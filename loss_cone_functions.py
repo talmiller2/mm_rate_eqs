@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Feb 25 23:42:08 2020
-
-@author: Tal Miller
-"""
-
 import copy
 
 import matplotlib.pyplot as plt

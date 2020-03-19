@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Dec 30 07:24:49 2019
-
-@author: Tal Miller
-"""
-
 import numpy as np
 
 
