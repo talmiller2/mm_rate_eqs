@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from default_settings import define_default_settings
+from rate_functions import get_thermal_velocity
 
 
 def get_sigma_v_fusion(T_eV, reaction='D-T_to_n_alpha'):
@@ -51,6 +52,11 @@ def get_sigma_v_fusion(T_eV, reaction='D-T_to_n_alpha'):
         C5 = 2.7621e-3
         C6 = -0.0091653e-3
         C7 = 0.00098305e-3
+    elif reaction == 'D-D_to_p_T_n_He3':
+        pass
+    else:
+        raise ValueError('invalid reaction: ' + reaction)
+
     if reaction == 'D-D_to_p_T_n_He3':
         sigma_v_m3_over_s = get_sigma_v_fusion(T_eV, reaction='D-D_to_p_T') \
                             + get_sigma_v_fusion(T_eV, reaction='D-D_to_n_He3')
@@ -79,7 +85,7 @@ def get_E_reaction(reaction='D-T_to_n_alpha'):
     elif reaction == 'p_B_to_3alpha':
         E_reaction = 8.7
     else:
-        print('invalid reaction:', reaction)
+        raise ValueError('invalid reaction: ' + reaction)
     return E_reaction
 
 
@@ -98,7 +104,7 @@ def get_E_charged(reaction='D-T_to_n_alpha'):
     elif reaction == 'p_B_to_3alpha':
         E_charged = 0
     else:
-        print('invalid reaction:', reaction)
+        print('invalid reaction: ' + reaction)
     return E_charged
 
 
@@ -125,6 +131,15 @@ def get_cyclotron_radiation_loss(ne, Te, B):
     return 6.2e-17 * B ** 2 * ne * Te
 
 
+def get_lawson_parameters(n, Ti, settings, reaction='D-T_to_n_alpha'):
+    sigma_v_fusion = get_sigma_v_fusion(Ti_0, reaction=reaction)
+    E_charged = get_E_charged(reaction=reaction) * settings['MeV_to_J']  # J
+    n_tau_lawson = 12 * settings['kB_eV'] * Ti / (E_charged * sigma_v_fusion)
+    tau_lawson = n_tau_lawson / n
+    flux_lawson = 1 / n_tau_lawson * settings['volume_main_cell'] * n ** 2
+    return tau_lawson, flux_lawson
+
+
 ### Plot fusion and radiation loss parameters
 
 settings = define_default_settings()
@@ -138,8 +153,8 @@ Te_0 = settings['Te_0']
 
 T_keV_array = np.linspace(0.2, 200, 1000)
 # reactions = ['D-T_to_n_alpha', 'D-D_to_p_T', 'D-D_to_n_He3', 'He3-D_to_p_alpha']
-# reactions = ['D-T_to_n_alpha', 'D-D_to_p_T_n_He3', 'He3-D_to_p_alpha', 'p_B_to_3alpha']
-reactions = ['D-T_to_n_alpha', 'D-D_to_p_T_n_He3']
+reactions = ['D-T_to_n_alpha', 'D-D_to_p_T_n_He3', 'He3-D_to_p_alpha', 'p_B_to_3alpha']
+# reactions = ['D-T_to_n_alpha', 'D-D_to_p_T_n_He3']
 
 plt.rcParams.update({'font.size': 16})
 plt.close('all')
@@ -187,6 +202,7 @@ for reaction in reactions:
 plt.legend()
 plt.title('Fusion and radiation loss power, $T_i=T_e$')
 plt.xlabel('$T_i$ [keV]')
+plt.ylabel('$W/m^3$')
 plt.xscale('log')
 plt.yscale('log')
 plt.tight_layout()
@@ -205,8 +221,8 @@ plt.tight_layout()
 plt.grid()
 
 # Radiation and Fusion, assuming Ti=3*Te
-P_brem_radiation_loss_volumetric = get_brem_radiation_loss(n0, n0, T_keV_array/3.0, Z_charge)  # W/m^3
-P_cycl_radiation_loss_volumetric = get_cyclotron_radiation_loss(n0, T_keV_array/3.0, B)  # W/m^3
+P_brem_radiation_loss_volumetric = get_brem_radiation_loss(n0, n0, T_keV_array / 3.0, Z_charge)  # W/m^3
+P_cycl_radiation_loss_volumetric = get_cyclotron_radiation_loss(n0, T_keV_array / 3.0, B)  # W/m^3
 P_cycl_radiation_loss_volumetric_total = P_brem_radiation_loss_volumetric + P_cycl_radiation_loss_volumetric
 plt.figure()
 plt.plot(T_keV_array, P_brem_radiation_loss_volumetric, '--', label='brem loss', linewidth=3)
@@ -218,6 +234,7 @@ for reaction in reactions:
 plt.legend()
 plt.title('Fusion and radiation loss power, $T_i=3T_e$')
 plt.xlabel('$T_i$ [keV]')
+plt.ylabel('$W/m^3$')
 plt.xscale('log')
 plt.yscale('log')
 plt.tight_layout()
@@ -234,3 +251,17 @@ plt.xscale('log')
 plt.yscale('log')
 plt.tight_layout()
 plt.grid()
+
+# Summary of Lawson criterion
+tau_lawson, flux_lawson = get_lawson_parameters(n0, Ti_0, settings)
+print('tau_lawson: ', '{:.3e}'.format(tau_lawson), 's')
+print('flux_lawson: ', '{:.3e}'.format(flux_lawson), 's^-1')
+v_th = get_thermal_velocity(Ti_0, settings)
+flux_single_mirror = v_th * n0 * settings['cross_section_main_cell']
+print('flux single mirror: ', '{:.3e}'.format(flux_single_mirror), 's^-1')
+
+# Fusion power in nominal parameters
+print('Main cell volume: ', '{:.3e}'.format(settings['volume_main_cell']), 'm^3')
+P_fusion_volumetric = get_fusion_power(n0, Ti_0/settings['keV'])
+P_fusion = P_fusion_volumetric * settings['volume_main_cell']  # Watt
+print('Fusion power: ', '{:.3e}'.format(P_fusion / 1e6), 'MW')

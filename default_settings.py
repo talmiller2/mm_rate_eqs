@@ -10,6 +10,8 @@ def define_default_settings(settings={}):
     settings['keV'] = 1e3 * settings['eV']
     settings['eV_to_K'] = 1.16e4
     settings['MeV_to_J'] = 1e6 * 1.6e-19
+    settings['kB_K'] = 1.380649e-23 #J/K
+    settings['kB_eV'] = settings['kB_K'] * settings['eV_to_K']  # J/eV
 
     # plasma parameters
     if 'plasma_gas' not in settings:
@@ -28,6 +30,14 @@ def define_default_settings(settings={}):
     settings['delta_n_smoothing'] = 0.1
     settings['cell_size'] = 3.0  # m (MMM wavelength)
     settings['N'] = 100
+    settings['length_main_cell'] = 100 # m
+    settings['diameter_main_cell'] = 0.5 # m
+    settings['cross_section_main_cell'] = np.pi*(settings['diameter_main_cell']/2)**2 # m
+    settings['volume_main_cell'] = settings['length_main_cell'] * settings['cross_section_main_cell'] # m^3
+
+    D_main_cell = 100
+    d = 0.5
+    mirror_cross_section = np.pi * (d / 2) ** 2
 
     # options
     # settings['uniform_system'] = True
