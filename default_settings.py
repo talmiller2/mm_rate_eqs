@@ -2,9 +2,8 @@ import numpy as np
 
 
 def define_default_settings(settings={}):
-    # print(settings)
 
-    # physical constants
+    #### physical constants
     settings['lnCoulombLambda'] = 10.0
     settings['eV'] = 1.0
     settings['keV'] = 1e3 * settings['eV']
@@ -13,15 +12,13 @@ def define_default_settings(settings={}):
     settings['kB_K'] = 1.380649e-23 #J/K
     settings['kB_eV'] = settings['kB_K'] * settings['eV_to_K']  # J/eV
 
-    # plasma parameters
+    ### plasma parameters
     if 'plasma_gas' not in settings:
         settings['plasma_gas'] = 'hydrogen'
-
-    # print(settings)
     settings['me'], settings['mi'], settings['A_atomic_weight'], settings['Z_charge'] \
         = define_plasma_parameters(gas_name=settings['plasma_gas'])
 
-    # system parameters
+    ### system parameters
     settings['n0'] = 1e22  # m^-3
     settings['Ti_0'] = 3 * settings['keV']
     settings['Te_0'] = 1 * settings['keV']
@@ -35,13 +32,13 @@ def define_default_settings(settings={}):
     settings['cross_section_main_cell'] = np.pi*(settings['diameter_main_cell']/2)**2 # m
     settings['volume_main_cell'] = settings['length_main_cell'] * settings['cross_section_main_cell'] # m^3
 
-    D_main_cell = 100
-    d = 0.5
-    mirror_cross_section = np.pi * (d / 2) ** 2
+    ### additional options
 
-    # options
     # settings['uniform_system'] = True
     settings['uniform_system'] = False
+
+    settings['adaptive_dimension'] = False
+    # settings['adaptive_dimension'] = True
 
     settings['transition_type'] = 'none'
     # settings['transition_type'] = 'smooth_transition_to_uniform'

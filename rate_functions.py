@@ -1,5 +1,7 @@
+import matplotlib.pyplot as plt
 import numpy as np
 
+from default_settings import define_default_settings
 from loss_cone_functions import get_solid_angles
 
 
@@ -100,6 +102,19 @@ def get_mirror_cell_sizes(n, T, settings):
 
 def get_transmission_rate(v_th, mirror_cell_sizes):
     return v_th / mirror_cell_sizes
+
+
+
+def calculate_mean_free_path(n, Ti, Te, settings, species='ions'):
+    v_th = get_thermal_velocity(Ti, settings, species=species)
+    nu_s = get_coulomb_scattering_rate(n, Ti, Te, settings, species=species)
+    return v_th / nu_s
+
+
+def calculate_transition_density(n, Ti, Te, settings):
+    mfp = calculate_mean_free_path(n, Ti, Te, settings)
+    return settings['n0'] * (settings['transition_density_factor'] * settings['cell_size'] / mfp) ** (
+                1 / (2 * get_gamma_dimension(1) - 3))
 
 
 def get_mmm_velocity(state, settings):
@@ -284,7 +299,70 @@ def get_density_time_derivatives(state, settings):
     state['dn_tR_dt'] = dn_tR_dt
     return state
 
+
 # state_variables = ['dni_c_dt', 'dni_tL_dt', 'dni_tR_dt', 'f_scat_c', 'f_scat_tL',
 #                    'f_scat_tR', 'f_trans_L', 'f_trans_R', 'f_drag', 'f_diffusion']
 # for state_variable in state_variables:
 #     state[state_variable] = np.zeros(settings['N'])
+
+### Plot different parameters
+settings = define_default_settings()
+n0 = settings['n0']
+Ti_0 = settings['Ti_0']
+Te_0 = settings['Te_0']
+
+mfp_i = calculate_mean_free_path(n0, Ti_0, Te_0, settings, species='ions')
+mfp_e = calculate_mean_free_path(n0, Ti_0, Te_0, settings, species='electrons')
+print('mfp_i=', '{:.3e}'.format(mfp_i), 'm')
+print('mfp_e=', '{:.3e}'.format(mfp_e), 'm')
+n_trans = calculate_transition_density(n0, Ti_0, Te_0, settings)
+print('n_trans=', '{:.3e}'.format(n_trans), 'm^-3')
+
+# plot isentropes
+plt.close('all')
+n_array = np.linspace(n0 * 1e-3, n0, 1000)
+Ti_isentrope_array = get_isentrope_temperature(n_array, settings, species='ions')
+Te_isentrope_array = get_isentrope_temperature(n_array, settings, species='electrons')
+plt.figure(100)
+plt.plot(n_array, Ti_isentrope_array / settings['keV'], label='i', color='r')
+plt.plot(n_array, Te_isentrope_array / settings['keV'], label='e', color='b')
+plt.legend()
+plt.xlabel('n [g/cc]')
+plt.ylabel('T [keV]')
+plt.title('Isentropes')
+plt.tight_layout()
+plt.grid()
+
+# plot rates
+v_th_i = get_thermal_velocity(Ti_isentrope_array, settings, species='ions')
+v_th_e = get_thermal_velocity(Te_isentrope_array, settings, species='electrons')
+mirror_cell_sizes = get_mirror_cell_sizes(n_array, Ti_isentrope_array, settings)
+nu_i_trans =  get_transmission_rate(v_th_i, mirror_cell_sizes)
+nu_e_trans = get_transmission_rate(v_th_e, mirror_cell_sizes)
+nu_i_scat = get_coulomb_scattering_rate(n_array, Ti_isentrope_array, Te_isentrope_array, settings, species='ions')
+nu_e_scat = get_coulomb_scattering_rate(n_array, Ti_isentrope_array, Te_isentrope_array, settings, species='electrons')
+plt.figure(101)
+plt.plot(n_array, nu_i_scat, '-', label='i scat', color='r')
+plt.plot(n_array, nu_i_trans, '--', label='i trans', color='r')
+plt.plot(n_array, nu_e_scat, '-', label='e scat', color='b')
+plt.plot(n_array, nu_e_trans, '--', label='e trans', color='b')
+plt.legend()
+plt.xlabel('n [g/cc]')
+plt.ylabel('rate [$s^{-1}$]')
+plt.title('Rates')
+plt.tight_layout()
+plt.yscale('log')
+plt.grid()
+
+# plot mfps
+mfp_i_array = calculate_mean_free_path(n_array, Ti_isentrope_array, Te_isentrope_array, settings, species='ions')
+mfp_e_array = calculate_mean_free_path(n_array, Ti_isentrope_array, Te_isentrope_array, settings, species='electrons')
+plt.figure(102)
+plt.plot(n_array, mfp_i_array, '-', label='i', color='r')
+plt.plot(n_array, mfp_e_array, '-', label='e', color='b')
+plt.legend()
+plt.xlabel('n [g/cc]')
+plt.ylabel('mfp [m]')
+plt.title('Mean free path')
+plt.tight_layout()
+plt.grid()
