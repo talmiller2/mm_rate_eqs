@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def getSolidAngles(U, vth, alpha):
+def get_solid_angles(U, vth, alpha):
     # solve analytical values of critical v_perp
     a = 1.0
     b = 2 * alpha * ((U / vth) ** 2 * (2 * alpha - 1) - 1)
@@ -138,7 +138,7 @@ for ind_Rm, Rm in enumerate(Rm_list):
                     print('not in LC')
 
         # calculate the solid angles for right/left loss cones
-        omega_tR[ind_U], omega_tL[ind_U], omega_c[ind_U] = getSolidAngles(U, vth, alpha)
+        omega_tR[ind_U], omega_tL[ind_U], omega_c[ind_U] = get_solid_angles(U, vth, alpha)
 
     plt.figure(2)
     plt.plot(U_list / vth, v_perp_high / vth, label='high Rm=' + str(Rm), color=colors[ind_Rm])
