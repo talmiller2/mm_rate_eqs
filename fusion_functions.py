@@ -1,4 +1,7 @@
+import matplotlib.pyplot as plt
 import numpy as np
+
+from default_settings import define_default_settings
 
 
 def get_sigma_v_fusion(T_eV, reaction='D-T_to_n_alpha'):
@@ -108,11 +111,35 @@ def get_fusion_sigma_v_E_reaction(T_eV, reaction='D-T_to_n_alpha'):
     return sigma_v_E * 1e6 * 1.6e-19  # MeV to J
 
 
-# test plot
+def get_fusion_power(n, T_keV, reaction='D-T_to_n_alpha'):
+    return 0.25 * n ** 2 * get_fusion_sigma_v_E_reaction(T_keV * 1e3, reaction=reaction)
+
+
+def get_brem_radiation_loss(ni, ne, Te, Z_charge):
+    # Fusion Plasma Analysis, p. 228, Bremsstrahlung radiation [W/m^3], T in [keV]
+    return 4.8e-37 * Z_charge ** 2 * ni * ne * Te ** (0.5)
+
+
+def get_cyclotron_radiation_loss(ne, Te, B):
+    # Fusion Plasma Analysis, p. 231, cyclotron radiation [W/m^3], B in [Tesla], T in [keV]
+    return 6.2e-17 * B ** 2 * ne * Te
+
+
+### Plot fusion and radiation loss parameters
+
+settings = define_default_settings()
+keV = settings['keV']
+eV_to_K = settings['eV_to_K']
+Z_charge = settings['Z_charge']
+B = settings['B']
+n0 = settings['n0']
+Ti_0 = settings['Ti_0']
+Te_0 = settings['Te_0']
+
 T_keV_array = np.linspace(0.2, 200, 1000)
 # reactions = ['D-T_to_n_alpha', 'D-D_to_p_T', 'D-D_to_n_He3', 'He3-D_to_p_alpha']
-reactions = ['D-T_to_n_alpha', 'D-D_to_p_T_n_He3', 'He3-D_to_p_alpha', 'p_B_to_3alpha']
-import matplotlib.pyplot as plt
+# reactions = ['D-T_to_n_alpha', 'D-D_to_p_T_n_He3', 'He3-D_to_p_alpha', 'p_B_to_3alpha']
+reactions = ['D-T_to_n_alpha', 'D-D_to_p_T_n_He3']
 
 plt.rcParams.update({'font.size': 16})
 plt.close('all')
@@ -146,21 +173,63 @@ plt.yscale('log')
 plt.tight_layout()
 plt.grid()
 
-eV_to_K = 1.16e4
-n0 = 1.0  # cancels out in ratio
-P_radiation_loss_volumetric = 1.4e-34 * (n0 / 1e6) ** 2 * np.sqrt(T_keV_array * 1e3 * eV_to_K) * 1e6
+# Radiation and Fusion, assuming Ti=Te
+P_brem_radiation_loss_volumetric = get_brem_radiation_loss(n0, n0, T_keV_array, Z_charge)  # W/m^3
+P_cycl_radiation_loss_volumetric = get_cyclotron_radiation_loss(n0, T_keV_array, B)  # W/m^3
+P_cycl_radiation_loss_volumetric_total = P_brem_radiation_loss_volumetric + P_cycl_radiation_loss_volumetric
+plt.figure()
+plt.plot(T_keV_array, P_brem_radiation_loss_volumetric, '--', label='brem loss', linewidth=3)
+plt.plot(T_keV_array, P_cycl_radiation_loss_volumetric, '--', label='cyclotron loss', linewidth=3)
+plt.plot(T_keV_array, P_cycl_radiation_loss_volumetric_total, '--', label='total loss', linewidth=3)
+for reaction in reactions:
+    P_fusion_volumetric = get_fusion_power(n0, T_keV_array, reaction=reaction)
+    plt.plot(T_keV_array, P_fusion_volumetric, label=reaction, linewidth=3)
+plt.legend()
+plt.title('Fusion and radiation loss power, $T_i=T_e$')
+plt.xlabel('$T_i$ [keV]')
+plt.xscale('log')
+plt.yscale('log')
+plt.tight_layout()
+plt.grid()
+
 plt.figure()
 for reaction in reactions:
-    #    sigma_v_array = get_sigma_v_fusion(T_keV_array*1e3, reaction=reaction)
-    #    E_reaction = get_E_reaction(reaction=reaction) * 1e6*1.6e-19 #MeV to J
-    fusion_sigma_v_E = get_fusion_sigma_v_E_reaction(T_keV_array * 1e3, reaction=reaction)
-    #    P_fusion_volumetric = 0.25*n0**2*sigma_v_array*E_reaction
-    P_fusion_volumetric = 0.25 * n0 ** 2 * fusion_sigma_v_E
-    label = reaction
-    plt.plot(T_keV_array, P_fusion_volumetric / P_radiation_loss_volumetric, label=label, linewidth=3)
+    P_fusion_volumetric = get_fusion_power(n0, T_keV_array, reaction=reaction)
+    plt.plot(T_keV_array, P_fusion_volumetric / P_cycl_radiation_loss_volumetric_total, label=reaction, linewidth=3)
 plt.legend()
-plt.ylabel('fusion to radiation loss ratio')
-plt.xlabel('T [keV]')
+plt.title('Fusion to radiation loss ratio, $T_i=T_e$')
+plt.xlabel('$T_i$ [keV]')
+plt.xscale('log')
+plt.yscale('log')
+plt.tight_layout()
+plt.grid()
+
+# Radiation and Fusion, assuming Ti=3*Te
+P_brem_radiation_loss_volumetric = get_brem_radiation_loss(n0, n0, T_keV_array/3.0, Z_charge)  # W/m^3
+P_cycl_radiation_loss_volumetric = get_cyclotron_radiation_loss(n0, T_keV_array/3.0, B)  # W/m^3
+P_cycl_radiation_loss_volumetric_total = P_brem_radiation_loss_volumetric + P_cycl_radiation_loss_volumetric
+plt.figure()
+plt.plot(T_keV_array, P_brem_radiation_loss_volumetric, '--', label='brem loss', linewidth=3)
+plt.plot(T_keV_array, P_cycl_radiation_loss_volumetric, '--', label='cyclotron loss', linewidth=3)
+plt.plot(T_keV_array, P_cycl_radiation_loss_volumetric_total, '--', label='total loss', linewidth=3)
+for reaction in reactions:
+    P_fusion_volumetric = get_fusion_power(n0, T_keV_array, reaction=reaction)
+    plt.plot(T_keV_array, P_fusion_volumetric, label=reaction, linewidth=3)
+plt.legend()
+plt.title('Fusion and radiation loss power, $T_i=3T_e$')
+plt.xlabel('$T_i$ [keV]')
+plt.xscale('log')
+plt.yscale('log')
+plt.tight_layout()
+plt.grid()
+
+plt.figure()
+for reaction in reactions:
+    P_fusion_volumetric = get_fusion_power(n0, T_keV_array, reaction=reaction)
+    plt.plot(T_keV_array, P_fusion_volumetric / P_cycl_radiation_loss_volumetric_total, label=reaction, linewidth=3)
+plt.legend()
+plt.title('Fusion to radiation loss ratio, $T_i=3T_e$')
+plt.xlabel('$T_i$ [keV]')
 plt.xscale('log')
 plt.yscale('log')
 plt.tight_layout()
