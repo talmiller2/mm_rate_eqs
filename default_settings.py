@@ -1,7 +1,9 @@
 import numpy as np
 
 
-def define_default_settings(settings={}):
+def define_default_settings(settings=None):
+    if settings == None:
+        settings = {}
 
     #### physical constants
     settings['lnCoulombLambda'] = 10.0
@@ -19,9 +21,12 @@ def define_default_settings(settings={}):
         = define_plasma_parameters(gas_name=settings['plasma_gas'])
 
     ### system parameters
-    settings['n0'] = 1e22  # m^-3
-    settings['Ti_0'] = 3 * settings['keV']
-    settings['Te_0'] = 1 * settings['keV']
+    if 'n0' not in settings:
+        settings['n0'] = 1e22  # m^-3
+    if 'Ti_0' not in settings:
+        settings['Ti_0'] = 3 * settings['keV']
+    if 'Te_0' not in settings:
+        settings['Te_0'] = 1 * settings['keV']
     settings['B'] = 1.0 * np.sqrt( settings['n0'] / 1e20 * settings['Ti_0'] / (5 * settings['keV']) )  # [Tesla]
     settings['transition_density_factor'] = 0.1
     settings['delta_n_smoothing'] = 0.1
@@ -60,6 +65,25 @@ def define_default_settings(settings={}):
     settings['ion_scattering_rate_factor'] = 1.0
     settings['electron_scattering_rate_factor'] = 1.0
     settings['cell_size_mfp_factor'] = 1.0
+
+    ### relaxation solver parameters
+    settings['t_stop'] = 1e-1
+    settings['t_solve_min'] = 1e-20
+    settings['dt_print'] = 1e-5
+    settings['dt_factor'] = 0.3
+    settings['dt_min'] = 1e-20
+    settings['n_min'] = 1e10
+
+    settings['left_boundary_condition'] = 'enforce_tR'
+    # settings['left_boundary_condition'] = 'uniform_scaling'
+    settings['right_boundary_condition'] = 'enforce_tL'
+    # settings['right_boundary_condition'] = 'uniform_scaling'
+
+    settings['flux_normalized_termination_cutoff'] = 0.05
+
+    settings['do_plot_status'] = True
+    settings['save_state'] = False
+    settings['state_save_file'] = 'runs/state.pickle'
 
     return settings
 
