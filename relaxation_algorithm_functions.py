@@ -2,6 +2,7 @@ import pickle
 import time
 
 import numpy as np
+from scipy.io import savemat, loadmat
 
 from plot_functions import plot_relaxation_status, plot_relaxation_end
 from rate_functions import calculate_transition_density, get_density_time_derivatives, \
@@ -97,7 +98,7 @@ def find_rate_equations_steady_state(settings):
 
     # save results
     if settings['save_state'] is True:
-        save_state(state, settings)
+        save_simulation(state, settings)
 
     return state
 
@@ -194,8 +195,30 @@ def get_simulation_time(start_time):
     return run_time
 
 
-def save_state(state, settings):
+def save_simulation(state, settings):
     print('Saving the state and settings of the simulation.')
-    with open(settings['state_save_file'], 'wb') as handle:
-        pickle.dump([state, settings], handle)
+    if settings['save_format'] == 'pickle':
+        with open(settings['save_dir'] + '/' + settings['state_file'] + '.pickle', 'wb') as handle:
+            pickle.dump(state, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        with open(settings['save_dir'] + '/' + settings['settings_file'] + '.pickle', 'wb') as handle:
+            pickle.dump(settings, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    elif settings['save_format'] == 'mat':
+        savemat(settings['save_dir'] + '/' + settings['state_file'] + '.mat', state)
+        savemat(settings['save_dir'] + '/' + settings['settings_file'] + '.mat', settings)
+    else:
+        raise TypeError('invalid save_format = ' + settings['save_format'])
     return
+
+
+def load_simulation(state_file, settings_file, save_format='pickle'):
+    if save_format == 'pickle':
+        with open(state_file, 'rb') as fid:
+            state = pickle.load(fid)
+        with open(settings_file, 'rb') as fid:
+            settings = pickle.load(fid)
+    elif save_format == 'mat':
+        state = loadmat(state_file)
+        settings = loadmat(settings_file)
+    else:
+        raise TypeError('invalid save_format = ' + save_format)
+    return state, settings

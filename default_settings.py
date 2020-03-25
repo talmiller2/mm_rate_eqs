@@ -36,7 +36,8 @@ def define_default_settings(settings=None):
     if 'transition_density_factor' not in settings:
         settings['transition_density_factor'] = 0.1
     if 'delta_n_smoothing' not in settings:
-        settings['delta_n_smoothing'] = 0.1
+        # settings['delta_n_smoothing'] = 0.1
+        settings['delta_n_smoothing'] = 0.5
     if 'cell_size' not in settings:
         settings['cell_size'] = 3.0  # m (MMM wavelength)
     if 'N' not in settings:
@@ -115,9 +116,17 @@ def define_default_settings(settings=None):
     if 'do_plot_status' not in settings:
         settings['do_plot_status'] = True
     if 'save_state' not in settings:
-        settings['save_state'] = False
-    if 'state_save_file' not in settings:
-        settings['state_save_file'] = 'runs/state.pickle'
+        # settings['save_state'] = False
+        settings['save_state'] = True
+    if 'save_format' not in settings:
+        settings['save_format'] = 'pickle'
+        # settings['save_format'] = 'mat'
+    if 'save_dir' not in settings:
+        settings['save_dir'] = 'runs/'
+    if 'state_file' not in settings:
+        settings['state_file'] = 'state_example'
+    if 'settings_file' not in settings:
+        settings['settings_file'] = 'settings_example'
 
     return settings
 
