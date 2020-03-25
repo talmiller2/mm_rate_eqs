@@ -1,3 +1,4 @@
+import logging
 import pickle
 import time
 
@@ -16,6 +17,7 @@ from rate_functions import calculate_transition_density, get_density_time_deriva
 def find_rate_equations_steady_state(settings):
     """ find the rate equations steady state using a relaxation algorithm """
     start_time = time.time()
+    define_logging(settings)
 
     # initialize densities
     settings['n_transition'] = calculate_transition_density(settings['n0'], settings['Ti_0'], settings['Te_0'],
@@ -33,7 +35,7 @@ def find_rate_equations_steady_state(settings):
     status_counter = 0
     state['termination_criterion_reached'] = False
 
-    print('*** Begin relaxation iterations ***')
+    logging.info('*** Begin relaxation iterations ***')
     while t_curr < settings['t_stop']:
 
         state['v_th'] = get_thermal_velocity(state['Ti'], settings, species='ions')
@@ -79,11 +81,11 @@ def find_rate_equations_steady_state(settings):
         if state['termination_criterion_reached'] is True:
             break
 
-    print('*** Finished relaxation iterations ***')
+    logging.info('*** Finished relaxation iterations ***')
     if state['termination_criterion_reached'] is not True:
-        print('\x1b[5;30;41m' + 'Termination criterion was NOT reached.' + '\x1b[0m')
+        logging.info('\x1b[5;30;41m' + 'Termination criterion was NOT reached.' + '\x1b[0m')
     else:
-        print('\x1b[5;30;42m' + 'Termination criterion was reached.' + '\x1b[0m')
+        logging.info('\x1b[5;30;42m' + 'Termination criterion was reached.' + '\x1b[0m')
 
     # finalize the generated plots with plot settings
     if settings['do_plot_status'] is True:
@@ -93,14 +95,30 @@ def find_rate_equations_steady_state(settings):
     state['run_time'] = get_simulation_time(start_time)
     state['t_end'] = t_curr
     state['num_time_steps'] = num_steps
-    print('Relaxation t_end = ' + str(state['t_end']))
-    print('Relaxation num_time_steps = ' + str(state['num_time_steps']))
+    logging.info('Relaxation t_end = ' + str(state['t_end']))
+    logging.info('Relaxation num_time_steps = ' + str(state['num_time_steps']))
 
     # save results
     if settings['save_state'] is True:
         save_simulation(state, settings)
 
     return state
+
+
+def define_logging(settings):
+    if 'log_file' in settings:
+        log_file_path = settings['save_dir'] + '/' + settings['log_file'] + '.txt'
+        logging.basicConfig(format='%(asctime)s %(message)s',
+                            datefmt='%d-%m-%y %H:%M:%S',
+                            filename=log_file_path, level=logging.INFO)
+        console = logging.StreamHandler()
+        console_formatter = logging.Formatter('%(message)s')
+        console.setFormatter(console_formatter)
+        console.setLevel(logging.INFO)
+        logging.getLogger('').addHandler(console)
+    else:
+        logging.basicConfig(format='%(message)s', level=logging.INFO)
+    return
 
 
 def initialize_densities(settings):
@@ -130,10 +148,10 @@ def define_time_step(state, settings):
 
 
 def print_time_step_info(dt, t_curr, num_time_steps):
-    print('************')
-    print('dt = ' + str(dt))
-    print('t_curr = ' + str(t_curr))
-    print('num_time_steps = ' + str(num_time_steps))
+    logging.info('************')
+    logging.info('dt = ' + str(dt))
+    logging.info('t_curr = ' + str(t_curr))
+    logging.info('num_time_steps = ' + str(num_time_steps))
     return
 
 
@@ -175,7 +193,7 @@ def enforce_boundary_conditions(state, settings):
 
 
 def check_status_threshold_passed(state, settings, t_curr, num_time_steps, plot_counter):
-    if num_time_steps == 1 or t_curr >= plot_counter * settings['dt_print']:
+    if num_time_steps == 1 or t_curr >= plot_counter * settings['dt_status']:
         return True
     else:
         return False
@@ -191,12 +209,12 @@ def check_termination_criterion_reached(state, settings, status_counter):
 def get_simulation_time(start_time):
     end_time = time.time()
     run_time = end_time - start_time
-    print('run_time = ' + str(run_time) + ' sec, ' + str(run_time / 60.0) + ' min.')
+    logging.info('run_time = ' + str(run_time) + ' sec, ' + str(run_time / 60.0) + ' min.')
     return run_time
 
 
 def save_simulation(state, settings):
-    print('Saving the state and settings of the simulation.')
+    logging.info('Saving the state and settings of the simulation.')
     if settings['save_format'] == 'pickle':
         with open(settings['save_dir'] + '/' + settings['state_file'] + '.pickle', 'wb') as handle:
             pickle.dump(state, handle, protocol=pickle.HIGHEST_PROTOCOL)

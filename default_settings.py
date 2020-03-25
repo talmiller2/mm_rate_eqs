@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def define_default_settings(settings=None):
     if settings == None:
         settings = {}
@@ -92,11 +91,11 @@ def define_default_settings(settings=None):
          settings['t_stop'] = 1.0
     if 't_solve_min' not in settings:
         settings['t_solve_min'] = 1e-20
-    if 'dt_print' not in settings:
-        # settings['dt_print'] = 1e-7
-        # settings['dt_print'] = 1e-6
-        # settings['dt_print'] = 1e-5
-        settings['dt_print'] = 1e-3
+    if 'dt_status' not in settings:
+        # settings['dt_status'] = 1e-7
+        # settings['dt_status'] = 1e-6
+        # settings['dt_status'] = 1e-5
+        settings['dt_status'] = 1e-3
     if 'dt_factor' not in settings:
         settings['dt_factor'] = 0.3
     if 'dt_min' not in settings:
@@ -110,7 +109,8 @@ def define_default_settings(settings=None):
         settings['right_boundary_condition'] = 'enforce_tL'
         # settings['right_boundary_condition'] = 'uniform_scaling'
     if 'flux_normalized_termination_cutoff' not in settings:
-        settings['flux_normalized_termination_cutoff'] = 0.05
+        # settings['flux_normalized_termination_cutoff'] = 0.05
+        settings['flux_normalized_termination_cutoff'] = 0.3
     if 'print_time_step_info' not in settings:
         settings['print_time_step_info'] = True
     if 'do_plot_status' not in settings:
@@ -127,6 +127,8 @@ def define_default_settings(settings=None):
         settings['state_file'] = 'state_example'
     if 'settings_file' not in settings:
         settings['settings_file'] = 'settings_example'
+    if 'log_file' not in settings:
+        settings['log_file'] = 'log_example'
 
     return settings
 

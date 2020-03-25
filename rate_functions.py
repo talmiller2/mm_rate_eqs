@@ -1,3 +1,5 @@
+import logging
+
 import numpy as np
 
 from loss_cone_functions import get_solid_angles
@@ -384,7 +386,7 @@ def get_fluxes(state, settings):
     state['flux_normalized_std'] = state['flux_std'] / state['flux_mean']
 
     # print('Flux statistics:')
-    print('flux_mean = ' + '{:.2e}'.format(state['flux_mean']))
-    print('flux_normalized_std = ' + '{:.2e}'.format(state['flux_normalized_std']))
+    logging.info('flux_mean = ' + '{:.2e}'.format(state['flux_mean']))
+    logging.info('flux_normalized_std = ' + '{:.2e}'.format(state['flux_normalized_std']))
 
     return state
