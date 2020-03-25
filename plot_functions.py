@@ -52,64 +52,43 @@ def plot_relaxation_status(state, settings):
     return
 
 
-def plot_relaxation_end(title = '', show_legend = False):
+def plot_relaxation_end(title_name = '', show_legend = False):
+
     plt.figure(1)
     plt.ylabel('$m^{-3}$')
     plt.xlabel('z [m]')
-    plt.title(title)
-    plt.tight_layout()
-    plt.grid()
-    if show_legend is True: plt.legend()
 
     plt.figure(2)
     plt.ylabel('flux')
     plt.xlabel('z [m]')
-    plt.title(title)
-    plt.tight_layout()
-    plt.grid()
-    if show_legend is True: plt.legend()
 
     plt.figure(3)
     plt.ylabel('rate [$s^{-1}$]')
     plt.xlabel('z [m]')
     plt.yscale('log')
-    plt.title(title)
-    plt.tight_layout()
-    plt.grid()
-    if show_legend is True: plt.legend()
 
     plt.figure(4)
     plt.ylabel('T [keV]')
     plt.xlabel('z [m]')
-    plt.title(title)
-    plt.tight_layout()
-    plt.grid()
-    if show_legend is True: plt.legend()
 
     plt.figure(5)
     plt.ylabel('mfp [m]')
     plt.xlabel('z [m]')
-    plt.title(title)
-    plt.tight_layout()
-    plt.grid()
-    if show_legend is True: plt.legend()
 
     plt.figure(6)
     plt.ylabel('$\\alpha$')
     plt.xlabel('z [m]')
-    plt.title(title)
-    plt.tight_layout()
-    plt.grid()
-    if show_legend is True: plt.legend()
 
     plt.figure(7)
     plt.xlabel('cell number')
     plt.ylabel('cell length [m]')
-    plt.title(title)
-    plt.tight_layout()
-    plt.grid()
-    if show_legend is True: plt.legend()
 
+    for fig_num in range(1,8):
+        plt.figure(fig_num)
+        plt.tight_layout()
+        plt.grid()
+        plt.title(title_name)
+        if show_legend is True: plt.legend()
 
     # plt.figure(3)
     # plt.plot(flux_i_var_list, label='i flux', color='r')

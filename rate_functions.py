@@ -1,6 +1,5 @@
 import numpy as np
 
-from default_settings import define_default_settings
 from loss_cone_functions import get_solid_angles
 
 
@@ -16,8 +15,8 @@ def get_gamma_dimension(d=1):
 
 
 def get_transition_filters(n, settings):
-    f1 = (1 + np.exp(-(n - settings['n_trans']) / settings['delta_n_smoothing']))
-    f2 = (1 + np.exp((n - settings['n_trans']) / settings['delta_n_smoothing']))
+    f1 = (1 + np.exp(-(n - settings['n_transition']) / settings['delta_n_smoothing']))
+    f2 = (1 + np.exp((n - settings['n_transition']) / settings['delta_n_smoothing']))
     return f1, f2
 
 
@@ -30,7 +29,7 @@ def get_isentrope_temperature(n, settings, species='ions'):
         T0 = settings['Te_0']
 
     if settings['uniform_system'] is True:
-        T0 * np.ones(len(n))
+        return T0 * np.ones(len(n))
     else:
         if settings['adaptive_dimension'] is True:
             n_trans = settings['n_transition']
@@ -99,8 +98,8 @@ def get_coulomb_scattering_rate(n, Ti, Te, settings, species='ions'):
         return 4e-12 * settings['lnCoulombLambda'] * n * (Tie ** (-1.5) * e_on_i_factor + Te ** (-1.5) * e_on_e_factor)
 
 
-def calculate_mean_free_path(n, Ti, Te, settings, state={}, species='ions'):
-    if state == {}:
+def calculate_mean_free_path(n, Ti, Te, settings, state=None, species='ions'):
+    if state is None:
         v_th = get_thermal_velocity(Ti, settings, species=species)
         nu_s = get_coulomb_scattering_rate(n, Ti, Te, settings, species=species)
         return v_th / nu_s
@@ -110,24 +109,24 @@ def calculate_mean_free_path(n, Ti, Te, settings, state={}, species='ions'):
         raise TypeError('invalid option.')
 
 
-def get_mirror_cell_sizes(n, Ti, Te, settings, state={}):
+def get_mirror_cell_sizes(n, Ti, Te, settings, state=None):
     if settings['adaptive_mirror'] == 'adjust_lambda':
-        if 'mean_free_path' in state:
+        if state is not None and 'mean_free_path' in state:
             mfp = state['mean_free_path']
         else:
             mfp = calculate_mean_free_path(n, Ti, Te, settings, state=state)
-        cell_sizes_array = settings['cell_size_mfp_factor'] * mfp
+        mirror_cell_sizes = settings['cell_size_mfp_factor'] * mfp
     else:
-        cell_sizes_array = settings['cell_size'] + 0 * Ti
-    return cell_sizes_array
+        mirror_cell_sizes = settings['cell_size'] + 0 * Ti
+    return mirror_cell_sizes
 
 
 def get_transmission_rate(v_th, mirror_cell_sizes):
     return v_th / mirror_cell_sizes
 
 
-def calculate_transition_density(n, Ti, Te, settings, state={}):
-    if 'mean_free_path' in state:
+def calculate_transition_density(n, Ti, Te, settings, state=None):
+    if state is not None and 'mean_free_path' in state:
         mfp = state['mean_free_path']
     else:
         mfp = calculate_mean_free_path(n, Ti, Te, settings, state=state)
@@ -154,16 +153,16 @@ def get_mmm_drag_rate(state, settings):
     delta_n_smoothing = settings['delta_n_smoothing']
 
     if settings['transition_type'] == 'none':
-        return U / state['cell_sizes_array']
+        return U / state['mirror_cell_sizes']
     elif settings['transition_type'] in ['smooth_transition_to_uniform', 'smooth_transition_to_tR']:
         f1 = (1 + np.exp(-(n - n_trans) / delta_n_smoothing))
-        return U / state['cell_sizes_array'] / f1
+        return U / state['mirror_cell_sizes'] / f1
     elif settings['transition_type'] == 'sharp_transition_to_tR':
         U_mod = U
         for i in range(len(n)):
             if n[i] < n_trans:
                 U_mod[i] = 0
-        return U_mod / state['cell_sizes_array']
+        return U_mod / state['mirror_cell_sizes']
     else:
         raise ValueError('invalid transition_type: ' + settings['transition_type'])
 
@@ -332,10 +331,6 @@ def get_fluxes(state, settings):
     v_th = state['v_th']
     U = state['U']
     n_trans = settings['n_transition']
-    delta_n_smoothing = settings['delta_n_smoothing']
-    nu_s = state['coulomb_scattering_rate']
-    nu_t = state['transmission_rate']
-    nu_d = state['mmm_drag_rate']
 
     # initializations
     flux_trans_R = np.nan * np.zeros(settings['N'])
@@ -344,8 +339,6 @@ def get_fluxes(state, settings):
 
     # transition filters
     f1, f2 = get_transition_filters(n, settings)
-    # f1 = (1 + np.exp(-(n - n_trans) / delta_n_smoothing))
-    # f2 = (1 + np.exp((n - n_trans) / delta_n_smoothing))
 
     # calculate fluxes (multiplied by 2 because there are 2 plugs to the main cell)
     flux_factor = 2.0 * settings['cross_section_main_cell']
@@ -381,6 +374,7 @@ def get_fluxes(state, settings):
     state['flux_trans_R'] = flux_trans_R
     state['flux_trans_L'] = flux_trans_L
     state['flux_mmm_drag'] = flux_mmm_drag
+    state['flux'] = flux
 
     # calculate flux  statistics
     state['flux_max'] = np.nanmax(flux)
@@ -389,74 +383,8 @@ def get_fluxes(state, settings):
     state['flux_std'] = np.nanstd(flux)
     state['flux_normalized_std'] = state['flux_std'] / state['flux_mean']
 
-    print('Flux statistics:')
+    # print('Flux statistics:')
     print('flux_mean = ' + '{:.2e}'.format(state['flux_mean']))
     print('flux_normalized_std = ' + '{:.2e}'.format(state['flux_normalized_std']))
 
-    if state['flux_normalized_std'] < settings['flux_normalized_termination_cutoff']:
-        state['termination_criterion_reached'] = True
-
     return state
-
-
-### Plot different parameters
-settings = define_default_settings()
-n0 = settings['n0']
-Ti_0 = settings['Ti_0']
-Te_0 = settings['Te_0']
-
-mfp_i = calculate_mean_free_path(n0, Ti_0, Te_0, settings, species='ions')
-mfp_e = calculate_mean_free_path(n0, Ti_0, Te_0, settings, species='electrons')
-print('mfp_i=', '{:.3e}'.format(mfp_i), 'm')
-print('mfp_e=', '{:.3e}'.format(mfp_e), 'm')
-n_trans = calculate_transition_density(n0, Ti_0, Te_0, settings)
-print('n_trans=', '{:.3e}'.format(n_trans), 'm^-3')
-
-# plot isentropes
-plt.close('all')
-n_array = np.linspace(n0 * 1e-3, n0, 1000)
-Ti_isentrope_array = get_isentrope_temperature(n_array, settings, species='ions')
-Te_isentrope_array = get_isentrope_temperature(n_array, settings, species='electrons')
-plt.figure(100)
-plt.plot(n_array, Ti_isentrope_array / settings['keV'], label='i', color='r')
-plt.plot(n_array, Te_isentrope_array / settings['keV'], label='e', color='b')
-plt.legend()
-plt.xlabel('n [g/cc]')
-plt.ylabel('T [keV]')
-plt.title('Isentropes')
-plt.tight_layout()
-plt.grid()
-
-# plot rates
-v_th_i = get_thermal_velocity(Ti_isentrope_array, settings, species='ions')
-v_th_e = get_thermal_velocity(Te_isentrope_array, settings, species='electrons')
-mirror_cell_sizes = get_mirror_cell_sizes(n_array, Ti_isentrope_array, settings)
-nu_i_trans = get_transmission_rate(v_th_i, mirror_cell_sizes)
-nu_e_trans = get_transmission_rate(v_th_e, mirror_cell_sizes)
-nu_i_scat = get_coulomb_scattering_rate(n_array, Ti_isentrope_array, Te_isentrope_array, settings, species='ions')
-nu_e_scat = get_coulomb_scattering_rate(n_array, Ti_isentrope_array, Te_isentrope_array, settings, species='electrons')
-plt.figure(101)
-plt.plot(n_array, nu_i_scat, '-', label='i scat', color='r')
-plt.plot(n_array, nu_i_trans, '--', label='i trans', color='r')
-plt.plot(n_array, nu_e_scat, '-', label='e scat', color='b')
-plt.plot(n_array, nu_e_trans, '--', label='e trans', color='b')
-plt.legend()
-plt.xlabel('n [g/cc]')
-plt.ylabel('rate [$s^{-1}$]')
-plt.title('Rates')
-plt.tight_layout()
-plt.yscale('log')
-plt.grid()
-
-# plot mfps
-mfp_i_array = calculate_mean_free_path(n_array, Ti_isentrope_array, Te_isentrope_array, settings, species='ions')
-mfp_e_array = calculate_mean_free_path(n_array, Ti_isentrope_array, Te_isentrope_array, settings, species='electrons')
-plt.figure(102)
-plt.plot(n_array, mfp_i_array, '-', label='i', color='r')
-plt.plot(n_array, mfp_e_array, '-', label='e', color='b')
-plt.legend()
-plt.xlabel('n [g/cc]')
-plt.ylabel('mfp [m]')
-plt.title('Mean free path')
-plt.tight_layout()
-plt.grid()

@@ -27,63 +27,97 @@ def define_default_settings(settings=None):
         settings['Ti_0'] = 3 * settings['keV']
     if 'Te_0' not in settings:
         settings['Te_0'] = 1 * settings['keV']
-    settings['B'] = 1.0 * np.sqrt( settings['n0'] / 1e20 * settings['Ti_0'] / (5 * settings['keV']) )  # [Tesla]
-    settings['transition_density_factor'] = 0.1
-    settings['delta_n_smoothing'] = 0.1
-    settings['cell_size'] = 3.0  # m (MMM wavelength)
-    settings['N'] = 100
-    settings['length_main_cell'] = 100 # m
-    settings['diameter_main_cell'] = 0.5 # m
+    if 'B' not in settings:
+        settings['B'] = 1.0 * np.sqrt( settings['n0'] / 1e20 * settings['Ti_0'] / (5 * settings['keV']) )  # [Tesla]
+    if 'Rm' not in settings:
+        settings['Rm'] = 1.4
+    if 'U0' not in settings:
+        settings['U0'] = 0
+    if 'transition_density_factor' not in settings:
+        settings['transition_density_factor'] = 0.1
+    if 'delta_n_smoothing' not in settings:
+        settings['delta_n_smoothing'] = 0.1
+    if 'cell_size' not in settings:
+        settings['cell_size'] = 3.0  # m (MMM wavelength)
+    if 'N' not in settings:
+        settings['N'] = 100
+        # settings['N'] = 200
+    if 'length_main_cell' not in settings:
+        settings['length_main_cell'] = 100 # m
+    if 'diameter_main_cell' not in settings:
+        settings['diameter_main_cell'] = 0.5 # m
     settings['cross_section_main_cell'] = np.pi*(settings['diameter_main_cell']/2)**2 # m
     settings['volume_main_cell'] = settings['length_main_cell'] * settings['cross_section_main_cell'] # m^3
 
     ### additional options
-
-    # settings['uniform_system'] = True
-    settings['uniform_system'] = False
-
-    settings['adaptive_dimension'] = False
-    # settings['adaptive_dimension'] = True
-
-    settings['transition_type'] = 'none'
-    # settings['transition_type'] = 'smooth_transition_to_uniform'
-    # settings['transition_type'] = 'smooth_transition_to_tR'
-    # settings['transition_type'] = 'sharp_transition_to_tR'
-
-    settings['adaptive_mirror'] = 'None'
-    # settings['adaptive_mirror'] = 'adjust_lambda'
-    # settings['adaptive_mirror'] = 'adjust_U'
-
-    # settings['alpha_definition'] = 'old_constant'
-    settings['alpha_definition'] = 'geometric_constant'
-    # settings['alpha_definition'] = 'geometric_local'
-
-    settings['cell_size_mfp_factor'] = 1.0
-    settings['ion_velocity_factor'] = 1.0
-    # settings['ion_velocity_factor'] = np.sqrt(2)
-    settings['electron_velocity_factor'] = 1.0
-    settings['ion_scattering_rate_factor'] = 1.0
-    settings['electron_scattering_rate_factor'] = 1.0
-    settings['cell_size_mfp_factor'] = 1.0
+    if 'uniform_system' not in settings:
+        # settings['uniform_system'] = True
+        settings['uniform_system'] = False
+    if 'adaptive_dimension' not in settings:
+        settings['adaptive_dimension'] = False
+        # settings['adaptive_dimension'] = True
+    if 'transition_type' not in settings:
+        settings['transition_type'] = 'none'
+        # settings['transition_type'] = 'smooth_transition_to_uniform'
+        # settings['transition_type'] = 'smooth_transition_to_tR'
+        # settings['transition_type'] = 'sharp_transition_to_tR'
+    if 'adaptive_mirror' not in settings:
+        settings['adaptive_mirror'] = 'None'
+        # settings['adaptive_mirror'] = 'adjust_lambda'
+        # settings['adaptive_mirror'] = 'adjust_U'
+    if 'alpha_definition' not in settings:
+        # settings['alpha_definition'] = 'old_constant'
+        settings['alpha_definition'] = 'geometric_constant'
+        # settings['alpha_definition'] = 'geometric_local'
+    if 'cell_size_mfp_factor' not in settings:
+        settings['cell_size_mfp_factor'] = 1.0
+    if 'ion_velocity_factor' not in settings:
+        settings['ion_velocity_factor'] = 1.0
+        # settings['ion_velocity_factor'] = np.sqrt(2)
+    if 'electron_velocity_factor' not in settings:
+        settings['electron_velocity_factor'] = 1.0
+    if 'ion_scattering_rate_factor' not in settings:
+        settings['ion_scattering_rate_factor'] = 1.0
+    if 'electron_scattering_rate_factor' not in settings:
+        settings['electron_scattering_rate_factor'] = 1.0
+    if 'cell_size_mfp_factor' not in settings:
+        settings['cell_size_mfp_factor'] = 1.0
 
     ### relaxation solver parameters
-    settings['t_stop'] = 1e-1
-    settings['t_solve_min'] = 1e-20
-    settings['dt_print'] = 1e-5
-    settings['dt_factor'] = 0.3
-    settings['dt_min'] = 1e-20
-    settings['n_min'] = 1e10
-
-    settings['left_boundary_condition'] = 'enforce_tR'
-    # settings['left_boundary_condition'] = 'uniform_scaling'
-    settings['right_boundary_condition'] = 'enforce_tL'
-    # settings['right_boundary_condition'] = 'uniform_scaling'
-
-    settings['flux_normalized_termination_cutoff'] = 0.05
-
-    settings['do_plot_status'] = True
-    settings['save_state'] = False
-    settings['state_save_file'] = 'runs/state.pickle'
+    if 't_stop' not in settings:
+        # settings['t_stop'] = 1e-6
+        # settings['t_stop'] = 1e-4
+        # settings['t_stop'] = 1e-1
+         settings['t_stop'] = 1.0
+    if 't_solve_min' not in settings:
+        settings['t_solve_min'] = 1e-20
+    if 'dt_print' not in settings:
+        # settings['dt_print'] = 1e-7
+        # settings['dt_print'] = 1e-6
+        # settings['dt_print'] = 1e-5
+        settings['dt_print'] = 1e-3
+    if 'dt_factor' not in settings:
+        settings['dt_factor'] = 0.3
+    if 'dt_min' not in settings:
+        settings['dt_min'] = 1e-20
+    if 'n_min' not in settings:
+        settings['n_min'] = 1e10
+    if 'left_boundary_condition' not in settings:
+        settings['left_boundary_condition'] = 'enforce_tR'
+        # settings['left_boundary_condition'] = 'uniform_scaling'
+    if 'right_boundary_condition' not in settings:
+        settings['right_boundary_condition'] = 'enforce_tL'
+        # settings['right_boundary_condition'] = 'uniform_scaling'
+    if 'flux_normalized_termination_cutoff' not in settings:
+        settings['flux_normalized_termination_cutoff'] = 0.05
+    if 'print_time_step_info' not in settings:
+        settings['print_time_step_info'] = True
+    if 'do_plot_status' not in settings:
+        settings['do_plot_status'] = True
+    if 'save_state' not in settings:
+        settings['save_state'] = False
+    if 'state_save_file' not in settings:
+        settings['state_save_file'] = 'runs/state.pickle'
 
     return settings
 
