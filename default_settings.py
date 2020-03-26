@@ -1,5 +1,8 @@
 import numpy as np
 
+from fusion_functions import define_plasma_parameters
+
+
 def define_default_settings(settings=None):
     if settings == None:
         settings = {}
@@ -10,7 +13,7 @@ def define_default_settings(settings=None):
     settings['keV'] = 1e3 * settings['eV']
     settings['eV_to_K'] = 1.16e4
     settings['MeV_to_J'] = 1e6 * 1.6e-19
-    settings['kB_K'] = 1.380649e-23 #J/K
+    settings['kB_K'] = 1.380649e-23  # J/K
     settings['kB_eV'] = settings['kB_K'] * settings['eV_to_K']  # J/eV
 
     ### plasma parameters
@@ -27,7 +30,7 @@ def define_default_settings(settings=None):
     if 'Te_0' not in settings:
         settings['Te_0'] = 1 * settings['keV']
     if 'B' not in settings:
-        settings['B'] = 1.0 * np.sqrt( settings['n0'] / 1e20 * settings['Ti_0'] / (5 * settings['keV']) )  # [Tesla]
+        settings['B'] = 1.0 * np.sqrt(settings['n0'] / 1e20 * settings['Ti_0'] / (5 * settings['keV']))  # [Tesla]
     if 'Rm' not in settings:
         settings['Rm'] = 1.4
     if 'U0' not in settings:
@@ -44,11 +47,11 @@ def define_default_settings(settings=None):
         settings['N'] = 100
         # settings['N'] = 200
     if 'length_main_cell' not in settings:
-        settings['length_main_cell'] = 100 # m
+        settings['length_main_cell'] = 100  # m
     if 'diameter_main_cell' not in settings:
-        settings['diameter_main_cell'] = 0.5 # m
-    settings['cross_section_main_cell'] = np.pi*(settings['diameter_main_cell']/2)**2 # m
-    settings['volume_main_cell'] = settings['length_main_cell'] * settings['cross_section_main_cell'] # m^3
+        settings['diameter_main_cell'] = 0.5  # m
+    settings['cross_section_main_cell'] = np.pi * (settings['diameter_main_cell'] / 2) ** 2  # m
+    settings['volume_main_cell'] = settings['length_main_cell'] * settings['cross_section_main_cell']  # m^3
 
     ### additional options
     if 'uniform_system' not in settings:
@@ -95,7 +98,7 @@ def define_default_settings(settings=None):
         # settings['t_stop'] = 1e-6
         # settings['t_stop'] = 1e-4
         # settings['t_stop'] = 1e-1
-         settings['t_stop'] = 1.0
+        settings['t_stop'] = 1.0
     if 't_solve_min' not in settings:
         settings['t_solve_min'] = 1e-20
         # settings['t_solve_min'] = 0.005
@@ -135,30 +138,3 @@ def define_default_settings(settings=None):
         settings['save_plots'] = True
 
     return settings
-
-
-def define_plasma_parameters(gas_name='hydrogen'):
-    me = 9.10938356e-31  # kg
-    mp = 1.67262192e-27  # kg
-    if gas_name == 'hydrogen':
-        A = 1.00784
-        Z = 1.0
-    elif gas_name == 'deuterium':
-        A = 2.01410177811
-        Z = 1.0
-    elif gas_name == 'tritium':
-        A = 3.0160492
-        Z = 1.0
-    elif gas_name == 'DT_mix':
-        A = np.mean([2.01410177811, 3.0160492])  # some approximation
-        Z = 1.0
-    elif gas_name == 'lithium':
-        A = 6.941
-        Z = 3.0
-    elif gas_name == 'potassium':
-        A = 39.0983
-        Z = 19.0
-    else:
-        raise TypeError('invalid gas: ' + gas_name)
-    mi = A * mp
-    return me, mi, A, Z

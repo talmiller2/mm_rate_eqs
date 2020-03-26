@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def get_sigma_v_fusion(T_eV, reaction='D-T_to_n_alpha'):
     # fit from http://www.fisicanucleare.it/documents/0-19-856264-0.pdf
     if reaction == 'D-T_to_n_alpha':
@@ -134,3 +135,32 @@ def get_lawson_parameters(n, Ti, settings, reaction='D-T_to_n_alpha'):
     flux_lawson = 1 / n_tau_lawson * settings['volume_main_cell'] * n ** 2
     return tau_lawson, flux_lawson
 
+
+def define_plasma_parameters(gas_name='hydrogen'):
+    me = 9.10938356e-31  # kg
+    mp = 1.67262192e-27  # kg
+    if gas_name == 'hydrogen':
+        A = 1.00784
+        Z = 1.0
+    elif gas_name == 'deuterium':
+        A = 2.01410177811
+        Z = 1.0
+    elif gas_name == 'tritium':
+        A = 3.0160492
+        Z = 1.0
+    elif gas_name == 'DT_mix':
+        A = np.mean([2.01410177811, 3.0160492])  # some approximation
+        Z = 1.0
+    elif gas_name == 'helium':
+        A = 4.002602
+        Z = 2.0
+    elif gas_name == 'lithium':
+        A = 6.941
+        Z = 3.0
+    elif gas_name == 'potassium':
+        A = 39.0983
+        Z = 19.0
+    else:
+        raise TypeError('invalid gas: ' + gas_name)
+    mi = A * mp
+    return me, mi, A, Z
