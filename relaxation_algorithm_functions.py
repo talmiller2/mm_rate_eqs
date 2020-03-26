@@ -70,7 +70,7 @@ def find_rate_equations_steady_state(settings):
 
             # define fluxes and check if termination criterion is reached
             state = get_fluxes(state, settings)
-            if check_termination_criterion_reached(state, settings, status_counter):
+            if check_termination_criterion_reached(state, settings, t_curr, status_counter):
                 state['termination_criterion_reached'] = True
 
             # plot status
@@ -199,8 +199,9 @@ def check_status_threshold_passed(state, settings, t_curr, num_time_steps, plot_
         return False
 
 
-def check_termination_criterion_reached(state, settings, status_counter):
-    if state['flux_normalized_std'] < settings['flux_normalized_termination_cutoff'] and status_counter >= 1:
+def check_termination_criterion_reached(state, settings, t_curr, status_counter):
+    if state['flux_normalized_std'] < settings['flux_normalized_termination_cutoff'] \
+            and status_counter >= 1 and t_curr >= settings['t_solve_min']:
         return True
     else:
         return False

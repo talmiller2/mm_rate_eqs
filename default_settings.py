@@ -67,8 +67,8 @@ def define_default_settings(settings=None):
         # settings['adaptive_mirror'] = 'adjust_U'
     if 'alpha_definition' not in settings:
         # settings['alpha_definition'] = 'old_constant'
-        settings['alpha_definition'] = 'geometric_constant'
-        # settings['alpha_definition'] = 'geometric_local'
+        # settings['alpha_definition'] = 'geometric_constant'
+        settings['alpha_definition'] = 'geometric_local'
     if 'cell_size_mfp_factor' not in settings:
         settings['cell_size_mfp_factor'] = 1.0
     if 'ion_velocity_factor' not in settings:
@@ -91,6 +91,7 @@ def define_default_settings(settings=None):
          settings['t_stop'] = 1.0
     if 't_solve_min' not in settings:
         settings['t_solve_min'] = 1e-20
+        # settings['t_solve_min'] = 0.005
     if 'dt_status' not in settings:
         # settings['dt_status'] = 1e-7
         # settings['dt_status'] = 1e-6
@@ -127,8 +128,8 @@ def define_default_settings(settings=None):
         settings['state_file'] = 'state_example'
     if 'settings_file' not in settings:
         settings['settings_file'] = 'settings_example'
-    if 'log_file' not in settings:
-        settings['log_file'] = 'log_example'
+    # if 'log_file' not in settings:
+    #     settings['log_file'] = 'log_example'
 
     return settings
 
