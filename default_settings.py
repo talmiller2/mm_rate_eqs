@@ -40,8 +40,8 @@ def define_default_settings(settings=None):
     if 'cell_size' not in settings:
         settings['cell_size'] = 3.0  # m (MMM wavelength)
     if 'N' not in settings:
-        settings['N'] = 30
-        # settings['N'] = 100
+        # settings['N'] = 30
+        settings['N'] = 100
         # settings['N'] = 200
     if 'length_main_cell' not in settings:
         settings['length_main_cell'] = 100 # m
@@ -111,8 +111,8 @@ def define_default_settings(settings=None):
     if 'n_min' not in settings:
         settings['n_min'] = 1e10
     if 'flux_normalized_termination_cutoff' not in settings:
-        # settings['flux_normalized_termination_cutoff'] = 0.05
-        settings['flux_normalized_termination_cutoff'] = 0.3
+        settings['flux_normalized_termination_cutoff'] = 0.05
+        # settings['flux_normalized_termination_cutoff'] = 0.3
     if 'print_time_step_info' not in settings:
         settings['print_time_step_info'] = True
     if 'do_plot_status' not in settings:

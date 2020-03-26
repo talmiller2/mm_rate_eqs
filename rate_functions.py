@@ -31,7 +31,7 @@ def get_isentrope_temperature(n, settings, species='ions'):
         T0 = settings['Te_0']
 
     if settings['uniform_system'] is True:
-        return T0 * np.ones(len(n))
+        return T0 + 0 * n
     else:
         if settings['adaptive_dimension'] is True:
             n_trans = settings['n_transition']
@@ -41,9 +41,6 @@ def get_isentrope_temperature(n, settings, species='ions'):
             f1, f2 = get_transition_filters(n, settings)
             return T0 * (n / n0) ** (gamma_start - 1) / f1 \
                    + T_trans * (n / n_trans) ** (gamma_fin - 1) / f2
-            # delta_n_smoothing = settings['delta_n_smoothing']
-            # return T0 * (n / n0) ** (gamma_start - 1) / (1 + np.exp(-(n - n_trans) / delta_n_smoothing)) \
-            #        + T_trans * (n / n_trans) ** (gamma_fin - 1) / (1 + np.exp((n - n_trans) / delta_n_smoothing))
         else:
             return T0 * (n / n0) ** (get_gamma_dimension(1) - 1)
 
@@ -90,6 +87,10 @@ def get_thermal_velocity(T, settings, species='ions'):
 def get_coulomb_scattering_rate(n, Ti, Te, settings, species='ions'):
     # Coulomb scattering rate
     Tie = get_dominant_temperature(Ti, Te, settings)
+
+    if settings['uniform_system'] is True:
+        n = settings['n0'] + 0 * n
+
     if species == 'ions':
         i_on_i_factor = settings['ion_scattering_rate_factor'] / np.sqrt(settings['mi'] / settings['me'])
         i_on_e_factor = settings['ion_scattering_rate_factor'] / (settings['mi'] / settings['me'])
@@ -269,15 +270,15 @@ def get_density_time_derivatives(state, settings):
         # keeping the same rates, but changing (or not) the left transmission term
         for k in range(settings['N']):
             f_scat_c[k] = + nu_s[k] * (alpha_c[k] * (n_tL[k] + n_tR[k])
-                                       - (alpha_tL[k] + alpha_tR[k]) * n_c[k] )
+                                       - (alpha_tL[k] + alpha_tR[k]) * n_c[k])
 
             f_scat_tL[k] = + nu_s[k] * (-(alpha_c[k] + alpha_tR[k]) * n_tL[k]
                                         + alpha_tL[k] * n_tR[k]
-                                        + alpha_tL[k] * n_c[k] )
+                                        + alpha_tL[k] * n_c[k])
 
             f_scat_tR[k] = + nu_s[k] * (-(alpha_c[k] + alpha_tL[k]) * n_tR[k]
                                         + alpha_tR[k] * n_tL[k]
-                                        + alpha_tR[k] * n_c[k] )
+                                        + alpha_tR[k] * n_c[k])
 
             if settings['transition_type'] == 'none':
                 f_trans_L[k] = - nu_t[k] * n_tL[k]
@@ -381,6 +382,7 @@ def get_fluxes(state, settings):
     # print('Flux statistics:')
     # logging.info('flux_mean = ' + '{:.2e}'.format(state['flux_mean']))
     # logging.info('flux_normalized_std = ' + '{:.2e}'.format(state['flux_normalized_std']))
-    logging.info('flux_mean = ' + '{:.2e}'.format(state['flux_mean']) + ', flux_normalized_std = ' + '{:.2e}'.format(state['flux_normalized_std']))
+    logging.info('flux_mean = ' + '{:.2e}'.format(state['flux_mean']) + ', flux_normalized_std = ' + '{:.2e}'.format(
+        state['flux_normalized_std']))
 
     return state
