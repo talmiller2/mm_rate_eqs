@@ -11,9 +11,10 @@ plt.close('all')
 state = find_rate_equations_steady_state(settings)
 # plot_relaxation_end()
 
-test loading
+### test loading
 # save_format = 'mat'
-save_format = 'pickle'
+# save_format = 'pickle'
+save_format = 'None'
 state_file = settings['save_dir'] + '/' + settings['state_file'] + '.' + save_format
 settings_file = settings['save_dir'] + '/' + settings['settings_file'] + '.' + save_format
 state1, settings1 = load_simulation(state_file, settings_file, save_format=save_format)

@@ -116,8 +116,8 @@ def define_default_settings(settings=None):
     if 'do_plot_status' not in settings:
         settings['do_plot_status'] = True
     if 'save_state' not in settings:
-        # settings['save_state'] = False
-        settings['save_state'] = True
+        settings['save_state'] = False
+        # settings['save_state'] = True
     if 'save_format' not in settings:
         settings['save_format'] = 'pickle'
         # settings['save_format'] = 'mat'

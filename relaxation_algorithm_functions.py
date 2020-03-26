@@ -214,17 +214,19 @@ def get_simulation_time(start_time):
 
 
 def save_simulation(state, settings):
-    logging.info('Saving the state and settings of the simulation.')
+    logging.info('Saving the state and settings of the simulation (' + settings['save_format'] + ' format).')
     if settings['save_format'] == 'pickle':
         with open(settings['save_dir'] + '/' + settings['state_file'] + '.pickle', 'wb') as handle:
             pickle.dump(state, handle, protocol=pickle.HIGHEST_PROTOCOL)
         with open(settings['save_dir'] + '/' + settings['settings_file'] + '.pickle', 'wb') as handle:
             pickle.dump(settings, handle, protocol=pickle.HIGHEST_PROTOCOL)
     elif settings['save_format'] == 'mat':
+        # note: the mat format puts everything into matrix format [[]], which means we cannot load the settings
+        # and immediately rerun them, some post-processing in necessary.
         savemat(settings['save_dir'] + '/' + settings['state_file'] + '.mat', state)
         savemat(settings['save_dir'] + '/' + settings['settings_file'] + '.mat', settings)
     else:
-        raise TypeError('invalid save_format = ' + settings['save_format'])
+        raise TypeError('invalid save format = ' + settings['save_format'])
     return
 
 
@@ -238,5 +240,5 @@ def load_simulation(state_file, settings_file, save_format='pickle'):
         state = loadmat(state_file)
         settings = loadmat(settings_file)
     else:
-        raise TypeError('invalid save_format = ' + save_format)
+        raise TypeError('invalid save format = ' + save_format)
     return state, settings
