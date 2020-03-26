@@ -89,7 +89,8 @@ def get_coulomb_scattering_rate(n, Ti, Te, settings, species='ions'):
     Tie = get_dominant_temperature(Ti, Te, settings)
 
     if settings['uniform_system'] is True:
-        n = settings['n0'] + 0 * n
+        if type(n) is not float:
+            n = n[0] + 0 * n
 
     if species == 'ions':
         i_on_i_factor = settings['ion_scattering_rate_factor'] / np.sqrt(settings['mi'] / settings['me'])

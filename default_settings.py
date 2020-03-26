@@ -17,10 +17,10 @@ def define_default_settings(settings=None):
     settings['kB_eV'] = settings['kB_K'] * settings['eV_to_K']  # J/eV
 
     ### plasma parameters
-    if 'plasma_gas' not in settings:
+    if 'gas_name' not in settings:
         settings['plasma_gas'] = 'hydrogen'
     settings['me'], settings['mi'], settings['A_atomic_weight'], settings['Z_charge'] \
-        = define_plasma_parameters(gas_name=settings['plasma_gas'])
+        = define_plasma_parameters(gas_name=settings['gas_name'])
 
     ### system parameters
     if 'n0' not in settings:

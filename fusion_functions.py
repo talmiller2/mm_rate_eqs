@@ -172,9 +172,10 @@ def get_debye_length(n, Te):
     return 0.76e-4 * np.sqrt(Te / 5.0 / (n / 1e20))
 
 
-def get_larmor_radius(Ti, B, mi_over_me):
+def get_larmor_radius(Ti, B, gas_name='hydrogen'):
     # Gyration radius, dominated by the heavy ions
     # Ti in [keV], B in [Tesla], return in [m]
     electron_gyration_radius = 2.2e-5 * np.sqrt(Ti / 5.0) / (B / 1.0)
-    ion_gyration_radius = np.sqrt(mi_over_me) * electron_gyration_radius
+    me, mi, A, Z = define_plasma_parameters(gas_name=gas_name)
+    ion_gyration_radius = np.sqrt(mi / me) * electron_gyration_radius
     return ion_gyration_radius
