@@ -204,7 +204,6 @@ def get_density_time_derivatives(state, settings):
     n_tL = state['n_tL']
     n_tR = state['n_tR']
     n_trans = settings['n_transition']
-    delta_n_smoothing = settings['delta_n_smoothing']
     nu_s = state['coulomb_scattering_rate']
     nu_t = state['transmission_rate']
     nu_d = state['mmm_drag_rate']
@@ -222,8 +221,6 @@ def get_density_time_derivatives(state, settings):
 
     # transition filters
     f1, f2 = get_transition_filters(n, settings)
-    # f1 = (1 + np.exp(-(n - n_trans) / delta_n_smoothing))
-    # f2 = (1 + np.exp((n - n_trans) / delta_n_smoothing))
 
     # define density time derivative
     if settings['transition_type'] == 'smooth_transition_to_uniform':
@@ -269,18 +266,18 @@ def get_density_time_derivatives(state, settings):
         dn_tR_dt = f_scat_tR + f_trans_R + f_trans_uniform
 
     elif settings['transition_type'] in ['none', 'smooth_transition_to_tR', 'sharp_transition_to_tR']:
-        # keeping the same rates, but making a transition of the L-transmission term
+        # keeping the same rates, but changing (or not) the left transmission term
         for k in range(settings['N']):
             f_scat_c[k] = + nu_s[k] * (alpha_c[k] * (n_tL[k] + n_tR[k])
-                                       - (alpha_tL[k] + alpha_tR[k]) * n_c[k])
+                                       - (alpha_tL[k] + alpha_tR[k]) * n_c[k] )
 
             f_scat_tL[k] = + nu_s[k] * (-(alpha_c[k] + alpha_tR[k]) * n_tL[k]
                                         + alpha_tL[k] * n_tR[k]
-                                        + alpha_tL[k] * n_c[k])
+                                        + alpha_tL[k] * n_c[k] )
 
             f_scat_tR[k] = + nu_s[k] * (-(alpha_c[k] + alpha_tL[k]) * n_tR[k]
                                         + alpha_tR[k] * n_tL[k]
-                                        + alpha_tR[k] * n_c[k])
+                                        + alpha_tR[k] * n_c[k] )
 
             if settings['transition_type'] == 'none':
                 f_trans_L[k] = - nu_t[k] * n_tL[k]
@@ -318,10 +315,6 @@ def get_density_time_derivatives(state, settings):
     # dni_tR_dt = dni_tR_dt + 1e-50
 
     return dn_c_dt, dn_tL_dt, dn_tR_dt
-    # state['dn_c_dt'] = dn_c_dt
-    # state['dn_tL_dt'] = dn_tL_dt
-    # state['dn_tR_dt'] = dn_tR_dt
-    # return state
 
 
 def get_fluxes(state, settings):
@@ -386,7 +379,8 @@ def get_fluxes(state, settings):
     state['flux_normalized_std'] = state['flux_std'] / state['flux_mean']
 
     # print('Flux statistics:')
-    logging.info('flux_mean = ' + '{:.2e}'.format(state['flux_mean']))
-    logging.info('flux_normalized_std = ' + '{:.2e}'.format(state['flux_normalized_std']))
+    # logging.info('flux_mean = ' + '{:.2e}'.format(state['flux_mean']))
+    # logging.info('flux_normalized_std = ' + '{:.2e}'.format(state['flux_normalized_std']))
+    logging.info('flux_mean = ' + '{:.2e}'.format(state['flux_mean']) + ', flux_normalized_std = ' + '{:.2e}'.format(state['flux_normalized_std']))
 
     return state

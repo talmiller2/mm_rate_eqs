@@ -40,7 +40,8 @@ def define_default_settings(settings=None):
     if 'cell_size' not in settings:
         settings['cell_size'] = 3.0  # m (MMM wavelength)
     if 'N' not in settings:
-        settings['N'] = 100
+        settings['N'] = 30
+        # settings['N'] = 100
         # settings['N'] = 200
     if 'length_main_cell' not in settings:
         settings['length_main_cell'] = 100 # m
@@ -51,8 +52,8 @@ def define_default_settings(settings=None):
 
     ### additional options
     if 'uniform_system' not in settings:
-        # settings['uniform_system'] = True
-        settings['uniform_system'] = False
+        settings['uniform_system'] = True
+        # settings['uniform_system'] = False
     if 'adaptive_dimension' not in settings:
         settings['adaptive_dimension'] = False
         # settings['adaptive_dimension'] = True
@@ -69,6 +70,12 @@ def define_default_settings(settings=None):
         # settings['alpha_definition'] = 'old_constant'
         # settings['alpha_definition'] = 'geometric_constant'
         settings['alpha_definition'] = 'geometric_local'
+    if 'left_boundary_condition' not in settings:
+        settings['left_boundary_condition'] = 'enforce_tR'
+        # settings['left_boundary_condition'] = 'uniform_scaling'
+    if 'right_boundary_condition' not in settings:
+        settings['right_boundary_condition'] = 'enforce_tL'
+        # settings['right_boundary_condition'] = 'uniform_scaling'
     if 'cell_size_mfp_factor' not in settings:
         settings['cell_size_mfp_factor'] = 1.0
     if 'ion_velocity_factor' not in settings:
@@ -103,12 +110,6 @@ def define_default_settings(settings=None):
         settings['dt_min'] = 1e-20
     if 'n_min' not in settings:
         settings['n_min'] = 1e10
-    if 'left_boundary_condition' not in settings:
-        settings['left_boundary_condition'] = 'enforce_tR'
-        # settings['left_boundary_condition'] = 'uniform_scaling'
-    if 'right_boundary_condition' not in settings:
-        settings['right_boundary_condition'] = 'enforce_tL'
-        # settings['right_boundary_condition'] = 'uniform_scaling'
     if 'flux_normalized_termination_cutoff' not in settings:
         # settings['flux_normalized_termination_cutoff'] = 0.05
         settings['flux_normalized_termination_cutoff'] = 0.3
@@ -117,19 +118,21 @@ def define_default_settings(settings=None):
     if 'do_plot_status' not in settings:
         settings['do_plot_status'] = True
     if 'save_state' not in settings:
-        settings['save_state'] = False
-        # settings['save_state'] = True
+        # settings['save_state'] = False
+        settings['save_state'] = True
     if 'save_format' not in settings:
         settings['save_format'] = 'pickle'
         # settings['save_format'] = 'mat'
     if 'save_dir' not in settings:
-        settings['save_dir'] = 'runs/'
+        settings['save_dir'] = 'runs/test/'
     if 'state_file' not in settings:
-        settings['state_file'] = 'state_example'
+        settings['state_file'] = 'state'
     if 'settings_file' not in settings:
-        settings['settings_file'] = 'settings_example'
-    # if 'log_file' not in settings:
-    #     settings['log_file'] = 'log_example'
+        settings['settings_file'] = 'settings'
+    if 'log_file' not in settings:
+        settings['log_file'] = 'log_file'
+    if 'save_plots' not in settings:
+        settings['save_plots'] = True
 
     return settings
 
