@@ -164,3 +164,17 @@ def define_plasma_parameters(gas_name='hydrogen'):
         raise TypeError('invalid gas: ' + gas_name)
     mi = A * mp
     return me, mi, A, Z
+
+
+def get_debye_length(n, Te):
+    # scale above which quasi-neutrality holds, dominated by the fast electrons
+    # n in [m^-3], Te in [keV], return in [m]
+    return 0.76e-4 * np.sqrt(Te / 5.0 / (n / 1e20))
+
+
+def get_larmor_radius(Ti, B, mi_over_me):
+    # Gyration radius, dominated by the heavy ions
+    # Ti in [keV], B in [Tesla], return in [m]
+    electron_gyration_radius = 2.2e-5 * np.sqrt(Ti / 5.0) / (B / 1.0)
+    ion_gyration_radius = np.sqrt(mi_over_me) * electron_gyration_radius
+    return ion_gyration_radius
