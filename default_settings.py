@@ -44,8 +44,8 @@ def define_default_settings(settings=None):
         # settings['transition_density_factor'] = 0.01
     if 'delta_n_smoothing' not in settings:
         # settings['delta_n_smoothing'] = 0.01 * settings['n0']
-        # settings['delta_n_smoothing'] = 0.05 * settings['n0']
-        settings['delta_n_smoothing'] = 0.1 * settings['n0']
+        settings['delta_n_smoothing'] = 0.05 * settings['n0']
+        # settings['delta_n_smoothing'] = 0.1 * settings['n0']
         # settings['delta_n_smoothing'] = 0.5 * settings['n0']
     if 'cell_size' not in settings:
         settings['cell_size'] = 3.0  # m (MMM wavelength)
@@ -108,9 +108,9 @@ def define_default_settings(settings=None):
     if 't_stop' not in settings:
         # settings['t_stop'] = 1e-6
         # settings['t_stop'] = 1e-4
-        settings['t_stop'] = 1e-2
+        # settings['t_stop'] = 1e-2
         # settings['t_stop'] = 1e-1
-        # settings['t_stop'] = 1.0
+        settings['t_stop'] = 1.0
     if 't_solve_min' not in settings:
         settings['t_solve_min'] = 1e-20
         # settings['t_solve_min'] = 0.005

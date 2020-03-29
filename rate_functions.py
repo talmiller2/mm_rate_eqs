@@ -365,7 +365,7 @@ def get_fluxes(state, settings):
 
     elif settings['transition_type'] in ['none', 'smooth_transition_to_tR', 'sharp_transition_to_tR']:
         for k in range(0, settings['N'] - 1):
-            flux_trans_R[k] = v_th[k] * n_tR[k] / f1[k] * flux_factor
+            flux_trans_R[k] = v_th[k] * n_tR[k] * flux_factor
             flux_mmm_drag[k] = (- U[k + 1] * n_c[k + 1]) * flux_factor
 
             if settings['transition_type'] == 'none':
