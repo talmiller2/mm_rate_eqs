@@ -135,11 +135,24 @@ def define_logging(settings):
 
 def initialize_densities(settings):
     state = {}
-    alpha = 1 / settings['Rm']
-    r = (1 - alpha) / alpha
-    state['n_c'] = np.linspace(settings['n0'] * r / (1 + r), settings['n_end'] * r / (1 + r), settings['N'])
-    state['n_tL'] = np.linspace(settings['n0'] / (1 + r) / 2, settings['n_end'] / (1 + r) / 2, settings['N'])
-    state['n_tR'] = np.linspace(settings['n0'] / (1 + r) / 2, settings['n_end'] / (1 + r) / 2, settings['N'])
+    if settings['initialization_type'] == 'linear_uniform':
+        for var_name in ['n_c', 'n_tL', 'n_tR']:
+            state[var_name] = np.linspace(settings['n0'], settings['n_end'], settings['N'])
+            state[var_name] /= 3.0
+    elif settings['initialization_type'] == 'linear_alpha':
+        alpha = 1 / settings['Rm']
+        r = (1 - alpha) / alpha
+        state['n_c'] = np.linspace(settings['n0'] * r / (1 + r), settings['n_end'] * r / (1 + r), settings['N'])
+        state['n_tL'] = np.linspace(settings['n0'] / (1 + r) / 2, settings['n_end'] / (1 + r) / 2, settings['N'])
+        state['n_tR'] = np.linspace(settings['n0'] / (1 + r) / 2, settings['n_end'] / (1 + r) / 2, settings['N'])
+    elif settings['initialization_type'] == 'FD_decay':
+        N_array = np.linspace(1, settings['N'], settings['N'])
+        for var_name in ['n_c', 'n_tL', 'n_tR']:
+            state[var_name] = settings['n0'] + (settings['n_end'] - settings['n0']) / (
+                    1 + np.exp(-(N_array - 0.4 * settings['N']) / (0.1 * settings['N'])))
+            state[var_name] /= 3.0
+    else:
+        raise TypeError('invalid initialization_type = ' + settings['initialization_type'])
     state['n'] = state['n_c'] + state['n_tL'] + state['n_tR']
     return state
 

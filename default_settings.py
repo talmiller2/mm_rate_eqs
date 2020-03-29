@@ -39,21 +39,25 @@ def define_default_settings(settings=None):
     if 'U0' not in settings:
         settings['U0'] = 0
     if 'transition_density_factor' not in settings:
+        # settings['transition_density_factor'] = 0.5
         settings['transition_density_factor'] = 0.1
+        # settings['transition_density_factor'] = 0.01
     if 'delta_n_smoothing' not in settings:
-        # settings['delta_n_smoothing'] = 0.1
-        settings['delta_n_smoothing'] = 0.5
+        # settings['delta_n_smoothing'] = 0.01 * settings['n0']
+        # settings['delta_n_smoothing'] = 0.05 * settings['n0']
+        settings['delta_n_smoothing'] = 0.1 * settings['n0']
+        # settings['delta_n_smoothing'] = 0.5 * settings['n0']
     if 'cell_size' not in settings:
         settings['cell_size'] = 3.0  # m (MMM wavelength)
     if 'N' not in settings:
         # settings['N'] = 30
-        settings['N'] = 100
-        # settings['N'] = 200
+        # settings['N'] = 100
+        settings['N'] = 200
     if 'length_main_cell' not in settings:
         settings['length_main_cell'] = 100  # m
     if 'diameter_main_cell' not in settings:
         settings['diameter_main_cell'] = 0.5  # m
-    settings['cross_section_main_cell'] = np.pi * (settings['diameter_main_cell'] / 2) ** 2  # m
+    settings['cross_section_main_cell'] = np.pi * (settings['diameter_main_cell'] / 2) ** 2  # m^3
     settings['volume_main_cell'] = settings['length_main_cell'] * settings['cross_section_main_cell']  # m^3
 
     ### additional options
@@ -65,8 +69,8 @@ def define_default_settings(settings=None):
         # settings['adaptive_dimension'] = True
     if 'transition_type' not in settings:
         # settings['transition_type'] = 'none'
-        settings['transition_type'] = 'smooth_transition_to_uniform'
-        # settings['transition_type'] = 'smooth_transition_to_tR'
+        # settings['transition_type'] = 'smooth_transition_to_uniform'
+        settings['transition_type'] = 'smooth_transition_to_tR'
         # settings['transition_type'] = 'sharp_transition_to_tR'
     if 'adaptive_mirror' not in settings:
         settings['adaptive_mirror'] = 'None'
@@ -74,8 +78,12 @@ def define_default_settings(settings=None):
         # settings['adaptive_mirror'] = 'adjust_U'
     if 'alpha_definition' not in settings:
         # settings['alpha_definition'] = 'old_constant'
-        # settings['alpha_definition'] = 'geometric_constant'
-        settings['alpha_definition'] = 'geometric_local'
+        settings['alpha_definition'] = 'geometric_constant'
+        # settings['alpha_definition'] = 'geometric_local'
+    if 'initialization_type' not in settings:
+        # settings['initialization_type'] = 'linear_uniform'
+        # settings['initialization_type'] = 'linear_alpha'
+        settings['initialization_type'] = 'FD_decay'
     if 'left_boundary_condition' not in settings:
         settings['left_boundary_condition'] = 'enforce_tR'
         # settings['left_boundary_condition'] = 'uniform_scaling'
@@ -100,8 +108,9 @@ def define_default_settings(settings=None):
     if 't_stop' not in settings:
         # settings['t_stop'] = 1e-6
         # settings['t_stop'] = 1e-4
+        settings['t_stop'] = 1e-2
         # settings['t_stop'] = 1e-1
-        settings['t_stop'] = 1.0
+        # settings['t_stop'] = 1.0
     if 't_solve_min' not in settings:
         settings['t_solve_min'] = 1e-20
         # settings['t_solve_min'] = 0.005
