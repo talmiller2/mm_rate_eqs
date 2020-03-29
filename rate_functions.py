@@ -392,7 +392,7 @@ def get_fluxes(state, settings):
     state['flux_min'] = np.nanmin(flux)
     state['flux_mean'] = np.nanmean(flux)
     state['flux_std'] = np.nanstd(flux)
-    state['flux_normalized_std'] = state['flux_std'] / state['flux_mean']
+    state['flux_normalized_std'] = np.abs(state['flux_std'] / state['flux_mean'])
 
     # print('Flux statistics:')
     logging.info('flux_mean = ' + '{:.2e}'.format(state['flux_mean']) + ', flux_normalized_std = ' + '{:.2e}'.format(

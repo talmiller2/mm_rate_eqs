@@ -38,6 +38,7 @@ def define_default_settings(settings=None):
         settings['Rm'] = 1.4
     if 'U0' not in settings:
         settings['U0'] = 0
+        # settings['U0'] = 1e5
     if 'transition_density_factor' not in settings:
         # settings['transition_density_factor'] = 0.5
         settings['transition_density_factor'] = 0.1
@@ -82,8 +83,8 @@ def define_default_settings(settings=None):
         # settings['alpha_definition'] = 'geometric_local'
     if 'initialization_type' not in settings:
         # settings['initialization_type'] = 'linear_uniform'
-        # settings['initialization_type'] = 'linear_alpha'
-        settings['initialization_type'] = 'FD_decay'
+        settings['initialization_type'] = 'linear_alpha'
+        # settings['initialization_type'] = 'FD_decay'
     if 'left_boundary_condition' not in settings:
         settings['left_boundary_condition'] = 'enforce_tR'
         # settings['left_boundary_condition'] = 'uniform_scaling'
