@@ -4,9 +4,10 @@ from default_settings import define_default_settings
 from relaxation_algorithm_functions import find_rate_equations_steady_state
 
 ### test the algorithm
-settings = define_default_settings()
+settings = {'gas_name': 'hydrogen'}
+settings = define_default_settings(settings)
+# settings = define_default_settings()
 plt.close('all')
-import sys
 
 state = find_rate_equations_steady_state(settings)
 

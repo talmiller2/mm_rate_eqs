@@ -18,9 +18,12 @@ def define_default_settings(settings=None):
 
     ### plasma parameters
     if 'gas_name' not in settings:
-        settings['plasma_gas'] = 'hydrogen'
-    settings['me'], settings['mi'], settings['A_atomic_weight'], settings['Z_charge'] \
-        = define_plasma_parameters(gas_name=settings['gas_name'])
+        settings['gas_name'] = 'hydrogen'
+    if 'ionization_level' not in settings:
+        settings['ionization_level'] = 1.0
+        # settings['ionization_level'] = None
+    settings['me'], settings['mp'], settings['mi'], settings['A_atomic_weight'], settings['Z_ion'] \
+        = define_plasma_parameters(gas_name=settings['gas_name'], ionization_level=settings['ionization_level'])
 
     ### system parameters
     if 'n0' not in settings:

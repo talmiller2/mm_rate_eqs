@@ -68,3 +68,11 @@ plt.ylabel('mfp [m]')
 plt.title('Mean free path')
 plt.tight_layout()
 plt.grid()
+
+# test mfp calc for different gasses
+for gas_name in ['hydrogen', 'helium', 'lithium', 'sodium', 'potassium']:
+    settings = define_default_settings({'gas_name': gas_name})
+    n = 1e16
+    T = 0.2
+    mfp = calculate_mean_free_path(n, T, T, settings)
+    print(gas_name + ' mfp = ' + str(mfp) + ' m')

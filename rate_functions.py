@@ -13,6 +13,10 @@ def theta_fun(x):
 
 
 def get_gamma_dimension(d=1):
+    """
+    gamma of ideal gas EOS, in d spatial dimensions
+    From Bellan 'Fundamentals of Plasma Physics' p. 50
+    """
     return (d + 2.0) / d
 
 
@@ -23,7 +27,10 @@ def get_transition_filters(n, settings):
 
 
 def get_isentrope_temperature(n, settings, species='ions'):
-    # temperature on isentrope of ideal gas EOS
+    """
+    calculate the temperature based on the density, assuming the plasma expands
+    adiabatically on the isentrope of ideal gas EOS.
+    """
     n0 = settings['n0']
     if species == 'ions':
         T0 = settings['Ti_0']
@@ -85,20 +92,24 @@ def get_thermal_velocity(T, settings, species='ions'):
 
 
 def get_coulomb_scattering_rate(n, Ti, Te, settings, species='ions'):
-    # Coulomb scattering rate
+    """
+    Coulomb scattering rate (Bellan 'Fundamentals of Plasma Physics' p. 15, 21)
+    """
     Tie = get_dominant_temperature(Ti, Te, settings)
 
     if settings['uniform_system'] is True:
         if type(n) is not float:
             n = n[0] + 0 * n
 
+    Zi = settings['Z_ion']
+    Ze = 1.0
     if species == 'ions':
-        i_on_i_factor = settings['ion_scattering_rate_factor'] / np.sqrt(settings['mi'] / settings['me'])
-        i_on_e_factor = settings['ion_scattering_rate_factor'] / (settings['mi'] / settings['me'])
+        i_on_i_factor = settings['ion_scattering_rate_factor'] * Zi ** 2 / np.sqrt(settings['mi'] / settings['me'])
+        i_on_e_factor = settings['ion_scattering_rate_factor'] * Zi * Ze / (settings['mi'] / settings['me'])
         return 4e-12 * settings['lnCoulombLambda'] * n * (Ti ** (-1.5) * i_on_i_factor + Tie ** (-1.5) * i_on_e_factor)
     else:
-        e_on_i_factor = settings['electron_scattering_rate_factor']
-        e_on_e_factor = settings['electron_scattering_rate_factor']
+        e_on_i_factor = settings['electron_scattering_rate_factor'] * Zi * Ze
+        e_on_e_factor = settings['electron_scattering_rate_factor'] * Ze ** 2
         return 4e-12 * settings['lnCoulombLambda'] * n * (Tie ** (-1.5) * e_on_i_factor + Te ** (-1.5) * e_on_e_factor)
 
 

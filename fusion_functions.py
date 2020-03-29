@@ -136,7 +136,7 @@ def get_lawson_parameters(n, Ti, settings, reaction='D-T_to_n_alpha'):
     return tau_lawson, flux_lawson
 
 
-def define_plasma_parameters(gas_name='hydrogen'):
+def define_plasma_parameters(gas_name='hydrogen', ionization_level=None):
     me = 9.10938356e-31  # kg
     mp = 1.67262192e-27  # kg
     if gas_name == 'hydrogen':
@@ -157,25 +157,37 @@ def define_plasma_parameters(gas_name='hydrogen'):
     elif gas_name == 'lithium':
         A = 6.941
         Z = 3.0
+    elif gas_name == 'sodium':
+        A = 22.9897
+        Z = 11.0
     elif gas_name == 'potassium':
         A = 39.0983
         Z = 19.0
     else:
         raise TypeError('invalid gas: ' + gas_name)
     mi = A * mp
-    return me, mi, A, Z
+    # for non-fusion experiments with low temperature, the ions are not fully ionized
+    if ionization_level is not None:
+        Z = ionization_level
+    return me, mp, mi, A, Z
 
 
 def get_debye_length(n, Te):
-    # scale above which quasi-neutrality holds, dominated by the fast electrons
-    # n in [m^-3], Te in [keV], return in [m]
+    """
+    scale above which quasi-neutrality holds, dominated by the fast electrons.
+    From Bellan 'Funamentals of Plasma Physics' p. 9, 20
+    n in [m^-3], Te in [keV], return in [m]
+    """
     return 0.76e-4 * np.sqrt(Te / 5.0 / (n / 1e20))
 
 
-def get_larmor_radius(Ti, B, gas_name='hydrogen'):
-    # Gyration radius, dominated by the heavy ions
-    # Ti in [keV], B in [Tesla], return in [m]
+def get_larmor_radius(Ti, B, gas_name='hydrogen', ionization_level=None):
+    """
+    Gyration radius, dominated by the heavy ions
+    source https://en.wikipedia.org/wiki/Gyroradius
+    Ti in [keV], B in [Tesla], return in [m]
+    """
     electron_gyration_radius = 2.2e-5 * np.sqrt(Ti / 5.0) / (B / 1.0)
-    me, mi, A, Z = define_plasma_parameters(gas_name=gas_name)
-    ion_gyration_radius = np.sqrt(mi / me) * electron_gyration_radius
+    me, mp, mi, A, Z = define_plasma_parameters(gas_name=gas_name, ionization_level=ionization_level)
+    ion_gyration_radius = np.sqrt(mp / me) * np.sqrt(A) / Z * electron_gyration_radius
     return ion_gyration_radius
