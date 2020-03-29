@@ -155,7 +155,7 @@ def define_plasma_parameters(gas_name='hydrogen', ionization_level=None):
         A = 4.002602
         Z = 2.0
     elif gas_name == 'lithium':
-        A = 6.941
+        A = 6.941  # 92.41% Li7 A=7.016, 7.59% Li6 A=6.015 (Wikipedia)
         Z = 3.0
     elif gas_name == 'sodium':
         A = 22.9897

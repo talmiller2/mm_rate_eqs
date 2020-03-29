@@ -21,6 +21,9 @@ def get_gamma_dimension(d=1):
 
 
 def get_transition_filters(n, settings):
+    """
+    "Fermi-Dirac" type smoothing function
+    """
     f1 = (1 + np.exp(-(n - settings['n_transition']) / settings['delta_n_smoothing']))
     f2 = (1 + np.exp((n - settings['n_transition']) / settings['delta_n_smoothing']))
     return f1, f2
@@ -53,8 +56,12 @@ def get_isentrope_temperature(n, settings, species='ions'):
 
 
 def get_dominant_temperature(Ti, Te, settings, quick_mode=True):
+    """
+    define the relevant temperature to use in the expression for the ion-electron Coulomb scattering rate
+    """
     if quick_mode is True:
-        # if the temperature difference is not too large, the electrons have the dominant thermal velocity
+        # if the temperature difference is not too large, the electrons have the larger thermal velociry,
+        # and therefore define the dominant temperature
         return Te
     else:
         if type(Te) is not type(Ti):
@@ -323,9 +330,11 @@ def get_density_time_derivatives(state, settings):
     else:
         raise TypeError('invalid transition_type = ' + settings['transition_type'])
 
-    # dni_c_dt = dni_c_dt + 1e-50
-    # dni_tL_dt = dni_tL_dt + 1e-50
-    # dni_tR_dt = dni_tR_dt + 1e-50
+    # prevent the derivatives from being exactly zero, so in the division by it (in the time step calculation)
+    # an error will not happen
+    dn_c_dt += 1e-50
+    dn_tL_dt += 1e-50
+    dn_tR_dt += 1e-50
 
     return dn_c_dt, dn_tL_dt, dn_tR_dt
 
@@ -392,8 +401,6 @@ def get_fluxes(state, settings):
     state['flux_normalized_std'] = state['flux_std'] / state['flux_mean']
 
     # print('Flux statistics:')
-    # logging.info('flux_mean = ' + '{:.2e}'.format(state['flux_mean']))
-    # logging.info('flux_normalized_std = ' + '{:.2e}'.format(state['flux_normalized_std']))
     logging.info('flux_mean = ' + '{:.2e}'.format(state['flux_mean']) + ', flux_normalized_std = ' + '{:.2e}'.format(
         state['flux_normalized_std']))
 

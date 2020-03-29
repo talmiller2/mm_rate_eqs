@@ -163,9 +163,6 @@ def define_time_step(state, settings):
 def print_time_step_info(dt, t_curr, num_time_steps):
     logging.info('************')
     logging.info('dt = ' + str(dt) + ', t_curr = ' + str(t_curr) + ', num_time_steps = ' + str(num_time_steps))
-    # logging.info('t_curr = ' + str(t_curr))
-    # logging.info('num_time_steps = ' + str(num_time_steps))
-    # logging.info('num_time_steps = ' + str(num_time_steps))
     return
 
 
