@@ -330,12 +330,6 @@ def get_density_time_derivatives(state, settings):
     else:
         raise TypeError('invalid transition_type = ' + settings['transition_type'])
 
-    # prevent the derivatives from being exactly zero, so in the division by it (in the time step calculation)
-    # an error will not happen
-    dn_c_dt += 1e-50
-    dn_tL_dt += 1e-50
-    dn_tR_dt += 1e-50
-
     return dn_c_dt, dn_tL_dt, dn_tR_dt
 
 

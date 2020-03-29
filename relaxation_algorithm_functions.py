@@ -96,8 +96,6 @@ def find_rate_equations_steady_state(settings):
     state['run_time'] = get_simulation_time(start_time)
     state['t_end'] = t_curr
     state['num_time_steps'] = num_steps
-    # logging.info('Relaxation t_end = ' + str(state['t_end']))
-    # logging.info('Relaxation num_time_steps = ' + str(state['num_time_steps']))
 
     # save results
     if settings['save_state'] is True:
@@ -146,10 +144,13 @@ def initialize_densities(settings):
 
 
 def define_time_step(state, settings):
-    dt_c = np.abs(state['n_c'] / state['dn_c_dt'])
-    dt_tL = np.abs(state['n_tL'] / state['dn_tL_dt'])
-    dt_tR = np.abs(state['n_tR'] / state['dn_tR_dt'])
-    dt = settings['dt_factor'] * min(min(dt_c), min(dt_tL), min(dt_tR))
+    dt_list = []
+    for var_name in ['n_c', 'n_tL', 'n_tR']:
+        der_var_name = 'd' + var_name + '_dt'
+        # prevent the derivatives from being exactly zero, so in the division by it  an error will not happen
+        state[var_name] += 1e-50
+        dt_list += [min(np.abs(state[var_name] / state[der_var_name]))]
+    dt = settings['dt_factor'] * min(dt_list)
 
     if dt <= 0:
         raise ValueError('invalid negative dt=' + str(dt) + '. Sign of a problem.')
