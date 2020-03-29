@@ -64,8 +64,8 @@ def define_default_settings(settings=None):
         settings['adaptive_dimension'] = False
         # settings['adaptive_dimension'] = True
     if 'transition_type' not in settings:
-        settings['transition_type'] = 'none'
-        # settings['transition_type'] = 'smooth_transition_to_uniform'
+        # settings['transition_type'] = 'none'
+        settings['transition_type'] = 'smooth_transition_to_uniform'
         # settings['transition_type'] = 'smooth_transition_to_tR'
         # settings['transition_type'] = 'sharp_transition_to_tR'
     if 'adaptive_mirror' not in settings:
@@ -124,8 +124,8 @@ def define_default_settings(settings=None):
     if 'do_plot_status' not in settings:
         settings['do_plot_status'] = True
     if 'save_state' not in settings:
-        settings['save_state'] = False
-        # settings['save_state'] = True
+        # settings['save_state'] = False
+        settings['save_state'] = True
     if 'save_format' not in settings:
         settings['save_format'] = 'pickle'
         # settings['save_format'] = 'mat'
@@ -138,7 +138,7 @@ def define_default_settings(settings=None):
     if 'log_file' not in settings:
         settings['log_file'] = 'log_file'
     if 'save_plots' not in settings:
-        # settings['save_plots'] = True
-        settings['save_plots'] = False
+        settings['save_plots'] = True
+        # settings['save_plots'] = False
 
     return settings

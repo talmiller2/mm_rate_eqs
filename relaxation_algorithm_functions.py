@@ -71,6 +71,7 @@ def find_rate_equations_steady_state(settings):
 
             # define fluxes and check if termination criterion is reached
             state = get_fluxes(state, settings)
+            state = save_fluxes_evolution(state, t_curr)
             if check_termination_criterion_reached(state, settings, t_curr, status_counter):
                 state['termination_criterion_reached'] = True
 
@@ -209,6 +210,24 @@ def check_status_threshold_passed(state, settings, t_curr, num_time_steps, plot_
         return True
     else:
         return False
+
+
+def save_fluxes_evolution(state, t_curr):
+    vars_list = ['t', 'flux_max', 'flux_min', 'flux_mean', 'flux_std', 'flux_normalized_std']
+    for var_name in vars_list:
+        var_name_evolution = var_name + '_evolution'
+
+        # initialization
+        if var_name_evolution not in state:
+            state[var_name_evolution] = []
+
+        # append progress
+        if var_name is 't':
+            state[var_name_evolution] += [t_curr]
+        else:
+            state[var_name_evolution] += [state[var_name]]
+
+    return state
 
 
 def check_termination_criterion_reached(state, settings, t_curr, status_counter):

@@ -63,6 +63,16 @@ def plot_relaxation_status(state, settings):
     plt.figure(7)
     plt.plot(z_array, linestyle=linestyle, linewidth=linewidth, color='b')
 
+    plt.figure(8)
+    plt.plot(state['t_evolution'], state['flux_normalized_std_evolution'], linestyle=linestyle, linewidth=linewidth,
+             label='normalized flux std' + label_suffix, color='k')
+
+    plt.figure(9)
+    plt.plot(state['t_evolution'], state['flux_min_evolution'], linestyle=linestyle, linewidth=linewidth,
+             label='flux max' + label_suffix, color='r')
+    plt.plot(state['t_evolution'], state['flux_max_evolution'], linestyle=linestyle, linewidth=linewidth,
+             label='flux min' + label_suffix, color='b')
+
     if settings['save_plots'] is True:
         plot_relaxation_end(settings, save_plots=True)
 
@@ -99,7 +109,17 @@ def plot_relaxation_end(settings, title_name='', show_legend=False, save_plots=F
     plt.xlabel('cell number')
     plt.ylabel('cell length [m]')
 
-    for fig_num in range(1, 8):
+    plt.figure(8)
+    # plt.ylim([0, 2])
+    plt.ylabel('flux normalized std evolution')
+    plt.xlabel('simulation time')
+
+    plt.figure(9)
+    plt.ylabel('fluxes min/max evolution')
+    plt.xlabel('simulation time')
+
+    num_plots = 9
+    for fig_num in range(1, num_plots + 1):
         plt.figure(fig_num)
         plt.tight_layout()
         plt.grid(True)
@@ -111,29 +131,5 @@ def plot_relaxation_end(settings, title_name='', show_legend=False, save_plots=F
             if not os.path.exists(settings['save_dir']):
                 logging.info('Creating save directory: ' + settings['save_dir'])
             plt.savefig(settings['save_dir'] + '/fig' + str(fig_num))
-
-    # plt.figure(3)
-    # plt.plot(flux_i_var_list, label='i flux', color='r')
-    # #        plt.ylim([0, 2])
-    # plt.legend()
-    # plt.ylabel('fluxes variance')
-    # plt.xlabel('print step')
-    # plt.title(label_U)
-    # plt.tight_layout()
-    # plt.grid()
-    #
-    # plt.figure(6 + num_plots * ind_U + 2 * num_plots * ind_Rm)
-    # plt.plot(flux_i_max_list, '-r', label='i flux max')
-    # plt.plot(flux_i_min_list, '--r', label='i flux min')
-    # #        plt.yscale('log')
-    # #        plt.ylim([-1e24, 5e27])
-    # #    df = max(flux_i_max_list[-1],flux_e_max_list[-1])
-    # #    plt.ylim([min(flux_i_min_list[-1],flux_e_min_list[-1])-df, max(flux_i_max_list[-1],flux_e_max_list[-1])+df])
-    # plt.legend()
-    # plt.ylabel('fluxes')
-    # plt.xlabel('print step')
-    # plt.title(label_U)
-    # plt.tight_layout()
-    # plt.grid()
 
     return
