@@ -54,9 +54,9 @@ def define_default_settings(settings=None):
         settings['cell_size'] = 3.0  # m (MMM wavelength)
     if 'N' not in settings:
         # settings['N'] = 30
-        settings['N'] = 50
+        # settings['N'] = 50
         # settings['N'] = 100
-        # settings['N'] = 200
+        settings['N'] = 200
     if 'length_main_cell' not in settings:
         settings['length_main_cell'] = 100  # m
     if 'diameter_main_cell' not in settings:
@@ -82,8 +82,8 @@ def define_default_settings(settings=None):
         # settings['adaptive_mirror'] = 'adjust_U'
     if 'alpha_definition' not in settings:
         # settings['alpha_definition'] = 'old_constant'
-        settings['alpha_definition'] = 'geometric_constant'
-        # settings['alpha_definition'] = 'geometric_constant_U0'
+        # settings['alpha_definition'] = 'geometric_constant'
+        settings['alpha_definition'] = 'geometric_constant_U0'
         # settings['alpha_definition'] = 'geometric_local'
     if 'initialization_type' not in settings:
         # settings['initialization_type'] = 'linear_uniform'
@@ -113,9 +113,9 @@ def define_default_settings(settings=None):
     if 't_stop' not in settings:
         # settings['t_stop'] = 1e-6
         # settings['t_stop'] = 1e-4
-        settings['t_stop'] = 1e-2
+        # settings['t_stop'] = 1e-2
         # settings['t_stop'] = 1e-1
-        # settings['t_stop'] = 1.0
+        settings['t_stop'] = 1.0
     if 't_solve_min' not in settings:
         settings['t_solve_min'] = 1e-20
         # settings['t_solve_min'] = 0.005

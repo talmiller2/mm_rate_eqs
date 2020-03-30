@@ -345,7 +345,8 @@ def get_fluxes(state, settings):
     n_tL = state['n_tL']
     n_tR = state['n_tR']
     v_th = state['v_th']
-    U = state['U']
+    # U = state['U']
+    U = state['mmm_drag_rate'] * state['mirror_cell_sizes']  # effective mirror velocity
     n_trans = settings['n_transition']
 
     # initializations
