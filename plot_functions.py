@@ -61,7 +61,7 @@ def plot_relaxation_status(state, settings):
              linewidth=linewidth, color='r')
 
     plt.figure(7)
-    plt.plot(z_array, linestyle=linestyle, linewidth=linewidth, color='b')
+    plt.plot(state['mirror_cell_sizes'], linestyle=linestyle, linewidth=linewidth, color='b')
 
     plt.figure(8)
     plt.plot(state['t_evolution'], state['flux_normalized_std_evolution'], linestyle=linestyle, linewidth=linewidth,

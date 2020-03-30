@@ -40,8 +40,9 @@ def define_default_settings(settings=None):
     if 'U0' not in settings:
         # settings['U0'] = 0
         # settings['U0'] = 1e4
-        # settings['U0'] = 1e5
-        settings['U0'] = 5e5
+        settings['U0'] = 1e5
+        # settings['U0'] = 5e5
+        # settings['U0'] = 8e5
         # settings['U0'] = 1e6
         # settings['U0'] = 1e7
     if 'transition_density_factor' not in settings:
@@ -81,8 +82,9 @@ def define_default_settings(settings=None):
         # settings['transition_type'] = 'sharp_transition_to_tR'
     if 'adaptive_mirror' not in settings:
         # settings['adaptive_mirror'] = 'None'
-        # settings['adaptive_mirror'] = 'adjust_lambda'
-        settings['adaptive_mirror'] = 'adjust_U'
+        # settings['adaptive_mirror'] = 'adjust_U'
+        # settings['adaptive_mirror'] = 'adjust_cell_size_with_mfp'
+        settings['adaptive_mirror'] = 'adjust_cell_size_with_vth'
     if 'alpha_definition' not in settings:
         # settings['alpha_definition'] = 'old_constant'
         # settings['alpha_definition'] = 'geometric_constant'
@@ -98,8 +100,7 @@ def define_default_settings(settings=None):
     if 'right_boundary_condition' not in settings:
         settings['right_boundary_condition'] = 'enforce_tL'
         # settings['right_boundary_condition'] = 'uniform_scaling'
-    if 'cell_size_mfp_factor' not in settings:
-        settings['cell_size_mfp_factor'] = 1.0
+
     if 'ion_velocity_factor' not in settings:
         settings['ion_velocity_factor'] = 1.0
         # settings['ion_velocity_factor'] = np.sqrt(2)
@@ -109,8 +110,6 @@ def define_default_settings(settings=None):
         settings['ion_scattering_rate_factor'] = 1.0
     if 'electron_scattering_rate_factor' not in settings:
         settings['electron_scattering_rate_factor'] = 1.0
-    if 'cell_size_mfp_factor' not in settings:
-        settings['cell_size_mfp_factor'] = 1.0
 
     ### relaxation solver parameters
     if 't_stop' not in settings:
@@ -127,6 +126,7 @@ def define_default_settings(settings=None):
         # settings['dt_status'] = 1e-6
         # settings['dt_status'] = 6e-6
         # settings['dt_status'] = 1e-5
+        # settings['dt_status'] = 1e-4
         settings['dt_status'] = 1e-3
     if 'dt_factor' not in settings:
         settings['dt_factor'] = 0.3

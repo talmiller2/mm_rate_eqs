@@ -132,12 +132,20 @@ def calculate_mean_free_path(n, Ti, Te, settings, state=None, species='ions'):
 
 
 def get_mirror_cell_sizes(n, Ti, Te, settings, state=None):
-    if settings['adaptive_mirror'] == 'adjust_lambda':
+    if settings['adaptive_mirror'] == 'adjust_cell_size_with_mfp':
         if state is not None and 'mean_free_path' in state:
             mfp = state['mean_free_path']
         else:
             mfp = calculate_mean_free_path(n, Ti, Te, settings, state=state)
-        mirror_cell_sizes = settings['cell_size_mfp_factor'] * mfp
+        mirror_cell_sizes = settings['cell_size'] * mfp / mfp[0]
+
+    elif settings['adaptive_mirror'] == 'adjust_cell_size_with_vth':
+        if state is not None and 'v_th' in state:
+            v_th = state['v_th']
+        else:
+            v_th = get_thermal_velocity(Ti, settings)
+        mirror_cell_sizes = settings['cell_size'] * v_th / v_th[0]
+
     else:
         mirror_cell_sizes = settings['cell_size'] + 0 * Ti
     return mirror_cell_sizes
@@ -159,12 +167,21 @@ def calculate_transition_density(n, Ti, Te, settings, state=None):
 def get_mmm_velocity(state, settings):
     if settings['adaptive_mirror'] == 'adjust_U':
         if 'v_th' not in state:
-            U = settings['U0'] * get_thermal_velocity(state['Ti'], settings) / get_thermal_velocity(settings['Ti_0'],
-                                                                                                    settings)
+            v_th = get_thermal_velocity(state['Ti'], settings)
         else:
-            U = settings['U0'] * state['v_th'] / state['v_th'][0]
+            v_th = state['v_th']
+        U = settings['U0'] * v_th / v_th[0]
+
+    elif settings['adaptive_mirror'] == 'adjust_lambda':
+        if 'mirror_cell_sizes' not in state:
+            mirror_cell_sizes = get_mirror_cell_sizes(state['n'], state['Ti'], state['Te'], settings, state=state)
+        else:
+            mirror_cell_sizes = state['mirror_cell_sizes']
+        # print(mirror_cell_sizes)
+        U = settings['U0'] * mirror_cell_sizes / mirror_cell_sizes[0]
+
     else:
-        U = settings['U0'] + 0 * state['v_th']
+        U = settings['U0'] + 0 * state['n']
     return U
 
 
