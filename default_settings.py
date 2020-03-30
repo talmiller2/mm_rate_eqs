@@ -39,8 +39,8 @@ def define_default_settings(settings=None):
         settings['Rm'] = 2.0
     if 'U0' not in settings:
         # settings['U0'] = 0
-        # settings['U0'] = 1e4
-        settings['U0'] = 1e5
+        settings['U0'] = 1e4
+        # settings['U0'] = 1e5
         # settings['U0'] = 5e5
         # settings['U0'] = 8e5
         # settings['U0'] = 1e6
@@ -58,8 +58,8 @@ def define_default_settings(settings=None):
         settings['cell_size'] = 3.0  # m (MMM wavelength)
     if 'N' not in settings:
         # settings['number_of_cells'] = 30
-        # settings['number_of_cells'] = 50
-        settings['number_of_cells'] = 100
+        settings['number_of_cells'] = 50
+        # settings['number_of_cells'] = 100
         # settings['number_of_cells'] = 200
     if 'length_main_cell' not in settings:
         settings['length_main_cell'] = 100  # m
@@ -115,9 +115,9 @@ def define_default_settings(settings=None):
     if 't_stop' not in settings:
         # settings['t_stop'] = 1e-6
         # settings['t_stop'] = 1e-4
-        # settings['t_stop'] = 1e-2
+        settings['t_stop'] = 1e-2
         # settings['t_stop'] = 1e-1
-        settings['t_stop'] = 1.0
+        # settings['t_stop'] = 1.0
     if 't_solve_min' not in settings:
         settings['t_solve_min'] = 1e-20
         # settings['t_solve_min'] = 0.005
@@ -165,5 +165,8 @@ def define_default_settings(settings=None):
     if 'save_plots' not in settings:
         settings['save_plots'] = True
         # settings['save_plots'] = False
+    if 'plots_x_axis' not in settings:
+        # settings['plots_x_axis'] = 'total_length'
+        settings['plots_x_axis'] = 'cell_number'
 
     return settings

@@ -177,7 +177,6 @@ def get_mmm_velocity(state, settings):
             mirror_cell_sizes = get_mirror_cell_sizes(state['n'], state['Ti'], state['Te'], settings, state=state)
         else:
             mirror_cell_sizes = state['mirror_cell_sizes']
-        # print(mirror_cell_sizes)
         U = settings['U0'] * mirror_cell_sizes / mirror_cell_sizes[0]
 
     else:

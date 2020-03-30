@@ -16,7 +16,13 @@ def plot_relaxation_status(state, settings):
         linestyle = '--'
     label_suffix = ''
 
-    z_array = np.cumsum(state['mirror_cell_sizes'])
+    # define x axis
+    if settings['plots_x_axis'] == 'total_length':
+        z_array = np.cumsum(state['mirror_cell_sizes'])
+    elif settings['plots_x_axis'] == 'cell_number':
+        z_array = np.linspace(1, settings['number_of_cells'], settings['number_of_cells'])
+    else:
+        raise ValueError('invalid plots_x_axis: ' + settings['plots_x_axis'])
 
     plt.figure(1)
     plt.plot(z_array, state['n_tL'], linewidth=linewidth, linestyle=linestyle, color='g', label='n_tL' + label_suffix)
@@ -64,10 +70,13 @@ def plot_relaxation_status(state, settings):
     plt.plot(state['mirror_cell_sizes'], linestyle=linestyle, linewidth=linewidth, color='b')
 
     plt.figure(8)
+    plt.plot(state['mean_free_path'] / state['mirror_cell_sizes'], linestyle=linestyle, linewidth=linewidth, color='b')
+
+    plt.figure(9)
     plt.plot(state['t_evolution'], state['flux_normalized_std_evolution'], linestyle=linestyle, linewidth=linewidth,
              label='normalized flux std' + label_suffix, color='k')
 
-    plt.figure(9)
+    plt.figure(10)
     plt.plot(state['t_evolution'], state['flux_min_evolution'], linestyle=linestyle, linewidth=linewidth,
              label='flux max' + label_suffix, color='r')
     plt.plot(state['t_evolution'], state['flux_max_evolution'], linestyle=linestyle, linewidth=linewidth,
@@ -80,45 +89,56 @@ def plot_relaxation_status(state, settings):
 
 
 def plot_relaxation_end(settings, title_name='', show_legend=False, save_plots=False):
+    # define x axis
+    if settings['plots_x_axis'] == 'total_length':
+        xlabel = 'z [m]'
+    elif settings['plots_x_axis'] == 'cell_number':
+        xlabel = 'cell number'
+    else:
+        raise ValueError('invalid plots_x_axis: ' + settings['plots_x_axis'])
+
     plt.figure(1)
     plt.ylabel('$m^{-3}$')
-    plt.xlabel('z [m]')
+    plt.xlabel(xlabel)
 
     plt.figure(2)
     plt.ylabel('flux')
-    plt.xlabel('z [m]')
+    plt.xlabel(xlabel)
 
     plt.figure(3)
     plt.ylabel('rate [$s^{-1}$]')
-    plt.xlabel('z [m]')
+    plt.xlabel(xlabel)
     plt.yscale('log')
 
     plt.figure(4)
     plt.ylabel('T [keV]')
-    plt.xlabel('z [m]')
+    plt.xlabel(xlabel)
 
     plt.figure(5)
     plt.ylabel('mfp [m]')
-    plt.xlabel('z [m]')
+    plt.xlabel(xlabel)
 
     plt.figure(6)
     plt.ylabel('$\\alpha$')
-    plt.xlabel('z [m]')
+    plt.xlabel(xlabel)
 
     plt.figure(7)
     plt.xlabel('cell number')
-    plt.ylabel('cell length [m]')
+    plt.ylabel('cell size [m]')
 
     plt.figure(8)
-    # plt.ylim([0, 2])
+    plt.xlabel('cell number')
+    plt.ylabel('mfp / cell size')
+
+    plt.figure(9)
     plt.ylabel('flux normalized std evolution')
     plt.xlabel('simulation time')
 
-    plt.figure(9)
+    plt.figure(10)
     plt.ylabel('fluxes min/max evolution')
     plt.xlabel('simulation time')
 
-    num_plots = 9
+    num_plots = 10
     for fig_num in range(1, num_plots + 1):
         plt.figure(fig_num)
         plt.tight_layout()
