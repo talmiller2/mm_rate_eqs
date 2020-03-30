@@ -55,7 +55,7 @@ def find_rate_equations_steady_state(settings):
         dt = define_time_step(state, settings)
         t_curr += dt
         num_steps += 1
-        state = advance_densities_time_step(state, settings, dt)
+        state = advance_densities_time_step(state, settings, dt, t_curr, num_steps)
 
         # boundary conditions
         state = enforce_boundary_conditions(state, settings)
@@ -179,18 +179,23 @@ def define_time_step(state, settings):
 
 
 def print_time_step_info(dt, t_curr, num_time_steps):
-    logging.info('************')
+    logging.info('************************************')
     logging.info('dt = ' + str(dt) + ', t_curr = ' + str(t_curr) + ', num_time_steps = ' + str(num_time_steps))
     return
 
 
-def advance_densities_time_step(state, settings, dt):
+def advance_densities_time_step(state, settings, dt, t_curr, num_steps):
     for var_name in ['n_c', 'n_tL', 'n_tR']:
         der_var_name = 'd' + var_name + '_dt'
         state[var_name] = state[var_name] + state[der_var_name] * dt
 
-        if min(state[var_name]) < settings['n_min']:
-            raise ValueError('min(' + var_name + ') = ' + str(min(state[var_name])) + '. Sign of a problem.')
+        if settings['fail_on_minimal_density'] is True:
+            if min(state[var_name]) < settings['n_min']:
+                print_time_step_info(dt, t_curr, num_steps)
+                raise ValueError('min(' + var_name + ') = ' + str(min(state[var_name])) + '. Sign of a problem.')
+        else:
+            ind_min = np.where(state[var_name] < settings['n_min'])
+            state[var_name][ind_min] = settings['n_min']
 
     return state
 
