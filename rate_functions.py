@@ -198,6 +198,11 @@ def define_loss_cone_fractions(state, settings):
         alpha_tR = alpha / 2.0 + 0 * v_th
         alpha_c = 1.0 - alpha_tL - alpha_tR
     elif settings['alpha_definition'] == 'geometric_constant':
+        alpha_tR, alpha_tL, alpha_c = get_solid_angles(0, v_th[0], alpha)
+        alpha_tR = alpha_tR + 0 * v_th
+        alpha_tL = alpha_tL + 0 * v_th
+        alpha_c = alpha_c + 0 * v_th
+    elif settings['alpha_definition'] == 'geometric_constant_U0':
         alpha_tR, alpha_tL, alpha_c = get_solid_angles(settings['U0'], v_th[0], alpha)
         alpha_tR = alpha_tR + 0 * v_th
         alpha_tL = alpha_tL + 0 * v_th

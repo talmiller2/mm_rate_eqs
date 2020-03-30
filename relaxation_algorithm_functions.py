@@ -162,7 +162,7 @@ def define_time_step(state, settings):
     for var_name in ['n_c', 'n_tL', 'n_tR']:
         der_var_name = 'd' + var_name + '_dt'
         # prevent the derivatives from being exactly zero, so in the division by it  an error will not happen
-        state[var_name] += 1e-50
+        state[der_var_name] += 1e-50
         dt_list += [min(np.abs(state[var_name] / state[der_var_name]))]
     dt = settings['dt_factor'] * min(dt_list)
 
