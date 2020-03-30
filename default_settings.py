@@ -35,11 +35,12 @@ def define_default_settings(settings=None):
     if 'B' not in settings:
         settings['B'] = 1.0 * np.sqrt(settings['n0'] / 1e20 * settings['Ti_0'] / (5 * settings['keV']))  # [Tesla]
     if 'Rm' not in settings:
-        settings['Rm'] = 1.4
+        # settings['Rm'] = 1.4
+        settings['Rm'] = 2.0
     if 'U0' not in settings:
         # settings['U0'] = 0
-        settings['U0'] = 1e5
-        # settings['U0'] = 1e6
+        # settings['U0'] = 1e5
+        settings['U0'] = 1e6
         # settings['U0'] = 1e7
     if 'transition_density_factor' not in settings:
         # settings['transition_density_factor'] = 0.5
@@ -55,8 +56,8 @@ def define_default_settings(settings=None):
     if 'N' not in settings:
         # settings['number_of_cells'] = 30
         # settings['number_of_cells'] = 50
-        # settings['number_of_cells'] = 100
-        settings['number_of_cells'] = 200
+        settings['number_of_cells'] = 100
+        # settings['number_of_cells'] = 200
     if 'length_main_cell' not in settings:
         settings['length_main_cell'] = 100  # m
     if 'diameter_main_cell' not in settings:
@@ -129,7 +130,8 @@ def define_default_settings(settings=None):
     if 'dt_min' not in settings:
         settings['dt_min'] = 1e-20
     if 'n_min' not in settings:
-        settings['n_min'] = 1e10
+        settings['n_min'] = 0
+        # settings['n_min'] = 1e10
     if 'flux_normalized_termination_cutoff' not in settings:
         settings['flux_normalized_termination_cutoff'] = 0.05
         # settings['flux_normalized_termination_cutoff'] = 0.3
@@ -145,7 +147,9 @@ def define_default_settings(settings=None):
         # settings['save_format'] = 'mat'
     if 'save_dir' not in settings:
         # settings['save_dir'] = 'runs/test/'
-        settings['save_dir'] = 'runs/test2/'
+        # settings['save_dir'] = 'runs/test2/'
+        # settings['save_dir'] = 'runs/test3/'
+        settings['save_dir'] = 'runs/test4/'
     if 'state_file' not in settings:
         settings['state_file'] = 'state'
     if 'settings_file' not in settings:

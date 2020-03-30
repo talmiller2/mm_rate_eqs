@@ -19,11 +19,16 @@ vth = 1.0
 # Rm_list = np.array([1.4, 1.6, 1.8, 2.0])
 # Rm_list = np.array([1.4, 2.0, 2.5, 3.0])
 # colors = ['k', 'b', 'r', 'g']
-Rm_list = np.array([1.4, 1.7, 2.0])
-colors = ['b', 'orange', 'g']
+# Rm_list = np.array([1.4, 1.7, 2.0])
+# colors = ['b', 'r', 'g']
+# Rm_list = np.array([1.4, 1.7, 2.0, 10.0])
+# colors = ['b', 'r', 'g', 'm']
+Rm_list = np.array([1.01, 1.4, 1.7, 2.0, 5.0])
+colors = ['k', 'b', 'r', 'g', 'm']
 for ind_Rm, Rm in enumerate(Rm_list):
     alpha = 1 / Rm
-    U_list = np.linspace(0, 2.0 * vth, 1000)
+    U_list = np.linspace(0, 5.0 * vth, 5000)
+    # U_list = np.linspace(0, 2.0 * vth, 1000)
     #    U_list = np.linspace(0, 0.3*vth, 1000)
     v_perp_high = np.nan * U_list
     v_perp_low = np.nan * U_list
@@ -35,6 +40,7 @@ for ind_Rm, Rm in enumerate(Rm_list):
     U_transition = np.sqrt((1 - alpha) / alpha * vth ** 2)
     U_last_sol = np.sqrt(vth ** 2 / alpha)
     v_perp_last_sol = np.sqrt((1 - alpha) * vth ** 2)
+    theta_last_sol = np.arcsin(v_perp_last_sol / vth)
 
     for ind_U, U in enumerate(U_list):
 
@@ -113,15 +119,10 @@ for ind_Rm, Rm in enumerate(Rm_list):
     theta_low = np.arcsin(v_perp_low / vth)
     theta_high = np.arcsin(v_perp_high / vth)
     plt.figure(5)
-    plt.plot(U_list / vth, theta_low / np.pi, label='high Rm=' + str(Rm), color=colors[ind_Rm])
-    plt.plot(U_list / vth, theta_high / np.pi, '--', label='low high Rm=' + str(Rm), color=colors[ind_Rm])
-
-    #    omega_tR = np.sin(theta_high/2)**2
-    #    omega_tR[inds_transition] = 0.5
-    #    omega_tL = np.sin(theta_low/2)**2
-    #    omega_tL[inds_transition] = np.sin(theta_low[inds_transition]/2)**2 + 0.5 - np.sin(theta_high[inds_transition]/2)**2
-    #    omega_tL[inds_last_sol] = 0.5
-    #    omega_c = 1 - omega_tR - omega_tL
+    plt.plot(U_list / vth, theta_high / np.pi, '-', label='high high Rm=' + str(Rm), color=colors[ind_Rm])
+    plt.plot(U_list / vth, theta_low / np.pi, '--', label='low Rm=' + str(Rm), color=colors[ind_Rm])
+    plt.plot(U_transition / vth, 0.5, 'o', color=colors[ind_Rm])
+    plt.plot(U_last_sol / vth, theta_last_sol / np.pi, 'o', color=colors[ind_Rm])
 
     plt.figure(6)
     plt.plot(U_list / vth, omega_tR, label='$\\Omega_{tR}$ Rm=' + str(Rm), color=colors[ind_Rm])
