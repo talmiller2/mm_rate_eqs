@@ -237,12 +237,12 @@ def get_density_time_derivatives(state, settings):
     alpha_c = state['alpha_c']
 
     # initializations
-    f_scat_c = np.zeros(settings['N'])
-    f_scat_tL = np.zeros(settings['N'])
-    f_scat_tR = np.zeros(settings['N'])
-    f_trans_L = np.zeros(settings['N'])
-    f_trans_R = np.zeros(settings['N'])
-    f_drag = np.zeros(settings['N'])
+    f_scat_c = np.zeros(settings['number_of_cells'])
+    f_scat_tL = np.zeros(settings['number_of_cells'])
+    f_scat_tR = np.zeros(settings['number_of_cells'])
+    f_trans_L = np.zeros(settings['number_of_cells'])
+    f_trans_R = np.zeros(settings['number_of_cells'])
+    f_drag = np.zeros(settings['number_of_cells'])
 
     # transition filters
     f1, f2 = get_transition_filters(n, settings)
@@ -251,8 +251,8 @@ def get_density_time_derivatives(state, settings):
     if settings['transition_type'] == 'smooth_transition_to_uniform':
         # smooth transition from the normal rates to a uniform description of the three sub-species,
         # while turning off the MMM drag and L,R transmission to a right-only transport
-        f_trans_uniform = np.zeros(settings['N'])
-        for k in range(settings['N']):
+        f_trans_uniform = np.zeros(settings['number_of_cells'])
+        for k in range(settings['number_of_cells']):
             f_scat_c[k] = + nu_s[k] * (alpha_c[k] * (n_tL[k] + n_tR[k])
                                        - (alpha_tL[k] + alpha_tR[k]) * n_c[k]) / f1[k] \
                           + nu_s[k] / 3 * (n_tL[k] + n_tR[k] - 2 * n_c[k]) / f2[k]
@@ -268,7 +268,7 @@ def get_density_time_derivatives(state, settings):
                            + nu_s[k] / 3 * (n_tL[k] - 2 * n_tR[k] + n_c[k]) / f2[k]
 
             f_trans_L[k] = - nu_t[k] * n_tL[k] / f1[k]
-            if k < settings['N'] - 1:
+            if k < settings['number_of_cells'] - 1:
                 f_trans_L[k] = f_trans_L[k] + nu_t[k + 1] * n_tL[k + 1] / f1[k + 1]
 
             f_trans_R[k] = - nu_t[k] * n_tR[k] / f1[k]
@@ -280,7 +280,7 @@ def get_density_time_derivatives(state, settings):
                 f_trans_uniform[k] = f_trans_uniform[k] + 1.0 / 3 * (nu_t[k - 1] * n[k - 1]) / f2[k - 1]
 
             f_drag[k] = - nu_d[k] * n_c[k]
-            if k < settings['N'] - 1:
+            if k < settings['number_of_cells'] - 1:
                 f_drag[k] = f_drag[k] + nu_d[k + 1] * n_c[k + 1]
             else:
                 f_drag[k] = f_drag[k] + f_drag[k - 1]
@@ -292,7 +292,7 @@ def get_density_time_derivatives(state, settings):
 
     elif settings['transition_type'] in ['none', 'smooth_transition_to_tR', 'sharp_transition_to_tR']:
         # keeping the same rates, but changing (or not) the left transmission term
-        for k in range(settings['N']):
+        for k in range(settings['number_of_cells']):
             f_scat_c[k] = + nu_s[k] * (alpha_c[k] * (n_tL[k] + n_tR[k])
                                        - (alpha_tL[k] + alpha_tR[k]) * n_c[k])
 
@@ -306,16 +306,16 @@ def get_density_time_derivatives(state, settings):
 
             if settings['transition_type'] == 'none':
                 f_trans_L[k] = - nu_t[k] * n_tL[k]
-                if k < settings['N'] - 1:
+                if k < settings['number_of_cells'] - 1:
                     f_trans_L[k] = f_trans_L[k] + nu_t[k + 1] * n_tL[k + 1]
             elif settings['transition_type'] == 'smooth_transition_to_tR':
                 f_trans_L[k] = - nu_t[k] * n_tL[k] / f1[k]
-                if k < settings['N'] - 1:
+                if k < settings['number_of_cells'] - 1:
                     f_trans_L[k] = f_trans_L[k] + nu_t[k + 1] * n_tL[k + 1] / f1[k + 1]
             elif settings['transition_type'] == 'sharp_transition_to_tR':
                 if n[k] > n_trans:  # shut off left flux below threshold
                     f_trans_L[k] = - nu_t[k] * n_tL[k]
-                    if k < settings['N'] - 1:
+                    if k < settings['number_of_cells'] - 1:
                         f_trans_L[k] = f_trans_L[k] + nu_t[k + 1] * n_tL[k + 1]
 
             f_trans_R[k] = - nu_t[k] * n_tR[k]
@@ -323,7 +323,7 @@ def get_density_time_derivatives(state, settings):
                 f_trans_R[k] = f_trans_R[k] + nu_t[k - 1] * n_tR[k - 1]
 
             f_drag[k] = - nu_d[k] * n_c[k]
-            if k < settings['N'] - 1:
+            if k < settings['number_of_cells'] - 1:
                 f_drag[k] = f_drag[k] + nu_d[k + 1] * n_c[k + 1]
             else:
                 f_drag[k] = f_drag[k] + f_drag[k - 1]
@@ -350,9 +350,9 @@ def get_fluxes(state, settings):
     n_trans = settings['n_transition']
 
     # initializations
-    flux_trans_R = np.nan * np.zeros(settings['N'])
-    flux_trans_L = np.nan * np.zeros(settings['N'])
-    flux_mmm_drag = np.nan * np.zeros(settings['N'])
+    flux_trans_R = np.nan * np.zeros(settings['number_of_cells'])
+    flux_trans_L = np.nan * np.zeros(settings['number_of_cells'])
+    flux_mmm_drag = np.nan * np.zeros(settings['number_of_cells'])
 
     # transition filters
     f1, f2 = get_transition_filters(n, settings)
@@ -361,8 +361,8 @@ def get_fluxes(state, settings):
     flux_factor = 2.0 * settings['cross_section_main_cell']
 
     if settings['transition_type'] == 'smooth_transition_to_uniform':
-        flux_trans_uniform = np.nan * np.zeros(settings['N'])
-        for k in range(0, settings['N'] - 1):
+        flux_trans_uniform = np.nan * np.zeros(settings['number_of_cells'])
+        for k in range(0, settings['number_of_cells'] - 1):
             flux_trans_R[k] = v_th[k] * n_tR[k] / f1[k] * flux_factor
             flux_trans_L[k] = - v_th[k + 1] * n_tL[k + 1] / f1[k + 1] * flux_factor
             flux_trans_uniform[k] = (v_th[k] * n[k] / f2[k]) * flux_factor
@@ -370,7 +370,7 @@ def get_fluxes(state, settings):
         flux = flux_trans_R + flux_trans_L + flux_trans_uniform + flux_mmm_drag
 
     elif settings['transition_type'] in ['none', 'smooth_transition_to_tR', 'sharp_transition_to_tR']:
-        for k in range(0, settings['N'] - 1):
+        for k in range(0, settings['number_of_cells'] - 1):
             flux_trans_R[k] = v_th[k] * n_tR[k] * flux_factor
             flux_mmm_drag[k] = (- U[k + 1] * n_c[k + 1]) * flux_factor
 

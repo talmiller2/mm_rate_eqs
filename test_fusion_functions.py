@@ -11,7 +11,7 @@ from rate_functions import get_thermal_velocity
 settings = define_default_settings()
 keV = settings['keV']
 eV_to_K = settings['eV_to_K']
-Z_charge = settings['Z_charge']
+Z_ion = settings['Z_ion']
 B = settings['B']
 n0 = settings['n0']
 Ti_0 = settings['Ti_0']
@@ -55,7 +55,7 @@ plt.tight_layout()
 plt.grid()
 
 # Radiation and Fusion, assuming Ti=Te
-P_brem_radiation_loss_volumetric = get_brem_radiation_loss(n0, n0, T_keV_array, Z_charge)  # W/m^3
+P_brem_radiation_loss_volumetric = get_brem_radiation_loss(n0, n0, T_keV_array, Z_ion)  # W/m^3
 P_cycl_radiation_loss_volumetric = get_cyclotron_radiation_loss(n0, T_keV_array, B)  # W/m^3
 P_cycl_radiation_loss_volumetric_total = P_brem_radiation_loss_volumetric + P_cycl_radiation_loss_volumetric
 plt.figure()
@@ -87,7 +87,7 @@ plt.tight_layout()
 plt.grid()
 
 # Radiation and Fusion, assuming Ti=3*Te
-P_brem_radiation_loss_volumetric = get_brem_radiation_loss(n0, n0, T_keV_array / 3.0, Z_charge)  # W/m^3
+P_brem_radiation_loss_volumetric = get_brem_radiation_loss(n0, n0, T_keV_array / 3.0, Z_ion)  # W/m^3
 P_cycl_radiation_loss_volumetric = get_cyclotron_radiation_loss(n0, T_keV_array / 3.0, B)  # W/m^3
 P_cycl_radiation_loss_volumetric_total = P_brem_radiation_loss_volumetric + P_cycl_radiation_loss_volumetric
 plt.figure()

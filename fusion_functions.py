@@ -117,9 +117,9 @@ def get_fusion_power(n, T_keV, reaction='D-T_to_n_alpha'):
     return 0.25 * n ** 2 * get_fusion_sigma_v_E_reaction(T_keV * 1e3, reaction=reaction)
 
 
-def get_brem_radiation_loss(ni, ne, Te, Z_charge):
+def get_brem_radiation_loss(ni, ne, Te, Z_ion):
     # Fusion Plasma Analysis, p. 228, Bremsstrahlung radiation [W/m^3], T in [keV]
-    return 4.8e-37 * Z_charge ** 2 * ni * ne * Te ** (0.5)
+    return 4.8e-37 * Z_ion ** 2 * ni * ne * Te ** (0.5)
 
 
 def get_cyclotron_radiation_loss(ne, Te, B):
