@@ -23,12 +23,12 @@ vth = 1.0
 # colors = ['b', 'r', 'g']
 # Rm_list = np.array([1.4, 1.7, 2.0, 10.0])
 # colors = ['b', 'r', 'g', 'm']
-Rm_list = np.array([1.01, 1.4, 1.7, 2.0, 5.0])
+Rm_list = np.array([1.05, 1.4, 1.7, 2.0, 3.0])
 colors = ['k', 'b', 'r', 'g', 'm']
 for ind_Rm, Rm in enumerate(Rm_list):
     alpha = 1 / Rm
-    U_list = np.linspace(0, 5.0 * vth, 5000)
-    # U_list = np.linspace(0, 2.0 * vth, 1000)
+    # U_list = np.linspace(0, 5.0 * vth, 5000)
+    U_list = np.linspace(0, 2.0 * vth, 1000)
     #    U_list = np.linspace(0, 0.3*vth, 1000)
     v_perp_high = np.nan * U_list
     v_perp_low = np.nan * U_list
@@ -138,6 +138,10 @@ for ind_Rm, Rm in enumerate(Rm_list):
     plt.plot(U_list / vth, flux, label='Rm=' + str(Rm), color=colors[ind_Rm])
 #    plt.plot(U_list/vth, omega_c/omega_tR, label='Rm='+str(Rm), color=colors[ind_Rm])
 
+    plt.figure(8)
+    plt.plot(U_list / vth, omega_c / omega_tR, '-', label='$\\Omega_{c}/\\Omega_{tR}$ Rm=' + str(Rm), color=colors[ind_Rm])
+    plt.plot(U_list / vth, omega_tL / omega_tR, '--', label='$\\Omega_{tL}/\\Omega_{tR}$ Rm=' + str(Rm), color=colors[ind_Rm])
+
 plt.figure(2)
 plt.xlabel('U/vth')
 plt.ylabel('v_perp/vth')
@@ -178,7 +182,14 @@ plt.tight_layout()
 
 plt.figure(7)
 plt.xlabel('U/vth')
-plt.title('Flux factor')
+plt.title('Flux prediction (toy model)')
+plt.legend()
+plt.grid()
+plt.tight_layout()
+
+plt.figure(8)
+plt.xlabel('U/vth')
+plt.title('Solid angle ratios')
 plt.legend()
 plt.grid()
 plt.tight_layout()

@@ -24,8 +24,9 @@ def get_transition_filters(n, settings):
     """
     "Fermi-Dirac" type smoothing function
     """
-    f1 = (1 + np.exp(-(n - settings['n_transition']) / settings['delta_n_smoothing']))
-    f2 = (1 + np.exp((n - settings['n_transition']) / settings['delta_n_smoothing']))
+    delta_n_smoothing = settings['delta_n_smoothing_factor'] * settings['n0']
+    f1 = (1 + np.exp(-(n - settings['n_transition']) / delta_n_smoothing))
+    f2 = (1 + np.exp((n - settings['n_transition']) / delta_n_smoothing))
     return f1, f2
 
 
@@ -81,7 +82,6 @@ def get_dominant_temperature(Ti, Te, settings, quick_mode=True):
             return Tie
         else:
             raise TypeError('invalid type(Te) = ' + str(type(Te)))
-        return Tie
 
 
 def get_thermal_velocity(T, settings, species='ions'):
@@ -137,18 +137,17 @@ def get_mirror_cell_sizes(n, Ti, Te, settings, state=None):
             mfp = state['mean_free_path']
         else:
             mfp = calculate_mean_free_path(n, Ti, Te, settings, state=state)
-        mirror_cell_sizes = settings['cell_size'] * mfp / mfp[0]
+        return settings['cell_size'] * mfp / mfp[0]
 
     elif settings['adaptive_mirror'] == 'adjust_cell_size_with_vth':
         if state is not None and 'v_th' in state:
             v_th = state['v_th']
         else:
             v_th = get_thermal_velocity(Ti, settings)
-        mirror_cell_sizes = settings['cell_size'] * v_th / v_th[0]
+        return settings['cell_size'] * v_th / v_th[0]
 
     else:
-        mirror_cell_sizes = settings['cell_size'] + 0 * Ti
-    return mirror_cell_sizes
+        return settings['cell_size'] + 0 * Ti
 
 
 def get_transmission_rate(v_th, mirror_cell_sizes):
@@ -165,14 +164,18 @@ def calculate_transition_density(n, Ti, Te, settings, state=None):
 
 
 def get_mmm_velocity(state, settings):
+    # define MMM velocity for different cells
     if settings['adaptive_mirror'] == 'adjust_U':
+        # change U at different positions directly. This is only theoretical, because in reality we can define
+        # the MMM frequency, and the velocity is derived from the wavelength (U=wavelength*frequency)
         if 'v_th' not in state:
             v_th = get_thermal_velocity(state['Ti'], settings)
         else:
             v_th = state['v_th']
         U = settings['U0'] * v_th / v_th[0]
 
-    elif settings['adaptive_mirror'] == 'adjust_lambda':
+    elif settings['adaptive_mirror'] in ['adjust_cell_size_with_mfp', 'adjust_cell_size_with_vth']:
+        # the realistic method, the MMM velocity scales with the cell size (wavelength)
         if 'mirror_cell_sizes' not in state:
             mirror_cell_sizes = get_mirror_cell_sizes(state['n'], state['Ti'], state['Te'], settings, state=state)
         else:
@@ -181,6 +184,7 @@ def get_mmm_velocity(state, settings):
 
     else:
         U = settings['U0'] + 0 * state['n']
+
     return U
 
 
@@ -188,12 +192,11 @@ def get_mmm_drag_rate(state, settings):
     n = state['n']
     U = state['U']
     n_trans = settings['n_transition']
-    delta_n_smoothing = settings['delta_n_smoothing']
 
     if settings['transition_type'] == 'none':
         return U / state['mirror_cell_sizes']
     elif settings['transition_type'] in ['smooth_transition_to_uniform', 'smooth_transition_to_tR']:
-        f1 = (1 + np.exp(-(n - n_trans) / delta_n_smoothing))
+        f1, f2 = get_transition_filters(n, settings)
         return U / state['mirror_cell_sizes'] / f1
     elif settings['transition_type'] == 'sharp_transition_to_tR':
         U_mod = U
@@ -203,7 +206,6 @@ def get_mmm_drag_rate(state, settings):
         return U_mod / state['mirror_cell_sizes']
     else:
         raise ValueError('invalid transition_type: ' + settings['transition_type'])
-
 
 def define_loss_cone_fractions(state, settings):
     v_th = state['v_th']
@@ -231,7 +233,7 @@ def define_loss_cone_fractions(state, settings):
             alpha_tR[i], alpha_tL[i], alpha_c[i] = get_solid_angles(U[i], v_th[i], alpha)
     else:
         raise ValueError('invalid alpha_definition: ' + settings['alpha_definition'])
-    return alpha_tL, alpha_tR, alpha_c
+    return alpha_tR, alpha_tL, alpha_c
 
 
 def get_density_time_derivatives(state, settings):
@@ -246,8 +248,9 @@ def get_density_time_derivatives(state, settings):
     n_tR = state['n_tR']
     n_trans = settings['n_transition']
     nu_s = state['coulomb_scattering_rate']
-    nu_t = state['transmission_rate']
-    nu_d = state['mmm_drag_rate']
+    v_th = state['v_th']
+    cell_sizes = state['mirror_cell_sizes']
+    U = state['mmm_drag_rate'] * state['mirror_cell_sizes']  # effective mirror velocity
     alpha_tL = state['alpha_tL']
     alpha_tR = state['alpha_tR']
     alpha_c = state['alpha_c']
@@ -283,21 +286,21 @@ def get_density_time_derivatives(state, settings):
                                         + alpha_tR[k] * n_c[k]) / f1[k] \
                            + nu_s[k] / 3 * (n_tL[k] - 2 * n_tR[k] + n_c[k]) / f2[k]
 
-            f_trans_L[k] = - nu_t[k] * n_tL[k] / f1[k]
+            f_trans_L[k] = - v_th[k] * n_tL[k] / f1[k] / cell_sizes[k]
             if k < settings['number_of_cells'] - 1:
-                f_trans_L[k] = f_trans_L[k] + nu_t[k + 1] * n_tL[k + 1] / f1[k + 1]
+                f_trans_L[k] = f_trans_L[k] + v_th[k + 1] * n_tL[k + 1] / f1[k + 1] / cell_sizes[k]
 
-            f_trans_R[k] = - nu_t[k] * n_tR[k] / f1[k]
+            f_trans_R[k] = - v_th[k] * n_tR[k] / f1[k] / cell_sizes[k]
             if k > 0:
-                f_trans_R[k] = f_trans_R[k] + nu_t[k - 1] * n_tR[k - 1] / f1[k - 1]
+                f_trans_R[k] = f_trans_R[k] + v_th[k - 1] * n_tR[k - 1] / f1[k - 1] / cell_sizes[k]
 
-            f_trans_uniform[k] = + 1.0 / 3 * (- nu_t[k] * n[k]) / f2[k]
+            f_trans_uniform[k] = + 1.0 / 3 * (- v_th[k] * n[k]) / f2[k] / cell_sizes[k]
             if k > 0:
-                f_trans_uniform[k] = f_trans_uniform[k] + 1.0 / 3 * (nu_t[k - 1] * n[k - 1]) / f2[k - 1]
+                f_trans_uniform[k] = f_trans_uniform[k] + 1.0 / 3 * (v_th[k - 1] * n[k - 1]) / f2[k - 1] / cell_sizes[k]
 
-            f_drag[k] = - nu_d[k] * n_c[k]
+            f_drag[k] = - U[k] * n_c[k] / cell_sizes[k]
             if k < settings['number_of_cells'] - 1:
-                f_drag[k] = f_drag[k] + nu_d[k + 1] * n_c[k + 1]
+                f_drag[k] = f_drag[k] + U[k + 1] * n_c[k + 1] / cell_sizes[k]
             else:
                 f_drag[k] = f_drag[k] + f_drag[k - 1]
 
@@ -321,26 +324,26 @@ def get_density_time_derivatives(state, settings):
                                         + alpha_tR[k] * n_c[k])
 
             if settings['transition_type'] == 'none':
-                f_trans_L[k] = - nu_t[k] * n_tL[k]
+                f_trans_L[k] = - v_th[k] * n_tL[k] / cell_sizes[k]
                 if k < settings['number_of_cells'] - 1:
-                    f_trans_L[k] = f_trans_L[k] + nu_t[k + 1] * n_tL[k + 1]
+                    f_trans_L[k] = f_trans_L[k] + v_th[k + 1] * n_tL[k + 1] / cell_sizes[k]
             elif settings['transition_type'] == 'smooth_transition_to_tR':
-                f_trans_L[k] = - nu_t[k] * n_tL[k] / f1[k]
+                f_trans_L[k] = - v_th[k] * n_tL[k] / cell_sizes[k] / f1[k]
                 if k < settings['number_of_cells'] - 1:
-                    f_trans_L[k] = f_trans_L[k] + nu_t[k + 1] * n_tL[k + 1] / f1[k + 1]
+                    f_trans_L[k] = f_trans_L[k] + v_th[k + 1] * n_tL[k + 1] / cell_sizes[k] / f1[k + 1]
             elif settings['transition_type'] == 'sharp_transition_to_tR':
                 if n[k] > n_trans:  # shut off left flux below threshold
-                    f_trans_L[k] = - nu_t[k] * n_tL[k]
+                    f_trans_L[k] = - v_th[k] * n_tL[k] / cell_sizes[k]
                     if k < settings['number_of_cells'] - 1:
-                        f_trans_L[k] = f_trans_L[k] + nu_t[k + 1] * n_tL[k + 1]
+                        f_trans_L[k] = f_trans_L[k] + v_th[k + 1] * n_tL[k + 1] / cell_sizes[k]
 
-            f_trans_R[k] = - nu_t[k] * n_tR[k]
+            f_trans_R[k] = - v_th[k] * n_tR[k] / cell_sizes[k]
             if k > 0:
-                f_trans_R[k] = f_trans_R[k] + nu_t[k - 1] * n_tR[k - 1]
+                f_trans_R[k] = f_trans_R[k] + v_th[k - 1] * n_tR[k - 1] / cell_sizes[k]
 
-            f_drag[k] = - nu_d[k] * n_c[k]
+            f_drag[k] = - U[k] * n_c[k] / cell_sizes[k]
             if k < settings['number_of_cells'] - 1:
-                f_drag[k] = f_drag[k] + nu_d[k + 1] * n_c[k + 1]
+                f_drag[k] = f_drag[k] + U[k + 1] * n_c[k + 1] / cell_sizes[k]
             else:
                 f_drag[k] = f_drag[k] + f_drag[k - 1]
 
@@ -361,7 +364,6 @@ def get_fluxes(state, settings):
     n_tL = state['n_tL']
     n_tR = state['n_tR']
     v_th = state['v_th']
-    # U = state['U']
     U = state['mmm_drag_rate'] * state['mirror_cell_sizes']  # effective mirror velocity
     n_trans = settings['n_transition']
 
@@ -400,6 +402,7 @@ def get_fluxes(state, settings):
                 else:
                     flux_trans_L[k] = 0
         flux = flux_trans_R + flux_trans_L + flux_mmm_drag
+
     else:
         raise TypeError('invalid transition_type = ' + settings['transition_type'])
 

@@ -25,8 +25,8 @@ def plot_relaxation_status(state, settings):
         raise ValueError('invalid plots_x_axis: ' + settings['plots_x_axis'])
 
     plt.figure(1)
-    plt.plot(z_array, state['n_tL'], linewidth=linewidth, linestyle=linestyle, color='g', label='n_tL' + label_suffix)
     plt.plot(z_array, state['n_tR'], linewidth=linewidth, linestyle=linestyle, color='b', label='n_tR' + label_suffix)
+    plt.plot(z_array, state['n_tL'], linewidth=linewidth, linestyle=linestyle, color='g', label='n_tL' + label_suffix)
     plt.plot(z_array, state['n_c'], linewidth=linewidth, linestyle=linestyle, color='r', label='n_c' + label_suffix)
     plt.plot(z_array, state['n'], linewidth=linewidth, linestyle=linestyle, color='k', label='n' + label_suffix)
 
@@ -34,9 +34,9 @@ def plot_relaxation_status(state, settings):
     plt.plot(z_array, state['flux_trans_R'], linestyle=linestyle, label='flux_trans_R' + label_suffix,
              linewidth=linewidth, color='b')
     plt.plot(z_array, state['flux_trans_L'], linestyle=linestyle, label='flux_trans_L' + label_suffix,
-             linewidth=linewidth, color='r')
-    plt.plot(z_array, state['flux_mmm_drag'], linestyle=linestyle, label='flux_mmm_drag' + label_suffix,
              linewidth=linewidth, color='g')
+    plt.plot(z_array, state['flux_mmm_drag'], linestyle=linestyle, label='flux_mmm_drag' + label_suffix,
+             linewidth=linewidth, color='r')
     plt.plot(z_array, state['flux'], linestyle=linestyle, label='flux total' + label_suffix, linewidth=linewidth,
              color='k')
 
@@ -73,14 +73,25 @@ def plot_relaxation_status(state, settings):
     plt.plot(state['mean_free_path'] / state['mirror_cell_sizes'], linestyle=linestyle, linewidth=linewidth, color='b')
 
     plt.figure(9)
+    plt.plot(z_array, state['v_th'], linestyle=linestyle, linewidth=linewidth, color='b',
+             label='$v_{th}$' + label_suffix)
+    plt.plot(z_array, state['U'], linestyle=linestyle, linewidth=linewidth, color='r',
+             label='$U_{MMM}$' + label_suffix)
+
+    plt.figure(10)
     plt.plot(state['t_evolution'], state['flux_normalized_std_evolution'], linestyle=linestyle, linewidth=linewidth,
              label='normalized flux std' + label_suffix, color='k')
 
-    plt.figure(10)
+    plt.figure(11)
     plt.plot(state['t_evolution'], state['flux_min_evolution'], linestyle=linestyle, linewidth=linewidth,
              label='flux max' + label_suffix, color='r')
     plt.plot(state['t_evolution'], state['flux_max_evolution'], linestyle=linestyle, linewidth=linewidth,
              label='flux min' + label_suffix, color='b')
+
+    plt.figure(12)
+    plt.plot(z_array, state['n_c'] / state['n_tR'], linewidth=linewidth, linestyle=linestyle, color='r', label='n_c/n_tR' + label_suffix)
+    plt.plot(z_array, state['n_tL'] / state['n_tR'], linewidth=linewidth, linestyle=linestyle, color='g', label='n_tL/n_tR' + label_suffix)
+
 
     if settings['save_plots'] is True:
         plot_relaxation_end(settings, save_plots=True)
@@ -131,14 +142,22 @@ def plot_relaxation_end(settings, title_name='', show_legend=False, save_plots=F
     plt.ylabel('mfp / cell size')
 
     plt.figure(9)
+    plt.ylabel('velocity [m/s]')
+    plt.xlabel(xlabel)
+
+    plt.figure(10)
     plt.ylabel('flux normalized std evolution')
     plt.xlabel('simulation time')
 
-    plt.figure(10)
+    plt.figure(11)
     plt.ylabel('fluxes min/max evolution')
     plt.xlabel('simulation time')
 
-    num_plots = 10
+    plt.figure(12)
+    plt.ylabel('density ratios')
+    plt.xlabel(xlabel)
+
+    num_plots = 12
     for fig_num in range(1, num_plots + 1):
         plt.figure(fig_num)
         plt.tight_layout()

@@ -36,31 +36,41 @@ def define_default_settings(settings=None):
         settings['B'] = 1.0 * np.sqrt(settings['n0'] / 1e20 * settings['Ti_0'] / (5 * settings['keV']))  # [Tesla]
     if 'Rm' not in settings:
         # settings['Rm'] = 1.4
-        settings['Rm'] = 2.0
+        # settings['Rm'] = 2.0
+        settings['Rm'] = 3.0
+        # settings['Rm'] = 5.0
     if 'U0' not in settings:
         # settings['U0'] = 0
-        settings['U0'] = 1e4
+        # settings['U0'] = 1e4
         # settings['U0'] = 1e5
+        settings['U0'] = 3e5
         # settings['U0'] = 5e5
+        # settings['U0'] = 6e5
+        # settings['U0'] = 6.5e5
+        # settings['U0'] = 7e5
         # settings['U0'] = 8e5
         # settings['U0'] = 1e6
+        # settings['U0'] = 1.2e6
         # settings['U0'] = 1e7
     if 'transition_density_factor' not in settings:
         # settings['transition_density_factor'] = 0.5
         settings['transition_density_factor'] = 0.1
         # settings['transition_density_factor'] = 0.01
-    if 'delta_n_smoothing' not in settings:
-        # settings['delta_n_smoothing'] = 0.01 * settings['n0']
-        settings['delta_n_smoothing'] = 0.05 * settings['n0']
-        # settings['delta_n_smoothing'] = 0.1 * settings['n0']
-        # settings['delta_n_smoothing'] = 0.5 * settings['n0']
+    if 'delta_n_smoothing_factor' not in settings:
+        # settings['delta_n_smoothing_factor'] = 0.01
+        settings['delta_n_smoothing_factor'] = 0.05
+        # settings['delta_n_smoothing_factor'] = 0.1
+        # settings['delta_n_smoothing_factor'] = 0.5
     if 'cell_size' not in settings:
         settings['cell_size'] = 3.0  # m (MMM wavelength)
-    if 'N' not in settings:
+    if 'number_of_cells' not in settings:
         # settings['number_of_cells'] = 30
-        settings['number_of_cells'] = 50
-        # settings['number_of_cells'] = 100
+        # settings['number_of_cells'] = 50
+        settings['number_of_cells'] = 100
+        # settings['number_of_cells'] = 150
         # settings['number_of_cells'] = 200
+        # settings['number_of_cells'] = 300
+        # settings['number_of_cells'] = 1000
     if 'length_main_cell' not in settings:
         settings['length_main_cell'] = 100  # m
     if 'diameter_main_cell' not in settings:
@@ -81,7 +91,7 @@ def define_default_settings(settings=None):
         settings['transition_type'] = 'smooth_transition_to_tR'
         # settings['transition_type'] = 'sharp_transition_to_tR'
     if 'adaptive_mirror' not in settings:
-        # settings['adaptive_mirror'] = 'None'
+        # settings['adaptive_mirror'] = 'none'
         # settings['adaptive_mirror'] = 'adjust_U'
         # settings['adaptive_mirror'] = 'adjust_cell_size_with_mfp'
         settings['adaptive_mirror'] = 'adjust_cell_size_with_vth'
@@ -92,14 +102,14 @@ def define_default_settings(settings=None):
         settings['alpha_definition'] = 'geometric_local'
     if 'initialization_type' not in settings:
         # settings['initialization_type'] = 'linear_uniform'
-        settings['initialization_type'] = 'linear_alpha'
-        # settings['initialization_type'] = 'FD_decay'
+        # settings['initialization_type'] = 'linear_alpha'
+        settings['initialization_type'] = 'FD_decay'
     if 'left_boundary_condition' not in settings:
         settings['left_boundary_condition'] = 'enforce_tR'
         # settings['left_boundary_condition'] = 'uniform_scaling'
     if 'right_boundary_condition' not in settings:
-        settings['right_boundary_condition'] = 'enforce_tL'
-        # settings['right_boundary_condition'] = 'uniform_scaling'
+        # settings['right_boundary_condition'] = 'enforce_tL'
+        settings['right_boundary_condition'] = 'uniform_scaling'
 
     if 'ion_velocity_factor' not in settings:
         settings['ion_velocity_factor'] = 1.0
@@ -108,6 +118,7 @@ def define_default_settings(settings=None):
         settings['electron_velocity_factor'] = 1.0
     if 'ion_scattering_rate_factor' not in settings:
         settings['ion_scattering_rate_factor'] = 1.0
+        # settings['ion_scattering_rate_factor'] = 10.0
     if 'electron_scattering_rate_factor' not in settings:
         settings['electron_scattering_rate_factor'] = 1.0
 
@@ -115,7 +126,9 @@ def define_default_settings(settings=None):
     if 't_stop' not in settings:
         # settings['t_stop'] = 1e-6
         # settings['t_stop'] = 1e-4
+        # settings['t_stop'] = 1e-3
         settings['t_stop'] = 1e-2
+        # settings['t_stop'] = 3e-2
         # settings['t_stop'] = 1e-1
         # settings['t_stop'] = 1.0
     if 't_solve_min' not in settings:
@@ -127,6 +140,7 @@ def define_default_settings(settings=None):
         # settings['dt_status'] = 6e-6
         # settings['dt_status'] = 1e-5
         # settings['dt_status'] = 1e-4
+        # settings['dt_status'] = 5e-4
         settings['dt_status'] = 1e-3
     if 'dt_factor' not in settings:
         settings['dt_factor'] = 0.3
@@ -135,10 +149,13 @@ def define_default_settings(settings=None):
     if 'n_min' not in settings:
         # settings['n_min'] = 0
         # settings['n_min'] = 1e10
-        settings['n_min'] = 1e19
+        settings['n_min'] = 1e15
+        # settings['n_min'] = 1e17
+        # settings['n_min'] = 1e19
     if 'fail_on_minimal_density' not in settings:
         settings['fail_on_minimal_density'] = False
     if 'flux_normalized_termination_cutoff' not in settings:
+        # settings['flux_normalized_termination_cutoff'] = 0.01
         settings['flux_normalized_termination_cutoff'] = 0.05
         # settings['flux_normalized_termination_cutoff'] = 0.3
     if 'print_time_step_info' not in settings:
@@ -153,9 +170,26 @@ def define_default_settings(settings=None):
         # settings['save_format'] = 'mat'
     if 'save_dir' not in settings:
         # settings['save_dir'] = 'runs/test/'
-        # settings['save_dir'] = 'runs/test2/'
-        # settings['save_dir'] = 'runs/test3/'
-        settings['save_dir'] = 'runs/test4/'
+        # settings['save_dir'] = 'runs/test_U_0_smooth_transition/'
+        # settings['save_dir'] = 'runs/test_U_1e5_smooth_transition/'
+        # settings['save_dir'] = 'runs/test_U_1e6_smooth_transition/'
+        # settings['save_dir'] = 'runs/test_U_7e5_smooth_transition/'
+        # settings['save_dir'] = 'runs/test_U_0_smooth_transition_adjust_cell_size/'
+        # settings['save_dir'] = 'runs/test_U_1e5_smooth_transition_adjust_cell_size/'
+        # settings['save_dir'] = 'runs/test_U_1e6_smooth_transition_adjust_cell_size/'
+        # settings['save_dir'] = 'runs/test_U_7e5_smooth_transition_adjust_cell_size/'
+        # settings['save_dir'] = 'runs/test_U_' + '{:.0e}'.format(settings['U0']) + '_smooth_transition_adjust_cell_size/'
+        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_smooth_transition/'
+        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_no_transition_adjust_cell_size/'
+        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_no_transition_adjust_cell_size_right_bc_uniform_scaling/'
+        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_smooth_transition_adjust_cell_size/'
+        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_smooth_transition_except_drag_adjust_cell_size/'
+        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_sharp_transition_adjust_cell_size/'
+        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_smooth_transition_adjust_cell_size_right_bc_uniform_scaling/'
+        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_smooth_transition_adjust_cell_size_right_bc_uniform_scaling2/'
+        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_smooth_transition_adjust_cell_size_both_bc_uniform_scaling/'
+        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_transition_density_factor_0.5'
+        settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0'])
     if 'state_file' not in settings:
         settings['state_file'] = 'state'
     if 'settings_file' not in settings:
