@@ -16,7 +16,7 @@ def define_default_settings(settings=None):
     settings['kB_K'] = 1.380649e-23  # J/K
     settings['kB_eV'] = settings['kB_K'] * settings['eV_to_K']  # J/eV
 
-    ### plasma parameters
+    ### plasma parameters5
     if 'gas_name' not in settings:
         settings['gas_name'] = 'hydrogen'
     if 'ionization_level' not in settings:
@@ -40,10 +40,10 @@ def define_default_settings(settings=None):
         settings['Rm'] = 3.0
         # settings['Rm'] = 5.0
     if 'U0' not in settings:
-        # settings['U0'] = 0
+        settings['U0'] = 0
         # settings['U0'] = 1e4
         # settings['U0'] = 1e5
-        settings['U0'] = 3e5
+        # settings['U0'] = 3e5
         # settings['U0'] = 5e5
         # settings['U0'] = 6e5
         # settings['U0'] = 6.5e5
@@ -64,9 +64,9 @@ def define_default_settings(settings=None):
     if 'cell_size' not in settings:
         settings['cell_size'] = 3.0  # m (MMM wavelength)
     if 'number_of_cells' not in settings:
-        # settings['number_of_cells'] = 30
+        settings['number_of_cells'] = 30
         # settings['number_of_cells'] = 50
-        settings['number_of_cells'] = 100
+        # settings['number_of_cells'] = 100
         # settings['number_of_cells'] = 150
         # settings['number_of_cells'] = 200
         # settings['number_of_cells'] = 300
@@ -86,9 +86,9 @@ def define_default_settings(settings=None):
         settings['adaptive_dimension'] = False
         # settings['adaptive_dimension'] = True
     if 'transition_type' not in settings:
-        # settings['transition_type'] = 'none'
+        settings['transition_type'] = 'none'
         # settings['transition_type'] = 'smooth_transition_to_uniform'
-        settings['transition_type'] = 'smooth_transition_to_tR'
+        # settings['transition_type'] = 'smooth_transition_to_tR'
         # settings['transition_type'] = 'sharp_transition_to_tR'
     if 'adaptive_mirror' not in settings:
         # settings['adaptive_mirror'] = 'none'
@@ -111,8 +111,8 @@ def define_default_settings(settings=None):
         # settings['right_boundary_condition'] = 'enforce_tL'
         settings['right_boundary_condition'] = 'uniform_scaling'
     if 'right_boundary_condition_density_type' not in settings:
-        settings['right_boundary_condition_density_type'] = 'n_transition'
-        # settings['right_boundary_condition_density_type'] = 'n_expander'
+        # settings['right_boundary_condition_density_type'] = 'n_transition'
+        settings['right_boundary_condition_density_type'] = 'n_expander'
     if 'ion_velocity_factor' not in settings:
         settings['ion_velocity_factor'] = 1.0
         # settings['ion_velocity_factor'] = np.sqrt(2)
@@ -129,10 +129,10 @@ def define_default_settings(settings=None):
         # settings['t_stop'] = 1e-6
         # settings['t_stop'] = 1e-4
         # settings['t_stop'] = 1e-3
-        settings['t_stop'] = 1e-2
+        # settings['t_stop'] = 1e-2
         # settings['t_stop'] = 3e-2
         # settings['t_stop'] = 1e-1
-        # settings['t_stop'] = 1.0
+        settings['t_stop'] = 1.0
     if 't_solve_min' not in settings:
         settings['t_solve_min'] = 1e-20
         # settings['t_solve_min'] = 0.005

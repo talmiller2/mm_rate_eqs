@@ -151,7 +151,7 @@ def initialize_densities(settings):
     if settings['right_boundary_condition_density_type'] == 'n_transition':
         settings['n_end'] = settings['n_transition']
     elif settings['right_boundary_condition_density_type'] == 'n_expander':
-        settings['n_end'] = settings['n0'] / 100.0  # approximating a low
+        settings['n_end'] = settings['n0'] / 20.0  # approximating a low
     else:
         raise TypeError(
             'invalid right_boundary_condition_density_type = ' + settings['right_boundary_condition_density_type'])
