@@ -191,3 +191,24 @@ def get_larmor_radius(Ti, B, gas_name='hydrogen', ionization_level=None):
     me, mp, mi, A, Z = define_plasma_parameters(gas_name=gas_name, ionization_level=ionization_level)
     ion_gyration_radius = np.sqrt(mp / me) * np.sqrt(A) / Z * electron_gyration_radius
     return ion_gyration_radius
+
+
+def get_magnetic_pressure(B):
+    """
+    Magnetic pressure B^2/(2*mu0)
+    source https://en.wikipedia.org/wiki/Magnetic_pressure
+    B in [Tesla], return in [bar]
+    """
+    return (B / 0.501) ** 2.0
+
+
+def get_ideal_gas_pressure(n, T):
+    """
+    Ideal gas pressure kB*n*T
+    source https://en.wikipedia.org/wiki/Boltzmann_constant
+    n in [m^-3], T in [eV], return in [bar]
+    """
+    kB = 1.380649e-23  # J/K
+    eV_to_K = 1.16e4
+    Pa_to_bar = 1e-5
+    return kB * n * eV_to_K * T * Pa_to_bar
