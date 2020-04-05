@@ -21,10 +21,7 @@ def find_rate_equations_steady_state(settings):
     initialize_logging(settings)
 
     # initialize densities
-    settings['n_transition'] = calculate_transition_density(settings['n0'], settings['Ti_0'], settings['Te_0'],
-                                                            settings)
-    settings['n_end'] = 1.0 * settings['n_transition'] # boundary condition density
-    state = initialize_densities(settings)
+    settings, state = initialize_densities(settings)
 
     # initialize temperatures
     state['Ti'] = get_isentrope_temperature(state['n'], settings, species='ions')
@@ -41,6 +38,7 @@ def find_rate_equations_steady_state(settings):
     while t_curr < settings['t_stop']:
 
         state['v_th'] = get_thermal_velocity(state['Ti'], settings, species='ions')
+        # state['flux_trans_R'], state['flux_trans_L'] = get_transmission_fluxes(state, settings)
         state['coulomb_scattering_rate'] = get_coulomb_scattering_rate(state['n'], state['Ti'], state['Te'], settings,
                                                                        species='ions')
         state['mean_free_path'] = calculate_mean_free_path(state['n'], state['Ti'], state['Te'], settings, state=state,
@@ -146,6 +144,19 @@ def initialize_logging(settings):
 
 
 def initialize_densities(settings):
+    settings['n_transition'] = calculate_transition_density(settings['n0'], settings['Ti_0'], settings['Te_0'],
+                                                            settings)
+
+    # right boundary density
+    if settings['right_boundary_condition_density_type'] == 'n_transition':
+        settings['n_end'] = settings['n_transition']
+    elif settings['right_boundary_condition_density_type'] == 'n_expander':
+        settings['n_end'] = settings['n0'] / 100.0  # approximating a low
+    else:
+        raise TypeError(
+            'invalid right_boundary_condition_density_type = ' + settings['right_boundary_condition_density_type'])
+
+    # initial density profiles
     state = {}
     if settings['initialization_type'] == 'linear_uniform':
         for var_name in ['n_c', 'n_tL', 'n_tR']:
@@ -169,7 +180,7 @@ def initialize_densities(settings):
     else:
         raise TypeError('invalid initialization_type = ' + settings['initialization_type'])
     state['n'] = state['n_c'] + state['n_tL'] + state['n_tR']
-    return state
+    return settings, state
 
 
 def define_time_step(state, settings):

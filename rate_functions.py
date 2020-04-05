@@ -207,6 +207,7 @@ def get_mmm_drag_rate(state, settings):
     else:
         raise ValueError('invalid transition_type: ' + settings['transition_type'])
 
+
 def define_loss_cone_fractions(state, settings):
     v_th = state['v_th']
     U = state['U']
@@ -347,6 +348,9 @@ def get_density_time_derivatives(state, settings):
             else:
                 f_drag[k] = f_drag[k] + f_drag[k - 1]
 
+        # f_trans_L = state['flux_trans_L'] / cell_sizes
+        # f_trans_R = state['flux_trans_R'] / cell_sizes
+
         # combine rates
         dn_c_dt = f_scat_c + f_drag
         dn_tL_dt = f_scat_tL + f_trans_L
@@ -357,15 +361,42 @@ def get_density_time_derivatives(state, settings):
     return dn_c_dt, dn_tL_dt, dn_tR_dt
 
 
+# def get_transmission_fluxes(state, settings):
+#     n = state['n']
+#     n_tL = state['n_tL']
+#     n_tR = state['n_tR']
+#     n_trans = settings['n_transition']
+#     v_th = state['v_th']
+#
+#     # transition filters
+#     f1, f2 = get_transition_filters(n, settings)
+#
+#     flux_trans_R = v_th * n_tR
+#
+#     flux_trans_L = np.zeros(settings['number_of_cells'])
+#     for k in range(0, settings['number_of_cells'] - 1):
+#         if settings['transition_type'] == 'none':
+#             flux_trans_L[k] = - v_th[k + 1] * n_tL[k + 1]
+#         elif settings['transition_type'] == 'smooth_transition_to_tR':
+#             flux_trans_L[k] = - v_th[k + 1] * n_tL[k + 1] / f1[k + 1]
+#         elif settings['transition_type'] == 'sharp_transition_to_tR':
+#             if n[k] > n_trans:  # shut off left flux below threshold
+#                 flux_trans_L[k] = - v_th[k + 1] * n_tL[k + 1]
+#             else:
+#                 flux_trans_L[k] = 0
+#
+#     return flux_trans_R, flux_trans_L
+
+
 def get_fluxes(state, settings):
     # state variables
     n = state['n']
     n_c = state['n_c']
     n_tL = state['n_tL']
     n_tR = state['n_tR']
+    n_trans = settings['n_transition']
     v_th = state['v_th']
     U = state['mmm_drag_rate'] * state['mirror_cell_sizes']  # effective mirror velocity
-    n_trans = settings['n_transition']
 
     # initializations
     flux_trans_R = np.nan * np.zeros(settings['number_of_cells'])
@@ -401,6 +432,10 @@ def get_fluxes(state, settings):
                     flux_trans_L[k] = - v_th[k + 1] * n_tL[k + 1] * flux_factor
                 else:
                     flux_trans_L[k] = 0
+
+        # flux_trans_L = state['flux_trans_L'] * flux_factor
+        # flux_trans_R = state['flux_trans_R'] * flux_factor
+
         flux = flux_trans_R + flux_trans_L + flux_mmm_drag
 
     else:

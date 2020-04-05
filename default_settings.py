@@ -110,7 +110,9 @@ def define_default_settings(settings=None):
     if 'right_boundary_condition' not in settings:
         # settings['right_boundary_condition'] = 'enforce_tL'
         settings['right_boundary_condition'] = 'uniform_scaling'
-
+    if 'right_boundary_condition_density_type' not in settings:
+        settings['right_boundary_condition_density_type'] = 'n_transition'
+        # settings['right_boundary_condition_density_type'] = 'n_expander'
     if 'ion_velocity_factor' not in settings:
         settings['ion_velocity_factor'] = 1.0
         # settings['ion_velocity_factor'] = np.sqrt(2)
