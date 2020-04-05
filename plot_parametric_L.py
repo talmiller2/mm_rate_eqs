@@ -9,14 +9,14 @@ plt.close('all')
 # parametric scan
 save_dir_main = 'runs/runs_no_transition_different_number_of_cells/'
 
-
-number_of_cells_list = np.array([10, 30, 50])
+# number_of_cells_list = np.array([10, 30, 50])
+number_of_cells_list = np.round(np.linspace(5,150,15))[0:-1]
 flux_list = np.zeros(len(number_of_cells_list))
 
 for i, number_of_cells in enumerate(number_of_cells_list):
-    print('number_of_cells=' + str(number_of_cells))
+    # print('number_of_cells=' + str(int(number_of_cells)))
 
-    save_dir = save_dir_main + '/number_of_cells_' + str(number_of_cells)
+    save_dir = save_dir_main + '/number_of_cells_' + str(int(number_of_cells))
 
     state_file = save_dir + '/state.pickle'
     settings_file = save_dir + '/settings.pickle'
@@ -32,4 +32,4 @@ plt.xlabel('number of cells')
 plt.ylabel('flux')
 plt.tight_layout()
 plt.grid(True)
-plt.legend()
+# plt.legend()
