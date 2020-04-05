@@ -43,15 +43,9 @@ def define_default_settings(settings=None):
         settings['U0'] = 0
         # settings['U0'] = 1e4
         # settings['U0'] = 1e5
-        # settings['U0'] = 3e5
-        # settings['U0'] = 5e5
-        # settings['U0'] = 6e5
-        # settings['U0'] = 6.5e5
-        # settings['U0'] = 7e5
-        # settings['U0'] = 8e5
-        # settings['U0'] = 1e6
-        # settings['U0'] = 1.2e6
-        # settings['U0'] = 1e7
+    if 'mmm_velocity_type' not in settings:
+        # settings['mmm_velocity_type'] = 'absolute'
+        settings['mmm_velocity_type'] = 'relative_to_thermal_velocity'
     if 'transition_density_factor' not in settings:
         # settings['transition_density_factor'] = 0.5
         settings['transition_density_factor'] = 0.1
@@ -64,11 +58,11 @@ def define_default_settings(settings=None):
     if 'cell_size' not in settings:
         settings['cell_size'] = 3.0  # m (MMM wavelength)
     if 'number_of_cells' not in settings:
-        settings['number_of_cells'] = 30
+        # settings['number_of_cells'] = 30
         # settings['number_of_cells'] = 50
         # settings['number_of_cells'] = 100
         # settings['number_of_cells'] = 150
-        # settings['number_of_cells'] = 200
+        settings['number_of_cells'] = 200
         # settings['number_of_cells'] = 300
         # settings['number_of_cells'] = 1000
     if 'length_main_cell' not in settings:
@@ -86,9 +80,9 @@ def define_default_settings(settings=None):
         settings['adaptive_dimension'] = False
         # settings['adaptive_dimension'] = True
     if 'transition_type' not in settings:
-        settings['transition_type'] = 'none'
+        # settings['transition_type'] = 'none'
         # settings['transition_type'] = 'smooth_transition_to_uniform'
-        # settings['transition_type'] = 'smooth_transition_to_tR'
+        settings['transition_type'] = 'smooth_transition_to_tR'
         # settings['transition_type'] = 'sharp_transition_to_tR'
     if 'adaptive_mirror' not in settings:
         # settings['adaptive_mirror'] = 'none'
@@ -111,8 +105,8 @@ def define_default_settings(settings=None):
         # settings['right_boundary_condition'] = 'enforce_tL'
         settings['right_boundary_condition'] = 'uniform_scaling'
     if 'right_boundary_condition_density_type' not in settings:
-        # settings['right_boundary_condition_density_type'] = 'n_transition'
-        settings['right_boundary_condition_density_type'] = 'n_expander'
+        settings['right_boundary_condition_density_type'] = 'n_transition'
+        # settings['right_boundary_condition_density_type'] = 'n_expander'
     if 'ion_velocity_factor' not in settings:
         settings['ion_velocity_factor'] = 1.0
         # settings['ion_velocity_factor'] = np.sqrt(2)
@@ -156,6 +150,7 @@ def define_default_settings(settings=None):
         # settings['n_min'] = 1e19
     if 'fail_on_minimal_density' not in settings:
         settings['fail_on_minimal_density'] = False
+        # settings['fail_on_minimal_density'] = True
     if 'flux_normalized_termination_cutoff' not in settings:
         # settings['flux_normalized_termination_cutoff'] = 0.01
         settings['flux_normalized_termination_cutoff'] = 0.05

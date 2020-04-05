@@ -9,6 +9,7 @@ from relaxation_algorithm_functions import find_rate_equations_steady_state
 # save_dir_main = 'runs/runs_smooth_transition_adjust_cell_size_vth_right_bc_uniform_scaling_transition_n_factor_0.5_delta_n_factor_0.1/'
 # save_dir_main = 'runs/runs_smooth_transition_adjust_cell_size_vth_right_bc_uniform_scaling_transition_n_factor_0.01_delta_n_factor_0.01/'
 # save_dir_main = 'runs/runs_smooth_transition_adjust_cell_size_vth_right_bc_uniform_scaling_transition_n_factor_0.1_delta_n_factor_0.1_DT_mix/'
+# save_dir_main = 'runs/runs_smooth_transition_adjust_cell_size_mfp_right_bc_uniform_scaling_transition_n_factor_0.1_delta_n_factor_0.1/'
 save_dir_main = 'runs/runs_smooth_transition_adjust_cell_size_mfp_right_bc_uniform_scaling_transition_n_factor_0.1_delta_n_factor_0.1/'
 
 if not os.path.exists(save_dir_main):
@@ -23,8 +24,8 @@ for Rm in [3.0]:
     # for U0 in [0, 1e4, 1e5, 2e5, 3e5, 4e5, 5e5, 6e5]:
     # for U0 in [7e5, 8e5, 9e5, 1e6]:
     # for U0 in [0, 1e4, 1e5, 2e5, 3e5, 4e5, 5e5, 6e5, 7e5, 8e5, 9e5, 1e6]:
-    for U0 in [1e4, 1e5, 2e5, 3e5, 4e5, 5e5, 6e5, 7e5, 8e5, 9e5, 1e6]:
-    # for U0 in [0]:
+    # for U0 in [1e4, 1e5, 2e5, 3e5, 4e5, 5e5, 6e5, 7e5, 8e5, 9e5, 1e6]:
+    for U0 in [0]:
     # for U0 in [1e4, 1e5]:
     # for U0 in [2e5, 3e5, 4e5, 5e5, 6e5]:
     # for U0 in [6e5, 7e5]:
@@ -53,8 +54,15 @@ for Rm in [3.0]:
         settings['gas_name'] = 'hydrogen'
         # settings['gas_name'] = 'DT_mix'
 
-        # settings['adaptive_mirror'] = 'adjust_cell_size_with_vth'
-        settings['adaptive_mirror'] = 'adjust_cell_size_with_mfp'
+        settings['n0'] = 1e22  # m^-3
+        settings['Ti_0'] = 3 * 1e3 # eV
+        settings['Te_0'] = 1 * 1e3 # eV
+        settings['n_min'] = 1e15
+        settings['ion_velocity_factor'] = 1.0
+        settings['cell_size'] = 3.0  # m (MMM wavelength)
+
+        settings['adaptive_mirror'] = 'adjust_cell_size_with_vth'
+        # settings['adaptive_mirror'] = 'adjust_cell_size_with_mfp'
 
         if settings['adaptive_mirror'] == 'adjust_cell_size_with_mfp':
             settings['number_of_cells'] = 2 * settings['number_of_cells']
@@ -62,5 +70,5 @@ for Rm in [3.0]:
         plt.close('all')
 
         settings = define_default_settings(settings)
-        state = find_rate_equations_steady_state(settings)
+        # state = find_rate_equations_steady_state(settings)
 

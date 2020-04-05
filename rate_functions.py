@@ -165,6 +165,18 @@ def calculate_transition_density(n, Ti, Te, settings, state=None):
 
 def get_mmm_velocity(state, settings):
     # define MMM velocity for different cells
+
+    if settings['mmm_velocity_type'] == 'absolute':
+        U0 = settings['U0']
+    elif settings['mmm_velocity_type'] == 'relative_to_thermal_velocity':
+        if 'v_th' not in state:
+            v_th = get_thermal_velocity(state['Ti'], settings)
+        else:
+            v_th = state['v_th']
+        U0 = settings['U0'] * v_th[0]
+    else:
+        raise ValueError('invalid mmm_velocity_type: ' + settings['mmm_velocity_type'])
+
     if settings['adaptive_mirror'] == 'adjust_U':
         # change U at different positions directly. This is only theoretical, because in reality we can define
         # the MMM frequency, and the velocity is derived from the wavelength (U=wavelength*frequency)
@@ -172,7 +184,7 @@ def get_mmm_velocity(state, settings):
             v_th = get_thermal_velocity(state['Ti'], settings)
         else:
             v_th = state['v_th']
-        U = settings['U0'] * v_th / v_th[0]
+        U = U0 * v_th / v_th[0]
 
     elif settings['adaptive_mirror'] in ['adjust_cell_size_with_mfp', 'adjust_cell_size_with_vth']:
         # the realistic method, the MMM velocity scales with the cell size (wavelength)
@@ -180,10 +192,10 @@ def get_mmm_velocity(state, settings):
             mirror_cell_sizes = get_mirror_cell_sizes(state['n'], state['Ti'], state['Te'], settings, state=state)
         else:
             mirror_cell_sizes = state['mirror_cell_sizes']
-        U = settings['U0'] * mirror_cell_sizes / mirror_cell_sizes[0]
+        U = U0 * mirror_cell_sizes / mirror_cell_sizes[0]
 
     else:
-        U = settings['U0'] + 0 * state['n']
+        U = U0 + 0 * state['n']
 
     return U
 

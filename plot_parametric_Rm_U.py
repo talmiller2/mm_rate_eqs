@@ -16,8 +16,8 @@ save_dir_main = 'runs/runs_smooth_transition_adjust_cell_size_vth_right_bc_unifo
 
 # Rm_list = np.array([1.4, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0])
 # Rm_list = np.array([2.0, 2.5, 3.0])
-# Rm_list = np.array([2.5, 3.0])
-Rm_list = np.array([3.0])
+Rm_list = np.array([2.5, 3.0])
+# Rm_list = np.array([3.0])
 U0_list = np.array([0, 1e4, 1e5, 2e5, 3e5, 4e5, 5e5, 6e5, 7e5, 8e5, 9e5, 1e6])
 
 for Rm in Rm_list:

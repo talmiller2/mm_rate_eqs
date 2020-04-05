@@ -50,6 +50,10 @@ def find_rate_equations_steady_state(settings):
         state['alpha_tR'], state['alpha_tL'], state['alpha_c'] = define_loss_cone_fractions(state, settings)
         state['dn_c_dt'], state['dn_tL_dt'], state['dn_tR_dt'] = get_density_time_derivatives(state, settings)
 
+        # print basic plasma info
+        if num_steps == 0:
+            print_basic_plasma_info(state, settings)
+
         # advance step
         dt = define_time_step(state, settings)
         t_curr += dt
@@ -150,6 +154,8 @@ def initialize_densities(settings):
     # right boundary density
     if settings['right_boundary_condition_density_type'] == 'n_transition':
         settings['n_end'] = settings['n_transition']
+        if settings['n_transition'] >= settings['n0']:
+            raise ValueError('n_transition < n0, meaning near main cell plasma has too short mfp / cell size.')
     elif settings['right_boundary_condition_density_type'] == 'n_expander':
         settings['n_end'] = settings['n0'] / 20.0  # approximating a low
     else:
@@ -182,6 +188,15 @@ def initialize_densities(settings):
     state['n'] = state['n_c'] + state['n_tL'] + state['n_tR']
     return settings, state
 
+
+def print_basic_plasma_info(state, settings):
+    logging.info('n0 = ' + str('{:.2e}'.format(settings['n0'])) + ' m^-3')
+    logging.info('n_transition = ' + str('{:.2e}'.format(settings['n_transition'])) + ' m^-3')
+    logging.info('Ti_0 = ' + str(settings['Ti_0']) + ' eV')
+    logging.info('Te_0 = ' + str(settings['Te_0']) + ' eV')
+    logging.info('v_th (main cell) = ' + str('{:.2e}'.format(state['v_th'][0])) + ' m/s')
+    logging.info('mfp (main cell) = ' + str('{:.2e}'.format(state['mean_free_path'][0])) + ' m')
+    return
 
 def define_time_step(state, settings):
     dt_list = []
