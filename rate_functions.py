@@ -109,14 +109,13 @@ def get_coulomb_scattering_rate(n, Ti, Te, settings, species='ions'):
             n = n[0] + 0 * n
 
     Zi = settings['Z_ion']
-    Ze = 1.0
     if species == 'ions':
-        i_on_i_factor = settings['ion_scattering_rate_factor'] * Zi ** 2 / np.sqrt(settings['mi'] / settings['me'])
-        i_on_e_factor = settings['ion_scattering_rate_factor'] * Zi * Ze / (settings['mi'] / settings['me'])
+        i_on_i_factor = settings['ion_scattering_rate_factor'] * Zi ** 4 / np.sqrt(settings['mi'] / settings['me'])
+        i_on_e_factor = settings['ion_scattering_rate_factor'] * Zi ** 2 / (settings['mi'] / settings['me'])
         return 4e-12 * settings['lnCoulombLambda'] * n * (Ti ** (-1.5) * i_on_i_factor + Tie ** (-1.5) * i_on_e_factor)
     else:
-        e_on_i_factor = settings['electron_scattering_rate_factor'] * Zi * Ze
-        e_on_e_factor = settings['electron_scattering_rate_factor'] * Ze ** 2
+        e_on_i_factor = settings['electron_scattering_rate_factor'] * Zi ** 2
+        e_on_e_factor = settings['electron_scattering_rate_factor']
         return 4e-12 * settings['lnCoulombLambda'] * n * (Tie ** (-1.5) * e_on_i_factor + Te ** (-1.5) * e_on_e_factor)
 
 
