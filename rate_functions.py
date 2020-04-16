@@ -159,7 +159,7 @@ def calculate_transition_density(n, Ti, Te, settings, state=None):
     else:
         mfp = calculate_mean_free_path(n, Ti, Te, settings, state=state)
     return settings['n0'] * (settings['transition_density_factor'] * settings['cell_size'] / mfp) ** (
-            1 / (2 * get_gamma_dimension(1) - 3))
+            1 / (2 * get_gamma_dimension(settings['plasma_dimension']) - 3))
 
 
 def get_mmm_velocity(state, settings):

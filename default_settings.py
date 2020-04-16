@@ -140,7 +140,8 @@ def define_default_settings(settings=None):
         # settings['dt_status'] = 5e-4
         settings['dt_status'] = 1e-3
     if 'dt_factor' not in settings:
-        settings['dt_factor'] = 0.3
+        # settings['dt_factor'] = 0.3
+        settings['dt_factor'] = 0.1
     if 'dt_min' not in settings:
         settings['dt_min'] = 1e-20
     if 'n_min' not in settings:
