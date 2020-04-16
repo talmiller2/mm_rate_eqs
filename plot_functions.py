@@ -89,9 +89,34 @@ def plot_relaxation_status(state, settings):
              label='flux min' + label_suffix, color='b')
 
     plt.figure(12)
-    plt.plot(z_array, state['n_c'] / state['n_tR'], linewidth=linewidth, linestyle=linestyle, color='r', label='n_c/n_tR' + label_suffix)
-    plt.plot(z_array, state['n_tL'] / state['n_tR'], linewidth=linewidth, linestyle=linestyle, color='g', label='n_tL/n_tR' + label_suffix)
+    plt.plot(z_array, state['n_c'] / state['n_tR'], linewidth=linewidth, linestyle=linestyle, color='r',
+             label='n_c/n_tR' + label_suffix)
+    plt.plot(z_array, state['n_tL'] / state['n_tR'], linewidth=linewidth, linestyle=linestyle, color='g',
+             label='n_tL/n_tR' + label_suffix)
 
+    plt.figure(13)
+    inds = np.where(state['alpha_tR'] > 0)
+    plt.plot(z_array[inds], state['n_tR'][inds] / state['n'][inds] / state['alpha_tR'][inds], linestyle=linestyle,
+             label='$n/\\alpha$ tR fraction' + label_suffix,
+             linewidth=linewidth, color='b')
+    inds = np.where(state['alpha_tL'] > 0)
+    plt.plot(z_array[inds], state['n_tL'][inds] / state['n'][inds] / state['alpha_tL'][inds], linestyle=linestyle,
+             label='$n/\\alpha$ tL fraction' + label_suffix,
+             linewidth=linewidth, color='g')
+    inds = np.where(state['alpha_c'] > 0)
+    plt.plot(z_array[inds], state['n_c'][inds] / state['n'][inds] / state['alpha_c'][inds], linestyle=linestyle,
+             label='$n/\\alpha$ c fraction' + label_suffix,
+             linewidth=linewidth, color='r')
+
+    # plt.plot(z_array, state['n_tR'] / state['n'] / state['alpha_tR'], linestyle=linestyle,
+    #          label='$n/\\alpha$ tR fraction' + label_suffix,
+    #          linewidth=linewidth, color='b')
+    # plt.plot(z_array, state['n_tL'] / state['n'] / state['alpha_tL'], linestyle=linestyle,
+    #          label='$n/\\alpha$ tL fraction' + label_suffix,
+    #          linewidth=linewidth, color='g')
+    # plt.plot(z_array, state['n_c'] / state['n'] / state['alpha_c'], linestyle=linestyle,
+    #          label='$n/\\alpha$ c fraction' + label_suffix,
+    #          linewidth=linewidth, color='r')
 
     if settings['save_plots'] is True:
         plot_relaxation_end(settings, save_plots=True)
@@ -157,7 +182,12 @@ def plot_relaxation_end(settings, title_name='', show_legend=False, save_plots=F
     plt.ylabel('density ratios')
     plt.xlabel(xlabel)
 
-    num_plots = 12
+    plt.figure(13)
+    plt.ylabel('$n/n_{tot}/\\alpha$ ratios')
+    plt.xlabel(xlabel)
+    plt.ylim([0,2])
+
+    num_plots = 13
     for fig_num in range(1, num_plots + 1):
         plt.figure(fig_num)
         plt.tight_layout()

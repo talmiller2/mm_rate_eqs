@@ -1,8 +1,10 @@
-import matplotlib.pyplot as plt
 import os
+
+import matplotlib.pyplot as plt
+import numpy as np
+
 from default_settings import define_default_settings
 from relaxation_algorithm_functions import find_rate_equations_steady_state
-import numpy as np
 
 # parametric scan
 # save_dir_main = 'runs/small_experiment_0.3eV_adaptive_mirror/'
@@ -54,8 +56,8 @@ for Rm in Rm_list:
         settings['gas_name'] = 'lithium'
 
         settings['n0'] = 1e16  # m^-3
-        settings['Ti_0'] = 0.3 # eV
-        settings['Te_0'] = 0.3 # eV
+        settings['Ti_0'] = 0.3  # eV
+        settings['Te_0'] = 0.3  # eV
         # settings['n0'] = 5e17  # m^-3
         # settings['Ti_0'] = 2.0 # eV
         # settings['Te_0'] = 2.0 # eV
@@ -74,4 +76,3 @@ for Rm in Rm_list:
 
         settings = define_default_settings(settings)
         state = find_rate_equations_steady_state(settings)
-

@@ -41,8 +41,6 @@ def define_default_settings(settings=None):
         # settings['Rm'] = 5.0
     if 'U0' not in settings:
         settings['U0'] = 0
-        # settings['U0'] = 1e4
-        # settings['U0'] = 1e5
     if 'mmm_velocity_type' not in settings:
         # settings['mmm_velocity_type'] = 'absolute'
         settings['mmm_velocity_type'] = 'relative_to_thermal_velocity'
@@ -77,8 +75,8 @@ def define_default_settings(settings=None):
         # settings['uniform_system'] = True
         settings['uniform_system'] = False
     if 'plasma_dimension' not in settings:
-        # settings['plasma_dimension'] = 1.0
-        settings['plasma_dimension'] = 3.0
+        settings['plasma_dimension'] = 1.0
+        # settings['plasma_dimension'] = 3.0
     if 'adaptive_dimension' not in settings:
         settings['adaptive_dimension'] = False
         # settings['adaptive_dimension'] = True
@@ -128,8 +126,8 @@ def define_default_settings(settings=None):
         # settings['t_stop'] = 1e-3
         # settings['t_stop'] = 1e-2
         # settings['t_stop'] = 3e-2
-        # settings['t_stop'] = 1e-1
-        settings['t_stop'] = 1.0
+        settings['t_stop'] = 1e-1
+        # settings['t_stop'] = 1.0
     if 't_solve_min' not in settings:
         settings['t_solve_min'] = 1e-20
         # settings['t_solve_min'] = 0.005

@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import os
 from default_settings import define_default_settings
 from relaxation_algorithm_functions import find_rate_equations_steady_state
+import numpy as np
 
 # parametric scan
 # save_dir_main = 'runs/runs_smooth_transition_adjust_cell_size_vth_right_bc_uniform_scaling_transition_n_factor_0.1_delta_n_factor_0.01/'
@@ -16,25 +17,30 @@ if not os.path.exists(save_dir_main):
     os.mkdir(save_dir_main)
 
 
-# for Rm in [1.4, 2.0, 3.0]:
-# for Rm in [2.0]:
-# for Rm in [2.5]:
-for Rm in [3.0]:
-# for Rm in [3.5, 4.0, 4.5, 5.0]:
-    # for U0 in [0, 1e4, 1e5, 2e5, 3e5, 4e5, 5e5, 6e5]:
-    # for U0 in [7e5, 8e5, 9e5, 1e6]:
-    # for U0 in [0, 1e4, 1e5, 2e5, 3e5, 4e5, 5e5, 6e5, 7e5, 8e5, 9e5, 1e6]:
-    # for U0 in [1e4, 1e5, 2e5, 3e5, 4e5, 5e5, 6e5, 7e5, 8e5, 9e5, 1e6]:
-    for U0 in [0]:
-    # for U0 in [1e4, 1e5]:
-    # for U0 in [2e5, 3e5, 4e5, 5e5, 6e5]:
-    # for U0 in [6e5, 7e5]:
-    # for U0 in [8e5, 9e5, 1e6]:
+# Rm_list = np.array([2.0])
+# Rm_list = np.array([2.5])
+Rm_list = np.array([3.0])
+# Rm_list = np.array([2.0, 2.5])
+# Rm_list = np.array([2.0, 2.5, 3.0])
+# Rm_list = np.array([2.5, 3.0])
+# U0_list = np.array([0])
+# U0_list = np.array([0.5])
+U0_list = np.array([0.7])
+# U0_list = np.array([0.8])
+# U0_list = np.array([0.1])
+# U0_list = np.array([0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8])
+# U0_list = np.array([0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8])
+# U0_list = np.array([0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7])
+# U0_list = np.array([0, 0.05, 0.1, 0.2])
+
+for Rm in Rm_list:
+    for U0 in U0_list:
 
         print('Rm=' + str(Rm) + ', U0=' + str(U0))
 
         settings = {'Rm': Rm, 'U0': U0}
-        settings['save_dir'] = save_dir_main + '/Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0'])
+        # settings['save_dir'] = save_dir_main + '/Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0'])
+        settings['save_dir'] = save_dir_main + '/' + 'Rm_' + str(settings['Rm']) + '_U_rel_' + str(settings['U0'])
 
         if U0 == 0:
             settings['number_of_cells'] = 300
