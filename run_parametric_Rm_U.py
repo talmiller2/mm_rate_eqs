@@ -10,7 +10,7 @@ from relaxation_algorithm_functions import find_rate_equations_steady_state
 # save_dir_main = 'runs/runs_smooth_transition_adjust_cell_size_vth_right_bc_uniform_scaling_transition_n_factor_0.01_delta_n_factor_0.01/'
 # save_dir_main = 'runs/runs_smooth_transition_adjust_cell_size_vth_right_bc_uniform_scaling_transition_n_factor_0.1_delta_n_factor_0.1_DT_mix/'
 # save_dir_main = 'runs/runs_smooth_transition_adjust_cell_size_mfp_right_bc_uniform_scaling_transition_n_factor_0.1_delta_n_factor_0.1/'
-save_dir_main = 'runs/runs_smooth_transition_adjust_cell_size_mfp_right_bc_uniform_scaling_transition_n_factor_0.1_delta_n_factor_0.1/'
+save_dir_main = 'runs/runs_smooth_transition_adjust_cell_size_vth_right_bc_uniform_scaling_transition_n_factor_0.1_delta_n_factor_0.01_dim_3/'
 
 if not os.path.exists(save_dir_main):
     os.mkdir(save_dir_main)
@@ -47,9 +47,9 @@ for Rm in [3.0]:
         # settings['transition_density_factor'] = 0.5
         # settings['transition_density_factor'] = 0.01
 
-        # settings['delta_n_smoothing_factor'] = 0.01
+        settings['delta_n_smoothing_factor'] = 0.01
         # settings['delta_n_smoothing_factor'] = 0.05
-        settings['delta_n_smoothing_factor'] = 0.1
+        # settings['delta_n_smoothing_factor'] = 0.1
 
         settings['gas_name'] = 'hydrogen'
         # settings['gas_name'] = 'DT_mix'
@@ -67,8 +67,11 @@ for Rm in [3.0]:
         if settings['adaptive_mirror'] == 'adjust_cell_size_with_mfp':
             settings['number_of_cells'] = 2 * settings['number_of_cells']
 
+        # settings['plasma_dimension'] = 1.0
+        settings['plasma_dimension'] = 3.0
+
         plt.close('all')
 
         settings = define_default_settings(settings)
-        # state = find_rate_equations_steady_state(settings)
+        state = find_rate_equations_steady_state(settings)
 

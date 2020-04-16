@@ -53,7 +53,7 @@ def get_isentrope_temperature(n, settings, species='ions'):
             return T0 * (n / n0) ** (gamma_start - 1) / f1 \
                    + T_trans * (n / n_trans) ** (gamma_fin - 1) / f2
         else:
-            return T0 * (n / n0) ** (get_gamma_dimension(1) - 1)
+            return T0 * (n / n0) ** (get_gamma_dimension(settings['plasma_dimension']) - 1)
 
 
 def get_dominant_temperature(Ti, Te, settings, quick_mode=True):

@@ -76,6 +76,9 @@ def define_default_settings(settings=None):
     if 'uniform_system' not in settings:
         # settings['uniform_system'] = True
         settings['uniform_system'] = False
+    if 'plasma_dimension' not in settings:
+        # settings['plasma_dimension'] = 1.0
+        settings['plasma_dimension'] = 3.0
     if 'adaptive_dimension' not in settings:
         settings['adaptive_dimension'] = False
         # settings['adaptive_dimension'] = True
