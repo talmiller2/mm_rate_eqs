@@ -12,25 +12,34 @@ from relaxation_algorithm_functions import load_simulation
 # save_dir_main = 'runs/runs_smooth_transition_adjust_cell_size_vth_right_bc_uniform_scaling_transition_n_factor_0.5_delta_n_factor_0.1/'
 # save_dir_main = 'runs/runs_smooth_transition_adjust_cell_size_vth_right_bc_uniform_scaling_transition_n_factor_0.01_delta_n_factor_0.01/'
 # save_dir_main = 'runs/runs_smooth_transition_adjust_cell_size_vth_right_bc_uniform_scaling_transition_n_factor_0.1_delta_n_factor_0.1_DT_mix/'
-# save_dir_main = 'runs/runs_smooth_transition_adjust_cell_size_vth_right_bc_uniform_scaling_transition_n_factor_0.1_delta_n_factor_0.01_dim_3/'
-save_dir_main = 'runs/runs_smooth_transition_adjust_cell_size_vth_right_bc_uniform_scaling_transition_n_factor_0.1_delta_n_factor_0.01_dim_1/'
 
+# save_dir_main = 'runs/runs_smooth_transition_adjust_cell_size_vth_right_bc_uniform_scaling_transition_n_factor_0.1_delta_n_factor_0.01_dim_1/'
+# save_dir_main = 'runs/runs_smooth_transition_no_adaptive_mirror_right_bc_uniform_scaling_transition_n_factor_0.1_delta_n_factor_0.01_dim_1/'
+# linestyle = '-'
+# label_suffix = ' d=1'
+
+# save_dir_main = 'runs/runs_smooth_transition_adjust_cell_size_vth_right_bc_uniform_scaling_transition_n_factor_0.1_delta_n_factor_0.01_dim_3_rbc_5e20/'
+# save_dir_main = 'runs/runs_smooth_transition_no_adaptive_mirror_right_bc_uniform_scaling_transition_n_factor_0.1_delta_n_factor_0.01_dim_3_rbc_5e20/'
+# linestyle = '--'
+# label_suffix = ' d=3 $n_{rbc}=5e20$'
+
+save_dir_main = 'runs/runs_smooth_transition_adjust_cell_size_vth_right_bc_uniform_scaling_transition_n_factor_0.1_delta_n_factor_0.01_dim_3_rbc_3e21/'
+# save_dir_main = 'runs/runs_smooth_transition_no_adaptive_mirror_right_bc_uniform_scaling_transition_n_factor_0.1_delta_n_factor_0.01_dim_3_rbc_3e21/'
+linestyle = ':'
+label_suffix = ' d=3 $n_{rbc}=3e21$'
 
 # Rm_list = np.array([1.4, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0])
 # Rm_list = np.array([2.0, 2.5, 3.0])
 Rm_list = np.array([2.5, 3.0])
 color_list = ['b', 'r']
 
-# linestyle = '-'
-# label_suffix = ' d=3'
 
-linestyle = '--'
-label_suffix = ' d=1'
 
 # Rm_list = np.array([3.0])
 # U0_list = np.array([0, 1e4, 1e5, 2e5, 3e5, 4e5, 5e5, 6e5, 7e5, 8e5, 9e5, 1e6])
 # U0_list = np.array([0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7])
 U0_list = np.array([0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1])
+# U0_list = np.array([0, 0.05, 0.1, 0.2, 0.3, 0.4])
 
 for ind_Rm, Rm in enumerate(Rm_list):
     color = color_list[ind_Rm]
@@ -64,7 +73,7 @@ for ind_Rm, Rm in enumerate(Rm_list):
         z_array = np.cumsum(state['mirror_cell_sizes'])
         L_stable_list[ind_U0] = z_array[ind_n_stable]
 
-        U0_to_plot = [0, 0.5]
+        U0_to_plot = [0, 0.05, 0.1, 0.3]
         Rm_to_plot = 3.0
         z_array = np.cumsum(state['mirror_cell_sizes'])
         if U0 in U0_to_plot and Rm == Rm_to_plot:
@@ -74,14 +83,15 @@ for ind_Rm, Rm in enumerate(Rm_list):
             plt.plot(z_array, state['n_c'],  linestyle=linestyle, color='r', label='n_c'+ label_suffix)
             plt.plot(z_array, state['n'], linestyle=linestyle, color='k', label='n' + label_suffix)
             plt.title('$R_m$=' + str(Rm_to_plot) + ', $U/v_{th}$=' + str(U0))
-            plt.ylabel('$m^{-3}$')
+            plt.ylabel('n $m^{-3}$')
             plt.xlabel('z [m]')
             plt.tight_layout()
             plt.grid(True)
             plt.legend()
 
     plt.figure(1)
-    plt.plot(U0_list, flux_list, '-o', label='Rm=' + str(Rm) + label_suffix, linestyle=linestyle, color=color)
+    # plt.plot(U0_list, flux_list, '-o', label='Rm=' + str(Rm) + label_suffix, linestyle=linestyle, color=color)
+    plt.plot(U0_list, flux_list/flux_list[0], '-o', label='Rm=' + str(Rm) + label_suffix, linestyle=linestyle, color=color)
 
     plt.figure(2)
     plt.plot(U0_list, L_stable_list, '-o', label='Rm=' + str(Rm) + label_suffix, linestyle=linestyle, color=color)
@@ -91,7 +101,8 @@ for ind_Rm, Rm in enumerate(Rm_list):
 
 plt.figure(1)
 plt.xlabel('$U_0$ [m/s]')
-plt.ylabel('flux')
+# plt.ylabel('flux')
+plt.ylabel('flux / flux0')
 plt.tight_layout()
 plt.grid(True)
 plt.legend()
@@ -105,7 +116,7 @@ plt.legend()
 
 plt.figure(3)
 plt.xlabel('$U_0$ [m/s]')
-plt.ylabel('$n_{stable}$ [m^-3]')
+plt.ylabel('$n_{stable}$ [$m^{-3}$]')
 plt.tight_layout()
 plt.grid(True)
 plt.legend()
