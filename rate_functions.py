@@ -119,6 +119,23 @@ def get_coulomb_scattering_rate(n, Ti, Te, settings, species='ions'):
         return 4e-12 * settings['lnCoulombLambda'] * n * (Tie ** (-1.5) * e_on_i_factor + Te ** (-1.5) * e_on_e_factor)
 
 
+def calculate_coulomb_logarithm(ne, Te, ni, Ti, Z=1, A=1):
+    """
+    Coulomb logarithm for different interactions, based on the NRL formulary.
+    densities in m^-3 and temperatures in eV
+    """
+    ne_cm = ne * 1e-6  # convert units to cm^-3 used in the formulas
+    ni_cm = ni * 1e-6
+    coulomb_log = {}
+    coulomb_log['ee'] = 23.5 - np.log(ne_cm ** 0.5 * Te ** (-5.0 / 4)) \
+                        - (1e-5 + (np.log(Te) - 2) ** 2.0 / 16.0) ** 0.5
+    coulomb_log['ii'] = 23.0 - np.log(Z ** 3.0 * 2 ** 0.5 * ni_cm ** 0.5 * Ti ** (-3.0 / 2))
+    coulomb_log['ie_overheated_ions'] = 16.0 - np.log(Z ** 2.0 * A * ni_cm ** 0.5 * Ti ** (-3.0 / 2))
+    coulomb_log['ie_cold_electrons'] = 23.0 - np.log(ne_cm ** 0.5 * Te ** (-1.0))
+    coulomb_log['ie_hot_electrons'] = 24.0 - np.log(Z * ne_cm ** 0.5 * Te ** (-3.0 / 2))
+    return coulomb_log
+
+
 def calculate_mean_free_path(n, Ti, Te, settings, state=None, species='ions'):
     if state is None:
         v_th = get_thermal_velocity(Ti, settings, species=species)
