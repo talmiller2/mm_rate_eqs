@@ -362,6 +362,10 @@ def get_density_time_derivatives(state, settings):
             else:
                 f_drag[k] = f_drag[k] + f_drag[k - 1]
 
+        f_trans_L = f_trans_L * settings['transmission_factor']
+        f_trans_R = f_trans_R * settings['transmission_factor']
+        f_trans_uniform = f_trans_uniform * settings['transmission_factor']
+
         # combine rates
         dn_c_dt = f_scat_c + f_drag + f_trans_uniform
         dn_tL_dt = f_scat_tL + f_trans_L + f_trans_uniform
@@ -405,8 +409,8 @@ def get_density_time_derivatives(state, settings):
             else:
                 f_drag[k] = f_drag[k] + f_drag[k - 1]
 
-        # f_trans_L = state['flux_trans_L'] / cell_sizes
-        # f_trans_R = state['flux_trans_R'] / cell_sizes
+        f_trans_L = f_trans_L * settings['transmission_factor']
+        f_trans_R = f_trans_R * settings['transmission_factor']
 
         # combine rates
         dn_c_dt = f_scat_c + f_drag
@@ -416,33 +420,6 @@ def get_density_time_derivatives(state, settings):
         raise TypeError('invalid transition_type = ' + settings['transition_type'])
 
     return dn_c_dt, dn_tL_dt, dn_tR_dt
-
-
-# def get_transmission_fluxes(state, settings):
-#     n = state['n']
-#     n_tL = state['n_tL']
-#     n_tR = state['n_tR']
-#     n_trans = settings['n_transition']
-#     v_th = state['v_th']
-#
-#     # transition filters
-#     f1, f2 = get_transition_filters(n, settings)
-#
-#     flux_trans_R = v_th * n_tR
-#
-#     flux_trans_L = np.zeros(settings['number_of_cells'])
-#     for k in range(0, settings['number_of_cells'] - 1):
-#         if settings['transition_type'] == 'none':
-#             flux_trans_L[k] = - v_th[k + 1] * n_tL[k + 1]
-#         elif settings['transition_type'] == 'smooth_transition_to_tR':
-#             flux_trans_L[k] = - v_th[k + 1] * n_tL[k + 1] / f1[k + 1]
-#         elif settings['transition_type'] == 'sharp_transition_to_tR':
-#             if n[k] > n_trans:  # shut off left flux below threshold
-#                 flux_trans_L[k] = - v_th[k + 1] * n_tL[k + 1]
-#             else:
-#                 flux_trans_L[k] = 0
-#
-#     return flux_trans_R, flux_trans_L
 
 
 def get_fluxes(state, settings):
@@ -473,6 +450,10 @@ def get_fluxes(state, settings):
             flux_trans_L[k] = - v_th[k + 1] * n_tL[k + 1] / f1[k + 1] * flux_factor
             flux_trans_uniform[k] = (v_th[k] * n[k] / f2[k]) * flux_factor
             flux_mmm_drag[k] = (- U[k + 1] * n_c[k + 1]) * flux_factor
+
+        flux_trans_L = flux_trans_L * settings['transmission_factor']
+        flux_trans_R = flux_trans_R * settings['transmission_factor']
+        flux_trans_uniform = flux_trans_uniform * settings['transmission_factor']
         flux = flux_trans_R + flux_trans_L + flux_trans_uniform + flux_mmm_drag
 
     elif settings['transition_type'] in ['none', 'smooth_transition_to_tR', 'sharp_transition_to_tR']:
@@ -490,9 +471,8 @@ def get_fluxes(state, settings):
                 else:
                     flux_trans_L[k] = 0
 
-        # flux_trans_L = state['flux_trans_L'] * flux_factor
-        # flux_trans_R = state['flux_trans_R'] * flux_factor
-
+        flux_trans_L = flux_trans_L * settings['transmission_factor']
+        flux_trans_R = flux_trans_R * settings['transmission_factor']
         flux = flux_trans_R + flux_trans_L + flux_mmm_drag
 
     else:

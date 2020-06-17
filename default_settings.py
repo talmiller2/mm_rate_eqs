@@ -69,9 +69,9 @@ def define_default_settings(settings=None):
     if 'number_of_cells' not in settings:
         # settings['number_of_cells'] = 30
         # settings['number_of_cells'] = 50
-        # settings['number_of_cells'] = 100
+        settings['number_of_cells'] = 100
         # settings['number_of_cells'] = 150
-        settings['number_of_cells'] = 200
+        # settings['number_of_cells'] = 200
         # settings['number_of_cells'] = 300
         # settings['number_of_cells'] = 1000
     if 'length_main_cell' not in settings:
@@ -99,9 +99,9 @@ def define_default_settings(settings=None):
         settings['adaptive_dimension'] = False
         # settings['adaptive_dimension'] = True
     if 'transition_type' not in settings:
-        # settings['transition_type'] = 'none'
+        settings['transition_type'] = 'none'
         # settings['transition_type'] = 'smooth_transition_to_uniform'
-        settings['transition_type'] = 'smooth_transition_to_tR'
+        # settings['transition_type'] = 'smooth_transition_to_tR'
         # settings['transition_type'] = 'sharp_transition_to_tR'
     if 'adaptive_mirror' not in settings:
         # settings['adaptive_mirror'] = 'none'
