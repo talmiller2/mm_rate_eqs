@@ -8,13 +8,14 @@ def define_default_settings(settings=None):
         settings = {}
 
     #### physical constants
-    settings['lnCoulombLambda'] = 10.0
     settings['eV'] = 1.0
     settings['keV'] = 1e3 * settings['eV']
     settings['eV_to_K'] = 1.16e4
     settings['MeV_to_J'] = 1e6 * 1.6e-19
     settings['kB_K'] = 1.380649e-23  # J/K
-    settings['kB_eV'] = settings['kB_K'] * settings['eV_to_K']  # J/eV
+    settings['e'] = 1.60217662e-19  # Coulomb (elementary charge)
+    settings['kB_eV'] = settings['kB_K'] * settings['eV_to_K']  # J/eV (numerically same as e)
+    settings['eps0'] = 8.85418781e-12  # Farad/m^2 (vacuum permittivity)
 
     ### plasma parameters5
     if 'gas_name' not in settings:
@@ -27,11 +28,15 @@ def define_default_settings(settings=None):
 
     ### system parameters
     if 'n0' not in settings:
-        settings['n0'] = 1e22  # m^-3
+        # settings['n0'] = 1e22  # m^-3
+        settings['n0'] = 5e21  # m^-3
     if 'Ti_0' not in settings:
-        settings['Ti_0'] = 3 * settings['keV']
+        # settings['Ti_0'] = 3 * settings['keV']
+        settings['Ti_0'] = 9 * settings['keV']
     if 'Te_0' not in settings:
-        settings['Te_0'] = 1 * settings['keV']
+        # settings['Te_0'] = 1 * settings['keV']
+        # settings['Te_0'] = 3 * settings['keV']
+        settings['Te_0'] = 9 * settings['keV']
     if 'B' not in settings:
         settings['B'] = 1.0 * np.sqrt(settings['n0'] / 1e20 * settings['Ti_0'] / (5 * settings['keV']))  # [Tesla]
     if 'Rm' not in settings:
@@ -41,6 +46,9 @@ def define_default_settings(settings=None):
         # settings['Rm'] = 5.0
     if 'U0' not in settings:
         settings['U0'] = 0
+        # settings['U0'] = 0.001
+        # settings['U0'] = 0.01
+        # settings['U0'] = 0.1
     if 'mmm_velocity_type' not in settings:
         # settings['mmm_velocity_type'] = 'absolute'
         settings['mmm_velocity_type'] = 'relative_to_thermal_velocity'
@@ -54,7 +62,10 @@ def define_default_settings(settings=None):
         # settings['delta_n_smoothing_factor'] = 0.1
         # settings['delta_n_smoothing_factor'] = 0.5
     if 'cell_size' not in settings:
-        settings['cell_size'] = 3.0  # m (MMM wavelength)
+        # settings['cell_size'] = 3.0  # m (MMM wavelength)
+        # settings['cell_size'] = 4.0  # m (MMM wavelength)
+        settings['cell_size'] = 5.0  # m (MMM wavelength)
+        # settings['cell_size'] = 10.0  # m (MMM wavelength)
     if 'number_of_cells' not in settings:
         # settings['number_of_cells'] = 30
         # settings['number_of_cells'] = 50
@@ -71,11 +82,18 @@ def define_default_settings(settings=None):
     settings['volume_main_cell'] = settings['length_main_cell'] * settings['cross_section_main_cell']  # m^3
 
     ### additional options
-    if 'uniform_system' not in settings:
-        # settings['uniform_system'] = True
-        settings['uniform_system'] = False
+    if 'assume_constant_density' not in settings:
+        # settings['assume_constant_density'] = True
+        settings['assume_constant_density'] = False
+    if 'assume_constant_temperature' not in settings:
+        # settings['assume_constant_temperature'] = True
+        settings['assume_constant_temperature'] = False
     if 'plasma_dimension' not in settings:
-        settings['plasma_dimension'] = 1.0
+        # settings['plasma_dimension'] = 1.0
+        # settings['plasma_dimension'] = 1.5
+        # settings['plasma_dimension'] = 1.8
+        # settings['plasma_dimension'] = 2.0
+        settings['plasma_dimension'] = 2.5
         # settings['plasma_dimension'] = 3.0
     if 'adaptive_dimension' not in settings:
         settings['adaptive_dimension'] = False
@@ -87,9 +105,9 @@ def define_default_settings(settings=None):
         # settings['transition_type'] = 'sharp_transition_to_tR'
     if 'adaptive_mirror' not in settings:
         # settings['adaptive_mirror'] = 'none'
-        # settings['adaptive_mirror'] = 'adjust_U'
+        settings['adaptive_mirror'] = 'adjust_U'
         # settings['adaptive_mirror'] = 'adjust_cell_size_with_mfp'
-        settings['adaptive_mirror'] = 'adjust_cell_size_with_vth'
+        # settings['adaptive_mirror'] = 'adjust_cell_size_with_vth'
     if 'alpha_definition' not in settings:
         # settings['alpha_definition'] = 'old_constant'
         # settings['alpha_definition'] = 'geometric_constant'
@@ -103,19 +121,18 @@ def define_default_settings(settings=None):
         settings['left_boundary_condition'] = 'enforce_tR'
         # settings['left_boundary_condition'] = 'uniform_scaling'
     if 'right_boundary_condition' not in settings:
-        # settings['right_boundary_condition'] = 'enforce_tL'
-        settings['right_boundary_condition'] = 'uniform_scaling'
+        settings['right_boundary_condition'] = 'enforce_tL'
+        # settings['right_boundary_condition'] = 'uniform_scaling'
     if 'right_boundary_condition_density_type' not in settings:
         settings['right_boundary_condition_density_type'] = 'n_transition'
         # settings['right_boundary_condition_density_type'] = 'n_expander'
-    if 'ion_velocity_factor' not in settings:
-        settings['ion_velocity_factor'] = 1.0
-        # settings['ion_velocity_factor'] = np.sqrt(2)
-    if 'electron_velocity_factor' not in settings:
-        settings['electron_velocity_factor'] = 1.0
+    if 'transmission_factor' not in settings:
+        # diffusion of ions increased by a factor of (Ti + Te)/Ti, see Bellan p. 19
+        settings['transmission_factor'] = (settings['Ti_0'] + settings['Te_0']) / settings['Ti_0']
     if 'ion_scattering_rate_factor' not in settings:
-        settings['ion_scattering_rate_factor'] = 1.0
-        # settings['ion_scattering_rate_factor'] = 10.0
+        # settings['ion_scattering_rate_factor'] = 1.0
+        settings['ion_scattering_rate_factor'] = 30.0
+        # settings['ion_scattering_rate_factor'] = 100.0
     if 'electron_scattering_rate_factor' not in settings:
         settings['electron_scattering_rate_factor'] = 1.0
 
@@ -151,13 +168,15 @@ def define_default_settings(settings=None):
         settings['n_min'] = 1e17
         # settings['n_min'] = 1e19
     if 'n_end_min' not in settings: # minimal density allowed as the right boundary condition and n_transition
+        # settings['n_end_min'] = 1e18
         settings['n_end_min'] = 1e20
     if 'fail_on_minimal_density' not in settings:
         settings['fail_on_minimal_density'] = False
         # settings['fail_on_minimal_density'] = True
     if 'flux_normalized_termination_cutoff' not in settings:
         # settings['flux_normalized_termination_cutoff'] = 0.01
-        settings['flux_normalized_termination_cutoff'] = 0.05
+        # settings['flux_normalized_termination_cutoff'] = 0.05
+        settings['flux_normalized_termination_cutoff'] = 0.1
         # settings['flux_normalized_termination_cutoff'] = 0.3
     if 'print_time_step_info' not in settings:
         settings['print_time_step_info'] = True
@@ -170,7 +189,7 @@ def define_default_settings(settings=None):
         settings['save_format'] = 'pickle'
         # settings['save_format'] = 'mat'
     if 'save_dir' not in settings:
-        # settings['save_dir'] = 'runs/test/'
+        settings['save_dir'] = 'runs/test4/'
         # settings['save_dir'] = 'runs/test_U_0_smooth_transition/'
         # settings['save_dir'] = 'runs/test_U_1e5_smooth_transition/'
         # settings['save_dir'] = 'runs/test_U_1e6_smooth_transition/'
@@ -190,7 +209,7 @@ def define_default_settings(settings=None):
         # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_smooth_transition_adjust_cell_size_right_bc_uniform_scaling2/'
         # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_smooth_transition_adjust_cell_size_both_bc_uniform_scaling/'
         # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_transition_density_factor_0.5'
-        settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0'])
+        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0'])
     if 'state_file' not in settings:
         settings['state_file'] = 'state'
     if 'settings_file' not in settings:

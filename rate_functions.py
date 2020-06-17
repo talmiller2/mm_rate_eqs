@@ -5,13 +5,6 @@ import numpy as np
 from loss_cone_functions import get_solid_angles
 
 
-def theta_fun(x):
-    if x > 0:
-        return x
-    else:
-        return 0
-
-
 def get_gamma_dimension(d=1):
     """
     gamma of ideal gas EOS, in d spatial dimensions
@@ -41,7 +34,8 @@ def get_isentrope_temperature(n, settings, species='ions'):
     else:
         T0 = settings['Te_0']
 
-    if settings['uniform_system'] is True:
+    # if settings['uniform_system'] is True:
+    if settings['assume_constant_temperature'] is True:
         return T0 + 0 * n
     else:
         if settings['adaptive_dimension'] is True:
@@ -56,72 +50,107 @@ def get_isentrope_temperature(n, settings, species='ions'):
             return T0 * (n / n0) ** (get_gamma_dimension(settings['plasma_dimension']) - 1)
 
 
-def get_dominant_temperature(Ti, Te, settings, quick_mode=True):
-    """
-    define the relevant temperature to use in the expression for the ion-electron Coulomb scattering rate
-    """
-    if quick_mode is True:
-        # if the temperature difference is not too large, the electrons have the larger thermal velociry,
-        # and therefore define the dominant temperature
-        return Te
-    else:
-        if type(Te) is not type(Ti):
-            raise TypeError('Both temperature arguments need to be of consistent type.')
-        if type(Te) is float or type(Te) is np.float64 or type(Te) is int:
-            if Ti / Te > settings['mi'] / settings['me']:
-                return Ti
-            else:
-                return Te
-        elif type(Te) is np.ndarray:
-            Tie = np.zeros(len(Te))
-            for i in range(len(Te)):
-                if Ti[i] / Te[i] > settings['mi'] / settings['me']:
-                    Tie[i] = Ti[i]
-                else:
-                    Tie[i] = Ti[i]
-            return Tie
-        else:
-            raise TypeError('invalid type(Te) = ' + str(type(Te)))
-
-
 def get_thermal_velocity(T, settings, species='ions'):
+    '''
+    Calculate the thermal velocity of particles according to 1/2*m*v_th^2 = 3/2*kB*T
+    '''
     if species == 'ions':
-        species_factor = 1.0 * settings['ion_velocity_factor']
-        T0 = settings['Ti_0']
+        m = settings['mi']
+        if settings['assume_constant_temperature'] is True:
+            T = settings['Ti_0'] + 0 * T
+    elif species == 'electrons':
+        m = settings['me']
+        if settings['assume_constant_temperature'] is True:
+            T = settings['Te_0'] + 0 * T
     else:
-        species_factor = np.sqrt(settings['mi'] / settings['me']) * settings['electron_velocity_factor']
-        T0 = settings['Te_0']
+        raise ValueError('invalid option for species = ' + str(species))
 
-    if settings['uniform_system'] is True:
-        return 1.4e4 * species_factor * np.sqrt(T0 / settings['A_atomic_weight']) + 0 * T
-    else:
-        return 1.4e4 * species_factor * np.sqrt(T / settings['A_atomic_weight'])
+    return np.sqrt(3.0 * settings['kB_eV'] * T / m)
 
 
 def get_coulomb_scattering_rate(n, Ti, Te, settings, species='ions'):
     """
-    Coulomb scattering rate (Bellan 'Fundamentals of Plasma Physics' p. 15, 21)
+    Coulomb scattering rate for ions or electrons, scattering off the other species
     """
-    Tie = get_dominant_temperature(Ti, Te, settings)
+    if settings['assume_constant_density'] is True:
+        n = settings['n0'] + 0 * n
 
-    if settings['uniform_system'] is True:
-        if type(n) is not float:
-            n = n[0] + 0 * n
+    if settings['assume_constant_temperature'] is True:
+        Ti = settings['Ti_0'] + 0 * Ti
+        Te = settings['Te_0'] + 0 * Te
 
-    Zi = settings['Z_ion']
     if species == 'ions':
-        i_on_i_factor = settings['ion_scattering_rate_factor'] * Zi ** 4 / np.sqrt(settings['mi'] / settings['me'])
-        i_on_e_factor = settings['ion_scattering_rate_factor'] * Zi ** 2 / (settings['mi'] / settings['me'])
-        return 4e-12 * settings['lnCoulombLambda'] * n * (Ti ** (-1.5) * i_on_i_factor + Tie ** (-1.5) * i_on_e_factor)
+        scat_rate = get_specific_coulomb_scattering_rate(n, Te, n, Ti, settings, impact_specie='i', target_specie='e') \
+                    + get_specific_coulomb_scattering_rate(n, Te, n, Ti, settings, impact_specie='i', target_specie='i')
+        return scat_rate * settings['ion_scattering_rate_factor']
+    elif species == 'electrons':
+        scat_rate = get_specific_coulomb_scattering_rate(n, Te, n, Ti, settings, impact_specie='e', target_specie='e') \
+                    + get_specific_coulomb_scattering_rate(n, Te, n, Ti, settings, impact_specie='e', target_specie='i')
+        return scat_rate * settings['electron_scattering_rate_factor']
     else:
-        e_on_i_factor = settings['electron_scattering_rate_factor'] * Zi ** 2
-        e_on_e_factor = settings['electron_scattering_rate_factor']
-        return 4e-12 * settings['lnCoulombLambda'] * n * (Tie ** (-1.5) * e_on_i_factor + Te ** (-1.5) * e_on_e_factor)
+        raise ValueError('invalid option for species = ' + str(species))
+
+
+def get_specific_coulomb_scattering_rate(ne, Te, ni, Ti, settings, impact_specie='e', target_specie='i'):
+    """
+    Coulomb scattering rate based on the general formula of
+    "2007 - Fundamenski et al - Comparison of Coulomb Collision Rates in the
+    Plasma Physics and Magnetically Confined Fusion Literature"
+    densities in m^-3 and temperatures in eV
+    """
+    eps0 = settings['eps0']
+    e = settings['e']
+    coulomb_log_dict = calculate_coulomb_logarithm(ne, Te, ni, Ti,
+                                                   Z=settings['Z_ion'],
+                                                   A=settings['A_atomic_weight'])
+
+    if impact_specie == 'e':
+        m_s1 = settings['me']
+        Z_s1 = 1
+        T_s1 = Te
+    else:
+        m_s1 = settings['mi']
+        Z_s1 = settings['Z_ion']
+        T_s1 = Ti
+
+    if target_specie == 'e':
+        m_s2 = settings['me']
+        Z_s2 = 1
+        T_s2 = Te
+        n_s2 = ne
+    else:
+        m_s2 = settings['mi']
+        Z_s2 = settings['Z_ion']
+        T_s2 = Ti
+        n_s2 = ni
+
+    if impact_specie == 'e' and target_specie == 'e':
+        coulomb_log = coulomb_log_dict['ee']
+    elif impact_specie == 'i' and target_specie == 'i':
+        coulomb_log = coulomb_log_dict['ii']
+    elif (impact_specie == 'e' and target_specie == 'i') or (impact_specie == 'i' and target_specie == 'e'):
+        # as a shortcut, check only the first cell temperatures to pick the correct temperature regine
+        Ti_0 = settings['Ti_0']
+        Te_0 = settings['Te_0']
+        if Ti_0 / Te_0 > settings['mi'] / settings['me']:
+            coulomb_log = coulomb_log_dict['ie_overheated_ions']
+        else:
+            if Te_0 > 10 * settings['Z_ion'] ** 2.0:
+                coulomb_log = coulomb_log_dict['ie_hot_electrons']
+            else:
+                coulomb_log = coulomb_log_dict['ie_cold_electrons']
+
+    else:
+        raise ValueError('invalid option for impact/target species.')
+    scat_rate = 2 ** 0.5 / (12 * np.pi ** 1.5) * n_s2 * Z_s1 ** 2 * Z_s2 ** 2 * e ** 4 * coulomb_log / \
+                (eps0 ** 2 * m_s1 ** 0.5 * (e * T_s1) ** 1.5) \
+                * (1 + m_s1 / m_s2) / (1 + m_s1 / m_s2 * T_s1 / T_s2) ** 1.5
+    return scat_rate
 
 
 def calculate_coulomb_logarithm(ne, Te, ni, Ti, Z=1, A=1):
     """
-    Coulomb logarithm for different interactions, based on the NRL formulary.
+    Coulomb logarithm for different interactions, based on the NRL formulary 2019.
     densities in m^-3 and temperatures in eV
     """
     ne_cm = ne * 1e-6  # convert units to cm^-3 used in the formulas
@@ -166,8 +195,8 @@ def get_mirror_cell_sizes(n, Ti, Te, settings, state=None):
         return settings['cell_size'] + 0 * Ti
 
 
-def get_transmission_rate(v_th, mirror_cell_sizes):
-    return v_th / mirror_cell_sizes
+def get_transmission_rate(v_th, mirror_cell_sizes, settings):
+    return v_th / mirror_cell_sizes * settings['transmission_factor']
 
 
 def calculate_transition_density(n, Ti, Te, settings, state=None):

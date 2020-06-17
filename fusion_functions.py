@@ -113,30 +113,46 @@ def get_fusion_sigma_v_E_reaction(T_eV, reaction='D-T_to_n_alpha'):
     return sigma_v_E * 1e6 * 1.6e-19  # MeV to J
 
 
-def get_fusion_power(n, T_keV, reaction='D-T_to_n_alpha'):
-    return 0.25 * n ** 2 * get_fusion_sigma_v_E_reaction(T_keV * 1e3, reaction=reaction)
+def get_fusion_power(ni, T_keV, reaction='D-T_to_n_alpha'):
+    return (ni / 2.0) ** 2 * get_fusion_sigma_v_E_reaction(T_keV * 1e3, reaction=reaction)
+
+
+def get_fusion_charged_power(ni, T_keV, reaction='D-T_to_n_alpha'):
+    return (ni / 2.0) ** 2 * get_sigma_v_fusion(T_keV * 1e3, reaction=reaction) \
+           * get_E_charged(reaction=reaction) * 1e6 * 1.6e-19  # MeV to J
 
 
 def get_brem_radiation_loss(ni, ne, Te, Z_ion):
-    # Fusion Plasma Analysis, p. 228, Bremsstrahlung radiation [W/m^3], T in [keV]
+    """
+    Bremsstrahlung radiation (source "Fusion Plasma Analysis", p. 228)
+    input T in [keV], n in [m^-3] (mks)
+    output in [W/m^3]
+    """
     return 4.8e-37 * Z_ion ** 2 * ni * ne * Te ** (0.5)
 
 
 def get_cyclotron_radiation_loss(ne, Te, B):
-    # Fusion Plasma Analysis, p. 231, cyclotron radiation [W/m^3], B in [Tesla], T in [keV]
-    return 6.2e-17 * B ** 2 * ne * Te
+    """
+    Cyclotron/synchrotron radiation (source "Fusion Plasma Analysis", p. 231)
+    Majority self-absorbs to only 1e-2 of it remain (source Wesson "Tokamaks" p. 230)
+    input T in [keV], n in [m^-3] (mks)
+    output in [W/m^3]
+    """
+    cyclotron_power = 6.2e-17 * B ** 2 * ne * Te
+    radiated_fraction = 1e-2
+    return radiated_fraction * cyclotron_power
 
 
-def get_lawson_parameters(n, Ti, settings, reaction='D-T_to_n_alpha'):
+def get_lawson_parameters(ni, Ti, settings, reaction='D-T_to_n_alpha'):
     sigma_v_fusion = get_sigma_v_fusion(Ti, reaction=reaction)
     E_charged = get_E_charged(reaction=reaction) * settings['MeV_to_J']  # J
     n_tau_lawson = 12 * settings['kB_eV'] * Ti / (E_charged * sigma_v_fusion)
-    tau_lawson = n_tau_lawson / n
-    flux_lawson = 1 / n_tau_lawson * settings['volume_main_cell'] * n ** 2
+    tau_lawson = n_tau_lawson / ni
+    flux_lawson = 1 / n_tau_lawson * settings['volume_main_cell'] * ni ** 2
     return tau_lawson, flux_lawson
 
 
-def define_plasma_parameters(gas_name='hydrogen', ionization_level=None):
+def define_plasma_parameters(gas_name='hydrogen', ionization_level=1):
     me = 9.10938356e-31  # kg
     mp = 1.67262192e-27  # kg
     if gas_name == 'hydrogen':
@@ -149,7 +165,7 @@ def define_plasma_parameters(gas_name='hydrogen', ionization_level=None):
         A = 3.0160492
         Z = 1.0
     elif gas_name == 'DT_mix':
-        A = np.mean([2.01410177811, 3.0160492])  # some approximation
+        A = np.mean([2.01410177811, 3.0160492])  # approximate as mean of D and T
         Z = 1.0
     elif gas_name == 'helium':
         A = 4.002602
@@ -202,13 +218,19 @@ def get_magnetic_pressure(B):
     return (B / 0.501) ** 2.0
 
 
-def get_ideal_gas_pressure(n, T):
+def get_ideal_gas_pressure(n, T, settings):
     """
     Ideal gas pressure kB*n*T
     source https://en.wikipedia.org/wiki/Boltzmann_constant
-    n in [m^-3], T in [eV], return in [bar]
+    n in total density [m^-3], T in [eV], return in [bar]
     """
-    kB = 1.380649e-23  # J/K
-    eV_to_K = 1.16e4
     Pa_to_bar = 1e-5
-    return kB * n * eV_to_K * T * Pa_to_bar
+    return settings['kB_K'] * n * settings['eV_to_K'] * T * Pa_to_bar
+
+
+def get_ideal_gas_energy_per_volume(n, T, settings):
+    """
+    Ideal gas energy for monoatomic gas 3/2*kB*n*T
+    n in total density [m^-3], T in [eV], return in [J/m^3]=[bar]
+    """
+    return 3.0 / 2 * settings['kB_K'] * n * settings['eV_to_K'] * T

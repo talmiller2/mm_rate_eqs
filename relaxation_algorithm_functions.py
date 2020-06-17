@@ -38,13 +38,12 @@ def find_rate_equations_steady_state(settings):
     while t_curr < settings['t_stop']:
 
         state['v_th'] = get_thermal_velocity(state['Ti'], settings, species='ions')
-        # state['flux_trans_R'], state['flux_trans_L'] = get_transmission_fluxes(state, settings)
         state['coulomb_scattering_rate'] = get_coulomb_scattering_rate(state['n'], state['Ti'], state['Te'], settings,
                                                                        species='ions')
         state['mean_free_path'] = calculate_mean_free_path(state['n'], state['Ti'], state['Te'], settings, state=state,
                                                            species='ions')
         state['mirror_cell_sizes'] = get_mirror_cell_sizes(state['n'], state['Ti'], state['Te'], settings, state=state)
-        state['transmission_rate'] = get_transmission_rate(state['v_th'], state['mirror_cell_sizes'])
+        state['transmission_rate'] = get_transmission_rate(state['v_th'], state['mirror_cell_sizes'], settings)
         state['U'] = get_mmm_velocity(state, settings)
         state['mmm_drag_rate'] = get_mmm_drag_rate(state, settings)
         state['alpha_tR'], state['alpha_tL'], state['alpha_c'] = define_loss_cone_fractions(state, settings)
@@ -150,6 +149,7 @@ def initialize_logging(settings):
 def initialize_densities(settings):
     settings['n_transition'] = calculate_transition_density(settings['n0'], settings['Ti_0'], settings['Te_0'],
                                                             settings)
+    settings['theoretical_n_transition'] = settings['n_transition']
 
     # right boundary density
     if settings['right_boundary_condition_density_type'] == 'n_transition':
@@ -197,6 +197,7 @@ def initialize_densities(settings):
 
 def print_basic_plasma_info(state, settings):
     logging.info('n0 = ' + str('{:.2e}'.format(settings['n0'])) + ' m^-3')
+    logging.info('theoretical n_transition = ' + str('{:.2e}'.format(settings['theoretical_n_transition'])) + ' m^-3')
     logging.info('n_transition = ' + str('{:.2e}'.format(settings['n_transition'])) + ' m^-3')
     logging.info('n_end = ' + str('{:.2e}'.format(settings['n_end'])) + ' m^-3')
     logging.info('Ti_0 = ' + str(settings['Ti_0']) + ' eV')
@@ -204,6 +205,7 @@ def print_basic_plasma_info(state, settings):
     logging.info('v_th (main cell) = ' + str('{:.2e}'.format(state['v_th'][0])) + ' m/s')
     logging.info('mfp (main cell) = ' + str('{:.2e}'.format(state['mean_free_path'][0])) + ' m')
     return
+
 
 def define_time_step(state, settings):
     dt_list = []

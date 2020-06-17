@@ -5,13 +5,13 @@ from relaxation_algorithm_functions import find_rate_equations_steady_state
 from relaxation_algorithm_functions import load_simulation, plot_relaxation_status, plot_relaxation_end
 
 ### test the algorithm
+settings = {}
 # settings = {'gas_name': 'hydrogen'}
-# settings = define_default_settings(settings)
-settings = define_default_settings()
+# settings = {'save_state': 'False'}
+settings = define_default_settings(settings)
 plt.close('all')
 
 state = find_rate_equations_steady_state(settings)
-
 
 ### test loading
 # save_format = 'mat'
