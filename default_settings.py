@@ -52,25 +52,27 @@ def define_default_settings(settings=None):
     if 'mmm_velocity_type' not in settings:
         # settings['mmm_velocity_type'] = 'absolute'
         settings['mmm_velocity_type'] = 'relative_to_thermal_velocity'
-    if 'transition_density_factor' not in settings:
-        # settings['transition_density_factor'] = 0.5
-        settings['transition_density_factor'] = 0.1
-        # settings['transition_density_factor'] = 0.01
-    if 'delta_n_smoothing_factor' not in settings:
-        # settings['delta_n_smoothing_factor'] = 0.01
-        settings['delta_n_smoothing_factor'] = 0.05
-        # settings['delta_n_smoothing_factor'] = 0.1
-        # settings['delta_n_smoothing_factor'] = 0.5
     if 'cell_size' not in settings:
         # settings['cell_size'] = 3.0  # m (MMM wavelength)
         # settings['cell_size'] = 4.0  # m (MMM wavelength)
         settings['cell_size'] = 5.0  # m (MMM wavelength)
         # settings['cell_size'] = 10.0  # m (MMM wavelength)
+    if 'mfp_min' not in settings:
+        settings['mfp_min'] = 0.1 * settings['cell_size']
+    if 'mfp_max' not in settings:
+        # settings['mfp_max'] = 100 * settings['cell_size']
+        # settings['mfp_max'] = 50 * settings['cell_size']
+        settings['mfp_max'] = 10 * settings['cell_size']
+    if 'delta_n_smoothing_factor' not in settings:
+        settings['delta_n_smoothing_factor'] = 0.01
+        # settings['delta_n_smoothing_factor'] = 0.05
+        # settings['delta_n_smoothing_factor'] = 0.1
+        # settings['delta_n_smoothing_factor'] = 0.5
     if 'number_of_cells' not in settings:
         # settings['number_of_cells'] = 30
         # settings['number_of_cells'] = 50
-        settings['number_of_cells'] = 100
-        # settings['number_of_cells'] = 150
+        # settings['number_of_cells'] = 100
+        settings['number_of_cells'] = 150
         # settings['number_of_cells'] = 200
         # settings['number_of_cells'] = 300
         # settings['number_of_cells'] = 1000
@@ -153,23 +155,24 @@ def define_default_settings(settings=None):
         # settings['dt_status'] = 1e-6
         # settings['dt_status'] = 6e-6
         # settings['dt_status'] = 1e-5
-        # settings['dt_status'] = 1e-4
+        settings['dt_status'] = 1e-4
         # settings['dt_status'] = 5e-4
-        settings['dt_status'] = 1e-3
+        # settings['dt_status'] = 1e-3
     if 'dt_factor' not in settings:
         # settings['dt_factor'] = 0.3
         settings['dt_factor'] = 0.1
     if 'dt_min' not in settings:
         settings['dt_min'] = 1e-20
-    if 'n_min' not in settings: # minimal density allowed in the entire system
+    if 'n_min' not in settings:  # minimal density allowed in the entire system
         # settings['n_min'] = 0
         # settings['n_min'] = 1e10
         # settings['n_min'] = 1e15
         settings['n_min'] = 1e17
         # settings['n_min'] = 1e19
-    if 'n_end_min' not in settings: # minimal density allowed as the right boundary condition and n_transition
-        # settings['n_end_min'] = 1e18
-        settings['n_end_min'] = 1e20
+    if 'n_end_min' not in settings:  # minimal density allowed as the right boundary condition and n_transition
+        settings['n_end_min'] = 1e18
+        # settings['n_end_min'] = 1e20
+        # settings['n_end_min'] = 5e20
     if 'fail_on_minimal_density' not in settings:
         settings['fail_on_minimal_density'] = False
         # settings['fail_on_minimal_density'] = True

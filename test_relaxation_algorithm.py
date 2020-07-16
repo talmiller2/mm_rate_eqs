@@ -8,8 +8,8 @@ from relaxation_algorithm_functions import load_simulation, plot_relaxation_stat
 settings = {}
 # settings['gas_name'] = 'hydrogen'
 # settings['save_state'] = 'False'
-# settings['assume_constant_temperature'] = True
-# settings['ion_scattering_rate_factor'] = 150
+settings['assume_constant_temperature'] = True
+settings['ion_scattering_rate_factor'] = 200
 settings = define_default_settings(settings)
 plt.close('all')
 
