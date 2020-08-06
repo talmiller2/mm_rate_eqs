@@ -194,8 +194,30 @@ def get_mirror_cell_sizes(n, Ti, Te, settings, state=None):
         return settings['cell_size'] + 0 * Ti
 
 
-def get_transmission_rate(v_th, mirror_cell_sizes, settings):
-    return v_th / mirror_cell_sizes * settings['transmission_factor']
+def get_transmission_velocities(state, settings):
+    if settings['use_collective_velocity'] is True:
+        v_R = state['v_col'] + state['v_th']  # gives simply constant v_th[0] in all cells
+        v_L = state['v_col'] - state['v_th']
+        # for high enough collective velocity, left transmission is halted
+        for k in range(settings['number_of_cells']):
+            if v_L[k] < 0: v_L[k] = 0
+    else:
+        v_R = state['v_th']
+        v_L = state['v_th']
+
+    if settings['transition_type'] == 'none':
+        pass
+    elif settings['transition_type'] == 'smooth_transition_to_tR':
+        # reduce the left transmission below the threshold, smoothly
+        v_L = v_L / state['f_above']
+    elif settings['transition_type'] == 'sharp_transition_to_tR':
+        # reduce the left transmission below the threshold, sharply
+        for k in range(settings['number_of_cells']):
+            if state['n'][k] < settings['n_transition']: v_L[k] = 0
+    else:
+        raise TypeError('invalid transition_type = ' + settings['transition_type'])
+
+    return v_R, v_L
 
 
 def calculate_transition_density(n, Ti, Te, settings, state=None):
@@ -205,7 +227,6 @@ def calculate_transition_density(n, Ti, Te, settings, state=None):
         mfp = calculate_mean_free_path(n, Ti, Te, settings, state=state)
 
     if settings['assume_constant_temperature'] is True:
-        # in an isothermal expansion,
         return settings['n0'] * (settings['mfp_max'] / mfp) ** (-1)
     else:
         return settings['n0'] * (settings['mfp_min'] / mfp) ** (
@@ -218,10 +239,7 @@ def get_mmm_velocity(state, settings):
     if settings['mmm_velocity_type'] == 'absolute':
         U0 = settings['U0']
     elif settings['mmm_velocity_type'] == 'relative_to_thermal_velocity':
-        if 'v_th' not in state:
-            v_th = get_thermal_velocity(state['Ti'], settings)
-        else:
-            v_th = state['v_th']
+        v_th = state['v_th']
         U0 = settings['U0'] * v_th[0]
     else:
         raise ValueError('invalid mmm_velocity_type: ' + settings['mmm_velocity_type'])
@@ -229,44 +247,28 @@ def get_mmm_velocity(state, settings):
     if settings['adaptive_mirror'] == 'adjust_U':
         # change U at different positions directly. This is only theoretical, because in reality we can define
         # the MMM frequency, and the velocity is derived from the wavelength (U=wavelength*frequency)
-        if 'v_th' not in state:
-            v_th = get_thermal_velocity(state['Ti'], settings)
-        else:
-            v_th = state['v_th']
+        v_th = state['v_th']
         U = U0 * v_th / v_th[0]
 
     elif settings['adaptive_mirror'] in ['adjust_cell_size_with_mfp', 'adjust_cell_size_with_vth']:
         # the realistic method, the MMM velocity scales with the cell size (wavelength)
-        if 'mirror_cell_sizes' not in state:
-            mirror_cell_sizes = get_mirror_cell_sizes(state['n'], state['Ti'], state['Te'], settings, state=state)
-        else:
-            mirror_cell_sizes = state['mirror_cell_sizes']
+        mirror_cell_sizes = state['mirror_cell_sizes']
         U = U0 * mirror_cell_sizes / mirror_cell_sizes[0]
-
     else:
         U = U0 + 0 * state['n']
 
-    return U
-
-
-def get_mmm_drag_rate(state, settings):
-    n = state['n']
-    U = state['U']
-    n_trans = settings['n_transition']
-
     if settings['transition_type'] == 'none':
-        return U / state['mirror_cell_sizes']
+        pass
     elif settings['transition_type'] in ['smooth_transition_to_uniform', 'smooth_transition_to_tR']:
-        f_above, f_below = get_transition_filters(n, settings)
-        return U / state['mirror_cell_sizes'] / f_above
+        U = U / state['f_above']
     elif settings['transition_type'] == 'sharp_transition_to_tR':
-        U_mod = U
-        for i in range(len(n)):
-            if n[i] < n_trans:
-                U_mod[i] = 0
-        return U_mod / state['mirror_cell_sizes']
+        # reduce the left transmission below the threshold, sharply
+        for k in range(settings['number_of_cells']):
+            if state['n'][k] < settings['n_transition']: U[k] = 0
     else:
         raise ValueError('invalid transition_type: ' + settings['transition_type'])
+
+    return U
 
 
 def define_loss_cone_fractions(state, settings):
@@ -304,15 +306,14 @@ def get_density_time_derivatives(state, settings):
     """
 
     # state variables
-    n = state['n']
     n_c = state['n_c']
     n_tL = state['n_tL']
     n_tR = state['n_tR']
-    n_trans = settings['n_transition']
     nu_s = state['coulomb_scattering_rate']
-    v_th = state['v_th']
+    v_R = state['v_R']
+    v_L = state['v_L']
+    U = state['U']
     cell_sizes = state['mirror_cell_sizes']
-    U = state['mmm_drag_rate'] * state['mirror_cell_sizes']  # effective mirror velocity
     alpha_tL = state['alpha_tL']
     alpha_tR = state['alpha_tR']
     alpha_c = state['alpha_c']
@@ -325,163 +326,62 @@ def get_density_time_derivatives(state, settings):
     f_trans_R = np.zeros(settings['number_of_cells'])
     f_drag = np.zeros(settings['number_of_cells'])
 
-    # transition filters
-    f_above, f_below = get_transition_filters(n, settings)
-
     # define density time derivative
-    if settings['transition_type'] == 'smooth_transition_to_uniform':
-        # smooth transition from the normal rates to a uniform description of the three sub-species,
-        # while turning off the MMM drag and L,R transmission to a right-only transport
-        f_trans_uniform = np.zeros(settings['number_of_cells'])
-        for k in range(settings['number_of_cells']):
-            f_scat_c[k] = + nu_s[k] * (alpha_c[k] * (n_tL[k] + n_tR[k])
-                                       - (alpha_tL[k] + alpha_tR[k]) * n_c[k]) / f_above[k] \
-                          + nu_s[k] / 3 * (n_tL[k] + n_tR[k] - 2 * n_c[k]) / f_below[k]
+    for k in range(settings['number_of_cells']):
+        f_scat_c[k] = + nu_s[k] * (alpha_c[k] * (n_tL[k] + n_tR[k])
+                                   - (alpha_tL[k] + alpha_tR[k]) * n_c[k])
 
-            f_scat_tL[k] = + nu_s[k] * (-(alpha_c[k] + alpha_tR[k]) * n_tL[k]
-                                        + alpha_tL[k] * n_tR[k]
-                                        + alpha_tL[k] * n_c[k]) / f_above[k] \
-                           + nu_s[k] / 3 * (- 2 * n_tL[k] + n_tR[k] + n_c[k]) / f_below[k]
+        f_scat_tL[k] = + nu_s[k] * (-(alpha_c[k] + alpha_tR[k]) * n_tL[k]
+                                    + alpha_tL[k] * n_tR[k]
+                                    + alpha_tL[k] * n_c[k])
 
-            f_scat_tR[k] = + nu_s[k] * (-(alpha_c[k] + alpha_tL[k]) * n_tR[k]
-                                        + alpha_tR[k] * n_tL[k]
-                                        + alpha_tR[k] * n_c[k]) / f_above[k] \
-                           + nu_s[k] / 3 * (n_tL[k] - 2 * n_tR[k] + n_c[k]) / f_below[k]
+        f_scat_tR[k] = + nu_s[k] * (-(alpha_c[k] + alpha_tL[k]) * n_tR[k]
+                                    + alpha_tR[k] * n_tL[k]
+                                    + alpha_tR[k] * n_c[k])
 
-            f_trans_L[k] = - v_th[k] * n_tL[k] / f_above[k] / cell_sizes[k]
-            if k < settings['number_of_cells'] - 1:
-                f_trans_L[k] = f_trans_L[k] + v_th[k + 1] * n_tL[k + 1] / f_above[k + 1] / cell_sizes[k]
+        f_trans_L[k] = - v_L[k] * n_tL[k] / cell_sizes[k] * settings['transmission_factor']
+        if k < settings['number_of_cells'] - 1:
+            f_trans_L[k] = f_trans_L[k] + v_L[k + 1] * n_tL[k + 1] / cell_sizes[k] * settings['transmission_factor']
 
-            f_trans_R[k] = - v_th[k] * n_tR[k] / f_above[k] / cell_sizes[k]
-            if k > 0:
-                f_trans_R[k] = f_trans_R[k] + v_th[k - 1] * n_tR[k - 1] / f_above[k - 1] / cell_sizes[k]
+        f_trans_R[k] = - v_R[k] * n_tR[k] / cell_sizes[k] * settings['transmission_factor']
+        if k > 0:
+            f_trans_R[k] = f_trans_R[k] + v_R[k - 1] * n_tR[k - 1] / cell_sizes[k] * settings['transmission_factor']
 
-            f_trans_uniform[k] = + 1.0 / 3 * (- v_th[k] * n[k]) / f_below[k] / cell_sizes[k]
-            if k > 0:
-                f_trans_uniform[k] = f_trans_uniform[k] + 1.0 / 3 * (v_th[k - 1] * n[k - 1]) / f_below[k - 1] / \
-                                     cell_sizes[k]
+        f_drag[k] = - U[k] * n_c[k] / cell_sizes[k]
+        if k < settings['number_of_cells'] - 1:
+            f_drag[k] = f_drag[k] + U[k + 1] * n_c[k + 1] / cell_sizes[k]
+        else:
+            f_drag[k] = f_drag[k] + f_drag[k - 1]
 
-            f_drag[k] = - U[k] * n_c[k] / cell_sizes[k]
-            if k < settings['number_of_cells'] - 1:
-                f_drag[k] = f_drag[k] + U[k + 1] * n_c[k + 1] / cell_sizes[k]
-            else:
-                f_drag[k] = f_drag[k] + f_drag[k - 1]
-
-        f_trans_L = f_trans_L * settings['transmission_factor']
-        f_trans_R = f_trans_R * settings['transmission_factor']
-        f_trans_uniform = f_trans_uniform * settings['transmission_factor']
-
-        # combine rates
-        dn_c_dt = f_scat_c + f_drag + f_trans_uniform
-        dn_tL_dt = f_scat_tL + f_trans_L + f_trans_uniform
-        dn_tR_dt = f_scat_tR + f_trans_R + f_trans_uniform
-
-    elif settings['transition_type'] in ['none', 'smooth_transition_to_tR', 'sharp_transition_to_tR']:
-        # keeping the same rates, but changing (or not) the left transmission term
-        for k in range(settings['number_of_cells']):
-            f_scat_c[k] = + nu_s[k] * (alpha_c[k] * (n_tL[k] + n_tR[k])
-                                       - (alpha_tL[k] + alpha_tR[k]) * n_c[k])
-
-            f_scat_tL[k] = + nu_s[k] * (-(alpha_c[k] + alpha_tR[k]) * n_tL[k]
-                                        + alpha_tL[k] * n_tR[k]
-                                        + alpha_tL[k] * n_c[k])
-
-            f_scat_tR[k] = + nu_s[k] * (-(alpha_c[k] + alpha_tL[k]) * n_tR[k]
-                                        + alpha_tR[k] * n_tL[k]
-                                        + alpha_tR[k] * n_c[k])
-
-            if settings['transition_type'] == 'none':
-                f_trans_L[k] = - v_th[k] * n_tL[k] / cell_sizes[k]
-                if k < settings['number_of_cells'] - 1:
-                    f_trans_L[k] = f_trans_L[k] + v_th[k + 1] * n_tL[k + 1] / cell_sizes[k]
-            elif settings['transition_type'] == 'smooth_transition_to_tR':
-                f_trans_L[k] = - v_th[k] * n_tL[k] / cell_sizes[k] / f_above[k]
-                if k < settings['number_of_cells'] - 1:
-                    f_trans_L[k] = f_trans_L[k] + v_th[k + 1] * n_tL[k + 1] / cell_sizes[k] / f_above[k + 1]
-            elif settings['transition_type'] == 'sharp_transition_to_tR':
-                if n[k] > n_trans:  # shut off left flux below threshold
-                    f_trans_L[k] = - v_th[k] * n_tL[k] / cell_sizes[k]
-                    if k < settings['number_of_cells'] - 1:
-                        f_trans_L[k] = f_trans_L[k] + v_th[k + 1] * n_tL[k + 1] / cell_sizes[k]
-
-            f_trans_R[k] = - v_th[k] * n_tR[k] / cell_sizes[k]
-            if k > 0:
-                f_trans_R[k] = f_trans_R[k] + v_th[k - 1] * n_tR[k - 1] / cell_sizes[k]
-
-            f_drag[k] = - U[k] * n_c[k] / cell_sizes[k]
-            if k < settings['number_of_cells'] - 1:
-                f_drag[k] = f_drag[k] + U[k + 1] * n_c[k + 1] / cell_sizes[k]
-            else:
-                f_drag[k] = f_drag[k] + f_drag[k - 1]
-
-        f_trans_L = f_trans_L * settings['transmission_factor']
-        f_trans_R = f_trans_R * settings['transmission_factor']
-
-        # combine rates
-        dn_c_dt = f_scat_c + f_drag
-        dn_tL_dt = f_scat_tL + f_trans_L
-        dn_tR_dt = f_scat_tR + f_trans_R
-    else:
-        raise TypeError('invalid transition_type = ' + settings['transition_type'])
+    # combine rates
+    dn_c_dt = f_scat_c + f_drag
+    dn_tL_dt = f_scat_tL + f_trans_L
+    dn_tR_dt = f_scat_tR + f_trans_R
 
     return dn_c_dt, dn_tL_dt, dn_tR_dt
 
 
 def get_fluxes(state, settings):
     # state variables
-    n = state['n']
     n_c = state['n_c']
     n_tL = state['n_tL']
     n_tR = state['n_tR']
-    n_trans = settings['n_transition']
-    v_th = state['v_th']
-    U = state['mmm_drag_rate'] * state['mirror_cell_sizes']  # effective mirror velocity
+    v_R = state['v_R']
+    v_L = state['v_L']
+    U = state['U']
 
     # initializations
     flux_trans_R = np.nan * np.zeros(settings['number_of_cells'])
     flux_trans_L = np.nan * np.zeros(settings['number_of_cells'])
     flux_mmm_drag = np.nan * np.zeros(settings['number_of_cells'])
 
-    # transition filters
-    f_above, f_below = get_transition_filters(n, settings)
-
-    # calculate fluxes (multiplied by 2 because there are 2 plugs to the main cell)
+    # calculate fluxes
     flux_factor = 2.0 * settings['cross_section_main_cell']
-
-    if settings['transition_type'] == 'smooth_transition_to_uniform':
-        flux_trans_uniform = np.nan * np.zeros(settings['number_of_cells'])
-        for k in range(0, settings['number_of_cells'] - 1):
-            flux_trans_R[k] = v_th[k] * n_tR[k] / f_above[k] * flux_factor
-            flux_trans_L[k] = - v_th[k + 1] * n_tL[k + 1] / f_above[k + 1] * flux_factor
-            flux_trans_uniform[k] = (v_th[k] * n[k] / f_below[k]) * flux_factor
-            flux_mmm_drag[k] = (- U[k + 1] * n_c[k + 1]) * flux_factor
-
-        flux_trans_L = flux_trans_L * settings['transmission_factor']
-        flux_trans_R = flux_trans_R * settings['transmission_factor']
-        flux_trans_uniform = flux_trans_uniform * settings['transmission_factor']
-        flux = flux_trans_R + flux_trans_L + flux_trans_uniform + flux_mmm_drag
-
-    elif settings['transition_type'] in ['none', 'smooth_transition_to_tR', 'sharp_transition_to_tR']:
-        for k in range(0, settings['number_of_cells'] - 1):
-            flux_trans_R[k] = v_th[k] * n_tR[k] * flux_factor
-            flux_mmm_drag[k] = (- U[k + 1] * n_c[k + 1]) * flux_factor
-
-            if settings['transition_type'] == 'none':
-                flux_trans_L[k] = - v_th[k + 1] * n_tL[k + 1] * flux_factor
-            elif settings['transition_type'] == 'smooth_transition_to_tR':
-                flux_trans_L[k] = - v_th[k + 1] * n_tL[k + 1] / f_above[k + 1] * flux_factor
-            elif settings['transition_type'] == 'sharp_transition_to_tR':
-                if n[k] > n_trans:  # shut off left flux below threshold
-                    flux_trans_L[k] = - v_th[k + 1] * n_tL[k + 1] * flux_factor
-                else:
-                    flux_trans_L[k] = 0
-
-        flux_trans_L = flux_trans_L * settings['transmission_factor']
-        flux_trans_R = flux_trans_R * settings['transmission_factor']
-        flux = flux_trans_R + flux_trans_L + flux_mmm_drag
-
-    else:
-        raise TypeError('invalid transition_type = ' + settings['transition_type'])
+    for k in range(0, settings['number_of_cells'] - 1):
+        flux_trans_R[k] = v_R[k] * n_tR[k] * flux_factor * settings['transmission_factor']
+        flux_trans_L[k] = - v_L[k + 1] * n_tL[k + 1] * flux_factor * settings['transmission_factor']
+        flux_mmm_drag[k] = - U[k + 1] * n_c[k + 1] * flux_factor
+    flux = flux_trans_R + flux_trans_L + flux_mmm_drag
 
     # save fluxes to state
     state['flux_trans_R'] = flux_trans_R
@@ -496,8 +396,7 @@ def get_fluxes(state, settings):
     state['flux_std'] = np.nanstd(flux)
     state['flux_normalized_std'] = np.abs(state['flux_std'] / state['flux_mean'])
 
-    # print('Flux statistics:')
-    logging.info('flux_mean = ' + '{:.2e}'.format(state['flux_mean']) + ', flux_normalized_std = ' + '{:.2e}'.format(
-        state['flux_normalized_std']))
+    logging.info('flux_mean = ' + '{:.2e}'.format(state['flux_mean'])
+                 + ', flux_normalized_std = ' + '{:.2e}'.format(state['flux_normalized_std']))
 
     return state

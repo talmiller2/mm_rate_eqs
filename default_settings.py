@@ -28,15 +28,17 @@ def define_default_settings(settings=None):
 
     ### system parameters
     if 'n0' not in settings:
+        # settings['n0'] = 10e22  # m^-3
+        settings['n0'] = 3.875e22  # m^-3
         # settings['n0'] = 1e22  # m^-3
-        settings['n0'] = 5e21  # m^-3
+        # settings['n0'] = 5e21  # m^-3
     if 'Ti_0' not in settings:
-        # settings['Ti_0'] = 3 * settings['keV']
-        settings['Ti_0'] = 9 * settings['keV']
+        settings['Ti_0'] = 3 * settings['keV']
+        # settings['Ti_0'] = 9 * settings['keV']
     if 'Te_0' not in settings:
         # settings['Te_0'] = 1 * settings['keV']
-        # settings['Te_0'] = 3 * settings['keV']
-        settings['Te_0'] = 9 * settings['keV']
+        settings['Te_0'] = 3 * settings['keV']
+        # settings['Te_0'] = 9 * settings['keV']
     if 'B' not in settings:
         settings['B'] = 1.0 * np.sqrt(settings['n0'] / 1e20 * settings['Ti_0'] / (5 * settings['keV']))  # [Tesla]
     if 'Rm' not in settings:
@@ -71,8 +73,8 @@ def define_default_settings(settings=None):
     if 'number_of_cells' not in settings:
         # settings['number_of_cells'] = 30
         # settings['number_of_cells'] = 50
-        # settings['number_of_cells'] = 100
-        settings['number_of_cells'] = 150
+        settings['number_of_cells'] = 100
+        # settings['number_of_cells'] = 150
         # settings['number_of_cells'] = 200
         # settings['number_of_cells'] = 300
         # settings['number_of_cells'] = 1000
@@ -90,24 +92,25 @@ def define_default_settings(settings=None):
     if 'assume_constant_temperature' not in settings:
         # settings['assume_constant_temperature'] = True
         settings['assume_constant_temperature'] = False
+    if 'use_collective_velocity' not in settings:
+        settings['use_collective_velocity'] = False
     if 'plasma_dimension' not in settings:
-        # settings['plasma_dimension'] = 1.0
+        settings['plasma_dimension'] = 1.0
         # settings['plasma_dimension'] = 1.5
         # settings['plasma_dimension'] = 1.8
         # settings['plasma_dimension'] = 2.0
-        settings['plasma_dimension'] = 2.5
+        # settings['plasma_dimension'] = 2.5
         # settings['plasma_dimension'] = 3.0
     if 'adaptive_dimension' not in settings:
         settings['adaptive_dimension'] = False
         # settings['adaptive_dimension'] = True
     if 'transition_type' not in settings:
-        settings['transition_type'] = 'none'
-        # settings['transition_type'] = 'smooth_transition_to_uniform'
-        # settings['transition_type'] = 'smooth_transition_to_tR'
+        # settings['transition_type'] = 'none'
+        settings['transition_type'] = 'smooth_transition_to_tR'
         # settings['transition_type'] = 'sharp_transition_to_tR'
     if 'adaptive_mirror' not in settings:
-        # settings['adaptive_mirror'] = 'none'
-        settings['adaptive_mirror'] = 'adjust_U'
+        settings['adaptive_mirror'] = 'none'
+        # settings['adaptive_mirror'] = 'adjust_U'
         # settings['adaptive_mirror'] = 'adjust_cell_size_with_mfp'
         # settings['adaptive_mirror'] = 'adjust_cell_size_with_vth'
     if 'alpha_definition' not in settings:
@@ -123,17 +126,19 @@ def define_default_settings(settings=None):
         settings['left_boundary_condition'] = 'enforce_tR'
         # settings['left_boundary_condition'] = 'uniform_scaling'
     if 'right_boundary_condition' not in settings:
-        settings['right_boundary_condition'] = 'enforce_tL'
-        # settings['right_boundary_condition'] = 'uniform_scaling'
+        # settings['right_boundary_condition'] = 'enforce_tL'
+        settings['right_boundary_condition'] = 'uniform_scaling'
     if 'right_boundary_condition_density_type' not in settings:
         settings['right_boundary_condition_density_type'] = 'n_transition'
         # settings['right_boundary_condition_density_type'] = 'n_expander'
     if 'transmission_factor' not in settings:
         # diffusion of ions increased by a factor of (Ti + Te)/Ti, see Bellan p. 19
         settings['transmission_factor'] = (settings['Ti_0'] + settings['Te_0']) / settings['Ti_0']
+        # settings['transmission_factor'] = 1.0
+        # settings['transmission_factor'] = np.sqrt(2)
     if 'ion_scattering_rate_factor' not in settings:
-        # settings['ion_scattering_rate_factor'] = 1.0
-        settings['ion_scattering_rate_factor'] = 30.0
+        settings['ion_scattering_rate_factor'] = 1.0
+        # settings['ion_scattering_rate_factor'] = 30.0
         # settings['ion_scattering_rate_factor'] = 100.0
     if 'electron_scattering_rate_factor' not in settings:
         settings['electron_scattering_rate_factor'] = 1.0
@@ -154,8 +159,8 @@ def define_default_settings(settings=None):
         # settings['dt_status'] = 1e-7
         # settings['dt_status'] = 1e-6
         # settings['dt_status'] = 6e-6
-        # settings['dt_status'] = 1e-5
-        settings['dt_status'] = 1e-4
+        settings['dt_status'] = 1e-5
+        # settings['dt_status'] = 1e-4
         # settings['dt_status'] = 5e-4
         # settings['dt_status'] = 1e-3
     if 'dt_factor' not in settings:
@@ -192,27 +197,11 @@ def define_default_settings(settings=None):
         settings['save_format'] = 'pickle'
         # settings['save_format'] = 'mat'
     if 'save_dir' not in settings:
-        settings['save_dir'] = 'runs/test4/'
+        settings['save_dir'] = 'runs/test5/'
+        # settings['save_dir'] = 'runs/test6/'
         # settings['save_dir'] = 'runs/test_U_0_smooth_transition/'
-        # settings['save_dir'] = 'runs/test_U_1e5_smooth_transition/'
-        # settings['save_dir'] = 'runs/test_U_1e6_smooth_transition/'
-        # settings['save_dir'] = 'runs/test_U_7e5_smooth_transition/'
-        # settings['save_dir'] = 'runs/test_U_0_smooth_transition_adjust_cell_size/'
-        # settings['save_dir'] = 'runs/test_U_1e5_smooth_transition_adjust_cell_size/'
-        # settings['save_dir'] = 'runs/test_U_1e6_smooth_transition_adjust_cell_size/'
-        # settings['save_dir'] = 'runs/test_U_7e5_smooth_transition_adjust_cell_size/'
         # settings['save_dir'] = 'runs/test_U_' + '{:.0e}'.format(settings['U0']) + '_smooth_transition_adjust_cell_size/'
         # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_smooth_transition/'
-        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_no_transition_adjust_cell_size/'
-        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_no_transition_adjust_cell_size_right_bc_uniform_scaling/'
-        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_smooth_transition_adjust_cell_size/'
-        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_smooth_transition_except_drag_adjust_cell_size/'
-        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_sharp_transition_adjust_cell_size/'
-        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_smooth_transition_adjust_cell_size_right_bc_uniform_scaling/'
-        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_smooth_transition_adjust_cell_size_right_bc_uniform_scaling2/'
-        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_smooth_transition_adjust_cell_size_both_bc_uniform_scaling/'
-        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_transition_density_factor_0.5'
-        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0'])
     if 'state_file' not in settings:
         settings['state_file'] = 'state'
     if 'settings_file' not in settings:

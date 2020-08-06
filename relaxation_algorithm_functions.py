@@ -7,12 +7,18 @@ import numpy as np
 from scipy.io import savemat, loadmat
 
 from plot_functions import plot_relaxation_status, plot_relaxation_end
-from rate_functions import calculate_transition_density, get_density_time_derivatives, \
-    get_isentrope_temperature, get_thermal_velocity, \
-    get_coulomb_scattering_rate, get_mirror_cell_sizes, \
-    get_transmission_rate, calculate_mean_free_path, \
-    get_mmm_velocity, get_mmm_drag_rate, define_loss_cone_fractions, \
-    get_fluxes
+from rate_functions import calculate_transition_density, \
+    get_density_time_derivatives, \
+    get_isentrope_temperature, \
+    get_thermal_velocity, \
+    get_coulomb_scattering_rate, \
+    get_mirror_cell_sizes, \
+    get_transmission_velocities, \
+    calculate_mean_free_path, \
+    get_mmm_velocity, \
+    define_loss_cone_fractions, \
+    get_fluxes, \
+    get_transition_filters
 
 
 def find_rate_equations_steady_state(settings):
@@ -38,20 +44,25 @@ def find_rate_equations_steady_state(settings):
     while t_curr < settings['t_stop']:
 
         state['v_th'] = get_thermal_velocity(state['Ti'], settings, species='ions')
+        if settings['use_collective_velocity'] is True:
+            state['v_col'] = state['v_th'][0] - state['v_th']
         state['coulomb_scattering_rate'] = get_coulomb_scattering_rate(state['n'], state['Ti'], state['Te'], settings,
                                                                        species='ions')
         state['mean_free_path'] = calculate_mean_free_path(state['n'], state['Ti'], state['Te'], settings, state=state,
                                                            species='ions')
         state['mirror_cell_sizes'] = get_mirror_cell_sizes(state['n'], state['Ti'], state['Te'], settings, state=state)
-        state['transmission_rate'] = get_transmission_rate(state['v_th'], state['mirror_cell_sizes'], settings)
+        state['f_above'], state['f_below'] = get_transition_filters(state['n'], settings)  # transition filters
+        state['v_R'], state['v_L'] = get_transmission_velocities(state, settings)
         state['U'] = get_mmm_velocity(state, settings)
-        state['mmm_drag_rate'] = get_mmm_drag_rate(state, settings)
         state['alpha_tR'], state['alpha_tL'], state['alpha_c'] = define_loss_cone_fractions(state, settings)
         state['dn_c_dt'], state['dn_tL_dt'], state['dn_tR_dt'] = get_density_time_derivatives(state, settings)
 
+        # variables for plots
+        state['transmission_rate'] = state['v_R'] / state['mirror_cell_sizes']  # TODO: genelralize to 2 separate rates
+        state['mmm_drag_rate'] = state['U'] / state['mirror_cell_sizes']
+
         # print basic plasma info
-        if num_steps == 0:
-            print_basic_plasma_info(state, settings)
+        if num_steps == 0: print_basic_plasma_info(state, settings)
 
         # advance step
         dt = define_time_step(state, settings)
@@ -88,8 +99,10 @@ def find_rate_equations_steady_state(settings):
     logging.info('*************************************')
     logging.info('*** Finished relaxation iterations ***')
     if state['termination_criterion_reached'] is not True:
+        # print in red color
         logging.info('\x1b[5;30;41m' + 'Termination criterion was NOT reached.' + '\x1b[0m')
     else:
+        # print in green color
         logging.info('\x1b[5;30;42m' + 'Termination criterion was reached.' + '\x1b[0m')
 
     # finalize the generated plots with plot settings
@@ -196,14 +209,18 @@ def initialize_densities(settings):
 
 
 def print_basic_plasma_info(state, settings):
+    logging.info('plasma_dimension = ' + str(settings['plasma_dimension']))
     logging.info('n0 = ' + str('{:.2e}'.format(settings['n0'])) + ' m^-3')
     logging.info('theoretical n_transition = ' + str('{:.2e}'.format(settings['theoretical_n_transition'])) + ' m^-3')
     logging.info('n_transition = ' + str('{:.2e}'.format(settings['n_transition'])) + ' m^-3')
     logging.info('n_end = ' + str('{:.2e}'.format(settings['n_end'])) + ' m^-3')
+    logging.info('n_end/n0 = ' + str(settings['n_end'] / settings['n0']))
     logging.info('Ti_0 = ' + str(settings['Ti_0']) + ' eV')
     logging.info('Te_0 = ' + str(settings['Te_0']) + ' eV')
-    logging.info('v_th (main cell) = ' + str('{:.2e}'.format(state['v_th'][0])) + ' m/s')
-    logging.info('mfp (main cell) = ' + str('{:.2e}'.format(state['mean_free_path'][0])) + ' m')
+    logging.info('v_th = ' + str('{:.2e}'.format(state['v_th'][0])) + ' m/s')
+    logging.info('mfp = ' + str('{:.2e}'.format(state['mean_free_path'][0])) + ' m')
+    logging.info('l = ' + str('{:.2e}'.format(state['mirror_cell_sizes'][0])) + ' m')
+    logging.info('mfp/l = ' + str(state['mean_free_path'][0] / state['mirror_cell_sizes'][0]))
     return
 
 
@@ -266,11 +283,6 @@ def enforce_boundary_conditions(state, settings):
         state['n_c'][-1] = state['n_c'][-1] * settings['n_end'] / state['n'][-1]
         state['n_tL'][-1] = state['n_tL'][-1] * settings['n_end'] / state['n'][-1]
         state['n_tR'][-1] = state['n_tR'][-1] * settings['n_end'] / state['n'][-1]
-    elif settings['right_boundary_condition'] == 'uniform_scaling2':
-        n_end_curr = state['n_c'][-1] + state['n_tL'][-1] + state['n_tR'][-1]
-        state['n_c'][-1] = state['n_c'][-1] * settings['n_end'] / n_end_curr
-        state['n_tL'][-1] = state['n_tL'][-1] * settings['n_end'] / n_end_curr
-        state['n_tR'][-1] = state['n_tR'][-1] * settings['n_end'] / n_end_curr
     else:
         raise TypeError('invalid right_boundary_condition = ' + settings['right_boundary_condition'])
 
