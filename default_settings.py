@@ -106,8 +106,8 @@ def define_default_settings(settings=None):
         # settings['adaptive_dimension'] = True
     if 'transition_type' not in settings:
         # settings['transition_type'] = 'none'
-        settings['transition_type'] = 'smooth_transition_to_tR'
-        # settings['transition_type'] = 'sharp_transition_to_tR'
+        settings['transition_type'] = 'smooth_transition_to_free_flow'
+        # settings['transition_type'] = 'sharp_transition_to_free_flow'
     if 'adaptive_mirror' not in settings:
         settings['adaptive_mirror'] = 'none'
         # settings['adaptive_mirror'] = 'adjust_U'
@@ -123,14 +123,17 @@ def define_default_settings(settings=None):
         # settings['initialization_type'] = 'linear_alpha'
         settings['initialization_type'] = 'FD_decay'
     if 'left_boundary_condition' not in settings:
-        settings['left_boundary_condition'] = 'enforce_tR'
-        # settings['left_boundary_condition'] = 'uniform_scaling'
+        settings['left_boundary_condition'] = 'adjust_ntR_for_n0'
+        # settings['left_boundary_condition'] = 'adjust_all_species_for_n0'
     if 'right_boundary_condition' not in settings:
-        # settings['right_boundary_condition'] = 'enforce_tL'
-        settings['right_boundary_condition'] = 'uniform_scaling'
+        # settings['right_boundary_condition'] = 'adjust_ntL_for_nend'
+        # settings['right_boundary_condition'] = 'adjust_all_species_for_nend'
+        settings['right_boundary_condition'] = 'nullify_ntL'
     if 'right_boundary_condition_density_type' not in settings:
         settings['right_boundary_condition_density_type'] = 'n_transition'
         # settings['right_boundary_condition_density_type'] = 'n_expander'
+    if 'nullify_ntL_factor' not in settings:
+        settings['nullify_ntL_factor'] = 0.05
     if 'transmission_factor' not in settings:
         # diffusion of ions increased by a factor of (Ti + Te)/Ti, see Bellan p. 19
         settings['transmission_factor'] = (settings['Ti_0'] + settings['Te_0']) / settings['Ti_0']

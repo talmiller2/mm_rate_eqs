@@ -207,10 +207,10 @@ def get_transmission_velocities(state, settings):
 
     if settings['transition_type'] == 'none':
         pass
-    elif settings['transition_type'] == 'smooth_transition_to_tR':
+    elif settings['transition_type'] == 'smooth_transition_to_free_flow':
         # reduce the left transmission below the threshold, smoothly
         v_L = v_L / state['f_above']
-    elif settings['transition_type'] == 'sharp_transition_to_tR':
+    elif settings['transition_type'] == 'sharp_transition_to_free_flow':
         # reduce the left transmission below the threshold, sharply
         for k in range(settings['number_of_cells']):
             if state['n'][k] < settings['n_transition']: v_L[k] = 0
@@ -259,9 +259,9 @@ def get_mmm_velocity(state, settings):
 
     if settings['transition_type'] == 'none':
         pass
-    elif settings['transition_type'] in ['smooth_transition_to_uniform', 'smooth_transition_to_tR']:
+    elif settings['transition_type'] == 'smooth_transition_to_free_flow':
         U = U / state['f_above']
-    elif settings['transition_type'] == 'sharp_transition_to_tR':
+    elif settings['transition_type'] == 'sharp_transition_to_free_flow':
         # reduce the left transmission below the threshold, sharply
         for k in range(settings['number_of_cells']):
             if state['n'][k] < settings['n_transition']: U[k] = 0
@@ -341,17 +341,15 @@ def get_density_time_derivatives(state, settings):
 
         f_trans_L[k] = - v_L[k] * n_tL[k] / cell_sizes[k] * settings['transmission_factor']
         if k < settings['number_of_cells'] - 1:
-            f_trans_L[k] = f_trans_L[k] + v_L[k + 1] * n_tL[k + 1] / cell_sizes[k] * settings['transmission_factor']
+            f_trans_L[k] += v_L[k + 1] * n_tL[k + 1] / cell_sizes[k] * settings['transmission_factor']
 
         f_trans_R[k] = - v_R[k] * n_tR[k] / cell_sizes[k] * settings['transmission_factor']
         if k > 0:
-            f_trans_R[k] = f_trans_R[k] + v_R[k - 1] * n_tR[k - 1] / cell_sizes[k] * settings['transmission_factor']
+            f_trans_R[k] += v_R[k - 1] * n_tR[k - 1] / cell_sizes[k] * settings['transmission_factor']
 
         f_drag[k] = - U[k] * n_c[k] / cell_sizes[k]
         if k < settings['number_of_cells'] - 1:
-            f_drag[k] = f_drag[k] + U[k + 1] * n_c[k + 1] / cell_sizes[k]
-        else:
-            f_drag[k] = f_drag[k] + f_drag[k - 1]
+            f_drag[k] += U[k + 1] * n_c[k + 1] / cell_sizes[k]
 
     # combine rates
     dn_c_dt = f_scat_c + f_drag

@@ -267,9 +267,9 @@ def advance_densities_time_step(state, settings, dt, t_curr, num_steps):
 
 def enforce_boundary_conditions(state, settings):
     # left boundary condition
-    if settings['left_boundary_condition'] == 'enforce_tR':
+    if settings['left_boundary_condition'] == 'adjust_ntR_for_n0':
         state['n_tR'][0] = settings['n0'] - state['n_c'][0] - state['n_tL'][0]
-    elif settings['left_boundary_condition'] == 'uniform_scaling':
+    elif settings['left_boundary_condition'] == 'adjust_all_species_for_n0':
         state['n_c'][0] = state['n_c'][0] * settings['n0'] / state['n'][0]
         state['n_tL'][0] = state['n_tL'][0] * settings['n0'] / state['n'][0]
         state['n_tR'][0] = state['n_tR'][0] * settings['n0'] / state['n'][0]
@@ -277,12 +277,18 @@ def enforce_boundary_conditions(state, settings):
         raise TypeError('invalid left_boundary_condition = ' + settings['left_boundary_condition'])
 
     # right boundary condition
-    if settings['right_boundary_condition'] == 'enforce_tL':
+    if settings['right_boundary_condition'] == 'adjust_ntL_for_nend':
         state['n_tL'][-1] = settings['n_end'] - state['n_c'][-1] - state['n_tR'][-1]
-    elif settings['right_boundary_condition'] == 'uniform_scaling':
+
+    elif settings['right_boundary_condition'] == 'adjust_all_species_for_nend':
         state['n_c'][-1] = state['n_c'][-1] * settings['n_end'] / state['n'][-1]
         state['n_tL'][-1] = state['n_tL'][-1] * settings['n_end'] / state['n'][-1]
         state['n_tR'][-1] = state['n_tR'][-1] * settings['n_end'] / state['n'][-1]
+
+    elif settings['right_boundary_condition'] == 'nullify_ntL':
+        # assign a low value to n_tL to enforce low left flux, but keep the other densities free
+        state['n_tL'][-1] = state['n_tL'][0] * settings['nullify_ntL_factor']
+
     else:
         raise TypeError('invalid right_boundary_condition = ' + settings['right_boundary_condition'])
 
