@@ -58,7 +58,8 @@ def find_rate_equations_steady_state(settings):
         state['dn_c_dt'], state['dn_tL_dt'], state['dn_tR_dt'] = get_density_time_derivatives(state, settings)
 
         # variables for plots
-        state['transmission_rate'] = state['v_R'] / state['mirror_cell_sizes']  # TODO: genelralize to 2 separate rates
+        state['transmission_rate_R'] = state['v_R'] / state['mirror_cell_sizes']
+        state['transmission_rate_L'] = state['v_L'] / state['mirror_cell_sizes']
         state['mmm_drag_rate'] = state['U'] / state['mirror_cell_sizes']
 
         # print basic plasma info

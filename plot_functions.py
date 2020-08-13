@@ -42,8 +42,10 @@ def plot_relaxation_status(state, settings):
 
     plt.figure(3)
     plt.plot(z_array, state['coulomb_scattering_rate'], linestyle=linestyle, label='scattering rate' + label_suffix,
+             linewidth=linewidth, color='k')
+    plt.plot(z_array, state['transmission_rate_R'], linestyle=linestyle, label='transmission rate R' + label_suffix,
              linewidth=linewidth, color='b')
-    plt.plot(z_array, state['transmission_rate'], linestyle=linestyle, label='transmission rate' + label_suffix,
+    plt.plot(z_array, state['transmission_rate_L'], linestyle=linestyle, label='transmission rate L' + label_suffix,
              linewidth=linewidth, color='g')
     plt.plot(z_array, state['mmm_drag_rate'], linestyle=linestyle, label='MMM drag rate' + label_suffix,
              linewidth=linewidth, color='r')

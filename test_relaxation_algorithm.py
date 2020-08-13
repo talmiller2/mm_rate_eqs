@@ -9,7 +9,7 @@ settings = {}
 # settings['gas_name'] = 'hydrogen'
 # settings['save_state'] = 'False'
 # settings['assume_constant_density'] = True
-# settings['assume_constant_temperature'] = True
+settings['assume_constant_temperature'] = True
 # settings['ion_scattering_rate_factor'] = 10
 # settings['cell_size'] = 50
 # settings['plasma_dimension'] = 1
@@ -31,7 +31,7 @@ settings['U0'] = 0
 # settings['right_boundary_condition'] = 'nullify_ntL'
 settings['right_boundary_condition'] = 'none'
 
-settings['nullify_ntL_factor'] = 0.05
+# settings['nullify_ntL_factor'] = 0.05
 # settings['nullify_ntL_factor'] = 0.01
 
 settings['transition_type'] = 'none'
