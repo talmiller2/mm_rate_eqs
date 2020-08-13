@@ -77,6 +77,8 @@ def plot_relaxation_status(state, settings):
              label='$v_{th}$' + label_suffix)
     plt.plot(z_array, state['U'], linestyle=linestyle, linewidth=linewidth, color='r',
              label='$U_{MMM}$' + label_suffix)
+    plt.plot(z_array, state['v_col'], linestyle=linestyle, linewidth=linewidth, color='c',
+             label='$v_{col}$' + label_suffix)
 
     plt.figure(10)
     plt.plot(state['t_evolution'], state['flux_normalized_std_evolution'], linestyle=linestyle, linewidth=linewidth,
@@ -108,15 +110,9 @@ def plot_relaxation_status(state, settings):
              label='$n/\\alpha$ c fraction' + label_suffix,
              linewidth=linewidth, color='r')
 
-    # plt.plot(z_array, state['n_tR'] / state['n'] / state['alpha_tR'], linestyle=linestyle,
-    #          label='$n/\\alpha$ tR fraction' + label_suffix,
-    #          linewidth=linewidth, color='b')
-    # plt.plot(z_array, state['n_tL'] / state['n'] / state['alpha_tL'], linestyle=linestyle,
-    #          label='$n/\\alpha$ tL fraction' + label_suffix,
-    #          linewidth=linewidth, color='g')
-    # plt.plot(z_array, state['n_c'] / state['n'] / state['alpha_c'], linestyle=linestyle,
-    #          label='$n/\\alpha$ c fraction' + label_suffix,
-    #          linewidth=linewidth, color='r')
+    plt.figure(14)
+    plt.plot(z_array, state['flux_E'], linestyle=linestyle, label='flux_E' + label_suffix,
+             linewidth=linewidth, color='b')
 
     if settings['save_plots'] is True:
         plot_relaxation_end(settings, save_plots=True)
@@ -185,9 +181,13 @@ def plot_relaxation_end(settings, title_name='', show_legend=False, save_plots=F
     plt.figure(13)
     plt.ylabel('$n/n_{tot}/\\alpha$ ratios')
     plt.xlabel(xlabel)
-    plt.ylim([0,2])
+    plt.ylim([0, 2])
 
-    num_plots = 13
+    plt.figure(14)
+    plt.ylabel('energy flux')
+    plt.xlabel(xlabel)
+
+    num_plots = 14
     for fig_num in range(1, num_plots + 1):
         plt.figure(fig_num)
         plt.tight_layout()

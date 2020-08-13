@@ -18,7 +18,8 @@ from rate_functions import calculate_transition_density, \
     get_mmm_velocity, \
     define_loss_cone_fractions, \
     get_fluxes, \
-    get_transition_filters
+    get_transition_filters, \
+    get_collective_velocity
 
 
 def find_rate_equations_steady_state(settings):
@@ -44,13 +45,12 @@ def find_rate_equations_steady_state(settings):
     while t_curr < settings['t_stop']:
 
         state['v_th'] = get_thermal_velocity(state['Ti'], settings, species='ions')
-        if settings['use_collective_velocity'] is True:
-            state['v_col'] = state['v_th'][0] - state['v_th']
         state['coulomb_scattering_rate'] = get_coulomb_scattering_rate(state['n'], state['Ti'], state['Te'], settings,
                                                                        species='ions')
         state['mean_free_path'] = calculate_mean_free_path(state['n'], state['Ti'], state['Te'], settings, state=state,
                                                            species='ions')
         state['mirror_cell_sizes'] = get_mirror_cell_sizes(state['n'], state['Ti'], state['Te'], settings, state=state)
+        state['v_col'], state['flux_E'] = get_collective_velocity(state, settings)
         state['f_above'], state['f_below'] = get_transition_filters(state['n'], settings)  # transition filters
         state['v_R'], state['v_L'] = get_transmission_velocities(state, settings)
         state['U'] = get_mmm_velocity(state, settings)
@@ -273,22 +273,23 @@ def enforce_boundary_conditions(state, settings):
         state['n_c'][0] = state['n_c'][0] * settings['n0'] / state['n'][0]
         state['n_tL'][0] = state['n_tL'][0] * settings['n0'] / state['n'][0]
         state['n_tR'][0] = state['n_tR'][0] * settings['n0'] / state['n'][0]
+    elif settings['left_boundary_condition'] == 'none':
+        pass
     else:
         raise TypeError('invalid left_boundary_condition = ' + settings['left_boundary_condition'])
 
     # right boundary condition
     if settings['right_boundary_condition'] == 'adjust_ntL_for_nend':
         state['n_tL'][-1] = settings['n_end'] - state['n_c'][-1] - state['n_tR'][-1]
-
     elif settings['right_boundary_condition'] == 'adjust_all_species_for_nend':
         state['n_c'][-1] = state['n_c'][-1] * settings['n_end'] / state['n'][-1]
         state['n_tL'][-1] = state['n_tL'][-1] * settings['n_end'] / state['n'][-1]
         state['n_tR'][-1] = state['n_tR'][-1] * settings['n_end'] / state['n'][-1]
-
     elif settings['right_boundary_condition'] == 'nullify_ntL':
         # assign a low value to n_tL to enforce low left flux, but keep the other densities free
         state['n_tL'][-1] = state['n_tL'][0] * settings['nullify_ntL_factor']
-
+    elif settings['right_boundary_condition'] == 'none':
+        pass
     else:
         raise TypeError('invalid right_boundary_condition = ' + settings['right_boundary_condition'])
 

@@ -67,6 +67,69 @@ def get_thermal_velocity(T, settings, species='ions'):
     return np.sqrt(3.0 * settings['kB_eV'] * T / m)
 
 
+def get_collective_velocity(state, settings):
+    """
+    Plasma in the multi-mirror system requires to conserve energy as it flows along thr axis.
+    (No requirement to conserve momentum due to torque applied by the magnetic field).
+    Similar to a gas in a tube, as it cools and expands, it gains a collective drift velocity.
+    Here we calculate the collective velocity and the energy flux (for plotting).
+    """
+
+    v_th = state['v_th']
+    Ti = state['Ti']
+    n_tR = state['n_tR']
+    n_tL = state['n_tL']
+    kB = settings['kB_eV']
+    mi = settings['mi']  # ion particle mass
+    l = state['mirror_cell_sizes']
+
+    if settings['energy_conservation_scheme'] == 'none':
+        # no collective velocity
+        v_col = 0 * state['v_th']
+        flux_E = v_th * (n_tR - n_tL) * (kB * Ti + 0.5 * mi * v_th ** 2.0)
+
+    elif settings['energy_conservation_scheme'] == 'simple':
+        # assume the collective velocity is fixed to the main cell thermal velocity
+        # in the isothermal approximation, this will be the same as previous case
+        v_col = state['v_th'][0] - state['v_th']
+        flux_E = v_th * (n_tR - n_tL) * (kB * Ti + 0.5 * mi * v_th ** 2.0)
+
+    elif settings['energy_conservation_scheme'] == 'detailed':
+        # when the plasma expands it loses internal energy (even if does not cool),
+        # which has to be balanced by extra kinetic energy of the collective velocity.
+        # A more detailed energy conservation equation (3rd order polynomical in v_col):
+        flux_E = np.nan * np.zeros(settings['number_of_cells'])
+        v_col = np.nan * np.zeros(settings['number_of_cells'])
+        for k in range(settings['number_of_cells']):
+            if k == 0:
+                v_col[0] = 0
+                flux_E[0] = v_th[0] * (n_tR[0] - n_tL[0]) * (kB * Ti[0] + 0.5 * mi * v_th[0] ** 2.0) / l[0]
+            else:
+                coef_p_3 = (n_tR[k] + n_tL[k]) * 0.5 * mi / l[k]
+                coef_p_2 = (n_tR[k] - n_tL[k]) * 1.5 * mi * v_th[k] / l[k]
+                coef_p_1 = (n_tR[k] + n_tL[k]) * (kB * Ti[k] + 1.5 * mi * v_th[k] ** 2.0) / l[k]
+                coef_p_0 = (n_tR[k] - n_tL[k]) * (kB * Ti[k] + 0.5 * mi * v_th[k] ** 2.0) * v_th[k] / l[k]
+                coef_p_0_shifted = coef_p_0 - flux_E[k - 1]
+                p_shifted = [coef_p_3, coef_p_2, coef_p_1, coef_p_0_shifted]
+                roots = np.roots(p_shifted)
+                indices_real_roots = [i for i in range(len(roots)) if np.isreal(roots[i])]
+                if len(indices_real_roots) == 0:
+                    raise ValueError('No real roots for energy flux conservation equation,'
+                                     'in cell ' + str(k) + '. roots = ' + str(roots))
+                elif len(indices_real_roots) > 1:
+                    raise ValueError('More than one real root for energy flux conservation equation, '
+                                     'in cell ' + str(k) + '. roots = ' + str(roots))
+                else:
+                    real_root = np.real(roots[indices_real_roots[0]])
+                    v_col[k] = np.real(real_root)
+                    p = [coef_p_3, coef_p_2, coef_p_1, coef_p_0]
+                    flux_E[k] = np.polyval(p, v_col[k])
+    else:
+        raise TypeError('invalid energy_conservation_scheme = ' + settings['energy_conservation_scheme'])
+
+    return v_col, flux_E
+
+
 def get_coulomb_scattering_rate(n, Ti, Te, settings, species='ions'):
     """
     Coulomb scattering rate for ions or electrons, scattering off the other species
@@ -195,15 +258,11 @@ def get_mirror_cell_sizes(n, Ti, Te, settings, state=None):
 
 
 def get_transmission_velocities(state, settings):
-    if settings['use_collective_velocity'] is True:
-        v_R = state['v_col'] + state['v_th']  # gives simply constant v_th[0] in all cells
-        v_L = state['v_col'] - state['v_th']
-        # for high enough collective velocity, left transmission is halted
-        for k in range(settings['number_of_cells']):
-            if v_L[k] < 0: v_L[k] = 0
-    else:
-        v_R = state['v_th']
-        v_L = state['v_th']
+    v_R = state['v_th'] + state['v_col']  # defined positive to the right
+    v_L = state['v_th'] - state['v_col']  # defined positive to the left
+    # for high enough collective velocity, left transmission is halted
+    for k in range(settings['number_of_cells']):
+        if v_L[k] < 0: v_L[k] = 0
 
     if settings['transition_type'] == 'none':
         pass

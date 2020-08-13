@@ -92,8 +92,10 @@ def define_default_settings(settings=None):
     if 'assume_constant_temperature' not in settings:
         # settings['assume_constant_temperature'] = True
         settings['assume_constant_temperature'] = False
-    if 'use_collective_velocity' not in settings:
-        settings['use_collective_velocity'] = False
+    if 'energy_conservation_scheme' not in settings:
+        settings['energy_conservation_scheme'] = 'none'
+        # settings['energy_conservation_scheme'] = 'simple'
+        # settings['energy_conservation_scheme'] = 'detailed'
     if 'plasma_dimension' not in settings:
         settings['plasma_dimension'] = 1.0
         # settings['plasma_dimension'] = 1.5
@@ -105,8 +107,8 @@ def define_default_settings(settings=None):
         settings['adaptive_dimension'] = False
         # settings['adaptive_dimension'] = True
     if 'transition_type' not in settings:
-        # settings['transition_type'] = 'none'
-        settings['transition_type'] = 'smooth_transition_to_free_flow'
+        settings['transition_type'] = 'none'
+        # settings['transition_type'] = 'smooth_transition_to_free_flow'
         # settings['transition_type'] = 'sharp_transition_to_free_flow'
     if 'adaptive_mirror' not in settings:
         settings['adaptive_mirror'] = 'none'
@@ -126,6 +128,7 @@ def define_default_settings(settings=None):
         settings['left_boundary_condition'] = 'adjust_ntR_for_n0'
         # settings['left_boundary_condition'] = 'adjust_all_species_for_n0'
     if 'right_boundary_condition' not in settings:
+        # settings['right_boundary_condition'] = 'none'
         # settings['right_boundary_condition'] = 'adjust_ntL_for_nend'
         # settings['right_boundary_condition'] = 'adjust_all_species_for_nend'
         settings['right_boundary_condition'] = 'nullify_ntL'
@@ -162,8 +165,8 @@ def define_default_settings(settings=None):
         # settings['dt_status'] = 1e-7
         # settings['dt_status'] = 1e-6
         # settings['dt_status'] = 6e-6
-        settings['dt_status'] = 1e-5
-        # settings['dt_status'] = 1e-4
+        # settings['dt_status'] = 1e-5
+        settings['dt_status'] = 1e-4
         # settings['dt_status'] = 5e-4
         # settings['dt_status'] = 1e-3
     if 'dt_factor' not in settings:
@@ -182,8 +185,8 @@ def define_default_settings(settings=None):
         # settings['n_end_min'] = 1e20
         # settings['n_end_min'] = 5e20
     if 'fail_on_minimal_density' not in settings:
-        settings['fail_on_minimal_density'] = False
-        # settings['fail_on_minimal_density'] = True
+        # settings['fail_on_minimal_density'] = False
+        settings['fail_on_minimal_density'] = True
     if 'flux_normalized_termination_cutoff' not in settings:
         # settings['flux_normalized_termination_cutoff'] = 0.01
         # settings['flux_normalized_termination_cutoff'] = 0.05

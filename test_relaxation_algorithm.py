@@ -12,28 +12,34 @@ settings = {}
 # settings['assume_constant_temperature'] = True
 # settings['ion_scattering_rate_factor'] = 10
 # settings['cell_size'] = 50
-settings['plasma_dimension'] = 1
+# settings['plasma_dimension'] = 1
 # settings['plasma_dimension'] = 1.5
 # settings['plasma_dimension'] = 2
-# settings['plasma_dimension'] = 3
+settings['plasma_dimension'] = 3
 # settings['number_of_cells'] = 20
 settings['number_of_cells'] = 30
 # settings['number_of_cells'] = 100
 # settings['number_of_cells'] = 150
 # settings['number_of_cells'] = 200
 
-# settings['U0'] = 0
+settings['U0'] = 0
 # settings['U0'] = 0.1
-settings['U0'] = 0.3
+# settings['U0'] = 0.3
 # settings['U0'] = 0.5
 # settings['U0'] = 0.8
-settings['right_boundary_condition'] = 'nullify_ntL'
+
+# settings['right_boundary_condition'] = 'nullify_ntL'
+settings['right_boundary_condition'] = 'none'
 
 settings['nullify_ntL_factor'] = 0.05
 # settings['nullify_ntL_factor'] = 0.01
 
 settings['transition_type'] = 'none'
 # settings['transition_type'] = 'smooth_transition_to_free_flow'
+
+# settings['energy_conservation_scheme'] = 'none'
+# settings['energy_conservation_scheme'] = 'simple'
+settings['energy_conservation_scheme'] = 'detailed'
 
 # settings['dt_status'] = 1e-5
 settings['dt_status'] = 1e-4
@@ -45,6 +51,7 @@ plt.close('all')
 
 settings['save_dir'] = 'runs/runs_August_2020/test'
 settings['save_dir'] += '_N_' + str(settings['number_of_cells'])
+settings['save_dir'] += '_U_' + str(settings['U0'])
 
 if settings['transition_type'] == 'none':
     settings['save_dir'] += '_trans_none'
@@ -55,13 +62,15 @@ if settings['assume_constant_temperature'] == True:
 else:
     settings['save_dir'] += '_cool_d_' + str(settings['plasma_dimension'])
 
-settings['save_dir'] += '_U_' + str(settings['U0'])
-
 if settings['right_boundary_condition'] == 'nullify_ntL':
     settings['save_dir'] += '_rbc_nullify_ntL'
     settings['save_dir'] += '_factor_' + str(settings['nullify_ntL_factor'])
-else:
+elif settings['right_boundary_condition'] == 'adjust_ntL_for_nend':
     settings['save_dir'] += '_rbc_adjust_for_nend'
+elif settings['right_boundary_condition'] == 'none':
+    settings['save_dir'] += '_rbc_none'
+
+settings['save_dir'] += '_energy_scheme_' + settings['energy_conservation_scheme']
 
 state = find_rate_equations_steady_state(settings)
 
