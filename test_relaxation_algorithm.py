@@ -4,6 +4,8 @@ from default_settings import define_default_settings
 from relaxation_algorithm_functions import find_rate_equations_steady_state
 from relaxation_algorithm_functions import load_simulation, plot_relaxation_status, plot_relaxation_end
 
+plt.close('all')
+
 ### test the algorithm
 settings = {}
 # settings['gas_name'] = 'hydrogen'
@@ -27,7 +29,8 @@ settings['number_of_cells'] = 30
 
 # settings['U0'] = 0
 # settings['U0'] = 0.1
-settings['U0'] = 0.3
+settings['U0'] = -0.3
+# settings['U0'] = 0.3
 # settings['U0'] = 0.5
 # settings['U0'] = 0.8
 
@@ -50,7 +53,6 @@ settings['dt_status'] = 1e-4
 
 settings = define_default_settings(settings)
 # settings['n_end_min'] = 0.3 * settings['n0']
-plt.close('all')
 
 settings['save_dir'] = 'runs/runs_August_2020/test'
 settings['save_dir'] += '_N_' + str(settings['number_of_cells'])
@@ -78,13 +80,14 @@ settings['save_dir'] += '_energy_scheme_' + settings['energy_conservation_scheme
 state = find_rate_equations_steady_state(settings)
 
 ### test loading
-# # save_format = 'mat'
+# save_format = 'mat'
 # save_format = 'pickle'
 # # save_format = 'None'
 # state_file = settings['save_dir'] + '/' + settings['state_file'] + '.' + save_format
 # settings_file = settings['save_dir'] + '/' + settings['settings_file'] + '.' + save_format
-# state1, settings1 = load_simulation(state_file, settings_file, save_format=save_format)
-# plot_relaxation_status(state1, settings1)
+# state_load, settings_load = load_simulation(state_file, settings_file, save_format=save_format)
+# # settings_load['linestyle'] = '--'
+# plot_relaxation_status(state_load, settings_load)
 
 # state2 = find_rate_equations_steady_state(settings1)
 # plot an additional run next to current one

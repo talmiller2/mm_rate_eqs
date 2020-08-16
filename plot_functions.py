@@ -14,6 +14,11 @@ def plot_relaxation_status(state, settings):
     else:
         linewidth = 1
         linestyle = '--'
+
+    # override to plot in a different style for comparisons
+    if 'linestyle' in settings:
+        linestyle = settings['linestyle']
+
     label_suffix = ''
 
     # define x axis
