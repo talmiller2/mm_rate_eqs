@@ -13,7 +13,13 @@ import numpy as np
 # nullify_ntL_factor = 0.01
 # save_dir_main = 'runs/runs_August_2020/different_number_of_cells_nullify_ntL_factor_' \
 #                 + str(nullify_ntL_factor)
-save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none'
+# save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none'
+# save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_U_0.3'
+# save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_cool_d_1_U_0'
+# save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_cool_d_1_U_0.3'
+save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_cool_d_1_U_0.3_adaptive_mirror_mfp'
+# save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_cool_d_3_U_0'
+# save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_cool_d_3_U_0.3'
 number_of_cells_list = np.round(np.linspace(5, 100, 15))
 
 os.makedirs(save_dir_main, exist_ok=True)
@@ -23,12 +29,17 @@ for number_of_cells in number_of_cells_list:
     print('number_of_cells=' + str(int(number_of_cells)))
 
     settings = {}
-    settings['assume_constant_temperature'] = True
+    # settings['assume_constant_temperature'] = True
+    settings['assume_constant_temperature'] = False
+    settings['plasma_dimension'] = 1
+    # settings['plasma_dimension'] = 3
     settings['number_of_cells'] = int(number_of_cells)
     # settings['right_boundary_condition'] = 'nullify_ntL'
     # settings['nullify_ntL_factor'] = nullify_ntL_factor
     settings['right_boundary_condition'] = 'none'
     settings['energy_conservation_scheme'] = 'none'
+    settings['U0'] = 0.3
+    settings['adaptive_mirror'] = 'adjust_cell_size_with_mfp'
     settings['save_dir'] = save_dir_main + '/number_of_cells_' + str(int(number_of_cells))
     plt.close('all')
 

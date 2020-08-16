@@ -9,22 +9,25 @@ settings = {}
 # settings['gas_name'] = 'hydrogen'
 # settings['save_state'] = 'False'
 # settings['assume_constant_density'] = True
+# settings['assume_constant_temperature'] = False
 settings['assume_constant_temperature'] = True
 # settings['ion_scattering_rate_factor'] = 10
 # settings['cell_size'] = 50
 # settings['plasma_dimension'] = 1
 # settings['plasma_dimension'] = 1.5
 # settings['plasma_dimension'] = 2
-settings['plasma_dimension'] = 3
+# settings['plasma_dimension'] = 3
+# settings['plasma_dimension'] = 10
+settings['plasma_dimension'] = 100
 # settings['number_of_cells'] = 20
 settings['number_of_cells'] = 30
 # settings['number_of_cells'] = 100
 # settings['number_of_cells'] = 150
 # settings['number_of_cells'] = 200
 
-settings['U0'] = 0
+# settings['U0'] = 0
 # settings['U0'] = 0.1
-# settings['U0'] = 0.3
+settings['U0'] = 0.3
 # settings['U0'] = 0.5
 # settings['U0'] = 0.8
 
@@ -32,14 +35,14 @@ settings['U0'] = 0
 settings['right_boundary_condition'] = 'none'
 
 # settings['nullify_ntL_factor'] = 0.05
-# settings['nullify_ntL_factor'] = 0.01
+settings['nullify_ntL_factor'] = 0.01
 
 settings['transition_type'] = 'none'
 # settings['transition_type'] = 'smooth_transition_to_free_flow'
 
-# settings['energy_conservation_scheme'] = 'none'
+settings['energy_conservation_scheme'] = 'none'
 # settings['energy_conservation_scheme'] = 'simple'
-settings['energy_conservation_scheme'] = 'detailed'
+# settings['energy_conservation_scheme'] = 'detailed'
 
 # settings['dt_status'] = 1e-5
 settings['dt_status'] = 1e-4
@@ -75,16 +78,15 @@ settings['save_dir'] += '_energy_scheme_' + settings['energy_conservation_scheme
 state = find_rate_equations_steady_state(settings)
 
 ### test loading
-# save_format = 'mat'
+# # save_format = 'mat'
 # save_format = 'pickle'
-# save_format = 'None'
+# # save_format = 'None'
 # state_file = settings['save_dir'] + '/' + settings['state_file'] + '.' + save_format
 # settings_file = settings['save_dir'] + '/' + settings['settings_file'] + '.' + save_format
 # state1, settings1 = load_simulation(state_file, settings_file, save_format=save_format)
-
+# plot_relaxation_status(state1, settings1)
 
 # state2 = find_rate_equations_steady_state(settings1)
-
 # plot an additional run next to current one
 # save_dir = 'runs/runs_August_2020/test_N_100_trans_smooth_iso_U_0.1_rbc_uni'
 # state_file = save_dir + '/state.pickle'

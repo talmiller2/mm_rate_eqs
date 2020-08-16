@@ -133,7 +133,8 @@ def define_default_settings(settings=None):
         # settings['right_boundary_condition'] = 'adjust_all_species_for_nend'
         settings['right_boundary_condition'] = 'nullify_ntL'
     if 'right_boundary_condition_density_type' not in settings:
-        settings['right_boundary_condition_density_type'] = 'n_transition'
+        settings['right_boundary_condition_density_type'] = 'none'
+        # settings['right_boundary_condition_density_type'] = 'n_transition'
         # settings['right_boundary_condition_density_type'] = 'n_expander'
     if 'nullify_ntL_factor' not in settings:
         settings['nullify_ntL_factor'] = 0.05
@@ -185,8 +186,8 @@ def define_default_settings(settings=None):
         # settings['n_end_min'] = 1e20
         # settings['n_end_min'] = 5e20
     if 'fail_on_minimal_density' not in settings:
-        # settings['fail_on_minimal_density'] = False
-        settings['fail_on_minimal_density'] = True
+        settings['fail_on_minimal_density'] = False
+        # settings['fail_on_minimal_density'] = True
     if 'flux_normalized_termination_cutoff' not in settings:
         # settings['flux_normalized_termination_cutoff'] = 0.01
         # settings['flux_normalized_termination_cutoff'] = 0.05

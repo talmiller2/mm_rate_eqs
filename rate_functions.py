@@ -105,10 +105,14 @@ def get_collective_velocity(state, settings):
                 v_col[0] = 0
                 flux_E[0] = v_th[0] * (n_tR[0] - n_tL[0]) * (kB * Ti[0] + 0.5 * mi * v_th[0] ** 2.0) / l[0]
             else:
+                # coef_p_3 = (n_tR[k] + n_tL[k]) * 0.5 * mi / l[k]
+                # coef_p_2 = (n_tR[k] - n_tL[k]) * 1.5 * mi * v_th[k] / l[k]
+                # coef_p_1 = (n_tR[k] + n_tL[k]) * (kB * Ti[k] + 1.5 * mi * v_th[k] ** 2.0) / l[k]
+                # coef_p_0 = (n_tR[k] - n_tL[k]) * (kB * Ti[k] + 0.5 * mi * v_th[k] ** 2.0) * v_th[k] / l[k]
                 coef_p_3 = (n_tR[k] + n_tL[k]) * 0.5 * mi / l[k]
-                coef_p_2 = (n_tR[k] - n_tL[k]) * 1.5 * mi * v_th[k] / l[k]
-                coef_p_1 = (n_tR[k] + n_tL[k]) * (kB * Ti[k] + 1.5 * mi * v_th[k] ** 2.0) / l[k]
-                coef_p_0 = (n_tR[k] - n_tL[k]) * (kB * Ti[k] + 0.5 * mi * v_th[k] ** 2.0) * v_th[k] / l[k]
+                coef_p_2 = (n_tR[k] - n_tL[k]) * 0.5 * mi * v_th[k] / l[k]
+                coef_p_1 = (n_tR[k] + n_tL[k]) * kB * Ti[k] / l[k]
+                coef_p_0 = (n_tR[k] - n_tL[k]) * kB * Ti[k] * v_th[k] / l[k]
                 coef_p_0_shifted = coef_p_0 - flux_E[k - 1]
                 p_shifted = [coef_p_3, coef_p_2, coef_p_1, coef_p_0_shifted]
                 roots = np.roots(p_shifted)

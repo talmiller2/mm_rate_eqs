@@ -165,8 +165,10 @@ def initialize_densities(settings):
                                                             settings)
     settings['theoretical_n_transition'] = settings['n_transition']
 
-    # right boundary density
-    if settings['right_boundary_condition_density_type'] == 'n_transition':
+    # definitions for right boundary density
+    if settings['right_boundary_condition_density_type'] == 'none':
+        settings['n_end'] = settings['n0'] / 5.0  # just for the initial guess
+    elif settings['right_boundary_condition_density_type'] == 'n_transition':
         settings['n_end'] = settings['n_transition']
         if settings['n_transition'] >= settings['n0']:
             raise ValueError('n_transition < n0, meaning leftmost cell has too short mfp / cell size.')
