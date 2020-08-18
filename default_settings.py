@@ -195,8 +195,14 @@ def define_default_settings(settings=None):
         # settings['flux_normalized_termination_cutoff'] = 0.3
     if 'print_time_step_info' not in settings:
         settings['print_time_step_info'] = True
-    if 'do_plot_status' not in settings:
-        settings['do_plot_status'] = True
+
+    if 'draw_plots' not in settings:
+        settings['draw_plots'] = True
+    if 'save_plots_scheme' not in settings:
+        # settings['save_plots_scheme'] = 'none'
+        settings['save_plots_scheme'] = 'status_plots'
+        # settings['save_plots_scheme'] = 'only_at_calculation_end'
+
     if 'save_state' not in settings:
         # settings['save_state'] = False
         settings['save_state'] = True

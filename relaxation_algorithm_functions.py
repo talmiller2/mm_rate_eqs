@@ -6,7 +6,7 @@ import time
 import numpy as np
 from scipy.io import savemat, loadmat
 
-from plot_functions import plot_relaxation_status, plot_relaxation_end
+from plot_functions import plot_relaxation_status, save_plots
 from rate_functions import calculate_transition_density, \
     get_density_time_derivatives, \
     get_isentrope_temperature, \
@@ -90,9 +90,12 @@ def find_rate_equations_steady_state(settings):
                 state['termination_criterion_reached'] = True
 
             # plot status
-            if settings['do_plot_status'] is True:
+            if settings['draw_plots'] is True:
                 plot_relaxation_status(state, settings)
-                status_counter += 1
+                if settings['save_plots_scheme'] == 'status_plots':
+                    save_plots(settings)
+
+            status_counter += 1
 
         if state['termination_criterion_reached'] is True:
             break
@@ -106,9 +109,16 @@ def find_rate_equations_steady_state(settings):
         # print in green color
         logging.info('\x1b[5;30;42m' + 'Termination criterion was reached.' + '\x1b[0m')
 
-    # finalize the generated plots with plot settings
-    if settings['do_plot_status'] is True:
-        plot_relaxation_end(settings)
+    # save the plots
+    if settings['draw_plots'] is True:
+        if settings['save_plots_scheme'] == 'status_plots':
+            save_plots(settings)
+        elif settings['save_plots_scheme'] == 'only_at_calculation_end':
+            plot_relaxation_status(state, settings)
+            save_plots(settings)
+        else:
+            raise ValueError('draw_plots is True but save_plots_scheme is invalid. '
+                             'save_plots_scheme = ' + str(settings['save_plots_scheme']))
 
     # run time
     state['run_time'] = get_simulation_time(start_time)

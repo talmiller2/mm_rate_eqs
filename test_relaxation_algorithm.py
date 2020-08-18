@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 
 from default_settings import define_default_settings
 from relaxation_algorithm_functions import find_rate_equations_steady_state
-from relaxation_algorithm_functions import load_simulation, plot_relaxation_status, plot_relaxation_end
 
 plt.close('all')
 
@@ -11,28 +10,32 @@ settings = {}
 # settings['gas_name'] = 'hydrogen'
 # settings['save_state'] = 'False'
 # settings['assume_constant_density'] = True
-# settings['assume_constant_temperature'] = False
-settings['assume_constant_temperature'] = True
+settings['assume_constant_temperature'] = False
+# settings['assume_constant_temperature'] = True
 # settings['ion_scattering_rate_factor'] = 10
 # settings['cell_size'] = 50
-# settings['plasma_dimension'] = 1
+settings['plasma_dimension'] = 1
 # settings['plasma_dimension'] = 1.5
 # settings['plasma_dimension'] = 2
 # settings['plasma_dimension'] = 3
 # settings['plasma_dimension'] = 10
-settings['plasma_dimension'] = 100
+# settings['plasma_dimension'] = 100
 # settings['number_of_cells'] = 20
 settings['number_of_cells'] = 30
 # settings['number_of_cells'] = 100
 # settings['number_of_cells'] = 150
 # settings['number_of_cells'] = 200
 
-# settings['U0'] = 0
+settings['U0'] = 0
+# settings['U0'] = 0.05
 # settings['U0'] = 0.1
-settings['U0'] = -0.3
+# settings['U0'] = 0.2
 # settings['U0'] = 0.3
 # settings['U0'] = 0.5
 # settings['U0'] = 0.8
+
+# settings['adaptive_mirror'] = 'adjust_cell_size_with_mfp'
+# settings['adaptive_mirror'] = 'adjust_cell_size_with_vth'
 
 # settings['right_boundary_condition'] = 'nullify_ntL'
 settings['right_boundary_condition'] = 'none'
@@ -58,6 +61,8 @@ settings['save_dir'] = 'runs/runs_August_2020/test'
 settings['save_dir'] += '_N_' + str(settings['number_of_cells'])
 settings['save_dir'] += '_U_' + str(settings['U0'])
 
+if settings['adaptive_mirror'] != 'none':
+    settings['save_dir'] += '_adap_' + settings['adaptive_mirror']
 if settings['transition_type'] == 'none':
     settings['save_dir'] += '_trans_none'
 else:

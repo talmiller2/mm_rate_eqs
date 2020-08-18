@@ -4,6 +4,7 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 
+num_plots = 14
 
 def plot_relaxation_status(state, settings):
     plt.rcParams.update({'font.size': 16})
@@ -48,10 +49,11 @@ def plot_relaxation_status(state, settings):
     plt.figure(3)
     plt.plot(z_array, state['coulomb_scattering_rate'], linestyle=linestyle, label='scattering rate' + label_suffix,
              linewidth=linewidth, color='k')
-    plt.plot(z_array, state['transmission_rate_R'], linestyle=linestyle, label='transmission rate R' + label_suffix,
-             linewidth=linewidth, color='b')
-    plt.plot(z_array, state['transmission_rate_L'], linestyle=linestyle, label='transmission rate L' + label_suffix,
-             linewidth=linewidth, color='g')
+    if 'transmission_rate_R' in state:
+        plt.plot(z_array, state['transmission_rate_R'], linestyle=linestyle, label='transmission rate R' + label_suffix,
+                 linewidth=linewidth, color='b')
+        plt.plot(z_array, state['transmission_rate_L'], linestyle=linestyle, label='transmission rate L' + label_suffix,
+                 linewidth=linewidth, color='g')
     plt.plot(z_array, state['mmm_drag_rate'], linestyle=linestyle, label='MMM drag rate' + label_suffix,
              linewidth=linewidth, color='r')
 
@@ -121,13 +123,12 @@ def plot_relaxation_status(state, settings):
     plt.plot(z_array, state['flux_E'], linestyle=linestyle, label='flux_E' + label_suffix,
              linewidth=linewidth, color='b')
 
-    if settings['save_plots'] is True:
-        plot_relaxation_end(settings, save_plots=True)
+    plot_aesthetics(settings)
 
     return
 
 
-def plot_relaxation_end(settings, title_name='', show_legend=False, save_plots=False):
+def plot_aesthetics(settings, title_name='', show_legend=False):
     # define x axis
     if settings['plots_x_axis'] == 'total_length':
         xlabel = 'z [m]'
@@ -194,7 +195,6 @@ def plot_relaxation_end(settings, title_name='', show_legend=False, save_plots=F
     plt.ylabel('energy flux')
     plt.xlabel(xlabel)
 
-    num_plots = 14
     for fig_num in range(1, num_plots + 1):
         plt.figure(fig_num)
         plt.tight_layout()
@@ -202,10 +202,14 @@ def plot_relaxation_end(settings, title_name='', show_legend=False, save_plots=F
         plt.title(title_name)
         if show_legend is True: plt.legend()
 
-        if save_plots is True:
-            # create save directory
-            if not os.path.exists(settings['save_dir']):
-                logging.info('Creating save directory: ' + settings['save_dir'])
-            plt.savefig(settings['save_dir'] + '/fig' + str(fig_num))
+    return
 
+
+def save_plots(settings):
+    for fig_num in range(1, num_plots + 1):
+        plt.figure(fig_num)
+        # create save directory
+        if not os.path.exists(settings['save_dir']):
+            logging.info('Creating save directory: ' + settings['save_dir'])
+        plt.savefig(settings['save_dir'] + '/fig' + str(fig_num))
     return
