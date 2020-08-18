@@ -10,15 +10,16 @@ linestyles = []
 # linestyles = ['-', '--']
 linestyles = ['-', '--', ':']
 
-# save_dirs += ['runs/runs_August_2020/test_N_30_U_0_trans_none_iso_rbc_none_energy_scheme_none']
+save_dirs += ['runs/runs_August_2020/test_N_30_U_0_trans_none_iso_rbc_none_energy_scheme_none']
 # save_dirs += ['runs/runs_August_2020/test_N_30_U_0.1_trans_none_iso_rbc_none_energy_scheme_none']
 # save_dirs += ['runs/runs_August_2020/test_N_30_U_0.3_trans_none_iso_rbc_none_energy_scheme_none']
+save_dirs += ['runs/runs_August_2020/test_N_30_U_0_trans_none_iso_rbc_none_energy_scheme_none_constLC']
 
 # save_dirs += ['runs/runs_August_2020/test_N_30_U_0_trans_none_cool_d_3_rbc_none_energy_scheme_none']
 # save_dirs += ['runs/runs_August_2020/test_N_30_U_0.1_trans_none_cool_d_3_rbc_none_energy_scheme_none']
 # save_dirs += ['runs/runs_August_2020/test_N_30_U_0.3_trans_none_cool_d_3_rbc_none_energy_scheme_none']
 
-save_dirs += ['runs/runs_August_2020/test_N_30_U_0_trans_none_cool_d_1_rbc_none_energy_scheme_none']
+# save_dirs += ['runs/runs_August_2020/test_N_30_U_0_trans_none_cool_d_1_rbc_none_energy_scheme_none']
 # save_dirs += ['runs/runs_August_2020/test_N_30_U_0.05_trans_none_cool_d_1_rbc_none_energy_scheme_none']
 # save_dirs += ['runs/runs_August_2020/test_N_30_U_0.1_trans_none_cool_d_1_rbc_none_energy_scheme_none']
 # save_dirs += ['runs/runs_August_2020/test_N_30_U_0.2_trans_none_cool_d_1_rbc_none_energy_scheme_none']

@@ -86,13 +86,13 @@ def get_collective_velocity(state, settings):
     if settings['energy_conservation_scheme'] == 'none':
         # no collective velocity
         v_col = 0 * state['v_th']
-        flux_E = v_th * (n_tR - n_tL) * (kB * Ti + 0.5 * mi * v_th ** 2.0)
+        flux_E = v_th * (n_tR - n_tL) * kB * Ti
 
     elif settings['energy_conservation_scheme'] == 'simple':
         # assume the collective velocity is fixed to the main cell thermal velocity
         # in the isothermal approximation, this will be the same as previous case
         v_col = state['v_th'][0] - state['v_th']
-        flux_E = v_th * (n_tR - n_tL) * (kB * Ti + 0.5 * mi * v_th ** 2.0)
+        flux_E = v_th * (n_tR - n_tL) * kB * Ti
 
     elif settings['energy_conservation_scheme'] == 'detailed':
         # when the plasma expands it loses internal energy (even if does not cool),
@@ -105,10 +105,6 @@ def get_collective_velocity(state, settings):
                 v_col[0] = 0
                 flux_E[0] = v_th[0] * (n_tR[0] - n_tL[0]) * (kB * Ti[0] + 0.5 * mi * v_th[0] ** 2.0) / l[0]
             else:
-                # coef_p_3 = (n_tR[k] + n_tL[k]) * 0.5 * mi / l[k]
-                # coef_p_2 = (n_tR[k] - n_tL[k]) * 1.5 * mi * v_th[k] / l[k]
-                # coef_p_1 = (n_tR[k] + n_tL[k]) * (kB * Ti[k] + 1.5 * mi * v_th[k] ** 2.0) / l[k]
-                # coef_p_0 = (n_tR[k] - n_tL[k]) * (kB * Ti[k] + 0.5 * mi * v_th[k] ** 2.0) * v_th[k] / l[k]
                 coef_p_3 = (n_tR[k] + n_tL[k]) * 0.5 * mi / l[k]
                 coef_p_2 = (n_tR[k] - n_tL[k]) * 0.5 * mi * v_th[k] / l[k]
                 coef_p_1 = (n_tR[k] + n_tL[k]) * kB * Ti[k] / l[k]

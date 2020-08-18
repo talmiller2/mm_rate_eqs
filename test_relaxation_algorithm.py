@@ -10,8 +10,8 @@ settings = {}
 # settings['gas_name'] = 'hydrogen'
 # settings['save_state'] = 'False'
 # settings['assume_constant_density'] = True
-settings['assume_constant_temperature'] = False
-# settings['assume_constant_temperature'] = True
+# settings['assume_constant_temperature'] = False
+settings['assume_constant_temperature'] = True
 # settings['ion_scattering_rate_factor'] = 10
 # settings['cell_size'] = 50
 settings['plasma_dimension'] = 1
@@ -33,6 +33,9 @@ settings['U0'] = 0
 # settings['U0'] = 0.3
 # settings['U0'] = 0.5
 # settings['U0'] = 0.8
+
+settings['alpha_definition'] = 'geometric_constant'
+# settings['alpha_definition'] = 'geometric_local'
 
 # settings['adaptive_mirror'] = 'adjust_cell_size_with_mfp'
 # settings['adaptive_mirror'] = 'adjust_cell_size_with_vth'
@@ -82,23 +85,7 @@ elif settings['right_boundary_condition'] == 'none':
 
 settings['save_dir'] += '_energy_scheme_' + settings['energy_conservation_scheme']
 
+if settings['alpha_definition'] == 'geometric_constant':
+    settings['save_dir'] += '_constLC'
+
 state = find_rate_equations_steady_state(settings)
-
-### test loading
-# save_format = 'mat'
-# save_format = 'pickle'
-# # save_format = 'None'
-# state_file = settings['save_dir'] + '/' + settings['state_file'] + '.' + save_format
-# settings_file = settings['save_dir'] + '/' + settings['settings_file'] + '.' + save_format
-# state_load, settings_load = load_simulation(state_file, settings_file, save_format=save_format)
-# # settings_load['linestyle'] = '--'
-# plot_relaxation_status(state_load, settings_load)
-
-# state2 = find_rate_equations_steady_state(settings1)
-# plot an additional run next to current one
-# save_dir = 'runs/runs_August_2020/test_N_100_trans_smooth_iso_U_0.1_rbc_uni'
-# state_file = save_dir + '/state.pickle'
-# settings_file = save_dir + '/settings.pickle'
-# state_load, settings_load = load_simulation(state_file, settings_file)
-# plot_relaxation_status(state_load, settings_load)
-# plot_relaxation_end(settings_load)
