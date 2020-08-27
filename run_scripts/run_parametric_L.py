@@ -16,7 +16,7 @@ import numpy as np
 # save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none'
 # save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_const_dens'
 # save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_const_dens_n0X0.2'
-save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_const_dens_mfpX10'
+save_dir_main = '../runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_const_dens_mfpX10'
 # save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_U_0.3'
 # save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_cool_d_1_U_0'
 # save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_cool_d_1_U_0.3'

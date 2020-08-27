@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.optimize import curve_fit
-
+import os
 plt.rcParams.update({'font.size': 16})
 
 from default_settings import define_default_settings
@@ -53,7 +53,11 @@ for color, mode in zip(colors, modes):
     # linestyle = '--'
 
     label = ''
-    save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none'
+
+    save_dir_main = 'runs/'
+    # save_dir_main = '../runs/'
+    # save_dir_main = 'C:\Users\Tal Miller\Dropbox\UNI\Courses Graduate\Plasma/code/plasma - multi - mirror/runs/'
+    save_dir_main += 'runs_August_2020/different_number_of_cells_rbc_none_energycons_none'
     if mode == 'iso':
         label += 'isothermal'
         save_dir_main += '_iso'
