@@ -260,21 +260,26 @@ def get_mirror_cell_sizes(n, Ti, Te, settings, state=None):
 def get_transmission_velocities(state, settings):
     v_R = state['v_th'] + state['v_col']  # defined positive to the right
     v_L = state['v_th'] - state['v_col']  # defined positive to the left
-    # for high enough collective velocity, left transmission is halted
-    for k in range(settings['number_of_cells']):
-        if v_L[k] < 0: v_L[k] = 0
 
-    if settings['transition_type'] == 'none':
-        pass
-    elif settings['transition_type'] == 'smooth_transition_to_free_flow':
-        # reduce the left transmission below the threshold, smoothly
-        v_L = v_L / state['f_above']
-    elif settings['transition_type'] == 'sharp_transition_to_free_flow':
-        # reduce the left transmission below the threshold, sharply
-        for k in range(settings['number_of_cells']):
-            if state['n'][k] < settings['n_transition']: v_L[k] = 0
+    if settings['assume_constant_transmission'] is True:
+        v_R = v_R[0] + 0 * v_R
+        v_L = v_L[0] + 0 * v_L
     else:
-        raise TypeError('invalid transition_type = ' + settings['transition_type'])
+        # for high enough collective velocity, left transmission is halted
+        for k in range(settings['number_of_cells']):
+            if v_L[k] < 0: v_L[k] = 0
+
+        if settings['transition_type'] == 'none':
+            pass
+        elif settings['transition_type'] == 'smooth_transition_to_free_flow':
+            # reduce the left transmission below the threshold, smoothly
+            v_L = v_L / state['f_above']
+        elif settings['transition_type'] == 'sharp_transition_to_free_flow':
+            # reduce the left transmission below the threshold, sharply
+            for k in range(settings['number_of_cells']):
+                if state['n'][k] < settings['n_transition']: v_L[k] = 0
+        else:
+            raise TypeError('invalid transition_type = ' + settings['transition_type'])
 
     return v_R, v_L
 

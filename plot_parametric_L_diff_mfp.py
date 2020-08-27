@@ -25,23 +25,18 @@ from relaxation_algorithm_functions import load_simulation
 
 plt.close('all')
 
-# mode = 'iso'
-# color = 'b'
-# mode = 'iso2'
-# color = 'g'
-# mode = 'cool'
-# color = 'r'
+mode = 'iso2'
 
 colors = []
-modes = []
-# colors += ['b']
-# modes += ['iso']
+mfps = []
+colors += ['b']
+mfps += [1]
 colors += ['g']
-modes += ['iso2']
+mfps += [5]
 # colors += ['r']
-# modes += ['cool']
+# mfps += [20]
 
-for color, mode in zip(colors, modes):
+for color, mfp in zip(colors, mfps):
     print('mode = ' + mode)
 
     # d = 3
@@ -65,8 +60,9 @@ for color, mode in zip(colors, modes):
         save_dir_main += '_cool_d_' + str(d)
     label += ', U=' + str(U)
     save_dir_main += '_U_' + str(U)
-    # save_dir_main += '_adaptive_mirror_mfp'
-    # save_dir_main += '_mfpX5'
+
+    if mfp > 1:
+        save_dir_main += '_mfpX' + str(mfp)
 
     number_of_cells_list = np.round(np.linspace(5, 100, 15))
 

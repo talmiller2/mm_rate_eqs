@@ -92,6 +92,9 @@ def define_default_settings(settings=None):
     if 'assume_constant_temperature' not in settings:
         # settings['assume_constant_temperature'] = True
         settings['assume_constant_temperature'] = False
+    if 'assume_constant_transmission' not in settings:
+        # settings['assume_constant_transmission'] = True
+        settings['assume_constant_transmission'] = False
     if 'energy_conservation_scheme' not in settings:
         settings['energy_conservation_scheme'] = 'none'
         # settings['energy_conservation_scheme'] = 'simple'
