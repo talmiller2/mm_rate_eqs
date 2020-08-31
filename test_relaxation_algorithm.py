@@ -9,10 +9,10 @@ plt.close('all')
 settings = {}
 # settings['gas_name'] = 'hydrogen'
 # settings['save_state'] = 'False'
-settings['assume_constant_density'] = False
-# settings['assume_constant_density'] = True
-settings['assume_constant_temperature'] = False
-# settings['assume_constant_temperature'] = True
+# settings['assume_constant_density'] = False
+settings['assume_constant_density'] = True
+# settings['assume_constant_temperature'] = False
+settings['assume_constant_temperature'] = True
 # settings['ion_scattering_rate_factor'] = 10
 # settings['cell_size'] = 50
 settings['plasma_dimension'] = 1
@@ -22,19 +22,19 @@ settings['plasma_dimension'] = 1
 # settings['plasma_dimension'] = 10
 # settings['plasma_dimension'] = 100
 # settings['number_of_cells'] = 20
-# settings['number_of_cells'] = 30
-settings['number_of_cells'] = 40
+settings['number_of_cells'] = 30
+# settings['number_of_cells'] = 40
 # settings['number_of_cells'] = 100
 # settings['number_of_cells'] = 150
 # settings['number_of_cells'] = 200
 
-settings['U0'] = 0
+# settings['U0'] = 0
 # settings['U0'] = 0.01
 # settings['U0'] = 0.02
 # settings['U0'] = 0.05
 # settings['U0'] = 0.1
 # settings['U0'] = 0.2
-# settings['U0'] = 0.3
+settings['U0'] = 0.3
 # settings['U0'] = 0.5
 # settings['U0'] = 0.8
 
@@ -44,6 +44,9 @@ settings['flux_normalized_termination_cutoff'] = 0.03
 
 # settings['alpha_definition'] = 'geometric_constant'
 settings['alpha_definition'] = 'geometric_local'
+
+# settings['U_for_loss_cone_factor'] = 1.0
+settings['U_for_loss_cone_factor'] = 0.5
 
 # settings['adaptive_mirror'] = 'adjust_cell_size_with_mfp'
 # settings['adaptive_mirror'] = 'adjust_cell_size_with_vth'
@@ -95,6 +98,9 @@ settings['save_dir'] += '_energy_scheme_' + settings['energy_conservation_scheme
 
 if settings['alpha_definition'] == 'geometric_constant':
     settings['save_dir'] += '_constLC'
+
+if settings['U_for_loss_cone_factor'] != 1.0:
+    settings['save_dir'] += '_Ufac' + str(settings['U_for_loss_cone_factor'])
 
 if settings['assume_constant_density'] == True:
     settings['save_dir'] += '_const_dens'

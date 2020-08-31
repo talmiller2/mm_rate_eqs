@@ -32,12 +32,13 @@ mfps = []
 colors += ['b']
 mfps += [1]
 colors += ['g']
-mfps += [5]
-# colors += ['r']
-# mfps += [20]
+mfps += [0.1]
+colors += ['r']
+mfps += [10]
 
 for color, mfp in zip(colors, mfps):
     print('mode = ' + mode)
+    print('mfp = ' + str(mfp))
 
     # d = 3
     d = 1
@@ -58,10 +59,11 @@ for color, mfp in zip(colors, mfps):
     elif mode == 'cool':
         label += 'cool d=' + str(d)
         save_dir_main += '_cool_d_' + str(d)
-    label += ', U=' + str(U)
+    # label += ', U=' + str(U)
     save_dir_main += '_U_' + str(U)
 
-    if mfp > 1:
+    label += ', mfp/l = ' + str(mfp)
+    if mfp != 1:
         save_dir_main += '_mfpX' + str(mfp)
 
     number_of_cells_list = np.round(np.linspace(5, 100, 15))
@@ -106,15 +108,15 @@ for color, mfp in zip(colors, mfps):
 
     # fit_function = lambda x, a, b: a + b / x
     # fit_function = lambda x, a, b: a + b / x ** 2
-    fit_function = lambda x, a, b, gamma: a + b / x ** gamma
-    # fit_function = lambda x, b, gamma: b / x ** gamma
+    # fit_function = lambda x, a, b, gamma: a + b / x ** gamma
+    fit_function = lambda x, b, gamma: b / x ** gamma
     # fit_function = lambda x, a: a / x
     # fit_function = lambda x, a: a / x ** 2.0
     # fit_function = lambda x, a, b: a * x + b
     popt, pcov = curve_fit(fit_function, n_cells, flux_cells)
     flux_cells_fit = fit_function(n_cells, *popt) * norm_factor
     # plt.plot(n_cells, flux_cells_fit, label=label + ' fit', linestyle='--', color=color)
-    plt.plot(n_cells, flux_cells_fit, label=label + ', fit power = ' + '{:0.2f}'.format(popt[-1]), linestyle='--',
+    plt.plot(n_cells, flux_cells_fit, label='fit power = ' + '{:0.2f}'.format(popt[-1]), linestyle='--',
              color=color)
 
 plt.figure(1)

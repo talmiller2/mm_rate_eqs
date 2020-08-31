@@ -16,9 +16,11 @@ import numpy as np
 # save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none'
 # save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_const_dens'
 # save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_const_dens_n0X0.2'
-save_dir_main = '../runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_const_dens_mfpX10'
+# save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_iso2_U_0_mfpX0.1'
+# save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_iso2_U_0_mfpX10'
 # save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_U_0.3'
 # save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_cool_d_1_U_0'
+save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_cool2_d_1_U_0'
 # save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_cool_d_1_U_0.3'
 # save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_cool_d_1_U_0.3_adaptive_mirror_mfp'
 # save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_cool_d_3_U_0'
@@ -33,14 +35,18 @@ for number_of_cells in number_of_cells_list:
 
     settings = {}
 
-    settings['assume_constant_temperature'] = True
-    # settings['assume_constant_temperature'] = False
+    # settings['assume_constant_temperature'] = True
+    settings['assume_constant_temperature'] = False
 
-    # settings['assume_constant_density'] = False
-    settings['assume_constant_density'] = True
+    settings['assume_constant_density'] = False
+    # settings['assume_constant_density'] = True
+
+    settings['assume_constant_transmission'] = True
+    # settings['assume_constant_transmission'] = False
 
     # settings['n0'] = 3.875e22 / 5 # m^-3 # to increase the mfp in the main cell
-    settings['ion_scattering_rate_factor'] = 10  # to increase the mfp in the main cell
+    # settings['ion_scattering_rate_factor'] = 10  # to decrease the mfp in the main cell
+    # settings['ion_scattering_rate_factor'] = 0.1  # to increase the mfp in the main cell
 
     settings['plasma_dimension'] = 1
     # settings['plasma_dimension'] = 3

@@ -123,6 +123,8 @@ def define_default_settings(settings=None):
         # settings['alpha_definition'] = 'geometric_constant'
         # settings['alpha_definition'] = 'geometric_constant_U0'
         settings['alpha_definition'] = 'geometric_local'
+    if 'U_for_loss_cone_factor' not in settings:
+        settings['U_for_loss_cone_factor'] = 1.0
     if 'initialization_type' not in settings:
         # settings['initialization_type'] = 'linear_uniform'
         # settings['initialization_type'] = 'linear_alpha'

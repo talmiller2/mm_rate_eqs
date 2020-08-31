@@ -337,7 +337,7 @@ def get_mmm_velocity(state, settings):
 
 def define_loss_cone_fractions(state, settings):
     v_th = state['v_th']
-    U = state['U']
+    U = state['U'] * settings['U_for_loss_cone_factor']
     alpha = 1 / settings['Rm']
     if settings['alpha_definition'] == 'old_constant':
         alpha_tL = alpha / 2.0 + 0 * v_th

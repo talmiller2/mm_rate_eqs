@@ -34,12 +34,14 @@ plt.close('all')
 
 colors = []
 modes = []
-# colors += ['b']
-# modes += ['iso']
+colors += ['b']
+modes += ['iso']
 colors += ['g']
 modes += ['iso2']
-# colors += ['r']
-# modes += ['cool']
+colors += ['r']
+modes += ['cool']
+colors += ['m']
+modes += ['cool2']
 
 for color, mode in zip(colors, modes):
     print('mode = ' + mode)
@@ -67,6 +69,10 @@ for color, mode in zip(colors, modes):
     elif mode == 'cool':
         label += 'cool d=' + str(d)
         save_dir_main += '_cool_d_' + str(d)
+    elif mode == 'cool2':
+        label += 'cool d=' + str(d) + ' const transmission'
+        save_dir_main += '_cool2_d_' + str(d)
+
     label += ', U=' + str(U)
     save_dir_main += '_U_' + str(U)
     # save_dir_main += '_adaptive_mirror_mfp'
@@ -114,15 +120,15 @@ for color, mode in zip(colors, modes):
 
     # fit_function = lambda x, a, b: a + b / x
     # fit_function = lambda x, a, b: a + b / x ** 2
-    fit_function = lambda x, a, b, gamma: a + b / x ** gamma
-    # fit_function = lambda x, b, gamma: b / x ** gamma
+    # fit_function = lambda x, a, b, gamma: a + b / x ** gamma
+    fit_function = lambda x, b, gamma: b / x ** gamma
     # fit_function = lambda x, a: a / x
     # fit_function = lambda x, a: a / x ** 2.0
     # fit_function = lambda x, a, b: a * x + b
     popt, pcov = curve_fit(fit_function, n_cells, flux_cells)
     flux_cells_fit = fit_function(n_cells, *popt) * norm_factor
     # plt.plot(n_cells, flux_cells_fit, label=label + ' fit', linestyle='--', color=color)
-    plt.plot(n_cells, flux_cells_fit, label=label + ', fit power = ' + '{:0.2f}'.format(popt[-1]), linestyle='--',
+    plt.plot(n_cells, flux_cells_fit, label='fit power = ' + '{:0.2f}'.format(popt[-1]), linestyle='--',
              color=color)
 
 plt.figure(1)
