@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from rate_functions import calculate_coulomb_logarithm
+from mm_rate_eqs.rate_functions import calculate_coulomb_logarithm
 
 plt.rcParams.update({'font.size': 16})
 plt.close('all')

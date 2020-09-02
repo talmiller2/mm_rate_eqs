@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from default_settings import define_default_settings
-from relaxation_algorithm_functions import load_simulation
+from mm_rate_eqs.relaxation_algorithm_functions import load_simulation
 
 # plt.close('all')
 

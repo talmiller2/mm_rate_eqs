@@ -1,10 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from default_settings import define_default_settings
-from fusion_functions import get_sigma_v_fusion, get_E_reaction, get_brem_radiation_loss, get_cyclotron_radiation_loss, \
+from mm_rate_eqs.default_settings import define_default_settings
+from mm_rate_eqs.fusion_functions import get_sigma_v_fusion, get_E_reaction, get_brem_radiation_loss, \
+    get_cyclotron_radiation_loss, \
     get_fusion_power, get_lawson_parameters
-from rate_functions import get_thermal_velocity
+from mm_rate_eqs.rate_functions import get_thermal_velocity
 
 ### Plot fusion and radiation loss parameters
 

@@ -1,10 +1,10 @@
 from setuptools import setup
 
 setup(
-    name="plasma-multi-mirror",
+    name="Multi-Mirror-Rate-Equations",
     author="Tal Miller",
     author_email="talmiller@gmail.com",
-    packages=['plasma-multi-mirror'],
+    packages=['mm_rate_eqs'],
 )
 
 # install locally using: python setup.py install --user

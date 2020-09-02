@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from default_settings import define_default_settings
-from rate_functions import calculate_transition_density, \
+from mm_rate_eqs.default_settings import define_default_settings
+from mm_rate_eqs.rate_functions import calculate_transition_density, \
     get_isentrope_temperature, get_thermal_velocity, \
     get_coulomb_scattering_rate, get_mirror_cell_sizes, \
     get_transmission_rate, calculate_mean_free_path

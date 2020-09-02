@@ -1,7 +1,7 @@
 from slurmpy.slurmpy import Slurm
 
-from default_settings import define_default_settings
-from slurm_functions import get_rate_equations_steady_state_slave_script
+from mm_rate_eqs.default_settings import define_default_settings
+from mm_rate_eqs.slurm_functions import get_rate_equations_steady_state_slave_script
 
 slave_script = get_rate_equations_steady_state_slave_script()
 

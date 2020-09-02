@@ -4,8 +4,7 @@ from scipy.optimize import curve_fit
 
 plt.rcParams.update({'font.size': 16})
 
-from default_settings import define_default_settings
-from relaxation_algorithm_functions import load_simulation
+from mm_rate_eqs.relaxation_algorithm_functions import load_simulation
 
 # parametric scan
 # save_dir_main = 'runs/runs_April_2020/runs_no_transition_different_number_of_cells/'

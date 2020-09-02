@@ -1,8 +1,9 @@
-from default_settings import define_default_settings
-from fusion_functions import get_lawson_parameters, get_brem_radiation_loss, get_cyclotron_radiation_loss, \
+from mm_rate_eqs.default_settings import define_default_settings
+from mm_rate_eqs.fusion_functions import get_lawson_parameters, get_brem_radiation_loss, get_cyclotron_radiation_loss, \
     get_fusion_power, get_magnetic_pressure, get_ideal_gas_pressure, get_fusion_charged_power, \
     get_ideal_gas_energy_per_volume
-from rate_functions import calculate_coulomb_logarithm, get_specific_coulomb_scattering_rate, get_thermal_velocity
+from mm_rate_eqs.rate_functions import calculate_coulomb_logarithm, get_specific_coulomb_scattering_rate, \
+    get_thermal_velocity
 
 # lab plasma
 # settings = {'gas_name': 'potassium'}

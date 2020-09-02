@@ -3,7 +3,7 @@ import copy
 import matplotlib.pyplot as plt
 import numpy as np
 
-from loss_cone_functions import get_solid_angles
+from mm_rate_eqs.loss_cone_functions import get_solid_angles
 
 plt.close('all')
 

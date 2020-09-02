@@ -3,8 +3,8 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 
-from default_settings import define_default_settings
-from relaxation_algorithm_functions import find_rate_equations_steady_state
+from mm_rate_eqs.default_settings import define_default_settings
+from mm_rate_eqs.relaxation_algorithm_functions import find_rate_equations_steady_state
 
 # parametric scan
 # save_dir_main = 'runs/small_experiment_0.3eV_adaptive_mirror/'

@@ -10,6 +10,6 @@ args = parser.parse_args()
 settings = ast.literal_eval(args.settings)
 
 sys.path.append(settings['code_dir'])
-from relaxation_algorithm_functions import find_rate_equations_steady_state
+from mm_rate_eqs.relaxation_algorithm_functions import find_rate_equations_steady_state
 
 state = find_rate_equations_steady_state(settings)

@@ -1,6 +1,6 @@
 import numpy as np
 
-from fusion_functions import define_plasma_parameters
+from mm_rate_eqs.fusion_functions import define_plasma_parameters
 
 
 def define_default_settings(settings=None):

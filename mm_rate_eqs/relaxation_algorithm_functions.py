@@ -6,8 +6,8 @@ import time
 import numpy as np
 from scipy.io import savemat, loadmat
 
-from plot_functions import plot_relaxation_status, save_plots
-from rate_functions import calculate_transition_density, \
+from mm_rate_eqs.plot_functions import plot_relaxation_status, save_plots
+from mm_rate_eqs.rate_functions import calculate_transition_density, \
     get_density_time_derivatives, \
     get_isentrope_temperature, \
     get_thermal_velocity, \
