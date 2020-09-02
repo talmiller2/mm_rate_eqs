@@ -156,6 +156,8 @@ def define_default_settings(settings=None):
         settings['electron_scattering_rate_factor'] = 1.0
 
     ### relaxation solver parameters
+    if 'max_num_time_steps' not in settings:
+        settings['max_num_time_steps'] = int(3e5)
     if 't_stop' not in settings:
         # settings['t_stop'] = 1e-6
         # settings['t_stop'] = 1e-4

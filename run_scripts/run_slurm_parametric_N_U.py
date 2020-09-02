@@ -15,9 +15,9 @@ slurm_kwargs = {'partition': 'socket'}
 # slurm_kwargs = {'partition': 'testing'}
 
 plasma_modes = []
-plasma_modes += ['isoTmfp']
+# plasma_modes += ['isoTmfp']
 # plasma_modes += ['isoT']
-# plasma_modes += ['cool']
+plasma_modes += ['cool']
 
 LC_modes = []
 LC_modes += ['sLC']  # static loss cone

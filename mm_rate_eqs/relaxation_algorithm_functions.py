@@ -36,9 +36,10 @@ def find_rate_equations_steady_state(settings):
 
     # relaxation algorithm initialization
     t_curr = 0
-    num_steps = 0
+    num_time_steps = 0
     status_counter = 0
     state['termination_criterion_reached'] = False
+    state['successful_termination'] = False
 
     logging.info('*************************************')
     logging.info('***  Begin relaxation iterations  ***')
@@ -63,13 +64,13 @@ def find_rate_equations_steady_state(settings):
         state['mmm_drag_rate'] = state['U'] / state['mirror_cell_sizes']
 
         # print basic run info
-        if num_steps == 0: print_basic_run_info(state, settings)
+        if num_time_steps == 0: print_basic_run_info(state, settings)
 
         # advance step
         dt = define_time_step(state, settings)
         t_curr += dt
-        num_steps += 1
-        state = advance_densities_time_step(state, settings, dt, t_curr, num_steps)
+        num_time_steps += 1
+        state = advance_densities_time_step(state, settings, dt, t_curr, num_time_steps)
 
         # boundary conditions
         state = enforce_boundary_conditions(state, settings)
@@ -78,16 +79,15 @@ def find_rate_equations_steady_state(settings):
         state['Ti'] = get_isentrope_temperature(state['n'], settings, species='ions')
         state['Te'] = get_isentrope_temperature(state['n'], settings, species='electrons')
 
-        if check_status_threshold_passed(state, settings, t_curr, num_steps, status_counter):
+        if check_status_threshold_passed(state, settings, t_curr, num_time_steps, status_counter):
             # print basic information
             if settings['print_time_step_info'] is True:
-                print_time_step_info(dt, t_curr, num_steps)
+                print_time_step_info(dt, t_curr, num_time_steps)
 
             # define fluxes and check if termination criterion is reached
             state = get_fluxes(state, settings)
             state = save_fluxes_evolution(state, t_curr)
-            if check_termination_criterion_reached(state, settings, t_curr, status_counter):
-                state['termination_criterion_reached'] = True
+            state = check_termination_criterion_reached(state, settings, t_curr, num_time_steps, status_counter)
 
             # plot status
             if settings['draw_plots'] is True:
@@ -102,12 +102,12 @@ def find_rate_equations_steady_state(settings):
 
     logging.info('*************************************')
     logging.info('*** Finished relaxation iterations ***')
-    if state['termination_criterion_reached'] is not True:
+    if state['successful_termination'] == False:
         # print in red color
-        logging.info('\x1b[5;30;41m' + 'Termination criterion was NOT reached.' + '\x1b[0m')
+        logging.info('\x1b[5;30;41m' + 'Termination unsuccessful.' + '\x1b[0m')
     else:
         # print in green color
-        logging.info('\x1b[5;30;42m' + 'Termination criterion was reached.' + '\x1b[0m')
+        logging.info('\x1b[5;30;42m' + 'Termination successful.' + '\x1b[0m')
 
     # save the plots
     if settings['draw_plots'] is True:
@@ -123,7 +123,7 @@ def find_rate_equations_steady_state(settings):
     # run time
     state['run_time'] = get_simulation_time(start_time)
     state['t_end'] = t_curr
-    state['num_time_steps'] = num_steps
+    state['num_time_steps'] = num_time_steps
 
     # save results
     if settings['save_state'] is True:
@@ -266,14 +266,14 @@ def print_time_step_info(dt, t_curr, num_time_steps):
     return
 
 
-def advance_densities_time_step(state, settings, dt, t_curr, num_steps):
+def advance_densities_time_step(state, settings, dt, t_curr, num_time_steps):
     for var_name in ['n_c', 'n_tL', 'n_tR']:
         der_var_name = 'd' + var_name + '_dt'
         state[var_name] = state[var_name] + state[der_var_name] * dt
 
         if settings['fail_on_minimal_density'] is True:
             if min(state[var_name]) < settings['n_min']:
-                print_time_step_info(dt, t_curr, num_steps)
+                print_time_step_info(dt, t_curr, num_time_steps)
                 raise ValueError('min(' + var_name + ') = ' + str(min(state[var_name])) + '. Sign of a problem.')
         else:
             ind_min = np.where(state[var_name] < settings['n_min'])
@@ -341,12 +341,17 @@ def save_fluxes_evolution(state, t_curr):
     return state
 
 
-def check_termination_criterion_reached(state, settings, t_curr, status_counter):
+def check_termination_criterion_reached(state, settings, t_curr, num_time_steps, status_counter):
     if state['flux_normalized_std'] < settings['flux_normalized_termination_cutoff'] \
             and status_counter >= 1 and t_curr >= settings['t_solve_min']:
-        return True
+        state['termination_criterion_reached'] = True
+        state['successful_termination'] = True
+    elif num_time_steps > settings['max_num_time_steps']:
+        state['termination_criterion_reached'] = True
+        state['successful_termination'] = False
     else:
-        return False
+        pass
+    return state
 
 
 def get_simulation_time(start_time):

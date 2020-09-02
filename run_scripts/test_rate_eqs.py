@@ -110,6 +110,9 @@ if settings['assume_constant_density'] == True:
 # settings['dt_factor'] = 0.1 / 3.0
 # settings['save_dir'] += '_dt_factor_3'
 
+settings['max_num_time_steps'] = 1000
+settings['save_dir'] = 'runs/runs_August_2020/TEST'
+
 print('save dir: ' + str(settings['save_dir']))
 
 state = find_rate_equations_steady_state(settings)
