@@ -10,10 +10,14 @@ rate_eqs_script = get_script_rate_eqs_slave()
 
 main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set1/'
 
+# slurm_kwargs = {'partition': 'core'} # default
+slurm_kwargs = {'partition': 'socket'}
+# slurm_kwargs = {'partition': 'testing'}
+
 plasma_modes = []
-# plasma_modes += ['isoTmfp']
+plasma_modes += ['isoTmfp']
 # plasma_modes += ['isoT']
-plasma_modes += ['cool']
+# plasma_modes += ['cool']
 
 LC_modes = []
 LC_modes += ['sLC']  # static loss cone
@@ -61,7 +65,7 @@ for plasma_mode in plasma_modes:
                 os.chdir(settings['save_dir'])
 
                 command = rate_eqs_script + ' --settings "' + str(settings) + '"'
-                s = Slurm(run_name)
+                s = Slurm(run_name, slurm_kwargs=slurm_kwargs)
                 s.run(command)
                 cnt += 1
                 print('run # ' + str(cnt) + ' / ' + str(total_number_of_combinations))
