@@ -62,8 +62,8 @@ def find_rate_equations_steady_state(settings):
         state['transmission_rate_L'] = state['v_L'] / state['mirror_cell_sizes']
         state['mmm_drag_rate'] = state['U'] / state['mirror_cell_sizes']
 
-        # print basic plasma info
-        if num_steps == 0: print_basic_plasma_info(state, settings)
+        # print basic run info
+        if num_steps == 0: print_basic_run_info(state, settings)
 
         # advance step
         dt = define_time_step(state, settings)
@@ -221,7 +221,7 @@ def initialize_densities(settings):
     return settings, state
 
 
-def print_basic_plasma_info(state, settings):
+def print_basic_run_info(state, settings):
     logging.info('assume_constant_density = ' + str(settings['assume_constant_density']))
     logging.info('assume_constant_temperature = ' + str(settings['assume_constant_temperature']))
     logging.info('assume_constant_transmission = ' + str(settings['assume_constant_transmission']))
