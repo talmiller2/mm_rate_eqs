@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name="Multi-Mirror-Rate-Equations",
+    name="mm_rate_eqs",
     author="Tal Miller",
     author_email="talmiller@gmail.com",
     packages=['mm_rate_eqs'],
