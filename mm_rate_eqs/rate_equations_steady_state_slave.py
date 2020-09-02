@@ -1,6 +1,7 @@
 import argparse
 import ast
-import sys
+
+from mm_rate_eqs.relaxation_algorithm_functions import find_rate_equations_steady_state
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--settings', help='settings for the rate equations solver algorithm',
@@ -8,8 +9,5 @@ parser.add_argument('--settings', help='settings for the rate equations solver a
 args = parser.parse_args()
 
 settings = ast.literal_eval(args.settings)
-
-sys.path.append(settings['code_dir'])
-from mm_rate_eqs.relaxation_algorithm_functions import find_rate_equations_steady_state
 
 state = find_rate_equations_steady_state(settings)
