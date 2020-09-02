@@ -133,10 +133,10 @@ def define_default_settings(settings=None):
         settings['left_boundary_condition'] = 'adjust_ntR_for_n0'
         # settings['left_boundary_condition'] = 'adjust_all_species_for_n0'
     if 'right_boundary_condition' not in settings:
-        # settings['right_boundary_condition'] = 'none'
+        settings['right_boundary_condition'] = 'none'
         # settings['right_boundary_condition'] = 'adjust_ntL_for_nend'
         # settings['right_boundary_condition'] = 'adjust_all_species_for_nend'
-        settings['right_boundary_condition'] = 'nullify_ntL'
+        # settings['right_boundary_condition'] = 'nullify_ntL'
     if 'right_boundary_condition_density_type' not in settings:
         settings['right_boundary_condition_density_type'] = 'none'
         # settings['right_boundary_condition_density_type'] = 'n_transition'
@@ -216,10 +216,7 @@ def define_default_settings(settings=None):
         # settings['save_format'] = 'mat'
     if 'save_dir' not in settings:
         settings['save_dir'] = 'runs/test5/'
-        # settings['save_dir'] = 'runs/test6/'
-        # settings['save_dir'] = 'runs/test_U_0_smooth_transition/'
-        # settings['save_dir'] = 'runs/test_U_' + '{:.0e}'.format(settings['U0']) + '_smooth_transition_adjust_cell_size/'
-        # settings['save_dir'] = 'runs/test_Rm_' + str(settings['Rm']) + '_U_' + '{:.1e}'.format(settings['U0']) + '_smooth_transition/'
+
     if 'state_file' not in settings:
         settings['state_file'] = 'state'
     if 'settings_file' not in settings:

@@ -222,18 +222,23 @@ def initialize_densities(settings):
 
 
 def print_basic_plasma_info(state, settings):
+    logging.info('assume_constant_density = ' + str(settings['assume_constant_density']))
+    logging.info('assume_constant_temperature = ' + str(settings['assume_constant_temperature']))
+    logging.info('assume_constant_transmission = ' + str(settings['assume_constant_transmission']))
     logging.info('plasma_dimension = ' + str(settings['plasma_dimension']))
     logging.info('n0 = ' + str('{:.2e}'.format(settings['n0'])) + ' m^-3')
-    logging.info('theoretical n_transition = ' + str('{:.2e}'.format(settings['theoretical_n_transition'])) + ' m^-3')
-    logging.info('n_transition = ' + str('{:.2e}'.format(settings['n_transition'])) + ' m^-3')
-    logging.info('n_end = ' + str('{:.2e}'.format(settings['n_end'])) + ' m^-3')
-    logging.info('n_end/n0 = ' + str(settings['n_end'] / settings['n0']))
     logging.info('Ti_0 = ' + str(settings['Ti_0']) + ' eV')
     logging.info('Te_0 = ' + str(settings['Te_0']) + ' eV')
     logging.info('v_th = ' + str('{:.2e}'.format(state['v_th'][0])) + ' m/s')
     logging.info('mfp = ' + str('{:.2e}'.format(state['mean_free_path'][0])) + ' m')
-    logging.info('l = ' + str('{:.2e}'.format(state['mirror_cell_sizes'][0])) + ' m')
-    logging.info('mfp/l = ' + str(state['mean_free_path'][0] / state['mirror_cell_sizes'][0]))
+    logging.info('cell_size = ' + str('{:.2e}'.format(state['mirror_cell_sizes'][0])) + ' m')
+    logging.info('mfp/cell_size = ' + str(state['mean_free_path'][0] / state['mirror_cell_sizes'][0]))
+    logging.info('Rm = ' + str(settings['Rm']))
+    logging.info('U0 = ' + str(settings['U0']))
+    logging.info('transition_type = ' + str(settings['transition_type']))
+    logging.info('transmission_factor = ' + str(settings['transmission_factor']))
+    logging.info('adaptive_mirror = ' + str(settings['adaptive_mirror']))
+    logging.info('alpha_definition = ' + str(settings['alpha_definition']))
     return
 
 
