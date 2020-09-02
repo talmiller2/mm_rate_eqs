@@ -7,7 +7,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--settings', help='settings for the rate equations solver algorithm',
                     type=str, required=True)
 args = parser.parse_args()
+print('args.settings = ' + str(args.settings))
 
 settings = ast.literal_eval(args.settings)
-
 state = find_rate_equations_steady_state(settings)
