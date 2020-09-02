@@ -11,8 +11,8 @@ rate_eqs_script = get_script_rate_eqs_slave()
 main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set1/'
 
 plasma_modes = []
-plasma_modes += ['isoTmfp']
-plasma_modes += ['isoT']
+# plasma_modes += ['isoTmfp']
+# plasma_modes += ['isoT']
 plasma_modes += ['cool']
 
 LC_modes = []
@@ -47,8 +47,9 @@ for plasma_mode in plasma_modes:
                     settings['assume_constant_temperature'] = True
                 elif plasma_mode == 'cool':
                     settings['assume_constant_density'] = False
-                    settings['assume_constant_temperature'] = True
+                    settings['assume_constant_temperature'] = False
 
+                settings['U0'] = U
                 if LC_mode == 'sLC':
                     settings['alpha_definition'] = 'geometric_constant'
                 elif LC_mode == 'dLC':
