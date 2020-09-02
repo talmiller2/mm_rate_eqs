@@ -195,8 +195,8 @@ def define_default_settings(settings=None):
         # settings['fail_on_minimal_density'] = True
     if 'flux_normalized_termination_cutoff' not in settings:
         # settings['flux_normalized_termination_cutoff'] = 0.01
-        # settings['flux_normalized_termination_cutoff'] = 0.05
-        settings['flux_normalized_termination_cutoff'] = 0.1
+        settings['flux_normalized_termination_cutoff'] = 0.05
+        # settings['flux_normalized_termination_cutoff'] = 0.1
         # settings['flux_normalized_termination_cutoff'] = 0.3
     if 'print_time_step_info' not in settings:
         settings['print_time_step_info'] = True
