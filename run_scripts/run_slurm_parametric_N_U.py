@@ -42,10 +42,11 @@ for plasma_mode in plasma_modes:
                 run_name = plasma_mode
                 if transition_type == 'cool':
                     run_name += '_d' + str(plasma_dimension)
+                if transition_type == 'smooth_transition_to_free_flow':
+                    run_name += '_mfpcutoff'
                 run_name += '_N_' + str(num_cells) + '_U_' + str(U)
                 run_name += '_' + LC_mode
-                if transition_type == 'smooth_transition_to_free_flow':
-                    run_name += '_lowmfp_cutoff'
+
                 print('run_name = ' + run_name)
 
                 settings = {}
@@ -70,8 +71,7 @@ for plasma_mode in plasma_modes:
                 elif LC_mode == 'dLC':
                     settings['alpha_definition'] = 'geometric_local'
 
-                settings['transition_type'] = 'none'
-                # settings['transition_type'] = 'smooth_transition_to_free_flow'
+                settings['transition_type'] = transition_type
 
                 settings['save_dir'] = main_folder + '/' + run_name
                 print('save dir: ' + str(settings['save_dir']))
