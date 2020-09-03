@@ -8,43 +8,44 @@ from mm_rate_eqs.slurm_functions import get_script_rate_eqs_slave
 pwd = os.getcwd()
 rate_eqs_script = get_script_rate_eqs_slave()
 
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set2_Rm_3/'
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set3_N_20/'
 
 slurm_kwargs = {'partition': 'core'}  # default
 # slurm_kwargs = {'partition': 'socket'}
 # slurm_kwargs = {'partition': 'testing'}
 
 plasma_modes = []
-# plasma_modes += ['isoTmfp']
-# plasma_modes += ['isoT']
+plasma_modes += ['isoTmfp']
+plasma_modes += ['isoT']
 plasma_modes += ['cool']
 
 LC_modes = []
 LC_modes += ['sLC']  # static loss cone
 LC_modes += ['dLC']  # dynamic loss cone
 
-num_cells_list = [3, 5, 8, 10, 12, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+num_cells = 20
+Rm_list = [1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
 U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5]
 
 plasma_dimension = 1
 
-# transition_type = 'none'
-transition_type = 'smooth_transition_to_free_flow'
+transition_type = 'none'
+# transition_type = 'smooth_transition_to_free_flow'
 
-total_number_of_combinations = len(plasma_modes) * len(LC_modes) * len(num_cells_list) * len(U_list)
+total_number_of_combinations = len(plasma_modes) * len(LC_modes) * len(Rm_list) * len(U_list)
 print('total_number_of_combinations = ' + str(total_number_of_combinations))
 cnt = 0
 
 for plasma_mode in plasma_modes:
     for LC_mode in LC_modes:
-        for num_cells in num_cells_list:
+        for Rm in Rm_list:
             for U in U_list:
                 run_name = plasma_mode
                 # if plasma_mode == 'cool':
                 #     run_name += '_d' + str(plasma_dimension)
                 if transition_type == 'smooth_transition_to_free_flow':
                     run_name += '_mfpcutoff'
-                run_name += '_N_' + str(num_cells) + '_U_' + str(U)
+                run_name += '_N_' + str(num_cells) + '_Rm_' + str(num_cells) + '_U_' + str(U)
                 run_name += '_' + LC_mode
 
                 print('run_name = ' + run_name)
@@ -64,6 +65,7 @@ for plasma_mode in plasma_modes:
                     settings['assume_constant_temperature'] = False
 
                 settings['number_of_cells'] = num_cells
+                settings['Rm'] = Rm
 
                 settings['U0'] = U
                 if LC_mode == 'sLC':
