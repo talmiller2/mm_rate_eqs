@@ -217,6 +217,13 @@ def get_magnetic_pressure(B):
     """
     return (B / 0.501) ** 2.0
 
+def get_magnetic_field_for_given_pressure(P, beta=1.0):
+    """
+    Calculate the magnetic field associated with some beta value for a given pressure
+    Inverse of get_magnetic_pressure function.
+    P in [bar], return in [Tesla]
+    """
+    return 0.501 * (P / beta) ** 0.5
 
 def get_ideal_gas_pressure(n, T, settings):
     """

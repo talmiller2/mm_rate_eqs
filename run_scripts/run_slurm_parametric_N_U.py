@@ -8,16 +8,16 @@ from mm_rate_eqs.slurm_functions import get_script_rate_eqs_slave
 pwd = os.getcwd()
 rate_eqs_script = get_script_rate_eqs_slave()
 
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set1/'
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set2/'
 
-# slurm_kwargs = {'partition': 'core'} # default
-slurm_kwargs = {'partition': 'socket'}
+slurm_kwargs = {'partition': 'core'}  # default
+# slurm_kwargs = {'partition': 'socket'}
 # slurm_kwargs = {'partition': 'testing'}
 
 plasma_modes = []
-# plasma_modes += ['isoTmfp']
-# plasma_modes += ['isoT']
-plasma_modes += ['cool']
+plasma_modes += ['isoTmfp']
+plasma_modes += ['isoT']
+# plasma_modes += ['cool']
 
 LC_modes = []
 LC_modes += ['sLC']  # static loss cone
@@ -52,6 +52,8 @@ for plasma_mode in plasma_modes:
                 elif plasma_mode == 'cool':
                     settings['assume_constant_density'] = False
                     settings['assume_constant_temperature'] = False
+
+                settings['number_of_cells'] = num_cells
 
                 settings['U0'] = U
                 if LC_mode == 'sLC':

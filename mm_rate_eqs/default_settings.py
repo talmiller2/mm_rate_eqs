@@ -1,6 +1,7 @@
 import numpy as np
 
-from mm_rate_eqs.fusion_functions import define_plasma_parameters
+from mm_rate_eqs.fusion_functions import define_plasma_parameters, get_ideal_gas_pressure, \
+    get_magnetic_field_for_given_pressure
 
 
 def define_default_settings(settings=None):
@@ -40,7 +41,9 @@ def define_default_settings(settings=None):
         settings['Te_0'] = 3 * settings['keV']
         # settings['Te_0'] = 9 * settings['keV']
     if 'B' not in settings:
-        settings['B'] = 1.0 * np.sqrt(settings['n0'] / 1e20 * settings['Ti_0'] / (5 * settings['keV']))  # [Tesla]
+        settings['P'] = get_ideal_gas_pressure(settings['n0'], settings['Ti_0'], settings)
+        # settings['B'] = 1.0 * np.sqrt(settings['n0'] / 1e20 * settings['Ti_0'] / (5 * settings['keV']))  # [Tesla]
+        settings['B'] = get_magnetic_field_for_given_pressure(settings['P'], beta=1.0)  # [Tesla]
     if 'Rm' not in settings:
         # settings['Rm'] = 1.4
         # settings['Rm'] = 2.0
@@ -71,9 +74,9 @@ def define_default_settings(settings=None):
         # settings['delta_n_smoothing_factor'] = 0.1
         # settings['delta_n_smoothing_factor'] = 0.5
     if 'number_of_cells' not in settings:
-        # settings['number_of_cells'] = 30
+        settings['number_of_cells'] = 10
         # settings['number_of_cells'] = 50
-        settings['number_of_cells'] = 100
+        # settings['number_of_cells'] = 100
         # settings['number_of_cells'] = 150
         # settings['number_of_cells'] = 200
         # settings['number_of_cells'] = 300
