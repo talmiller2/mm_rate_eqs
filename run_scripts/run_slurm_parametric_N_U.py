@@ -8,7 +8,7 @@ from mm_rate_eqs.slurm_functions import get_script_rate_eqs_slave
 pwd = os.getcwd()
 rate_eqs_script = get_script_rate_eqs_slave()
 
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set2/'
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set2_Rm_3/'
 
 slurm_kwargs = {'partition': 'core'}  # default
 # slurm_kwargs = {'partition': 'socket'}
@@ -40,7 +40,7 @@ for plasma_mode in plasma_modes:
         for num_cells in num_cells_list:
             for U in U_list:
                 run_name = plasma_mode
-                if transition_type == 'cool':
+                if plasma_mode == 'cool':
                     run_name += '_d' + str(plasma_dimension)
                 if transition_type == 'smooth_transition_to_free_flow':
                     run_name += '_mfpcutoff'

@@ -9,22 +9,24 @@ save_dirs = []
 linestyles = []
 
 # linestyles = ['-', '--']
-linestyles = ['-', '--', ':']
+linestyles = ['-', '--', ':', '-.']
 
-main_dir = '../runs/slurm_runs/set1/'
+main_dir = '../runs/slurm_runs/set2/'
 
 plasma_modes = []
 plasma_modes += ['isoTmfp']
 plasma_modes += ['isoT']
 plasma_modes += ['cool']
+plasma_modes += ['cool_mfpcutoff']
+# plasma_modes += ['cool_d1']
 
 curr_LC_mode = 'sLC'
 LC_modes = [curr_LC_mode for i in range(len(plasma_modes))]
 
-curr_num_cells = 10
+curr_num_cells = 100
 num_cells_list = [curr_num_cells for _ in range(len(plasma_modes))]
 
-curr_U = 0
+curr_U = 0.5
 U_list = [curr_U for _ in range(len(plasma_modes))]
 
 for i, linestyle in enumerate(linestyles):
@@ -38,6 +40,11 @@ for i, linestyle in enumerate(linestyles):
     state_file = save_dir + '/state.pickle'
     settings_file = save_dir + '/settings.pickle'
     state, settings = load_simulation(state_file, settings_file)
-    print('flux = ' + str(np.nanmean(state['flux'])))
+
+    print('flux = ' + str(state['flux_mean']))
+
+    if state['successful_termination'] == False:
+        print('RUN FAILED.')
+
     settings['linestyle'] = linestyle
     plot_relaxation_status(state, settings)
