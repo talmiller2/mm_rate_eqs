@@ -8,15 +8,18 @@ from mm_rate_eqs.slurm_functions import get_script_rate_eqs_slave
 pwd = os.getcwd()
 rate_eqs_script = get_script_rate_eqs_slave()
 
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set2_Rm_3/'
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set2_Rm_3/'
+# n0 = 3.875e22  # m^-3
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set4_Rm_3_mfp_over_cell_4/'
+n0 = 1e22  # m^-3
 
 slurm_kwargs = {'partition': 'core'}  # default
 # slurm_kwargs = {'partition': 'socket'}
 # slurm_kwargs = {'partition': 'testing'}
 
 plasma_modes = []
-# plasma_modes += ['isoTmfp']
-# plasma_modes += ['isoT']
+plasma_modes += ['isoTmfp']
+plasma_modes += ['isoT']
 plasma_modes += ['cool']
 
 LC_modes = []
@@ -28,8 +31,8 @@ U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5]
 
 plasma_dimension = 1
 
-# transition_type = 'none'
-transition_type = 'smooth_transition_to_free_flow'
+transition_type = 'none'
+# transition_type = 'smooth_transition_to_free_flow'
 
 total_number_of_combinations = len(plasma_modes) * len(LC_modes) * len(num_cells_list) * len(U_list)
 print('total_number_of_combinations = ' + str(total_number_of_combinations))
@@ -62,6 +65,8 @@ for plasma_mode in plasma_modes:
                 elif plasma_mode == 'cool':
                     settings['assume_constant_density'] = False
                     settings['assume_constant_temperature'] = False
+
+                settings['n0'] = n0
 
                 settings['number_of_cells'] = num_cells
 
