@@ -6,6 +6,8 @@ import time
 import numpy as np
 from scipy.io import savemat, loadmat
 
+from mm_rate_eqs.fusion_functions import get_ideal_gas_pressure, \
+    get_magnetic_field_for_given_pressure
 from mm_rate_eqs.plot_functions import plot_relaxation_status, save_plots
 from mm_rate_eqs.rate_functions import calculate_transition_density, \
     get_density_time_derivatives, \
@@ -228,6 +230,9 @@ def print_basic_run_info(state, settings):
     logging.info('n0 = ' + str('{:.2e}'.format(settings['n0'])) + ' m^-3')
     logging.info('Ti_0 = ' + str(settings['Ti_0']) + ' eV')
     logging.info('Te_0 = ' + str(settings['Te_0']) + ' eV')
+    settings['P'] = get_ideal_gas_pressure(settings['n0'], settings['Ti_0'], settings)
+    logging.info('P = ' + str(settings['P']) + ' bar')
+    settings['B'] = get_magnetic_field_for_given_pressure(settings['P'], beta=1.0)  # [Tesla]
     logging.info('B = ' + str(settings['B']) + ' T (for beta=1)')
     logging.info('v_th = ' + str('{:.2e}'.format(state['v_th'][0])) + ' m/s')
     logging.info('mfp = ' + str('{:.2e}'.format(state['mean_free_path'][0])) + ' m')
