@@ -9,10 +9,10 @@ plt.close('all')
 settings = {}
 # settings['gas_name'] = 'hydrogen'
 # settings['save_state'] = 'False'
-# settings['assume_constant_density'] = False
-settings['assume_constant_density'] = True
-# settings['assume_constant_temperature'] = False
-settings['assume_constant_temperature'] = True
+settings['assume_constant_density'] = False
+# settings['assume_constant_density'] = True
+settings['assume_constant_temperature'] = False
+# settings['assume_constant_temperature'] = True
 # settings['ion_scattering_rate_factor'] = 10
 # settings['cell_size'] = 50
 settings['plasma_dimension'] = 1
@@ -28,13 +28,13 @@ settings['number_of_cells'] = 30
 # settings['number_of_cells'] = 150
 # settings['number_of_cells'] = 200
 
-# settings['U0'] = 0
+settings['U0'] = 0
 # settings['U0'] = 0.01
 # settings['U0'] = 0.02
 # settings['U0'] = 0.05
 # settings['U0'] = 0.1
 # settings['U0'] = 0.2
-settings['U0'] = 0.3
+# settings['U0'] = 0.3
 # settings['U0'] = 0.5
 # settings['U0'] = 0.8
 
@@ -57,8 +57,8 @@ settings['right_boundary_condition'] = 'none'
 # settings['nullify_ntL_factor'] = 0.05
 settings['nullify_ntL_factor'] = 0.01
 
-settings['transition_type'] = 'none'
-# settings['transition_type'] = 'smooth_transition_to_free_flow'
+# settings['transition_type'] = 'none'
+settings['transition_type'] = 'smooth_transition_to_free_flow'
 
 settings['energy_conservation_scheme'] = 'none'
 # settings['energy_conservation_scheme'] = 'simple'
@@ -110,7 +110,7 @@ if settings['assume_constant_density'] == True:
 # settings['dt_factor'] = 0.1 / 3.0
 # settings['save_dir'] += '_dt_factor_3'
 
-settings['max_num_time_steps'] = 1000
+# settings['max_num_time_steps'] = 1000
 settings['save_dir'] = '../runs/runs_August_2020/TEST'
 
 print('save dir: ' + str(settings['save_dir']))

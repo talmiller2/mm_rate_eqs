@@ -15,9 +15,9 @@ slurm_kwargs = {'partition': 'core'}  # default
 # slurm_kwargs = {'partition': 'testing'}
 
 plasma_modes = []
-plasma_modes += ['isoTmfp']
-plasma_modes += ['isoT']
-# plasma_modes += ['cool']
+# plasma_modes += ['isoTmfp']
+# plasma_modes += ['isoT']
+plasma_modes += ['cool']
 
 LC_modes = []
 LC_modes += ['sLC']  # static loss cone
@@ -25,6 +25,11 @@ LC_modes += ['dLC']  # dynamic loss cone
 
 num_cells_list = [3, 5, 8, 10, 12, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5]
+
+plasma_dimension = 1
+
+# transition_type = 'none'
+transition_type = 'smooth_transition_to_free_flow'
 
 total_number_of_combinations = len(plasma_modes) * len(LC_modes) * len(num_cells_list) * len(U_list)
 print('total_number_of_combinations = ' + str(total_number_of_combinations))
@@ -35,8 +40,12 @@ for plasma_mode in plasma_modes:
         for num_cells in num_cells_list:
             for U in U_list:
                 run_name = plasma_mode
+                if transition_type == 'cool':
+                    run_name += '_d' + str(plasma_dimension)
                 run_name += '_N_' + str(num_cells) + '_U_' + str(U)
                 run_name += '_' + LC_mode
+                if transition_type == 'smooth_transition_to_free_flow':
+                    run_name += '_lowmfp_cutoff'
                 print('run_name = ' + run_name)
 
                 settings = {}
@@ -60,6 +69,9 @@ for plasma_mode in plasma_modes:
                     settings['alpha_definition'] = 'geometric_constant'
                 elif LC_mode == 'dLC':
                     settings['alpha_definition'] = 'geometric_local'
+
+                settings['transition_type'] = 'none'
+                # settings['transition_type'] = 'smooth_transition_to_free_flow'
 
                 settings['save_dir'] = main_folder + '/' + run_name
                 print('save dir: ' + str(settings['save_dir']))
