@@ -81,7 +81,8 @@ def find_rate_equations_steady_state(settings):
         state['Ti'] = get_isentrope_temperature(state['n'], settings, species='ions')
         state['Te'] = get_isentrope_temperature(state['n'], settings, species='electrons')
 
-        if check_status_threshold_passed(settings, t_curr, num_time_steps, status_counter):
+        if check_status_threshold_passed(settings, t_curr, num_time_steps, status_counter) \
+                or state['termination_criterion_reached']:
             # print basic information
             if settings['print_time_step_info'] is True:
                 print_time_step_info(dt, t_curr, num_time_steps)
