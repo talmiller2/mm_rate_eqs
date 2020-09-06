@@ -167,6 +167,9 @@ def define_default_settings(settings=None):
     if 't_solve_min' not in settings:
         settings['t_solve_min'] = 1e-20
         # settings['t_solve_min'] = 0.005
+    if 'status_counter_type' not in settings:
+        # settings['status_counter_type'] = 'time_elapsed'
+        settings['status_counter_type'] = 'time_steps'
     if 'dt_status' not in settings:
         # settings['dt_status'] = 1e-7
         # settings['dt_status'] = 1e-6
@@ -175,6 +178,8 @@ def define_default_settings(settings=None):
         settings['dt_status'] = 1e-4
         # settings['dt_status'] = 5e-4
         # settings['dt_status'] = 1e-3
+    if 'time_steps_status' not in settings:
+        settings['time_steps_status'] = int(1e4)
     if 'dt_factor' not in settings:
         # settings['dt_factor'] = 0.3
         settings['dt_factor'] = 0.1

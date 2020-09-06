@@ -9,7 +9,8 @@ from mm_rate_eqs.relaxation_algorithm_functions import load_simulation
 # plt.close('all')
 
 # main_dir = '../runs/slurm_runs/set2_Rm_3/'
-main_dir = '../runs/slurm_runs/set4_Rm_3_mfp_over_cell_4/'
+# main_dir = '../runs/slurm_runs/set4_Rm_3_mfp_over_cell_4/'
+main_dir = '../runs/slurm_runs/set5_Rm_3_mfp_over_cell_20/'
 
 colors = []
 colors += ['b']
@@ -26,15 +27,15 @@ plasma_modes += ['cool_mfpcutoff']
 num_cells_list = [3, 5, 8, 10, 12, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 # num_cells_list = [3, 5, 8]
 
-U = 0
+# U = 0
 # U = 0.05
-# U = 0.1
+U = 0.1
 # U = 0.3
 # U = 0.5
 
 linestyles = []
-# linestyles += ['-']
-linestyles += ['--']
+linestyles += ['-']
+# linestyles += ['--']
 
 LC_modes = []
 LC_modes += ['sLC']
@@ -71,15 +72,15 @@ for ind_mode in range(len(plasma_modes)):
                 flux_list[ind_N] = state['flux_mean']
 
             # extract the density profile
-            chosen_num_cells = 50
+            chosen_num_cells = 10
             if number_of_cells == chosen_num_cells:
                 plt.figure(2)
                 label = run_name
                 plt.plot(state['n'], '-', label=label, linestyle=linestyle, color=color)
 
         # plot flux as a function of N
-        # label_flux = plasma_modes[ind_mode] + '_U_' + str(U) + '_' + LC_mode
-        label_flux = plasma_modes[ind_mode] + ', mfp/l=4'
+        label_flux = plasma_modes[ind_mode] + '_U_' + str(U) + '_' + LC_mode
+        # label_flux = plasma_modes[ind_mode] + ', mfp/l=4'
         plt.figure(1)
         plt.plot(num_cells_list, flux_list, '-', label=label_flux, linestyle=linestyle, color=color)
         plt.yscale("log")

@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import os
 
 from mm_rate_eqs.default_settings import define_default_settings
 from mm_rate_eqs.relaxation_algorithm_functions import find_rate_equations_steady_state
@@ -28,11 +29,11 @@ settings['number_of_cells'] = 30
 # settings['number_of_cells'] = 150
 # settings['number_of_cells'] = 200
 
-settings['U0'] = 0
+# settings['U0'] = 0
 # settings['U0'] = 0.01
 # settings['U0'] = 0.02
 # settings['U0'] = 0.05
-# settings['U0'] = 0.1
+settings['U0'] = 0.1
 # settings['U0'] = 0.2
 # settings['U0'] = 0.3
 # settings['U0'] = 0.5
@@ -42,11 +43,11 @@ settings['U0'] = 0
 # settings['flux_normalized_termination_cutoff'] = 0.1
 settings['flux_normalized_termination_cutoff'] = 0.03
 
-# settings['alpha_definition'] = 'geometric_constant'
-settings['alpha_definition'] = 'geometric_local'
+settings['alpha_definition'] = 'geometric_constant'
+# settings['alpha_definition'] = 'geometric_local'
 
-# settings['U_for_loss_cone_factor'] = 1.0
-settings['U_for_loss_cone_factor'] = 0.5
+settings['U_for_loss_cone_factor'] = 1.0
+# settings['U_for_loss_cone_factor'] = 0.5
 
 # settings['adaptive_mirror'] = 'adjust_cell_size_with_mfp'
 # settings['adaptive_mirror'] = 'adjust_cell_size_with_vth'
@@ -57,8 +58,8 @@ settings['right_boundary_condition'] = 'none'
 # settings['nullify_ntL_factor'] = 0.05
 settings['nullify_ntL_factor'] = 0.01
 
-# settings['transition_type'] = 'none'
-settings['transition_type'] = 'smooth_transition_to_free_flow'
+settings['transition_type'] = 'none'
+# settings['transition_type'] = 'smooth_transition_to_free_flow'
 
 settings['energy_conservation_scheme'] = 'none'
 # settings['energy_conservation_scheme'] = 'simple'
@@ -71,7 +72,13 @@ settings['dt_status'] = 1e-4
 settings = define_default_settings(settings)
 # settings['n_end_min'] = 0.3 * settings['n0']
 
-settings['save_dir'] = 'runs/runs_August_2020/test'
+# settings['save_dir'] = 'runs/runs_August_2020/'
+settings['save_dir'] = '../runs/runs_September_2020/'
+
+os.makedirs(settings['save_dir'], exist_ok=True)
+
+settings['save_dir'] += 'test'
+
 settings['save_dir'] += '_N_' + str(settings['number_of_cells'])
 settings['save_dir'] += '_U_' + str(settings['U0'])
 
@@ -111,7 +118,10 @@ if settings['assume_constant_density'] == True:
 # settings['save_dir'] += '_dt_factor_3'
 
 # settings['max_num_time_steps'] = 1000
-settings['save_dir'] = '../runs/runs_August_2020/TEST'
+# settings['save_dir'] = '../runs/runs_August_2020/TEST'
+
+settings['n_min'] = 1e5
+settings['save_dir'] += '_nmin_' + str('{:.2e}'.format(settings['n_min']))
 
 print('save dir: ' + str(settings['save_dir']))
 

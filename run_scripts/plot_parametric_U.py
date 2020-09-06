@@ -8,8 +8,9 @@ from mm_rate_eqs.relaxation_algorithm_functions import load_simulation
 
 plt.close('all')
 
-# main_dir = '../runs/slurm_runs/set2_Rm_3/'
-main_dir = '../runs/slurm_runs/set4_Rm_3_mfp_over_cell_4/'
+main_dir = '../runs/slurm_runs/set2_Rm_3/'
+# main_dir = '../runs/slurm_runs/set4_Rm_3_mfp_over_cell_4/'
+# main_dir = '../runs/slurm_runs/set5_Rm_3_mfp_over_cell_20/'
 
 colors = []
 colors += ['b']
