@@ -2,6 +2,7 @@ import logging
 
 import numpy as np
 
+from mm_rate_eqs.aux_functions import theta_fun_generic
 from mm_rate_eqs.loss_cone_functions import get_solid_angles
 
 
@@ -164,7 +165,8 @@ def get_specific_coulomb_scattering_rate(ne, Te, ni, Ti, settings, impact_specie
     e = settings['e']
     coulomb_log_dict = calculate_coulomb_logarithm(ne, Te, ni, Ti,
                                                    Z=settings['Z_ion'],
-                                                   A=settings['A_atomic_weight'])
+                                                   A=settings['A_atomic_weight'],
+                                                   coulomb_log_min=settings['coulomb_log_min'])
 
     if impact_specie == 'e':
         m_s1 = settings['me']
@@ -210,7 +212,7 @@ def get_specific_coulomb_scattering_rate(ne, Te, ni, Ti, settings, impact_specie
     return scat_rate
 
 
-def calculate_coulomb_logarithm(ne, Te, ni, Ti, Z=1, A=1):
+def calculate_coulomb_logarithm(ne, Te, ni, Ti, Z=1, A=1, coulomb_log_min=1):
     """
     Coulomb logarithm for different interactions, based on the NRL formulary 2019.
     densities in m^-3 and temperatures in eV
@@ -224,6 +226,11 @@ def calculate_coulomb_logarithm(ne, Te, ni, Ti, Z=1, A=1):
     coulomb_log['ie_overheated_ions'] = 16.0 - np.log(Z ** 2.0 * A * ni_cm ** 0.5 * Ti ** (-3.0 / 2))
     coulomb_log['ie_cold_electrons'] = 23.0 - np.log(ne_cm ** 0.5 * Te ** (-1.0))
     coulomb_log['ie_hot_electrons'] = 24.0 - np.log(Z * ne_cm ** 0.5 * Te ** (-3.0 / 2))
+
+    # make sure the coulomb log does not get too low (unphysical parameter range)
+    for key in coulomb_log:
+        coulomb_log[key] = theta_fun_generic(coulomb_log[key], x0=coulomb_log_min)
+
     return coulomb_log
 
 
