@@ -87,6 +87,12 @@ def find_rate_equations_steady_state(settings):
             if settings['print_time_step_info'] is True:
                 print_time_step_info(dt, t_curr, num_time_steps)
 
+            # print minimal density values for debugging
+            logging.info('min: n=' + '{:.2e}'.format(min(state['n']))
+                         + ', n_c=' + '{:.2e}'.format(min(state['n_c']))
+                         + ', n_tL=' + '{:.2e}'.format(min(state['n_tL']))
+                         + ', n_tR=' + '{:.2e}'.format(min(state['n_tR'])))
+
             # define fluxes and check if termination criterion is reached
             state = get_fluxes(state, settings)
             state = save_fluxes_evolution(state, t_curr)
@@ -304,6 +310,7 @@ def advance_densities_time_step(state, settings, dt, t_curr, num_time_steps):
             state[var_name][ind_min] = settings['n_min']
 
     state['n'] = state['n_c'] + state['n_tL'] + state['n_tR']
+
     return state
 
 
@@ -374,11 +381,11 @@ def save_fluxes_evolution(state, t_curr):
 def check_termination_criterion_reached(state, settings, t_curr, num_time_steps, status_counter):
     if state['flux_normalized_std'] < settings['flux_normalized_termination_cutoff'] \
             and status_counter >= 1 and t_curr >= settings['t_solve_min']:
-        print('flux_normalized_termination_cutoff reached.')
+        logging.info('flux_normalized_termination_cutoff reached.')
         state['termination_criterion_reached'] = True
         state['successful_termination'] = True
     elif num_time_steps > settings['max_num_time_steps']:
-        print('max_num_time_steps reached.')
+        logging.info('max_num_time_steps reached.')
         state['termination_criterion_reached'] = True
         state['successful_termination'] = False
     else:

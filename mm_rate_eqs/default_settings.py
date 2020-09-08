@@ -59,11 +59,12 @@ def define_default_settings(settings=None):
         settings['cell_size'] = 5.0  # m (MMM wavelength)
         # settings['cell_size'] = 10.0  # m (MMM wavelength)
     if 'mfp_min' not in settings:
-        settings['mfp_min'] = 0.1 * settings['cell_size']
+        # settings['mfp_min'] = 0.1 * settings['cell_size']
+        settings['mfp_min'] = 0.01 * settings['cell_size']
     if 'mfp_max' not in settings:
-        # settings['mfp_max'] = 100 * settings['cell_size']
+        settings['mfp_max'] = 100 * settings['cell_size']
         # settings['mfp_max'] = 50 * settings['cell_size']
-        settings['mfp_max'] = 10 * settings['cell_size']
+        # settings['mfp_max'] = 10 * settings['cell_size']
     if 'delta_n_smoothing_factor' not in settings:
         settings['delta_n_smoothing_factor'] = 0.01
         # settings['delta_n_smoothing_factor'] = 0.05
@@ -156,7 +157,9 @@ def define_default_settings(settings=None):
 
     ### relaxation solver parameters
     if 'max_num_time_steps' not in settings:
-        settings['max_num_time_steps'] = int(3e5)
+        settings['max_num_time_steps'] = int(3e5) - 1
+        # settings['max_num_time_steps'] = int(1e5) - 1
+        # settings['max_num_time_steps'] = int(1e10) - 1
     if 't_stop' not in settings:
         # settings['t_stop'] = 1e-6
         # settings['t_stop'] = 1e-4

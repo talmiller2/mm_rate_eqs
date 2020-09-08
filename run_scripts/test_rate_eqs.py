@@ -16,10 +16,10 @@ settings['assume_constant_temperature'] = False
 # settings['assume_constant_temperature'] = True
 # settings['ion_scattering_rate_factor'] = 10
 # settings['cell_size'] = 50
-settings['plasma_dimension'] = 1
+# settings['plasma_dimension'] = 1
 # settings['plasma_dimension'] = 1.5
 # settings['plasma_dimension'] = 2
-# settings['plasma_dimension'] = 3
+settings['plasma_dimension'] = 3
 # settings['plasma_dimension'] = 10
 # settings['plasma_dimension'] = 100
 # settings['number_of_cells'] = 20
@@ -58,8 +58,8 @@ settings['right_boundary_condition'] = 'none'
 # settings['nullify_ntL_factor'] = 0.05
 settings['nullify_ntL_factor'] = 0.01
 
-settings['transition_type'] = 'none'
-# settings['transition_type'] = 'smooth_transition_to_free_flow'
+# settings['transition_type'] = 'none'
+settings['transition_type'] = 'smooth_transition_to_free_flow'
 
 settings['energy_conservation_scheme'] = 'none'
 # settings['energy_conservation_scheme'] = 'simple'
@@ -84,10 +84,12 @@ settings['save_dir'] += '_U_' + str(settings['U0'])
 
 if settings['adaptive_mirror'] != 'none':
     settings['save_dir'] += '_adap_' + settings['adaptive_mirror']
+
 if settings['transition_type'] == 'none':
     settings['save_dir'] += '_trans_none'
 else:
     settings['save_dir'] += '_trans_smooth'
+
 if settings['assume_constant_temperature'] == True:
     settings['save_dir'] += '_iso'
 else:
@@ -101,7 +103,7 @@ elif settings['right_boundary_condition'] == 'adjust_ntL_for_nend':
 elif settings['right_boundary_condition'] == 'none':
     settings['save_dir'] += '_rbc_none'
 
-settings['save_dir'] += '_energy_scheme_' + settings['energy_conservation_scheme']
+# settings['save_dir'] += '_energy_scheme_' + settings['energy_conservation_scheme']
 
 if settings['alpha_definition'] == 'geometric_constant':
     settings['save_dir'] += '_constLC'
@@ -120,8 +122,12 @@ if settings['assume_constant_density'] == True:
 # settings['max_num_time_steps'] = 1000
 # settings['save_dir'] = '../runs/runs_August_2020/TEST'
 
-settings['n_min'] = 1e5
-settings['save_dir'] += '_nmin_' + str('{:.2e}'.format(settings['n_min']))
+# settings['n_min'] = 1e5
+# settings['save_dir'] += '_nmin_' + str('{:.2e}'.format(settings['n_min']))
+
+# settings['mfp_min'] = 1e-2
+# settings['save_dir'] += '_mfp_min_' + str(settings['mfp_min'])
+
 
 print('save dir: ' + str(settings['save_dir']))
 
