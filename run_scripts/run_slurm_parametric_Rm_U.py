@@ -8,7 +8,9 @@ from mm_rate_eqs.slurm_functions import get_script_rate_eqs_slave
 pwd = os.getcwd()
 rate_eqs_script = get_script_rate_eqs_slave()
 
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set3_N_20/'
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set3_N_20/'
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set8_N_30_mfp_over_cell_1_mfp_limitX100/'
+n0 = 3.875e22  # m^-3
 
 slurm_kwargs = {'partition': 'core'}  # default
 # slurm_kwargs = {'partition': 'socket'}
@@ -17,20 +19,21 @@ slurm_kwargs = {'partition': 'core'}  # default
 plasma_modes = []
 plasma_modes += ['isoTmfp']
 plasma_modes += ['isoT']
-plasma_modes += ['cool']
+plasma_modes += ['coold1']
+plasma_modes += ['coold2']
+plasma_modes += ['coold3']
 
 LC_modes = []
 LC_modes += ['sLC']  # static loss cone
 LC_modes += ['dLC']  # dynamic loss cone
 
-num_cells = 20
+# num_cells = 20
+# Rm_list = [1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
+# U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5]
+
+num_cells = 30
 Rm_list = [1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
-U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5]
-
-plasma_dimension = 1
-
-transition_type = 'none'
-# transition_type = 'smooth_transition_to_free_flow'
+U_list = [0, 0.05, 0.1, 0.3, 0.5]
 
 total_number_of_combinations = len(plasma_modes) * len(LC_modes) * len(Rm_list) * len(U_list)
 print('total_number_of_combinations = ' + str(total_number_of_combinations))
@@ -41,10 +44,6 @@ for plasma_mode in plasma_modes:
         for Rm in Rm_list:
             for U in U_list:
                 run_name = plasma_mode
-                # if plasma_mode == 'cool':
-                #     run_name += '_d' + str(plasma_dimension)
-                if transition_type == 'smooth_transition_to_free_flow':
-                    run_name += '_mfpcutoff'
                 run_name += '_Rm_' + str(Rm) + '_U_' + str(U)
                 run_name += '_' + LC_mode
 
@@ -60,10 +59,12 @@ for plasma_mode in plasma_modes:
                 elif plasma_mode == 'isoT':
                     settings['assume_constant_density'] = False
                     settings['assume_constant_temperature'] = True
-                elif plasma_mode == 'cool':
+                elif 'cool' in plasma_mode:
                     settings['assume_constant_density'] = False
-                    settings['assume_constant_temperature'] = False
+                    settings['assume_constant_density'] = False
+                    settings['plasma_dimension'] = int(plasma_mode.split('d')[-1])
 
+                settings['n0'] = n0
                 settings['number_of_cells'] = num_cells
                 settings['Rm'] = Rm
 
@@ -73,7 +74,9 @@ for plasma_mode in plasma_modes:
                 elif LC_mode == 'dLC':
                     settings['alpha_definition'] = 'geometric_local'
 
-                settings['transition_type'] = transition_type
+                # if plasma_mode == 'cool_mfpcutoff':
+                #     settings['transition_type'] = 'smooth_transition_to_free_flow'
+                settings['transition_type'] = 'smooth_transition_to_free_flow'
 
                 settings['save_dir'] = main_folder + '/' + run_name
                 print('save dir: ' + str(settings['save_dir']))

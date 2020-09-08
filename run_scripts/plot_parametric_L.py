@@ -131,8 +131,8 @@ for color, mode in zip(colors, modes):
              color=color)
 
 plt.figure(1)
-plt.xlabel('number of cells')
-plt.ylabel('flux')
+plt.xlabel('N')
+plt.ylabel('flux [$s^{-1}$]')
 plt.title('flux as a function of system size')
 plt.tight_layout()
 plt.grid(True)

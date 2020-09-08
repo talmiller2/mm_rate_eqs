@@ -14,6 +14,9 @@ def is_array_like(obj):
 
 
 def theta_fun(x, x0=0):
+    """
+    theta or relu function
+    """
     if x > x0:
         return x
     else:
