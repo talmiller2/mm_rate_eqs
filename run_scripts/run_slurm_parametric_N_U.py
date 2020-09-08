@@ -9,14 +9,15 @@ pwd = os.getcwd()
 rate_eqs_script = get_script_rate_eqs_slave()
 
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set2_Rm_3/'
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set6_Rm_3_mfp_over_cell_1_mfp_limitX100/'
-n0 = 3.875e22  # m^-3
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set6_Rm_3_mfp_over_cell_1_mfp_limitX100/'
+# n0 = 3.875e22  # m^-3
 
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set4_Rm_3_mfp_over_cell_4/'
 # n0 = 1e22  # m^-3
 
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set5_Rm_3_mfp_over_cell_20/'
-# n0 = 2e21  # m^-3
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set7_Rm_3_mfp_over_cell_20_mfp_limitX100/'
+n0 = 2e21  # m^-3
 
 slurm_kwargs = {'partition': 'core'}  # default
 # slurm_kwargs = {'partition': 'socket'}
@@ -28,6 +29,7 @@ plasma_modes += ['isoT']
 plasma_modes += ['coold1']
 plasma_modes += ['coold2']
 plasma_modes += ['coold3']
+# plasma_modes += ['coold']
 # plasma_modes += ['cool_mfpcutoff']
 
 LC_modes = []

@@ -6,40 +6,49 @@ import numpy as np
 
 from mm_rate_eqs.relaxation_algorithm_functions import load_simulation
 
-# plt.close('all')
+plt.close('all')
 
 # main_dir = '../runs/slurm_runs/set2_Rm_3/'
 # main_dir = '../runs/slurm_runs/set4_Rm_3_mfp_over_cell_4/'
-main_dir = '../runs/slurm_runs/set5_Rm_3_mfp_over_cell_20/'
+# main_dir = '../runs/slurm_runs/set5_Rm_3_mfp_over_cell_20/'
+main_dir = '../runs/slurm_runs/set6_Rm_3_mfp_over_cell_1_mfp_limitX100/'
 
 colors = []
 colors += ['b']
 colors += ['g']
 colors += ['r']
 colors += ['m']
+colors += ['c']
 
 plasma_modes = []
 plasma_modes += ['isoTmfp']
 plasma_modes += ['isoT']
-plasma_modes += ['cool']
-plasma_modes += ['cool_mfpcutoff']
+plasma_modes += ['coold1']
+plasma_modes += ['coold2']
+plasma_modes += ['coold3']
+# plasma_modes += ['cool']
+# plasma_modes += ['cool_mfpcutoff']
 
-num_cells_list = [3, 5, 8, 10, 12, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+# num_cells_list = [3, 5, 8, 10, 12, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 # num_cells_list = [3, 5, 8]
+num_cells_list = [3, 5, 8, 10, 15, 30, 50, 70, 100]
 
 # U = 0
 # U = 0.05
-U = 0.1
+# U = 0.1
+U = 0.2
 # U = 0.3
 # U = 0.5
+# U = 0.75
+# U = 1.0
 
 linestyles = []
 linestyles += ['-']
-# linestyles += ['--']
+linestyles += ['--']
 
 LC_modes = []
 LC_modes += ['sLC']
-# LC_modes += ['dLC']
+LC_modes += ['dLC']
 
 
 for ind_mode in range(len(plasma_modes)):
@@ -62,7 +71,10 @@ for ind_mode in range(len(plasma_modes)):
 
             state_file = save_dir + '/state.pickle'
             settings_file = save_dir + '/settings.pickle'
-            state, settings = load_simulation(state_file, settings_file)
+            try:
+                state, settings = load_simulation(state_file, settings_file)
+            except:
+                pass
 
             # flux_list[ind_N] = state['flux_mean']
             # if state['successful_termination'] == False:
@@ -72,7 +84,7 @@ for ind_mode in range(len(plasma_modes)):
                 flux_list[ind_N] = state['flux_mean']
 
             # extract the density profile
-            chosen_num_cells = 10
+            chosen_num_cells = 30
             if number_of_cells == chosen_num_cells:
                 plt.figure(2)
                 label = run_name
@@ -88,7 +100,8 @@ for ind_mode in range(len(plasma_modes)):
 plt.figure(1)
 plt.xlabel('number of cells')
 plt.ylabel('flux')
-plt.title('flux as a function of system size')
+# plt.title('flux as a function of system size')
+plt.title('flux as a function of system size (U/$v_{th}$=' + str(U) + ')')
 plt.tight_layout()
 plt.grid(True)
 plt.legend()
@@ -96,7 +109,7 @@ plt.legend()
 plt.figure(2)
 plt.xlabel('cell number')
 plt.ylabel('density')
-plt.title('density profile for N = ' + str(chosen_num_cells) + ' cells')
+plt.title('density profile for N = ' + str(chosen_num_cells) + ' cells (U/$v_{th}$=' + str(U) + ')')
 plt.tight_layout()
 plt.grid(True)
 plt.legend()

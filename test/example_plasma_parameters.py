@@ -1,9 +1,9 @@
 from mm_rate_eqs.default_settings import define_default_settings
 from mm_rate_eqs.fusion_functions import get_lawson_parameters, get_brem_radiation_loss, get_cyclotron_radiation_loss, \
     get_fusion_power, get_magnetic_pressure, get_ideal_gas_pressure, get_fusion_charged_power, \
-    get_ideal_gas_energy_per_volume
+    get_ideal_gas_energy_per_volume, get_magnetic_field_for_given_pressure
 from mm_rate_eqs.rate_functions import calculate_coulomb_logarithm, get_specific_coulomb_scattering_rate, \
-    get_thermal_velocity
+    get_thermal_velocity, get_coulomb_scattering_rate
 
 # lab plasma
 # settings = {'gas_name': 'potassium'}
@@ -12,14 +12,17 @@ from mm_rate_eqs.rate_functions import calculate_coulomb_logarithm, get_specific
 # n_list = [1e15, 1e16, 1e17, 1e18]
 
 # fusion plasma (linear)
+# settings = {'gas_name': 'DT_mix'}
+# T = 3500
+# n_list = [1e22]
 settings = {'gas_name': 'DT_mix'}
-T = 3500
-n_list = [1e22]
+T = 3000
+n_list = [4e22]
 
 # fusion plasma
 # settings = {'gas_name': 'DT_mix'}
 # T = 10000
-# n_list = [1e20]
+# n_list = [1e21]
 
 # fusion plasma
 # settings = {'gas_name': 'DT_mix'}
@@ -60,7 +63,9 @@ for n in n_list:
     ni = n / 2
     print('Ti = ' + str(Ti) + ' eV = ' + str(Ti_keV) + ' keV')
     print('Coulomb log = ' + str(calculate_coulomb_logarithm(ne, Te, ni, Ti)['ii']))
-    scat_rate = get_specific_coulomb_scattering_rate(ne, Te, ni, Ti, settings, impact_specie='i', target_specie='i')
+    # scat_rate = get_specific_coulomb_scattering_rate(ne, Te, ni, Ti, settings, impact_specie='i', target_specie='i')
+    scat_rate = get_coulomb_scattering_rate(n, Ti, Te, settings, species='ions')
+
     print('ii scattering rate = ' + str(scat_rate) + ' 1/s')
     # belan_scat_rate = get_coulomb_scattering_rate(n, T, T, settings, species='ions')
     # print('ii belan_scat_rate = ' + str(belan_scat_rate) + ' 1/s')
@@ -73,10 +78,13 @@ for n in n_list:
     # Plasma beta
     P_magnetic = get_magnetic_pressure(B)
     P_plasma = get_ideal_gas_pressure(ne, Te, settings) + get_ideal_gas_pressure(ni, Ti, settings)
+    print('B = ' + str(B) + ' T')
     beta = P_plasma / P_magnetic
     print('P_magnetic = ' + str(P_magnetic) + ' bar')
     print('P_plasma = ' + str(P_plasma) + ' bar')
     print('beta = ' + str(beta))
+    B_for_given_P = get_magnetic_field_for_given_pressure(P_plasma, beta=1.0)  # [Tesla]
+    print('B (for beta=1) = ' + str(B_for_given_P) + ' T')
 
     # Summary of Lawson criterion
     tau_lawson, flux_lawson = get_lawson_parameters(ni, Ti, settings)

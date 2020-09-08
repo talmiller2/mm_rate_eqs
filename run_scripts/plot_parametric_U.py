@@ -8,29 +8,37 @@ from mm_rate_eqs.relaxation_algorithm_functions import load_simulation
 
 plt.close('all')
 
-main_dir = '../runs/slurm_runs/set2_Rm_3/'
+# main_dir = '../runs/slurm_runs/set2_Rm_3/'
 # main_dir = '../runs/slurm_runs/set4_Rm_3_mfp_over_cell_4/'
 # main_dir = '../runs/slurm_runs/set5_Rm_3_mfp_over_cell_20/'
+main_dir = '../runs/slurm_runs/set6_Rm_3_mfp_over_cell_1_mfp_limitX100/'
 
 colors = []
 colors += ['b']
 colors += ['g']
 colors += ['r']
 colors += ['m']
+colors += ['c']
 
 plasma_modes = []
-plasma_modes += ['isoTmfp']
-plasma_modes += ['isoT']
-plasma_modes += ['cool']
-plasma_modes += ['cool_mfpcutoff']
+# plasma_modes += ['isoTmfp']
+# plasma_modes += ['isoT']
+# plasma_modes += ['coold1']
+plasma_modes += ['coold2']
+# plasma_modes += ['coold3']
+# plasma_modes += ['cool']
+# plasma_modes += ['cool_mfpcutoff']
 
 # number_of_cells = 10
 # number_of_cells = 20
-number_of_cells = 30
+# number_of_cells = 30
 # number_of_cells = 40
 # number_of_cells = 50
+number_of_cells = 70
+# number_of_cells = 100
 
-U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5]
+# U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5]
+U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0]
 
 linestyles = []
 linestyles += ['-']
@@ -38,7 +46,7 @@ linestyles += ['--']
 
 LC_modes = []
 LC_modes += ['sLC']
-LC_modes += ['dLC']
+# LC_modes += ['dLC']
 
 for ind_mode in range(len(plasma_modes)):
     color = colors[ind_mode]
@@ -60,7 +68,10 @@ for ind_mode in range(len(plasma_modes)):
 
             state_file = save_dir + '/state.pickle'
             settings_file = save_dir + '/settings.pickle'
-            state, settings = load_simulation(state_file, settings_file)
+            try:
+                state, settings = load_simulation(state_file, settings_file)
+            except:
+                pass
 
             # flux_list[ind_N] = state['flux_mean']
             # if state['successful_termination'] == False:
