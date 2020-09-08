@@ -191,9 +191,9 @@ def define_default_settings(settings=None):
         settings['dt_min'] = 1e-20
     if 'n_min' not in settings:  # minimal density allowed in the entire system
         # settings['n_min'] = 0
-        # settings['n_min'] = 1e10
+        settings['n_min'] = 1e10
         # settings['n_min'] = 1e15
-        settings['n_min'] = 1e17
+        # settings['n_min'] = 1e17
         # settings['n_min'] = 1e19
     if 'n_end_min' not in settings:  # minimal density allowed as the right boundary condition and n_transition
         settings['n_end_min'] = 1e18
