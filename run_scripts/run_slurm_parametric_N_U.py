@@ -16,8 +16,11 @@ rate_eqs_script = get_script_rate_eqs_slave()
 # n0 = 1e22  # m^-3
 
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set5_Rm_3_mfp_over_cell_20/'
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set7_Rm_3_mfp_over_cell_20_mfp_limitX100/'
-n0 = 2e21  # m^-3
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set7_Rm_3_mfp_over_cell_20_mfp_limitX100/'
+# n0 = 2e21  # m^-3
+
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set10_Rm_3_mfp_over_cell_0.04_mfp_limitX100/'
+n0 = 1e24  # m^-3
 
 slurm_kwargs = {'partition': 'core'}  # default
 # slurm_kwargs = {'partition': 'socket'}

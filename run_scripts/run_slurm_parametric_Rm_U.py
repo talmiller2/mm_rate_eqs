@@ -9,8 +9,10 @@ pwd = os.getcwd()
 rate_eqs_script = get_script_rate_eqs_slave()
 
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set3_N_20/'
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set8_N_30_mfp_over_cell_1_mfp_limitX100/'
-n0 = 3.875e22  # m^-3
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set8_N_30_mfp_over_cell_1_mfp_limitX100/'
+# n0 = 3.875e22  # m^-3
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set9_N_30_mfp_over_cell_40_mfp_limitX100/'
+n0 = 1e22  # m^-3
 
 slurm_kwargs = {'partition': 'core'}  # default
 # slurm_kwargs = {'partition': 'socket'}
@@ -33,7 +35,8 @@ LC_modes += ['dLC']  # dynamic loss cone
 
 num_cells = 30
 Rm_list = [1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
-U_list = [0, 0.05, 0.1, 0.3, 0.5]
+# U_list = [0, 0.05, 0.1, 0.3, 0.5]
+U_list = [0]
 
 total_number_of_combinations = len(plasma_modes) * len(LC_modes) * len(Rm_list) * len(U_list)
 print('total_number_of_combinations = ' + str(total_number_of_combinations))

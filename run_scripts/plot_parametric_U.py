@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 
-plt.rcParams.update({'font.size': 16})
+# plt.rcParams.update({'font.size': 16})
+plt.rcParams.update({'font.size': 14})
 
 import numpy as np
 
@@ -65,9 +66,9 @@ plasma_modes += ['coold3']
 # number_of_cells = 15
 # number_of_cells = 30
 # number_of_cells = 40
-number_of_cells = 50
+# number_of_cells = 50
 # number_of_cells = 70
-# number_of_cells = 100
+number_of_cells = 100
 
 # U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5]
 # U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0]

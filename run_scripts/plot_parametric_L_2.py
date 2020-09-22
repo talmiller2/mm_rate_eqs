@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 
-plt.rcParams.update({'font.size': 16})
+# plt.rcParams.update({'font.size': 16})
+plt.rcParams.update({'font.size': 14})
 
 import numpy as np
 from scipy.optimize import curve_fit
@@ -31,8 +32,8 @@ def define_LC_mode_label(LC_mode):
 
 def define_label(plasma_mode, LC_mode):
     label = define_plasma_mode_label(plasma_mode)
-    # label += ', '
-    # label += define_LC_mode_label(LC_mode)
+    label += ', '
+    label += define_LC_mode_label(LC_mode)
     return label
 
 
@@ -41,8 +42,8 @@ plt.close('all')
 # main_dir = '../runs/slurm_runs/set2_Rm_3/'
 # main_dir = '../runs/slurm_runs/set4_Rm_3_mfp_over_cell_4/'
 # main_dir = '../runs/slurm_runs/set5_Rm_3_mfp_over_cell_20/'
-# main_dir = '../runs/slurm_runs/set6_Rm_3_mfp_over_cell_1_mfp_limitX100/'
-main_dir = '../runs/slurm_runs/set7_Rm_3_mfp_over_cell_20_mfp_limitX100/'
+main_dir = '../runs/slurm_runs/set6_Rm_3_mfp_over_cell_1_mfp_limitX100/'
+# main_dir = '../runs/slurm_runs/set7_Rm_3_mfp_over_cell_20_mfp_limitX100/'
 
 colors = []
 colors += ['b']
@@ -64,12 +65,12 @@ plasma_modes += ['coold3']
 # num_cells_list = [3, 5, 8]
 num_cells_list = [3, 5, 8, 10, 15, 30, 50, 70, 100]
 
-U = 0
+# U = 0
 # U = 0.05
 # U = 0.1
 # U = 0.2
 # U = 0.3
-# U = 0.5
+U = 0.5
 # U = 0.75
 # U = 1.0
 
@@ -79,7 +80,7 @@ linestyles += ['--']
 
 LC_modes = []
 LC_modes += ['sLC']
-# LC_modes += ['dLC']
+LC_modes += ['dLC']
 
 
 for ind_mode in range(len(plasma_modes)):
@@ -145,8 +146,8 @@ for ind_mode in range(len(plasma_modes)):
 plt.figure(1)
 plt.xlabel('N')
 plt.ylabel('flux [$s^{-1}$]')
-plt.title('flux as a function of system size')
-# plt.title('flux as a function of system size (U/$v_{th}$=' + str(U) + ')')
+# plt.title('flux as a function of system size')
+plt.title('flux as a function of system size ($U/v_{th}$=' + str(U) + ')')
 plt.tight_layout()
 plt.grid(True)
 plt.legend()
@@ -154,8 +155,8 @@ plt.legend()
 plt.figure(2)
 plt.xlabel('cell number')
 plt.ylabel('density [$m^{-3}$]')
-plt.title('density profile (N=' + str(chosen_num_cells) + ')')
-# plt.title('density profile (N=' + str(chosen_num_cells) + ' cells, U/$v_{th}$=' + str(U) + ')')
+# plt.title('density profile (N=' + str(chosen_num_cells) + ')')
+plt.title('density profile (N=' + str(chosen_num_cells) + ' cells, $U/v_{th}$=' + str(U) + ')')
 plt.tight_layout()
 plt.grid(True)
 plt.legend()
