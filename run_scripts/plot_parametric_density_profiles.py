@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 
 # plt.rcParams.update({'font.size': 16})
 plt.rcParams.update({'font.size': 14})
@@ -43,15 +44,9 @@ plt.close('all')
 # main_dir = '../runs/slurm_runs/set4_Rm_3_mfp_over_cell_4/'
 # main_dir = '../runs/slurm_runs/set5_Rm_3_mfp_over_cell_20/'
 # main_dir = '../runs/slurm_runs/set6_Rm_3_mfp_over_cell_1_mfp_limitX100/'
-# main_dir = '../runs/slurm_runs/set7_Rm_3_mfp_over_cell_20_mfp_limitX100/'
-main_dir = '../runs/slurm_runs/set10_Rm_3_mfp_over_cell_0.04_mfp_limitX100/'
+main_dir = '../runs/slurm_runs/set7_Rm_3_mfp_over_cell_20_mfp_limitX100/'
+# main_dir = '../runs/slurm_runs/set10_Rm_3_mfp_over_cell_0.04_mfp_limitX100/'
 
-colors = []
-colors += ['b']
-colors += ['g']
-colors += ['r']
-colors += ['m']
-colors += ['c']
 
 plasma_modes = []
 plasma_modes += ['isoT']
@@ -65,6 +60,14 @@ plasma_modes += ['coold3']
 # num_cells_list = [3, 5, 8, 10, 12, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 # num_cells_list = [3, 5, 8]
 num_cells_list = [3, 5, 8, 10, 15, 30, 50, 70, 100]
+
+# colors = []
+# colors += ['b']
+# colors += ['g']
+# colors += ['r']
+# colors += ['m']
+# colors += ['c']
+colors = cm.rainbow(np.linspace(0, 1, len(num_cells_list)))
 
 U = 0
 # U = 0.05
@@ -85,7 +88,6 @@ LC_modes += ['sLC']
 
 
 for ind_mode in range(len(plasma_modes)):
-    color = colors[ind_mode]
     plasma_mode = plasma_modes[ind_mode]
 
     for ind_LC in range(len(LC_modes)):
@@ -94,6 +96,7 @@ for ind_mode in range(len(plasma_modes)):
 
         flux_list = np.nan * np.zeros(len(num_cells_list))
         for ind_N, number_of_cells in enumerate(num_cells_list):
+            color = colors[ind_N]
 
             run_name = plasma_mode
             run_name += '_N_' + str(number_of_cells) + '_U_' + str(U)
@@ -108,57 +111,39 @@ for ind_mode in range(len(plasma_modes)):
                 state, settings = load_simulation(state_file, settings_file)
                 if state['successful_termination'] == True:
                     flux_list[ind_N] = state['flux_mean']
+
+                # label = run_name
+                # label = 'N=' + str(number_of_cells) + ', ' + define_LC_mode_label(LC_mode)
+                # label = define_label(plasma_mode, LC_mode)
+                label = 'N=' + str(number_of_cells)
+                plt.figure(1 + 2 * ind_mode)
+                x = np.linspace(0, number_of_cells, number_of_cells)
+                plt.plot(x, state['n'], '-', label=label, linestyle=linestyle, color=color)
+
+                plt.figure(2 + 2 * ind_mode)
+                x = np.linspace(0, 1, number_of_cells)
+                plt.plot(x, state['n'], '-', label=label, linestyle=linestyle, color=color)
+
             except:
                 pass
 
+for ind_mode, mode in enumerate(plasma_modes):
+    plt.figure(1 + 2 * ind_mode)
+    plt.xlabel('cell number')
+    plt.ylabel('density [$m^{-3}$]')
+    # plt.title('mode "' + mode + '" density profiles $U/v_{th}$=' + str(U))
+    # plt.title('mode "' + mode + '" density profiles')
+    plt.title(define_plasma_mode_label(mode) + ' density profiles')
+    plt.tight_layout()
+    plt.grid(True)
+    plt.legend()
+    plt.grid(True)
 
-            # extract the density profile
-            chosen_num_cells = 30
-            if number_of_cells == chosen_num_cells:
-                plt.figure(2)
-                # label = run_name
-                # label = 'N=' + str(number_of_cells) + ', ' + define_LC_mode_label(LC_mode)
-                label = define_label(plasma_mode, LC_mode)
-                plt.plot(state['n'], '-', label=label, linestyle=linestyle, color=color)
-
-        # plot flux as a function of N
-        # label_flux = plasma_modes[ind_mode] + '_U_' + str(U) + '_' + LC_mode
-        # label_flux = plasma_modes[ind_mode] + ', mfp/l=4'
-        label_flux = define_label(plasma_mode, LC_mode)
-        plt.figure(1)
-        plt.plot(num_cells_list, flux_list, '-', label=label_flux, linestyle=linestyle, color=color)
-        plt.yscale("log")
-
-        # # clear nans for fit
-        norm_factor = 1e27
-        num_cells_list = np.array(num_cells_list)
-        inds_flux_not_nan = [i for i in range(len(flux_list)) if not np.isnan(flux_list[i])]
-        n_cells = num_cells_list[inds_flux_not_nan]
-        flux_cells = flux_list[inds_flux_not_nan] / norm_factor
-        # fit_function = lambda x, a, b, gamma: a + b / x ** gamma
-        fit_function = lambda x, b, gamma: b / x ** gamma
-        # fit_function = lambda x, b: b / x
-        popt, pcov = curve_fit(fit_function, n_cells, flux_cells)
-        flux_cells_fit = fit_function(n_cells, *popt) * norm_factor
-        # plt.plot(n_cells, flux_cells_fit, label=label + ' fit', linestyle=':', color=color)
-        plt.plot(n_cells, flux_cells_fit, label='fit power = ' + '{:0.3f}'.format(popt[-1]), linestyle='--',
-                 color=color)
-
-plt.figure(1)
-plt.xlabel('N')
-plt.ylabel('flux [$s^{-1}$]')
-# plt.title('flux as a function of system size')
-plt.title('flux as a function of system size ($U/v_{th}$=' + str(U) + ')')
-plt.tight_layout()
-plt.grid(True)
-plt.legend()
-
-plt.figure(2)
-plt.xlabel('cell number')
-plt.ylabel('density [$m^{-3}$]')
-# plt.title('density profile (N=' + str(chosen_num_cells) + ')')
-plt.title('density profile (N=' + str(chosen_num_cells) + ' cells, $U/v_{th}$=' + str(U) + ')')
-plt.tight_layout()
-plt.grid(True)
-plt.legend()
-plt.grid(True)
+    plt.figure(2 + 2 * ind_mode)
+    plt.xlabel('cell number / N')
+    plt.ylabel('density [$m^{-3}$]')
+    plt.title(define_plasma_mode_label(mode) + ' density profiles')
+    plt.tight_layout()
+    plt.grid(True)
+    plt.legend()
+    plt.grid(True)
