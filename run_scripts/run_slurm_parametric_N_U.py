@@ -10,7 +10,8 @@ rate_eqs_script = get_script_rate_eqs_slave()
 
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set2_Rm_3/'
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set6_Rm_3_mfp_over_cell_1_mfp_limitX100/'
-# n0 = 3.875e22  # m^-3
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set11_Rm_3_mfp_over_cell_1_mfp_limitX100_nend_1e-2_nmin_1e-3/'
+n0 = 3.875e22  # m^-3
 
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set4_Rm_3_mfp_over_cell_4/'
 # n0 = 1e22  # m^-3
@@ -19,8 +20,8 @@ rate_eqs_script = get_script_rate_eqs_slave()
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set7_Rm_3_mfp_over_cell_20_mfp_limitX100/'
 # n0 = 2e21  # m^-3
 
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set10_Rm_3_mfp_over_cell_0.04_mfp_limitX100/'
-n0 = 1e24  # m^-3
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set10_Rm_3_mfp_over_cell_0.04_mfp_limitX100/'
+# n0 = 1e24  # m^-3
 
 slurm_kwargs = {'partition': 'core'}  # default
 # slurm_kwargs = {'partition': 'socket'}
@@ -37,12 +38,13 @@ plasma_modes += ['coold3']
 
 LC_modes = []
 LC_modes += ['sLC']  # static loss cone
-LC_modes += ['dLC']  # dynamic loss cone
+# LC_modes += ['dLC']  # dynamic loss cone
 
 # num_cells_list = [3, 5, 8, 10, 12, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 # U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5]
 num_cells_list = [3, 5, 8, 10, 15, 30, 50, 70, 100]
-U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0]
+# U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0]
+U_list = [0]
 
 total_number_of_combinations = len(plasma_modes) * len(LC_modes) * len(num_cells_list) * len(U_list)
 print('total_number_of_combinations = ' + str(total_number_of_combinations))
@@ -68,13 +70,18 @@ for plasma_mode in plasma_modes:
                 elif plasma_mode == 'isoT':
                     settings['assume_constant_density'] = False
                     settings['assume_constant_temperature'] = True
-                # elif plasma_mode == 'cool':
                 elif 'cool' in plasma_mode:
                     settings['assume_constant_density'] = False
                     settings['assume_constant_density'] = False
                     settings['plasma_dimension'] = int(plasma_mode.split('d')[-1])
 
                 settings['n0'] = n0
+
+                # for const density right boundary condition
+                settings['right_boundary_condition'] = 'adjust_ntL_for_nend'
+                settings['right_boundary_condition_density_type'] = 'n_expander'
+                settings['n_expander_factor'] = 1e-2
+                settings['n_min'] = n0 * 1e-3
 
                 settings['number_of_cells'] = num_cells
 
@@ -84,8 +91,6 @@ for plasma_mode in plasma_modes:
                 elif LC_mode == 'dLC':
                     settings['alpha_definition'] = 'geometric_local'
 
-                # if plasma_mode == 'cool_mfpcutoff':
-                #     settings['transition_type'] = 'smooth_transition_to_free_flow'
                 settings['transition_type'] = 'smooth_transition_to_free_flow'
 
                 settings['save_dir'] = main_folder + '/' + run_name

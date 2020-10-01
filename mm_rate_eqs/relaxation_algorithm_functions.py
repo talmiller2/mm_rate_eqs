@@ -72,10 +72,13 @@ def find_rate_equations_steady_state(settings):
         dt, state = define_time_step(state, settings)
         t_curr += dt
         num_time_steps += 1
-        state = advance_densities_time_step(state, settings, dt, t_curr, num_time_steps)
+        state = advance_densities_time_step(state, dt)
 
         # boundary conditions
         state = enforce_boundary_conditions(state, settings)
+
+        # check if densities are too low and deal with them
+        state = check_minimal_density(state, settings, dt, t_curr, num_time_steps)
 
         # update temperatures
         state['Ti'] = get_isentrope_temperature(state['n'], settings, species='ions')
@@ -198,7 +201,7 @@ def initialize_densities(settings):
             settings['n_transition'] = settings['n_end_min']
 
     elif settings['right_boundary_condition_density_type'] == 'n_expander':
-        settings['n_end'] = settings['n0'] / 20.0  # approximating a low value
+        settings['n_end'] = settings['n0'] * settings['n_expander_factor']  # approximating a low value
     else:
         raise TypeError(
             'invalid right_boundary_condition_density_type = ' + settings['right_boundary_condition_density_type'])
@@ -296,11 +299,16 @@ def print_time_step_info(dt, t_curr, num_time_steps):
     return
 
 
-def advance_densities_time_step(state, settings, dt, t_curr, num_time_steps):
+def advance_densities_time_step(state, dt):
     for var_name in ['n_c', 'n_tL', 'n_tR']:
         der_var_name = 'd' + var_name + '_dt'
         state[var_name] = state[var_name] + state[der_var_name] * dt
+    state['n'] = state['n_c'] + state['n_tL'] + state['n_tR']
+    return state
 
+
+def check_minimal_density(state, settings, dt, t_curr, num_time_steps):
+    for var_name in ['n_c', 'n_tL', 'n_tR']:
         if settings['fail_on_minimal_density'] is True:
             if min(state[var_name]) < settings['n_min']:
                 print_time_step_info(dt, t_curr, num_time_steps)
@@ -308,11 +316,8 @@ def advance_densities_time_step(state, settings, dt, t_curr, num_time_steps):
         else:
             ind_min = np.where(state[var_name] < settings['n_min'])
             state[var_name][ind_min] = settings['n_min']
-
     state['n'] = state['n_c'] + state['n_tL'] + state['n_tR']
-
     return state
-
 
 def enforce_boundary_conditions(state, settings):
     # left boundary condition

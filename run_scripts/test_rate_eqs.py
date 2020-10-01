@@ -10,10 +10,10 @@ plt.close('all')
 settings = {}
 # settings['gas_name'] = 'hydrogen'
 # settings['save_state'] = 'False'
-settings['assume_constant_density'] = False
-# settings['assume_constant_density'] = True
-settings['assume_constant_temperature'] = False
-# settings['assume_constant_temperature'] = True
+# settings['assume_constant_density'] = False
+settings['assume_constant_density'] = True
+# settings['assume_constant_temperature'] = False
+settings['assume_constant_temperature'] = True
 # settings['ion_scattering_rate_factor'] = 10
 # settings['cell_size'] = 50
 # settings['plasma_dimension'] = 1
@@ -29,11 +29,11 @@ settings['number_of_cells'] = 30
 # settings['number_of_cells'] = 150
 # settings['number_of_cells'] = 200
 
-# settings['U0'] = 0
+settings['U0'] = 0
 # settings['U0'] = 0.01
 # settings['U0'] = 0.02
 # settings['U0'] = 0.05
-settings['U0'] = 0.1
+# settings['U0'] = 0.1
 # settings['U0'] = 0.2
 # settings['U0'] = 0.3
 # settings['U0'] = 0.5
@@ -41,7 +41,8 @@ settings['U0'] = 0.1
 
 # settings['flux_normalized_termination_cutoff'] = 0.5
 # settings['flux_normalized_termination_cutoff'] = 0.1
-settings['flux_normalized_termination_cutoff'] = 0.03
+# settings['flux_normalized_termination_cutoff'] = 0.03
+settings['flux_normalized_termination_cutoff'] = 0.01
 
 settings['alpha_definition'] = 'geometric_constant'
 # settings['alpha_definition'] = 'geometric_local'
@@ -52,8 +53,19 @@ settings['U_for_loss_cone_factor'] = 1.0
 # settings['adaptive_mirror'] = 'adjust_cell_size_with_mfp'
 # settings['adaptive_mirror'] = 'adjust_cell_size_with_vth'
 
+
+# settings['right_boundary_condition'] = 'none'
+# settings['right_boundary_condition'] = 'adjust_ntL_for_nend'
+settings['right_boundary_condition'] = 'adjust_all_species_for_nend'
 # settings['right_boundary_condition'] = 'nullify_ntL'
-settings['right_boundary_condition'] = 'none'
+
+# settings['right_boundary_condition_density_type'] = 'none'
+# settings['right_boundary_condition_density_type'] = 'n_transition'
+settings['right_boundary_condition_density_type'] = 'n_expander'
+
+# settings['n_expander_factor'] = 0.1
+# settings['n_expander_factor'] = 0.05
+settings['n_expander_factor'] = 0.01
 
 # settings['nullify_ntL_factor'] = 0.05
 settings['nullify_ntL_factor'] = 0.01
@@ -72,8 +84,9 @@ settings['dt_status'] = 1e-4
 settings = define_default_settings(settings)
 # settings['n_end_min'] = 0.3 * settings['n0']
 
-# settings['save_dir'] = 'runs/runs_August_2020/'
-settings['save_dir'] = '../runs/runs_September_2020/'
+# settings['save_dir'] = '../runs/runs_August_2020/'
+# settings['save_dir'] = '../runs/runs_September_2020/'
+settings['save_dir'] = '../runs/runs_October_2020/'
 
 os.makedirs(settings['save_dir'], exist_ok=True)
 
@@ -98,10 +111,12 @@ else:
 if settings['right_boundary_condition'] == 'nullify_ntL':
     settings['save_dir'] += '_rbc_nullify_ntL'
     settings['save_dir'] += '_factor_' + str(settings['nullify_ntL_factor'])
-elif settings['right_boundary_condition'] == 'adjust_ntL_for_nend':
-    settings['save_dir'] += '_rbc_adjust_for_nend'
+elif settings['right_boundary_condition'] in ['adjust_ntL_for_nend', 'adjust_all_species_for_nend']:
+    settings['save_dir'] += '_' + settings['right_boundary_condition']
+    settings['save_dir'] += '_nend_' + str(settings['n_expander_factor'])
 elif settings['right_boundary_condition'] == 'none':
     settings['save_dir'] += '_rbc_none'
+
 
 # settings['save_dir'] += '_energy_scheme_' + settings['energy_conservation_scheme']
 
@@ -123,11 +138,15 @@ if settings['assume_constant_density'] == True:
 # settings['save_dir'] = '../runs/runs_August_2020/TEST'
 
 # settings['n_min'] = 1e5
-# settings['save_dir'] += '_nmin_' + str('{:.2e}'.format(settings['n_min']))
+# settings['n_min'] = 1e19
+settings['n_min'] = 1e18
+settings['save_dir'] += '_nmin_' + str('{:.2e}'.format(settings['n_min']))
 
 # settings['mfp_min'] = 1e-2
 # settings['save_dir'] += '_mfp_min_' + str(settings['mfp_min'])
 
+# settings['t_stop'] = 10e-4
+# settings['max_num_time_steps'] = int(2e4) - 1
 
 print('save dir: ' + str(settings['save_dir']))
 

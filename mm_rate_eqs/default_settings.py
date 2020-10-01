@@ -141,6 +141,8 @@ def define_default_settings(settings=None):
         settings['right_boundary_condition_density_type'] = 'none'
         # settings['right_boundary_condition_density_type'] = 'n_transition'
         # settings['right_boundary_condition_density_type'] = 'n_expander'
+    if 'n_expander_factor' not in settings:
+        settings['n_expander_factor'] = 0.01
     if 'nullify_ntL_factor' not in settings:
         settings['nullify_ntL_factor'] = 0.05
     if 'transmission_factor' not in settings:
@@ -158,11 +160,10 @@ def define_default_settings(settings=None):
     ### relaxation solver parameters
     if 'max_num_time_steps' not in settings:
         settings['max_num_time_steps'] = int(3e5) - 1
-        # settings['max_num_time_steps'] = int(1e5) - 1
+        # settings['max_num_time_steps'] = int(status_counter_type1e5) - 1
         # settings['max_num_time_steps'] = int(1e10) - 1
     if 't_stop' not in settings:
         # settings['t_stop'] = 1e-6
-        # settings['t_stop'] = 1e-4
         # settings['t_stop'] = 1e-3
         # settings['t_stop'] = 1e-2
         # settings['t_stop'] = 3e-2
@@ -224,7 +225,7 @@ def define_default_settings(settings=None):
         settings['save_format'] = 'pickle'
         # settings['save_format'] = 'mat'
     if 'save_dir' not in settings:
-        settings['save_dir'] = 'runs/test5/'
+        settings['save_dir'] = 'runs/test/'
 
     if 'state_file' not in settings:
         settings['state_file'] = 'state'
