@@ -74,11 +74,11 @@ def find_rate_equations_steady_state(settings):
         num_time_steps += 1
         state = advance_densities_time_step(state, dt)
 
-        # boundary conditions
-        state = enforce_boundary_conditions(state, settings)
-
         # check if densities are too low and deal with them
         state = check_minimal_density(state, settings, dt, t_curr, num_time_steps)
+
+        # boundary conditions
+        state = enforce_boundary_conditions(state, settings)
 
         # update temperatures
         state['Ti'] = get_isentrope_temperature(state['n'], settings, species='ions')
@@ -91,7 +91,7 @@ def find_rate_equations_steady_state(settings):
                 print_time_step_info(dt, t_curr, num_time_steps)
 
             # print minimal density values for debugging
-            logging.info('min: n=' + '{:.2e}'.format(min(state['n']))
+            logging.info('min values: n_tot=' + '{:.2e}'.format(min(state['n']))
                          + ', n_c=' + '{:.2e}'.format(min(state['n_c']))
                          + ', n_tL=' + '{:.2e}'.format(min(state['n_tL']))
                          + ', n_tR=' + '{:.2e}'.format(min(state['n_tR'])))
@@ -202,9 +202,10 @@ def initialize_densities(settings):
 
     elif settings['right_boundary_condition_density_type'] == 'n_expander':
         settings['n_end'] = settings['n0'] * settings['n_expander_factor']  # approximating a low value
+
     else:
-        raise TypeError(
-            'invalid right_boundary_condition_density_type = ' + settings['right_boundary_condition_density_type'])
+        raise TypeError('invalid right_boundary_condition_density_type = '
+                        + settings['right_boundary_condition_density_type'])
 
     # initial density profiles
     state = {}
@@ -238,9 +239,12 @@ def print_basic_run_info(state, settings):
     logging.info('***********  Plasma info  ***********')
     logging.info('*************************************')
     logging.info('n0 = ' + str('{:.2e}'.format(settings['n0'])) + ' m^-3')
+    n0_gas = 2.0 * settings['n0']
+    logging.info('n0_gas = ' + str('{:.2e}'.format(n0_gas)) + ' m^-3')
     logging.info('Ti_0 = ' + str(settings['Ti_0']) + ' eV')
     logging.info('Te_0 = ' + str(settings['Te_0']) + ' eV')
-    settings['P'] = get_ideal_gas_pressure(settings['n0'], settings['Ti_0'], settings)
+    T_average = np.mean([settings['Ti_0'], settings['Te_0']])
+    settings['P'] = get_ideal_gas_pressure(n0_gas, T_average, settings)
     logging.info('P = ' + str(settings['P']) + ' bar')
     settings['B'] = get_magnetic_field_for_given_pressure(settings['P'], beta=1.0)  # [Tesla]
     logging.info('B = ' + str(settings['B']) + ' T (for beta=1)')
@@ -267,6 +271,10 @@ def print_basic_run_info(state, settings):
     logging.info('transmission_factor = ' + str(settings['transmission_factor']))
     logging.info('alpha_definition = ' + str(settings['alpha_definition']))
     logging.info('adaptive_mirror = ' + str(settings['adaptive_mirror']))
+    logging.info('right_boundary_condition = ' + str(settings['right_boundary_condition']))
+    logging.info('right_boundary_condition_density_type = ' + str(settings['right_boundary_condition_density_type']))
+    logging.info('n_min = ' + str('{:.2e}'.format(settings['n_min'])) + ' m^-3')
+    logging.info('n_end = ' + str('{:.2e}'.format(settings['n_end'])) + ' m^-3')
 
     logging.info('*************************************')
     return
@@ -275,6 +283,7 @@ def print_basic_run_info(state, settings):
 def define_time_step(state, settings):
     dt_list = []
     for var_name in ['n_c', 'n_tL', 'n_tR']:
+        # for var_name in ['n_c', 'n_tR']:
         der_var_name = 'd' + var_name + '_dt'
         # prevent the derivatives from being exactly zero, so in the division by it  an error will not happen
         state[der_var_name] += 1e-50
@@ -318,6 +327,7 @@ def check_minimal_density(state, settings, dt, t_curr, num_time_steps):
             state[var_name][ind_min] = settings['n_min']
     state['n'] = state['n_c'] + state['n_tL'] + state['n_tR']
     return state
+
 
 def enforce_boundary_conditions(state, settings):
     # left boundary condition

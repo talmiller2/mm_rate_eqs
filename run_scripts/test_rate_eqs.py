@@ -23,9 +23,9 @@ settings['plasma_dimension'] = 2
 # settings['plasma_dimension'] = 10
 # settings['plasma_dimension'] = 100
 # settings['number_of_cells'] = 20
-settings['number_of_cells'] = 30
+# settings['number_of_cells'] = 30
 # settings['number_of_cells'] = 40
-# settings['number_of_cells'] = 100
+settings['number_of_cells'] = 100
 # settings['number_of_cells'] = 150
 # settings['number_of_cells'] = 200
 
@@ -41,8 +41,8 @@ settings['U0'] = 0
 
 # settings['flux_normalized_termination_cutoff'] = 0.5
 # settings['flux_normalized_termination_cutoff'] = 0.1
-# settings['flux_normalized_termination_cutoff'] = 0.03
-settings['flux_normalized_termination_cutoff'] = 0.01
+settings['flux_normalized_termination_cutoff'] = 0.03
+# settings['flux_normalized_termination_cutoff'] = 0.01
 
 settings['alpha_definition'] = 'geometric_constant'
 # settings['alpha_definition'] = 'geometric_local'
@@ -63,12 +63,14 @@ settings['right_boundary_condition'] = 'adjust_all_species_for_nend'
 # settings['right_boundary_condition_density_type'] = 'n_transition'
 settings['right_boundary_condition_density_type'] = 'n_expander'
 
+# settings['n_expander_factor'] = 0.5
 # settings['n_expander_factor'] = 0.1
 # settings['n_expander_factor'] = 0.05
 settings['n_expander_factor'] = 0.01
 
 # settings['nullify_ntL_factor'] = 0.05
-settings['nullify_ntL_factor'] = 0.01
+# settings['nullify_ntL_factor'] = 0.05
+# settings['nullify_ntL_factor'] = 0.01
 
 # settings['transition_type'] = 'none'
 settings['transition_type'] = 'smooth_transition_to_free_flow'
@@ -104,9 +106,12 @@ else:
     settings['save_dir'] += '_trans_smooth'
 
 if settings['assume_constant_temperature'] == True:
-    settings['save_dir'] += '_iso'
+    settings['save_dir'] += '_isoT'
 else:
     settings['save_dir'] += '_cool_d_' + str(settings['plasma_dimension'])
+
+if settings['assume_constant_density'] == True:
+    settings['save_dir'] += '_const_dens'
 
 if settings['right_boundary_condition'] == 'nullify_ntL':
     settings['save_dir'] += '_rbc_nullify_ntL'
@@ -126,9 +131,6 @@ if settings['alpha_definition'] == 'geometric_constant':
 if settings['U_for_loss_cone_factor'] != 1.0:
     settings['save_dir'] += '_Ufac' + str(settings['U_for_loss_cone_factor'])
 
-if settings['assume_constant_density'] == True:
-    settings['save_dir'] += '_const_dens'
-
 # settings['save_dir'] += '_nmin0'
 
 # settings['dt_factor'] = 0.1 / 3.0
@@ -139,7 +141,9 @@ if settings['assume_constant_density'] == True:
 
 # settings['n_min'] = 1e5
 # settings['n_min'] = 1e19
-settings['n_min'] = 1e18
+# settings['n_min'] = 1e18
+# settings['n_min'] = settings['n0'] * 1e-4
+settings['n_min'] = settings['n0'] * 1e-10
 settings['save_dir'] += '_nmin_' + str('{:.2e}'.format(settings['n_min']))
 
 # settings['mfp_min'] = 1e-2
@@ -149,5 +153,7 @@ settings['save_dir'] += '_nmin_' + str('{:.2e}'.format(settings['n_min']))
 # settings['max_num_time_steps'] = int(2e4) - 1
 
 print('save dir: ' + str(settings['save_dir']))
+
+print('right_boundary_condition_density_type = ' + str(settings['right_boundary_condition_density_type']))
 
 state = find_rate_equations_steady_state(settings)

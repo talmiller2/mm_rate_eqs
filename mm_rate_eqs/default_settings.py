@@ -184,7 +184,8 @@ def define_default_settings(settings=None):
         # settings['dt_status'] = 5e-4
         # settings['dt_status'] = 1e-3
     if 'time_steps_status' not in settings:
-        settings['time_steps_status'] = int(1e4)
+        settings['time_steps_status'] = int(1e3)
+        # settings['time_steps_status'] = int(1e4)
     if 'dt_factor' not in settings:
         # settings['dt_factor'] = 0.3
         settings['dt_factor'] = 0.1
