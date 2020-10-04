@@ -191,6 +191,10 @@ def define_default_settings(settings=None):
         settings['dt_factor'] = 0.1
     if 'dt_min' not in settings:
         settings['dt_min'] = 1e-20
+    if 'time_step_definition_using_species' not in settings:
+        settings['time_step_definition_using_species'] = 'all'
+        # settings['time_step_definition_using_species'] = 'only_c_tR'
+
     if 'n_min' not in settings:  # minimal density allowed in the entire system
         # settings['n_min'] = 0
         settings['n_min'] = 1e10
@@ -204,6 +208,7 @@ def define_default_settings(settings=None):
     if 'fail_on_minimal_density' not in settings:
         settings['fail_on_minimal_density'] = False
         # settings['fail_on_minimal_density'] = True
+
     if 'flux_normalized_termination_cutoff' not in settings:
         # settings['flux_normalized_termination_cutoff'] = 0.01
         settings['flux_normalized_termination_cutoff'] = 0.05

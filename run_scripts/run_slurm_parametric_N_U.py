@@ -10,7 +10,8 @@ rate_eqs_script = get_script_rate_eqs_slave()
 
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set2_Rm_3/'
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set6_Rm_3_mfp_over_cell_1_mfp_limitX100/'
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set11_Rm_3_mfp_over_cell_1_mfp_limitX100_nend_1e-2/'
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set11_Rm_3_mfp_over_cell_1_mfp_limitX100_nend_1e-2/'
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set12_Rm_3_mfp_over_cell_1_mfp_limitX100_nend_1e-2_rbc_adjut_ntL_timestepdef_without_ntL/'
 n0 = 3.875e22  # m^-3
 
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set4_Rm_3_mfp_over_cell_4/'
@@ -83,6 +84,7 @@ for plasma_mode in plasma_modes:
                 settings['right_boundary_condition_density_type'] = 'n_expander'
                 settings['n_expander_factor'] = 1e-2
                 # settings['n_min'] = n0 * 1e-3
+                settings['time_step_definition_using_species'] = 'only_c_tR'
 
                 settings['number_of_cells'] = num_cells
 

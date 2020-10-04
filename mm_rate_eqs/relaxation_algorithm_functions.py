@@ -282,8 +282,15 @@ def print_basic_run_info(state, settings):
 
 def define_time_step(state, settings):
     dt_list = []
-    for var_name in ['n_c', 'n_tL', 'n_tR']:
-        # for var_name in ['n_c', 'n_tR']:
+    if settings['time_step_definition_using_species'] == 'all':
+        var_names = ['n_c', 'n_tL', 'n_tR']
+    elif settings['time_step_definition_using_species'] == 'only_c_tR':
+        var_names = ['n_c', 'n_tR']
+    else:
+        raise TypeError(
+            'invalid time_step_definition_using_species = ' + settings['time_step_definition_using_species'])
+
+    for var_name in var_names:
         der_var_name = 'd' + var_name + '_dt'
         # prevent the derivatives from being exactly zero, so in the division by it  an error will not happen
         state[der_var_name] += 1e-50

@@ -23,9 +23,9 @@ settings['plasma_dimension'] = 2
 # settings['plasma_dimension'] = 10
 # settings['plasma_dimension'] = 100
 # settings['number_of_cells'] = 20
-# settings['number_of_cells'] = 30
+settings['number_of_cells'] = 30
 # settings['number_of_cells'] = 40
-settings['number_of_cells'] = 100
+# settings['number_of_cells'] = 100
 # settings['number_of_cells'] = 150
 # settings['number_of_cells'] = 200
 
@@ -55,8 +55,8 @@ settings['U_for_loss_cone_factor'] = 1.0
 
 
 # settings['right_boundary_condition'] = 'none'
-# settings['right_boundary_condition'] = 'adjust_ntL_for_nend'
-settings['right_boundary_condition'] = 'adjust_all_species_for_nend'
+settings['right_boundary_condition'] = 'adjust_ntL_for_nend'
+# settings['right_boundary_condition'] = 'adjust_all_species_for_nend'
 # settings['right_boundary_condition'] = 'nullify_ntL'
 
 # settings['right_boundary_condition_density_type'] = 'none'
@@ -67,6 +67,8 @@ settings['right_boundary_condition_density_type'] = 'n_expander'
 # settings['n_expander_factor'] = 0.1
 # settings['n_expander_factor'] = 0.05
 settings['n_expander_factor'] = 0.01
+
+settings['time_step_definition_using_species'] = 'only_c_tR'
 
 # settings['nullify_ntL_factor'] = 0.05
 # settings['nullify_ntL_factor'] = 0.05
@@ -122,7 +124,6 @@ elif settings['right_boundary_condition'] in ['adjust_ntL_for_nend', 'adjust_all
 elif settings['right_boundary_condition'] == 'none':
     settings['save_dir'] += '_rbc_none'
 
-
 # settings['save_dir'] += '_energy_scheme_' + settings['energy_conservation_scheme']
 
 if settings['alpha_definition'] == 'geometric_constant':
@@ -130,6 +131,9 @@ if settings['alpha_definition'] == 'geometric_constant':
 
 if settings['U_for_loss_cone_factor'] != 1.0:
     settings['save_dir'] += '_Ufac' + str(settings['U_for_loss_cone_factor'])
+
+if settings['time_step_definition_using_species'] == 'only_c_tR':
+    settings['save_dir'] += '_timestep_def_without_tL'
 
 # settings['save_dir'] += '_nmin0'
 
@@ -151,6 +155,7 @@ settings['save_dir'] += '_nmin_' + str('{:.2e}'.format(settings['n_min']))
 
 # settings['t_stop'] = 10e-4
 # settings['max_num_time_steps'] = int(2e4) - 1
+
 
 print('save dir: ' + str(settings['save_dir']))
 
