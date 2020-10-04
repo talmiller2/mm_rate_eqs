@@ -79,8 +79,8 @@ for plasma_mode in plasma_modes:
                 settings['n0'] = n0
 
                 # for const density right boundary condition
-                # settings['right_boundary_condition'] = 'adjust_ntL_for_nend'
-                settings['right_boundary_condition'] = 'adjust_all_species_for_nend'
+                settings['right_boundary_condition'] = 'adjust_ntL_for_nend'
+                # settings['right_boundary_condition'] = 'adjust_all_species_for_nend'
                 settings['right_boundary_condition_density_type'] = 'n_expander'
                 settings['n_expander_factor'] = 1e-2
                 # settings['n_min'] = n0 * 1e-3
