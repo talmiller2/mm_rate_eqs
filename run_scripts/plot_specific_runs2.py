@@ -11,7 +11,7 @@ linestyles = []
 # linestyles = ['-', '--']
 linestyles = ['-', '--', ':', '-.']
 
-main_dir = '../runs/slurm_runs/set2/'
+main_dir = '../runs/slurm_runs/set2_Rm_3/'
 
 plasma_modes = []
 plasma_modes += ['isoTmfp']

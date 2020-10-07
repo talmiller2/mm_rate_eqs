@@ -15,7 +15,8 @@ def define_plasma_mode_label(plasma_mode):
     if plasma_mode == 'isoT':
         label += 'isothermal'
     elif plasma_mode == 'isoTmfp':
-        label += 'isothermal iso-mfp'
+        # label += 'isothermal iso-mfp'
+        label += 'diffusion'
     elif 'cool' in plasma_mode:
         plasma_dimension = int(plasma_mode.split('d')[-1])
         label += 'cooling d=' + str(plasma_dimension)
@@ -43,11 +44,11 @@ plt.close('all')
 # main_dir = '../runs/slurm_runs/set2_Rm_3/'
 # main_dir = '../runs/slurm_runs/set4_Rm_3_mfp_over_cell_4/'
 # main_dir = '../runs/slurm_runs/set5_Rm_3_mfp_over_cell_20/'
-main_dir = '../runs/slurm_runs/set6_Rm_3_mfp_over_cell_1_mfp_limitX100/'
+# main_dir = '../runs/slurm_runs/set6_Rm_3_mfp_over_cell_1_mfp_limitX100/'
 # main_dir = '../runs/slurm_runs/set7_Rm_3_mfp_over_cell_20_mfp_limitX100/'
 # main_dir = '../runs/slurm_runs/set10_Rm_3_mfp_over_cell_0.04_mfp_limitX100/'
 # main_dir = '../runs/slurm_runs/set11_Rm_3_mfp_over_cell_1_mfp_limitX100_nend_1e-2/'
-# main_dir = '../runs/slurm_runs/set12_Rm_3_mfp_over_cell_1_mfp_limitX100_nend_1e-2_rbc_adjut_ntL_timestepdef_without_ntL/'
+main_dir = '../runs/slurm_runs/set12_Rm_3_mfp_over_cell_1_mfp_limitX100_nend_1e-2_rbc_adjut_ntL_timestepdef_without_ntL/'
 
 plasma_modes = []
 plasma_modes += ['isoT']

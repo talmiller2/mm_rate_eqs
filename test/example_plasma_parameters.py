@@ -15,6 +15,7 @@ from mm_rate_eqs.rate_functions import calculate_coulomb_logarithm, get_specific
 # settings = {'gas_name': 'DT_mix'}
 # T = 3500
 # n_list = [1e22]
+
 settings = {'gas_name': 'DT_mix'}
 T = 3000
 n_list = [4e22]

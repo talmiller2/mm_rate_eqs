@@ -352,6 +352,10 @@ def enforce_boundary_conditions(state, settings):
     # right boundary condition
     if settings['right_boundary_condition'] == 'adjust_ntL_for_nend':
         state['n_tL'][-1] = settings['n_end'] - state['n_c'][-1] - state['n_tR'][-1]
+    elif settings['right_boundary_condition'] == 'adjust_ntR_for_nend':
+        state['n_tR'][-1] = settings['n_end'] - state['n_c'][-1] - state['n_tL'][-1]
+    elif settings['right_boundary_condition'] == 'adjust_nc_for_nend':
+        state['n_c'][-1] = settings['n_end'] - state['n_tL'][-1] - state['n_tR'][-1]
     elif settings['right_boundary_condition'] == 'adjust_all_species_for_nend':
         state['n_c'][-1] = state['n_c'][-1] * settings['n_end'] / state['n'][-1]
         state['n_tL'][-1] = state['n_tL'][-1] * settings['n_end'] / state['n'][-1]

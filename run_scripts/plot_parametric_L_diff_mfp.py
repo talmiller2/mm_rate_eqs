@@ -6,21 +6,6 @@ plt.rcParams.update({'font.size': 16})
 
 from mm_rate_eqs.relaxation_algorithm_functions import load_simulation
 
-# parametric scan
-# save_dir_main = 'runs/runs_April_2020/runs_no_transition_different_number_of_cells/'
-# number_of_cells_list = np.round(np.linspace(5,150,15))[0:-1]
-
-# nullify_ntL_factor = 0.05
-# # nullify_ntL_factor = 0.01
-# label = 'isothermal_nullify_ntL_factor_' + str(nullify_ntL_factor)
-# save_dir_main = 'runs/runs_August_2020/different_number_of_cells_nullify_ntL_factor_' \
-#                 + str(nullify_ntL_factor)
-# label = 'isothermal_rbc_none_energycons_none_U_0'
-# label = 'isothermal U=0'
-# save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none'
-# label = 'isothermal_rbc_none_energycons_none_U_0.3'
-# save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none_U_0.3'
-
 
 plt.close('all')
 
@@ -48,7 +33,7 @@ for color, mfp in zip(colors, mfps):
     # linestyle = '--'
 
     label = ''
-    save_dir_main = 'runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none'
+    save_dir_main = '../runs/runs_August_2020/different_number_of_cells_rbc_none_energycons_none'
     if mode == 'iso':
         label += 'isothermal'
         save_dir_main += '_iso'

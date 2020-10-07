@@ -55,7 +55,9 @@ settings['U_for_loss_cone_factor'] = 1.0
 
 
 # settings['right_boundary_condition'] = 'none'
-settings['right_boundary_condition'] = 'adjust_ntL_for_nend'
+# settings['right_boundary_condition'] = 'adjust_ntL_for_nend'
+# settings['right_boundary_condition'] = 'adjust_ntR_for_nend'
+settings['right_boundary_condition'] = 'adjust_nc_for_nend'
 # settings['right_boundary_condition'] = 'adjust_all_species_for_nend'
 # settings['right_boundary_condition'] = 'nullify_ntL'
 
@@ -68,7 +70,8 @@ settings['right_boundary_condition_density_type'] = 'n_expander'
 # settings['n_expander_factor'] = 0.05
 settings['n_expander_factor'] = 0.01
 
-settings['time_step_definition_using_species'] = 'only_c_tR'
+settings['time_step_definition_using_species'] = 'all'
+# settings['time_step_definition_using_species'] = 'only_c_tR'
 
 # settings['nullify_ntL_factor'] = 0.05
 # settings['nullify_ntL_factor'] = 0.05
@@ -118,7 +121,9 @@ if settings['assume_constant_density'] == True:
 if settings['right_boundary_condition'] == 'nullify_ntL':
     settings['save_dir'] += '_rbc_nullify_ntL'
     settings['save_dir'] += '_factor_' + str(settings['nullify_ntL_factor'])
-elif settings['right_boundary_condition'] in ['adjust_ntL_for_nend', 'adjust_all_species_for_nend']:
+# elif settings['right_boundary_condition'] in ['adjust_ntL_for_nend', 'adjust_ntR_for_nend',
+#                                               'adjust_all_species_for_nend']:
+elif 'adjust' in settings['right_boundary_condition']:
     settings['save_dir'] += '_' + settings['right_boundary_condition']
     settings['save_dir'] += '_nend_' + str(settings['n_expander_factor'])
 elif settings['right_boundary_condition'] == 'none':
