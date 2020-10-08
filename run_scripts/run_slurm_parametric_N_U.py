@@ -12,8 +12,8 @@ rate_eqs_script = get_script_rate_eqs_slave()
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set6_Rm_3_mfp_over_cell_1_mfp_limitX100/'
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set11_Rm_3_mfp_over_cell_1_mfp_limitX100_nend_1e-2/'
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set12_Rm_3_mfp_over_cell_1_mfp_limitX100_nend_1e-2_rbc_adjut_ntL_timestepdef_without_ntL/'
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set13_Rm_3_mfp_over_cell_1_mfp_limitX100_nend_1e-2_rbc_adjut_ntR/'
-n0 = 3.875e22  # m^-3
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set13_Rm_3_mfp_over_cell_1_mfp_limitX100_nend_1e-2_rbc_adjut_ntR/'
+# n0 = 3.875e22  # m^-3
 
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set4_Rm_3_mfp_over_cell_4/'
 # n0 = 1e22  # m^-3
@@ -24,6 +24,19 @@ n0 = 3.875e22  # m^-3
 
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set10_Rm_3_mfp_over_cell_0.04_mfp_limitX100/'
 # n0 = 1e24  # m^-3
+
+n0 = 2e22  # m^-3
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set14_MM_Rm_3_ni_2e22'
+
+# n0 = 2e22  # m^-3
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set15_MM_Rm_3_ni_2e22_nend_1e-2_rbc_adjust_ntR'
+
+# n0 = 4e23  # m^-3
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set16_MM_Rm_3_ni_4e23'
+
+# n0 = 1e21  # m^-3
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set17_MM_Rm_3_ni_1e21'
+
 
 slurm_kwargs = {'partition': 'core'}  # default
 # slurm_kwargs = {'partition': 'socket'}
@@ -40,13 +53,13 @@ plasma_modes += ['coold3']
 
 LC_modes = []
 LC_modes += ['sLC']  # static loss cone
-# LC_modes += ['dLC']  # dynamic loss cone
+LC_modes += ['dLC']  # dynamic loss cone
 
 # num_cells_list = [3, 5, 8, 10, 12, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 # U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5]
 num_cells_list = [3, 5, 8, 10, 15, 30, 50, 70, 100]
-# U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0]
-U_list = [0]
+U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0]
+# U_list = [0]
 
 total_number_of_combinations = len(plasma_modes) * len(LC_modes) * len(num_cells_list) * len(U_list)
 print('total_number_of_combinations = ' + str(total_number_of_combinations))
@@ -80,8 +93,9 @@ for plasma_mode in plasma_modes:
                 settings['n0'] = n0
 
                 # for const density right boundary condition
+                settings['right_boundary_condition'] = 'none'
                 # settings['right_boundary_condition'] = 'adjust_ntL_for_nend'
-                settings['right_boundary_condition'] = 'adjust_ntR_for_nend'
+                # settings['right_boundary_condition'] = 'adjust_ntR_for_nend'
                 # settings['right_boundary_condition'] = 'adjust_all_species_for_nend'
                 settings['right_boundary_condition_density_type'] = 'n_expander'
                 settings['n_expander_factor'] = 1e-2

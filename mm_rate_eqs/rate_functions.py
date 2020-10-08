@@ -134,6 +134,7 @@ def get_collective_velocity(state, settings):
 def get_coulomb_scattering_rate(n, Ti, Te, settings, species='ions'):
     """
     Coulomb scattering rate for ions or electrons, scattering off the other species
+    n is ni=ne, not the total density n_tot = 2*n
     """
     if settings['assume_constant_density'] is True:
         n = settings['n0'] + 0 * n

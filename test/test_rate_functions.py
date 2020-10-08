@@ -5,7 +5,7 @@ from mm_rate_eqs.default_settings import define_default_settings
 from mm_rate_eqs.rate_functions import calculate_transition_density, \
     get_isentrope_temperature, get_thermal_velocity, \
     get_coulomb_scattering_rate, get_mirror_cell_sizes, \
-    get_transmission_rate, calculate_mean_free_path
+    calculate_mean_free_path
 
 ### Plot different parameters
 settings = define_default_settings()
@@ -39,15 +39,15 @@ plt.grid()
 v_th_i = get_thermal_velocity(Ti_isentrope_array, settings, species='ions')
 v_th_e = get_thermal_velocity(Te_isentrope_array, settings, species='electrons')
 mirror_cell_sizes = get_mirror_cell_sizes(n_array, Ti_isentrope_array, Te_isentrope_array, settings)
-nu_i_trans = get_transmission_rate(v_th_i, mirror_cell_sizes)
-nu_e_trans = get_transmission_rate(v_th_e, mirror_cell_sizes)
+# nu_i_trans = get_transmission_rate(v_th_i, mirror_cell_sizes)
+# nu_e_trans = get_transmission_rate(v_th_e, mirror_cell_sizes)
 nu_i_scat = get_coulomb_scattering_rate(n_array, Ti_isentrope_array, Te_isentrope_array, settings, species='ions')
 nu_e_scat = get_coulomb_scattering_rate(n_array, Ti_isentrope_array, Te_isentrope_array, settings, species='electrons')
 plt.figure(101)
 plt.plot(n_array, nu_i_scat, '-', label='i scat', color='r')
-plt.plot(n_array, nu_i_trans, '--', label='i trans', color='r')
+# plt.plot(n_array, nu_i_trans, '--', label='i trans', color='r')
 plt.plot(n_array, nu_e_scat, '-', label='e scat', color='b')
-plt.plot(n_array, nu_e_trans, '--', label='e trans', color='b')
+# plt.plot(n_array, nu_e_trans, '--', label='e trans', color='b')
 plt.legend()
 plt.xlabel('n [g/cc]')
 plt.ylabel('rate [$s^{-1}$]')

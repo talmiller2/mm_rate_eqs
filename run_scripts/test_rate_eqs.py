@@ -54,10 +54,10 @@ settings['U_for_loss_cone_factor'] = 1.0
 # settings['adaptive_mirror'] = 'adjust_cell_size_with_vth'
 
 
-# settings['right_boundary_condition'] = 'none'
+settings['right_boundary_condition'] = 'none'
 # settings['right_boundary_condition'] = 'adjust_ntL_for_nend'
 # settings['right_boundary_condition'] = 'adjust_ntR_for_nend'
-settings['right_boundary_condition'] = 'adjust_nc_for_nend'
+# settings['right_boundary_condition'] = 'adjust_nc_for_nend'
 # settings['right_boundary_condition'] = 'adjust_all_species_for_nend'
 # settings['right_boundary_condition'] = 'nullify_ntL'
 

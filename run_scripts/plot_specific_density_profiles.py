@@ -44,18 +44,19 @@ plt.close('all')
 # main_dir = '../runs/slurm_runs/set2_Rm_3/'
 # main_dir = '../runs/slurm_runs/set4_Rm_3_mfp_over_cell_4/'
 # main_dir = '../runs/slurm_runs/set5_Rm_3_mfp_over_cell_20/'
-main_dir = '../runs/slurm_runs/set6_Rm_3_mfp_over_cell_1_mfp_limitX100/'
+# main_dir = '../runs/slurm_runs/set6_Rm_3_mfp_over_cell_1_mfp_limitX100/'
 # main_dir = '../runs/slurm_runs/set7_Rm_3_mfp_over_cell_20_mfp_limitX100/'
 # main_dir = '../runs/slurm_runs/set10_Rm_3_mfp_over_cell_0.04_mfp_limitX100/'
 # main_dir = '../runs/slurm_runs/set11_Rm_3_mfp_over_cell_1_mfp_limitX100_nend_1e-2/'
 # main_dir = '../runs/slurm_runs/set12_Rm_3_mfp_over_cell_1_mfp_limitX100_nend_1e-2_rbc_adjut_ntL_timestepdef_without_ntL/'
+main_dir = '../runs/slurm_runs/set13_Rm_3_mfp_over_cell_1_mfp_limitX100_nend_1e-2_rbc_adjut_ntR/'
 
 plasma_modes = []
 plasma_modes += ['isoTmfp']
 plasma_modes += ['isoT']
-# plasma_modes += ['coold1']
+plasma_modes += ['coold1']
 plasma_modes += ['coold2']
-# plasma_modes += ['coold3']
+plasma_modes += ['coold3']
 # plasma_modes += ['cool']
 # plasma_modes += ['cool_mfpcutoff']
 
@@ -89,23 +90,37 @@ for ind_mode in range(len(plasma_modes)):
         label = define_plasma_mode_label(plasma_mode)
         plt.figure(1)
         x = np.linspace(0, number_of_cells, number_of_cells)
-        plt.plot(x, state['n_tR'], label='$n_{tR}$ ' + label, linestyle='solid', color=color)
-        plt.plot(x, state['n_tL'], label='$n_{tL}$ ' + label, linestyle='dashed', color=color)
-        plt.plot(x, state['n_c'], label='$n_{c}$ ' + label, linestyle='dashdot', color=color)
+        n0 = settings['n0']
+        plt.plot(x, state['n_tR'] / n0, label='$n_{tR}$ ' + label, linestyle='solid', color=color)
+        plt.plot(x, state['n_tL'] / n0, label='$n_{tL}$ ' + label, linestyle='dashed', color=color)
+        plt.plot(x, state['n_c'] / n0, label='$n_{c}$ ' + label, linestyle='dashdot', color=color)
         plt.xlabel('cell number')
-        plt.ylabel('[$m^{-3}$]')
+        # plt.ylabel('[$m^{-3}$]')
+        plt.ylabel('$n/n_0$')
         plt.title('density profiles for N=' + str(number_of_cells))
         plt.tight_layout()
         plt.grid(True)
         plt.legend()
 
+        label = define_plasma_mode_label(plasma_mode)
         plt.figure(2)
         x = np.linspace(0, number_of_cells, number_of_cells)
-        plt.plot(x, state['mean_free_path'], label=label, linestyle='solid', color=color)
+        plt.plot(x, state['n'] / n0, label=label, linestyle='solid', color=color)
+        plt.xlabel('cell number')
+        # plt.ylabel('[$m^{-3}$]')
+        plt.ylabel('$n/n_0$')
+        plt.title('density profile for N=' + str(number_of_cells))
+        plt.tight_layout()
+        plt.grid(True)
+        plt.legend()
+
+        plt.figure(3)
+        x = np.linspace(0, number_of_cells, number_of_cells)
+        plt.plot(x, state['mean_free_path'] / settings['cell_size'], label=label, linestyle='solid', color=color)
         plt.yscale('log')
         plt.xlabel('cell number')
         plt.ylabel('[$m$]')
-        plt.title('mean free path profiles for N=' + str(number_of_cells))
+        plt.title('$\\lambda/l$ profiles for N=' + str(number_of_cells))
         plt.tight_layout()
         plt.grid(True)
         plt.legend()

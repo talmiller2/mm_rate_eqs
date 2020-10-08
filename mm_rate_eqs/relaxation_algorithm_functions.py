@@ -91,10 +91,7 @@ def find_rate_equations_steady_state(settings):
                 print_time_step_info(dt, t_curr, num_time_steps)
 
             # print minimal density values for debugging
-            logging.info('min values: n_tot=' + '{:.2e}'.format(min(state['n']))
-                         + ', n_c=' + '{:.2e}'.format(min(state['n_c']))
-                         + ', n_tL=' + '{:.2e}'.format(min(state['n_tL']))
-                         + ', n_tR=' + '{:.2e}'.format(min(state['n_tR'])))
+            print_minimal_densities(state)
 
             # define fluxes and check if termination criterion is reached
             state = get_fluxes(state, settings)
@@ -183,6 +180,9 @@ def initialize_logging(settings):
 
 
 def initialize_densities(settings):
+    """
+    all densities are ion densities, so the total density is twice that n_tot = 2 ni
+    """
     settings['n_transition'] = calculate_transition_density(settings['n0'], settings['Ti_0'], settings['Te_0'],
                                                             settings)
     settings['theoretical_n_transition'] = settings['n_transition']
@@ -312,6 +312,14 @@ def define_time_step(state, settings):
 def print_time_step_info(dt, t_curr, num_time_steps):
     logging.info('*************************************')
     logging.info('dt = ' + str(dt) + ', t_curr = ' + str(t_curr) + ', num_time_steps = ' + str(num_time_steps))
+    return
+
+
+def print_minimal_densities(state):
+    logging.info('min values: n_tot=' + '{:.2e}'.format(min(state['n']))
+                 + ', n_c=' + '{:.2e}'.format(min(state['n_c']))
+                 + ', n_tL=' + '{:.2e}'.format(min(state['n_tL']))
+                 + ', n_tR=' + '{:.2e}'.format(min(state['n_tR'])))
     return
 
 

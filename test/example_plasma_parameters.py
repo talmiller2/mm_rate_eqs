@@ -18,7 +18,10 @@ from mm_rate_eqs.rate_functions import calculate_coulomb_logarithm, get_specific
 
 settings = {'gas_name': 'DT_mix'}
 T = 3000
+# n_list = [8e22]
 n_list = [4e22]
+# n_list = [3.875e22]
+# n_list = [3.875e22]
 
 # fusion plasma
 # settings = {'gas_name': 'DT_mix'}
@@ -62,10 +65,11 @@ for n in n_list:
     print('n = ' + str(n) + ' m^-3')
     ne = n / 2
     ni = n / 2
+    print('ni = ' + str(ni) + ' m^-3')
     print('Ti = ' + str(Ti) + ' eV = ' + str(Ti_keV) + ' keV')
     print('Coulomb log = ' + str(calculate_coulomb_logarithm(ne, Te, ni, Ti)['ii']))
     # scat_rate = get_specific_coulomb_scattering_rate(ne, Te, ni, Ti, settings, impact_specie='i', target_specie='i')
-    scat_rate = get_coulomb_scattering_rate(n, Ti, Te, settings, species='ions')
+    scat_rate = get_coulomb_scattering_rate(ni, Ti, Te, settings, species='ions')
 
     print('ii scattering rate = ' + str(scat_rate) + ' 1/s')
     # belan_scat_rate = get_coulomb_scattering_rate(n, T, T, settings, species='ions')

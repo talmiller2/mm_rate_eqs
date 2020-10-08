@@ -30,7 +30,8 @@ def define_default_settings(settings=None):
     ### system parameters
     if 'n0' not in settings:
         # settings['n0'] = 10e22  # m^-3
-        settings['n0'] = 3.875e22  # m^-3
+        # settings['n0'] = 3.875e22  # m^-3
+        settings['n0'] = 2e22  # m^-3
         # settings['n0'] = 1e22  # m^-3
         # settings['n0'] = 5e21  # m^-3
     if 'Ti_0' not in settings:
@@ -56,8 +57,8 @@ def define_default_settings(settings=None):
     if 'cell_size' not in settings:
         # settings['cell_size'] = 3.0  # m (MMM wavelength)
         # settings['cell_size'] = 4.0  # m (MMM wavelength)
-        settings['cell_size'] = 5.0  # m (MMM wavelength)
-        # settings['cell_size'] = 10.0  # m (MMM wavelength)
+        # settings['cell_size'] = 5.0  # m (MMM wavelength)
+        settings['cell_size'] = 10.0  # m (MMM wavelength)
     if 'mfp_min' not in settings:
         # settings['mfp_min'] = 0.1 * settings['cell_size']
         settings['mfp_min'] = 0.01 * settings['cell_size']
