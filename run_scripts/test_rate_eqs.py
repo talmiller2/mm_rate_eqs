@@ -10,22 +10,22 @@ plt.close('all')
 settings = {}
 # settings['gas_name'] = 'hydrogen'
 # settings['save_state'] = 'False'
-# settings['assume_constant_density'] = False
-settings['assume_constant_density'] = True
-# settings['assume_constant_temperature'] = False
-settings['assume_constant_temperature'] = True
+settings['assume_constant_density'] = False
+# settings['assume_constant_density'] = True
+settings['assume_constant_temperature'] = False
+# settings['assume_constant_temperature'] = True
 # settings['ion_scattering_rate_factor'] = 10
 # settings['cell_size'] = 50
-# settings['plasma_dimension'] = 1
+settings['plasma_dimension'] = 1
 # settings['plasma_dimension'] = 1.5
-settings['plasma_dimension'] = 2
+# settings['plasma_dimension'] = 2
 # settings['plasma_dimension'] = 3
 # settings['plasma_dimension'] = 10
 # settings['plasma_dimension'] = 100
 # settings['number_of_cells'] = 20
-settings['number_of_cells'] = 30
+# settings['number_of_cells'] = 30
 # settings['number_of_cells'] = 40
-# settings['number_of_cells'] = 100
+settings['number_of_cells'] = 100
 # settings['number_of_cells'] = 150
 # settings['number_of_cells'] = 200
 
@@ -41,7 +41,8 @@ settings['U0'] = 0
 
 # settings['flux_normalized_termination_cutoff'] = 0.5
 # settings['flux_normalized_termination_cutoff'] = 0.1
-settings['flux_normalized_termination_cutoff'] = 0.03
+settings['flux_normalized_termination_cutoff'] = 0.05
+# settings['flux_normalized_termination_cutoff'] = 0.03
 # settings['flux_normalized_termination_cutoff'] = 0.01
 
 settings['alpha_definition'] = 'geometric_constant'
@@ -85,7 +86,7 @@ settings['energy_conservation_scheme'] = 'none'
 # settings['energy_conservation_scheme'] = 'detailed'
 
 # settings['dt_status'] = 1e-5
-settings['dt_status'] = 1e-4
+# settings['dt_status'] = 1e-4
 # settings['dt_status'] = 1e-3
 
 settings = define_default_settings(settings)
@@ -152,8 +153,8 @@ if settings['time_step_definition_using_species'] == 'only_c_tR':
 # settings['n_min'] = 1e19
 # settings['n_min'] = 1e18
 # settings['n_min'] = settings['n0'] * 1e-4
-settings['n_min'] = settings['n0'] * 1e-10
-settings['save_dir'] += '_nmin_' + str('{:.2e}'.format(settings['n_min']))
+# settings['n_min'] = settings['n0'] * 1e-10
+# settings['save_dir'] += '_nmin_' + str('{:.2e}'.format(settings['n_min']))
 
 # settings['mfp_min'] = 1e-2
 # settings['save_dir'] += '_mfp_min_' + str(settings['mfp_min'])

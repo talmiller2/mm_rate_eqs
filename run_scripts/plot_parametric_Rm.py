@@ -40,7 +40,8 @@ plt.close('all')
 
 # main_dir = '../runs/slurm_runs/set3_N_20/'
 # main_dir = '../runs/slurm_runs/set8_N_30_mfp_over_cell_1_mfp_limitX100/'
-main_dir = '../runs/slurm_runs/set9_N_30_mfp_over_cell_40_mfp_limitX100/'
+# main_dir = '../runs/slurm_runs/set9_N_30_mfp_over_cell_40_mfp_limitX100/'
+main_dir = '../runs/slurm_runs/set18_MM_N_30_ni_2e22/'
 
 colors = []
 colors += ['b']
@@ -64,7 +65,8 @@ U = 0
 # U = 0.1
 # U = 0.3
 # U = 0.5
-Rm_list = [1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
+# Rm_list = [1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
+Rm_list = [1.1, 1.3, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0, 20.0]
 
 linestyles = []
 linestyles += ['-']

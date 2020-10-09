@@ -238,13 +238,13 @@ def print_basic_run_info(state, settings):
     logging.info('*************************************')
     logging.info('***********  Plasma info  ***********')
     logging.info('*************************************')
-    logging.info('n0 = ' + str('{:.2e}'.format(settings['n0'])) + ' m^-3')
-    n0_gas = 2.0 * settings['n0']
-    logging.info('n0_gas = ' + str('{:.2e}'.format(n0_gas)) + ' m^-3')
+    logging.info('n0 (ions) = ' + str('{:.2e}'.format(settings['n0'])) + ' m^-3')
+    n0_total = 2.0 * settings['n0']
+    logging.info('n0 (total) = ' + str('{:.2e}'.format(n0_total)) + ' m^-3')
     logging.info('Ti_0 = ' + str(settings['Ti_0']) + ' eV')
     logging.info('Te_0 = ' + str(settings['Te_0']) + ' eV')
     T_average = np.mean([settings['Ti_0'], settings['Te_0']])
-    settings['P'] = get_ideal_gas_pressure(n0_gas, T_average, settings)
+    settings['P'] = get_ideal_gas_pressure(n0_total, T_average, settings)
     logging.info('P = ' + str(settings['P']) + ' bar')
     settings['B'] = get_magnetic_field_for_given_pressure(settings['P'], beta=1.0)  # [Tesla]
     logging.info('B = ' + str(settings['B']) + ' T (for beta=1)')
@@ -272,9 +272,11 @@ def print_basic_run_info(state, settings):
     logging.info('alpha_definition = ' + str(settings['alpha_definition']))
     logging.info('adaptive_mirror = ' + str(settings['adaptive_mirror']))
     logging.info('right_boundary_condition = ' + str(settings['right_boundary_condition']))
-    logging.info('right_boundary_condition_density_type = ' + str(settings['right_boundary_condition_density_type']))
-    logging.info('n_min = ' + str('{:.2e}'.format(settings['n_min'])) + ' m^-3')
-    logging.info('n_end = ' + str('{:.2e}'.format(settings['n_end'])) + ' m^-3')
+    if settings['right_boundary_condition'] != 'none':
+        logging.info('right_boundary_condition_density_type = '
+                     + str(settings['right_boundary_condition_density_type']))
+        logging.info('n_min = ' + str('{:.2e}'.format(settings['n_min'])) + ' m^-3')
+        logging.info('n_end = ' + str('{:.2e}'.format(settings['n_end'])) + ' m^-3')
 
     logging.info('*************************************')
     return

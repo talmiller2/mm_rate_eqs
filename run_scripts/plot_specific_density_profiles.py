@@ -44,12 +44,16 @@ plt.close('all')
 # main_dir = '../runs/slurm_runs/set2_Rm_3/'
 # main_dir = '../runs/slurm_runs/set4_Rm_3_mfp_over_cell_4/'
 # main_dir = '../runs/slurm_runs/set5_Rm_3_mfp_over_cell_20/'
-# main_dir = '../runs/slurm_runs/set6_Rm_3_mfp_over_cell_1_mfp_limitX100/'
+main_dir = '../runs/slurm_runs/set6_Rm_3_mfp_over_cell_1_mfp_limitX100/'
 # main_dir = '../runs/slurm_runs/set7_Rm_3_mfp_over_cell_20_mfp_limitX100/'
 # main_dir = '../runs/slurm_runs/set10_Rm_3_mfp_over_cell_0.04_mfp_limitX100/'
 # main_dir = '../runs/slurm_runs/set11_Rm_3_mfp_over_cell_1_mfp_limitX100_nend_1e-2/'
 # main_dir = '../runs/slurm_runs/set12_Rm_3_mfp_over_cell_1_mfp_limitX100_nend_1e-2_rbc_adjut_ntL_timestepdef_without_ntL/'
-main_dir = '../runs/slurm_runs/set13_Rm_3_mfp_over_cell_1_mfp_limitX100_nend_1e-2_rbc_adjut_ntR/'
+# main_dir = '../runs/slurm_runs/set13_Rm_3_mfp_over_cell_1_mfp_limitX100_nend_1e-2_rbc_adjut_ntR/'
+# main_dir = '../runs/slurm_runs/set14_MM_Rm_3_ni_2e22/'
+# main_dir = '../runs/slurm_runs/set15_MM_Rm_3_ni_2e22_nend_1e-2_rbc_adjust_ntR/'
+# main_dir = '../runs/slurm_runs/set16_MM_Rm_3_ni_4e23/'
+# main_dir = '../runs/slurm_runs/set17_MM_Rm_3_ni_1e21/'
 
 plasma_modes = []
 plasma_modes += ['isoTmfp']
@@ -64,6 +68,7 @@ plasma_modes += ['coold3']
 colors = ['b', 'g', 'r', 'm', 'c', 'k']
 
 # number_of_cells = 30
+# number_of_cells = 70
 number_of_cells = 100
 U = 0
 
@@ -86,6 +91,7 @@ for ind_mode in range(len(plasma_modes)):
     settings_file = save_dir + '/settings.pickle'
     try:
         state, settings = load_simulation(state_file, settings_file)
+        print('plasma_mode:', plasma_mode, ', successful_termination:', state['successful_termination'])
 
         label = define_plasma_mode_label(plasma_mode)
         plt.figure(1)
@@ -96,7 +102,7 @@ for ind_mode in range(len(plasma_modes)):
         plt.plot(x, state['n_c'] / n0, label='$n_{c}$ ' + label, linestyle='dashdot', color=color)
         plt.xlabel('cell number')
         # plt.ylabel('[$m^{-3}$]')
-        plt.ylabel('$n/n_0$')
+        plt.ylabel('$n/n_{i,0}$')
         plt.title('density profiles for N=' + str(number_of_cells))
         plt.tight_layout()
         plt.grid(True)
@@ -108,7 +114,7 @@ for ind_mode in range(len(plasma_modes)):
         plt.plot(x, state['n'] / n0, label=label, linestyle='solid', color=color)
         plt.xlabel('cell number')
         # plt.ylabel('[$m^{-3}$]')
-        plt.ylabel('$n/n_0$')
+        plt.ylabel('$n/n_{i,0}$')
         plt.title('density profile for N=' + str(number_of_cells))
         plt.tight_layout()
         plt.grid(True)
@@ -121,6 +127,17 @@ for ind_mode in range(len(plasma_modes)):
         plt.xlabel('cell number')
         plt.ylabel('[$m$]')
         plt.title('$\\lambda/l$ profiles for N=' + str(number_of_cells))
+        plt.tight_layout()
+        plt.grid(True)
+        plt.legend()
+
+        plt.figure(4)
+        x = np.linspace(0, number_of_cells, number_of_cells)
+        plt.plot(x, state['flux'], label=label, linestyle='solid', color=color)
+        plt.yscale('log')
+        plt.xlabel('cell number')
+        # plt.ylabel('[$m$]')
+        plt.title('flux profile for N=' + str(number_of_cells))
         plt.tight_layout()
         plt.grid(True)
         plt.legend()

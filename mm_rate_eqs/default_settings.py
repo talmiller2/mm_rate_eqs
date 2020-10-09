@@ -111,8 +111,8 @@ def define_default_settings(settings=None):
         settings['adaptive_dimension'] = False
         # settings['adaptive_dimension'] = True
     if 'transition_type' not in settings:
-        settings['transition_type'] = 'none'
-        # settings['transition_type'] = 'smooth_transition_to_free_flow'
+        # settings['transition_type'] = 'none'
+        settings['transition_type'] = 'smooth_transition_to_free_flow'
         # settings['transition_type'] = 'sharp_transition_to_free_flow'
     if 'adaptive_mirror' not in settings:
         settings['adaptive_mirror'] = 'none'
@@ -160,7 +160,8 @@ def define_default_settings(settings=None):
 
     ### relaxation solver parameters
     if 'max_num_time_steps' not in settings:
-        settings['max_num_time_steps'] = int(3e5) - 1
+        settings['max_num_time_steps'] = int(3e6) - 1
+        # settings['max_num_time_steps'] = int(3e5) - 1
         # settings['max_num_time_steps'] = int(status_counter_type1e5) - 1
         # settings['max_num_time_steps'] = int(1e10) - 1
     if 't_stop' not in settings:
@@ -185,8 +186,8 @@ def define_default_settings(settings=None):
         # settings['dt_status'] = 5e-4
         # settings['dt_status'] = 1e-3
     if 'time_steps_status' not in settings:
-        settings['time_steps_status'] = int(1e3)
-        # settings['time_steps_status'] = int(1e4)
+        # settings['time_steps_status'] = int(1e3)
+        settings['time_steps_status'] = int(1e4)
     if 'dt_factor' not in settings:
         # settings['dt_factor'] = 0.3
         settings['dt_factor'] = 0.1

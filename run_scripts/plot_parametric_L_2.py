@@ -14,7 +14,8 @@ def define_plasma_mode_label(plasma_mode):
     if plasma_mode == 'isoT':
         label += 'isothermal'
     elif plasma_mode == 'isoTmfp':
-        label += 'isothermal iso-mfp'
+        # label += 'isothermal iso-mfp'
+        label += 'diffusion'
     elif 'cool' in plasma_mode:
         plasma_dimension = int(plasma_mode.split('d')[-1])
         label += 'cooling d=' + str(plasma_dimension)
@@ -44,7 +45,11 @@ plt.close('all')
 # main_dir = '../runs/slurm_runs/set5_Rm_3_mfp_over_cell_20/'
 # main_dir = '../runs/slurm_runs/set6_Rm_3_mfp_over_cell_1_mfp_limitX100/'
 # main_dir = '../runs/slurm_runs/set7_Rm_3_mfp_over_cell_20_mfp_limitX100/'
-main_dir = '../runs/slurm_runs/set10_Rm_3_mfp_over_cell_0.04_mfp_limitX100/'
+# main_dir = '../runs/slurm_runs/set10_Rm_3_mfp_over_cell_0.04_mfp_limitX100/'
+main_dir = '../runs/slurm_runs/set14_MM_Rm_3_ni_2e22/'
+# main_dir = '../runs/slurm_runs/set15_MM_Rm_3_ni_2e22_nend_1e-2_rbc_adjust_ntR/'
+# main_dir = '../runs/slurm_runs/set16_MM_Rm_3_ni_4e23/'
+# main_dir = '../runs/slurm_runs/set17_MM_Rm_3_ni_1e21/'
 
 colors = []
 colors += ['b']
@@ -54,8 +59,8 @@ colors += ['m']
 colors += ['c']
 
 plasma_modes = []
-plasma_modes += ['isoT']
 plasma_modes += ['isoTmfp']
+plasma_modes += ['isoT']
 plasma_modes += ['coold1']
 plasma_modes += ['coold2']
 plasma_modes += ['coold3']
@@ -64,7 +69,8 @@ plasma_modes += ['coold3']
 
 # num_cells_list = [3, 5, 8, 10, 12, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 # num_cells_list = [3, 5, 8]
-num_cells_list = [3, 5, 8, 10, 15, 30, 50, 70, 100]
+# num_cells_list = [3, 5, 8, 10, 15, 30, 50, 70, 100]
+num_cells_list = [3, 5, 8, 10, 15, 20, 30, 50, 70, 100, 130, 150]
 
 U = 0
 # U = 0.05
@@ -118,13 +124,15 @@ for ind_mode in range(len(plasma_modes)):
                 plt.figure(2)
                 # label = run_name
                 # label = 'N=' + str(number_of_cells) + ', ' + define_LC_mode_label(LC_mode)
-                label = define_label(plasma_mode, LC_mode)
+                # label = define_label(plasma_mode, LC_mode)
+                label = define_plasma_mode_label(plasma_mode)
                 plt.plot(state['n'], '-', label=label, linestyle=linestyle, color=color)
 
         # plot flux as a function of N
         # label_flux = plasma_modes[ind_mode] + '_U_' + str(U) + '_' + LC_mode
         # label_flux = plasma_modes[ind_mode] + ', mfp/l=4'
-        label_flux = define_label(plasma_mode, LC_mode)
+        # label_flux = define_label(plasma_mode, LC_mode)
+        label_flux = define_plasma_mode_label(plasma_mode)
         plt.figure(1)
         plt.plot(num_cells_list, flux_list, '-', label=label_flux, linestyle=linestyle, color=color)
         plt.yscale("log")
