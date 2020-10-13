@@ -13,7 +13,8 @@ def define_plasma_mode_label(plasma_mode):
     if plasma_mode == 'isoT':
         label += 'isothermal'
     elif plasma_mode == 'isoTmfp':
-        label += 'isothermal iso-mfp'
+        # label += 'isothermal iso-mfp'
+        label += 'diffusion'
     elif 'cool' in plasma_mode:
         plasma_dimension = int(plasma_mode.split('d')[-1])
         label += 'cooling d=' + str(plasma_dimension)
@@ -42,6 +43,7 @@ plt.close('all')
 # main_dir = '../runs/slurm_runs/set8_N_30_mfp_over_cell_1_mfp_limitX100/'
 # main_dir = '../runs/slurm_runs/set9_N_30_mfp_over_cell_40_mfp_limitX100/'
 main_dir = '../runs/slurm_runs/set18_MM_N_30_ni_2e22/'
+# main_dir = '../runs/slurm_runs/set19_MM_N_30_ni_1e21/'
 
 colors = []
 colors += ['b']
@@ -67,6 +69,9 @@ U = 0
 # U = 0.5
 # Rm_list = [1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
 Rm_list = [1.1, 1.3, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0, 20.0]
+# Rm_list = [3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0, 20.0]
+# Rm_list = [1.1, 1.3, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5]
+# Rm_list = [5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0, 20.0]
 
 linestyles = []
 linestyles += ['-']
@@ -107,31 +112,41 @@ for ind_mode in range(len(plasma_modes)):
         # label_flux = plasma_modes[ind_mode] + '_N_' + str(number_of_cells) + '_' + LC_mode
         # label_flux = plasma_modes[ind_mode] + '_' + LC_mode
         # label_flux = plasma_modes[ind_mode] + '_U_' + str(U) + '_' + LC_mode
-        label_flux = define_label(plasma_mode, LC_mode)
+        # label_flux = define_label(plasma_mode, LC_mode)
+        label_flux = define_plasma_mode_label(plasma_mode)
         plt.figure(1)
         plt.plot(Rm_list, flux_list, '-', label=label_flux, linestyle=linestyle, color=color)
-        # plt.yscale("log")
+        plt.yscale("log")
+        plt.xscale("log")
+
+        # remove some of the values prior to fit
+        # ind_min = 0
+        # ind_min = 3
+        ind_min = 5
+        Rm_list_for_fit = Rm_list[ind_min:]
+        flux_list_for_fit = flux_list[ind_min:]
 
         # clear nans for fit
         norm_factor = 1e27
-        Rm_list = np.array(Rm_list)
-        inds_flux_not_nan = [i for i in range(len(flux_list)) if not np.isnan(flux_list[i])]
-        Rm_cells = Rm_list[inds_flux_not_nan]
-        flux_cells = flux_list[inds_flux_not_nan] / norm_factor
+        Rm_list_for_fit = np.array(Rm_list_for_fit)
+        inds_flux_not_nan = [i for i in range(len(flux_list_for_fit)) if not np.isnan(flux_list_for_fit[i])]
+        Rm_cells = Rm_list_for_fit[inds_flux_not_nan]
+        flux_cells = flux_list_for_fit[inds_flux_not_nan] / norm_factor
         # fit_function = lambda x, a, b, gamma: a + b / x ** gamma
         fit_function = lambda x, b, gamma: b / x ** gamma
         # fit_function = lambda x, b: b / x
         popt, pcov = curve_fit(fit_function, Rm_cells, flux_cells)
-        flux_cells_fit = fit_function(Rm_cells, *popt) * norm_factor
-        # plt.plot(n_cells, flux_cells_fit, label=label + ' fit', linestyle=':', color=color)
-        plt.plot(Rm_cells, flux_cells_fit, label='fit power = ' + '{:0.3f}'.format(popt[-1]), linestyle='--',
-                 color=color)
+        # flux_cells_fit = fit_function(Rm_cells, *popt) * norm_factor
+        flux_cells_fit = fit_function(Rm_list, *popt) * norm_factor
+        label = 'fit decay power: ' + '{:0.3f}'.format(popt[-1])
+        # plt.plot(Rm_cells, flux_cells_fit, label=label, linestyle='--', color=color)
+        plt.plot(Rm_list, flux_cells_fit, label=label, linestyle='--', color=color)
 
 plt.figure(1)
 plt.xlabel('$R_m$')
 plt.ylabel('flux [$s^{-1}$]')
 # plt.title('flux as a function of mirror ratio (N=' + str(number_of_cells) + ', $U/v_{th}$=' + str(U) + ')')
-plt.title('flux as a function of mirror ratio (N=' + str(number_of_cells) + ')')
+# plt.title('flux as a function of mirror ratio (N=' + str(number_of_cells) + ')')
 plt.tight_layout()
 plt.grid(True)
 plt.legend()

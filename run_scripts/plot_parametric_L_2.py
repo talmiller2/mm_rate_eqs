@@ -46,10 +46,10 @@ plt.close('all')
 # main_dir = '../runs/slurm_runs/set6_Rm_3_mfp_over_cell_1_mfp_limitX100/'
 # main_dir = '../runs/slurm_runs/set7_Rm_3_mfp_over_cell_20_mfp_limitX100/'
 # main_dir = '../runs/slurm_runs/set10_Rm_3_mfp_over_cell_0.04_mfp_limitX100/'
-main_dir = '../runs/slurm_runs/set14_MM_Rm_3_ni_2e22/'
+# main_dir = '../runs/slurm_runs/set14_MM_Rm_3_ni_2e22/'
 # main_dir = '../runs/slurm_runs/set15_MM_Rm_3_ni_2e22_nend_1e-2_rbc_adjust_ntR/'
 # main_dir = '../runs/slurm_runs/set16_MM_Rm_3_ni_4e23/'
-# main_dir = '../runs/slurm_runs/set17_MM_Rm_3_ni_1e21/'
+main_dir = '../runs/slurm_runs/set17_MM_Rm_3_ni_1e21/'
 
 colors = []
 colors += ['b']
@@ -136,27 +136,38 @@ for ind_mode in range(len(plasma_modes)):
         plt.figure(1)
         plt.plot(num_cells_list, flux_list, '-', label=label_flux, linestyle=linestyle, color=color)
         plt.yscale("log")
+        plt.xscale("log")
+
+        # remove some of the values prior to fit
+        # ind_min = 0
+        ind_min = 5
+        ind_max = len(num_cells_list)
+        # if plasma_mode == 'coold1':
+        #     ind_max -= 4
+        num_cells_list_for_fit = num_cells_list[ind_min:ind_max]
+        flux_list_for_fit = flux_list[ind_min:ind_max]
 
         # # clear nans for fit
         norm_factor = 1e27
-        num_cells_list = np.array(num_cells_list)
-        inds_flux_not_nan = [i for i in range(len(flux_list)) if not np.isnan(flux_list[i])]
-        n_cells = num_cells_list[inds_flux_not_nan]
-        flux_cells = flux_list[inds_flux_not_nan] / norm_factor
+        num_cells_list_for_fit = np.array(num_cells_list_for_fit)
+        inds_flux_not_nan = [i for i in range(len(flux_list_for_fit)) if not np.isnan(flux_list_for_fit[i])]
+        n_cells = num_cells_list_for_fit[inds_flux_not_nan]
+        flux_cells = flux_list_for_fit[inds_flux_not_nan] / norm_factor
         # fit_function = lambda x, a, b, gamma: a + b / x ** gamma
         fit_function = lambda x, b, gamma: b / x ** gamma
         # fit_function = lambda x, b: b / x
         popt, pcov = curve_fit(fit_function, n_cells, flux_cells)
-        flux_cells_fit = fit_function(n_cells, *popt) * norm_factor
-        # plt.plot(n_cells, flux_cells_fit, label=label + ' fit', linestyle=':', color=color)
-        plt.plot(n_cells, flux_cells_fit, label='fit power = ' + '{:0.3f}'.format(popt[-1]), linestyle='--',
-                 color=color)
+        # flux_cells_fit = fit_function(n_cells, *popt) * norm_factor
+        flux_cells_fit = fit_function(num_cells_list, *popt) * norm_factor
+        label = 'fit decay power: ' + '{:0.3f}'.format(popt[-1])
+        # plt.plot(n_cells, flux_cells_fit, label=label, linestyle='--', color=color)
+        plt.plot(num_cells_list, flux_cells_fit, label=label, linestyle='--', color=color)
 
 plt.figure(1)
 plt.xlabel('N')
 plt.ylabel('flux [$s^{-1}$]')
 # plt.title('flux as a function of system size')
-plt.title('flux as a function of system size ($U/v_{th}$=' + str(U) + ')')
+# plt.title('flux as a function of system size ($U/v_{th}$=' + str(U) + ')')
 plt.tight_layout()
 plt.grid(True)
 plt.legend()
@@ -165,8 +176,7 @@ plt.figure(2)
 plt.xlabel('cell number')
 plt.ylabel('density [$m^{-3}$]')
 # plt.title('density profile (N=' + str(chosen_num_cells) + ')')
-plt.title('density profile (N=' + str(chosen_num_cells) + ' cells, $U/v_{th}$=' + str(U) + ')')
+# plt.title('density profile (N=' + str(chosen_num_cells) + ' cells, $U/v_{th}$=' + str(U) + ')')
 plt.tight_layout()
 plt.grid(True)
 plt.legend()
-plt.grid(True)

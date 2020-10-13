@@ -15,8 +15,11 @@ rate_eqs_script = get_script_rate_eqs_slave()
 # n0 = 1e22  # m^-3
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set9_N_30_mfp_over_cell_40_mfp_limitX100/'
 
-n0 = 2e22  # m^-3
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set18_MM_N_30_ni_2e22'
+# n0 = 2e22  # m^-3
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set18_MM_N_30_ni_2e22'
+
+n0 = 1e21  # m^-3
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set19_MM_N_30_ni_1e21'
 
 slurm_kwargs = {'partition': 'core'}  # default
 # slurm_kwargs = {'partition': 'socket'}
@@ -31,7 +34,7 @@ plasma_modes += ['coold3']
 
 LC_modes = []
 LC_modes += ['sLC']  # static loss cone
-LC_modes += ['dLC']  # dynamic loss cone
+# LC_modes += ['dLC']  # dynamic loss cone
 
 # num_cells = 20
 # Rm_list = [1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
