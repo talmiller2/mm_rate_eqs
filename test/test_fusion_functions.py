@@ -26,7 +26,6 @@ Te_0 = settings['Te_0']
 v_th = get_thermal_velocity(Ti_0, settings, species='ions')
 
 T_keV_array = np.linspace(0.2, 200, 1000)
-T_eV_array = T_keV_array * 1e3
 # reactions = ['D_T_to_n_alpha', 'D_D_to_p_T', 'D_D_to_n_He3', 'D_He3_to_p_alpha']
 reactions = ['D_T_to_n_alpha', 'D_D_to_p_T_n_He3', 'D_He3_to_p_alpha', 'p_B_to_3alpha']
 # reactions = ['D_T_to_n_alpha']
@@ -49,10 +48,10 @@ for ind_r, reaction in enumerate(reactions):
     color = colors[ind_r]
 
     plt.figure(1)
-    sigma_v_array = get_sigma_v_fusion(T_eV_array, reaction=reaction)
+    sigma_v_array = get_sigma_v_fusion(T_keV_array, reaction=reaction)
     plt.plot(T_keV_array, sigma_v_array, label=label, linewidth=3, color=color)
     if reaction == 'p_B_to_3alpha':
-        sigma_v_array = get_sigma_v_fusion(T_eV_array, reaction=reaction, use_resonance=False)
+        sigma_v_array = get_sigma_v_fusion(T_keV_array, reaction=reaction, use_resonance=False)
         label_res = label + ' w/o res'
         plt.plot(T_keV_array, sigma_v_array, label=label_res, linewidth=3, linestyle='--', color=color)
     plt.legend()
@@ -64,7 +63,7 @@ for ind_r, reaction in enumerate(reactions):
     plt.grid(True)
 
     plt.figure(2)
-    sigma_v_array = get_sigma_v_fusion(T_keV_array * 1e3, reaction=reaction)
+    sigma_v_array = get_sigma_v_fusion(T_keV_array, reaction=reaction)
     funsion_scaling_power = np.diff(np.log(sigma_v_array)) / np.diff(np.log(T_keV_array))
     plt.plot(T_keV_array[1:], funsion_scaling_power, label=label, linewidth=3, color=color)
     plt.legend()
@@ -78,8 +77,8 @@ for ind_r, reaction in enumerate(reactions):
 
     plt.figure(3)
     if ind_r == 0:
-        sigma_v_array_ref = get_sigma_v_fusion(T_eV_array, reaction=reaction)
-    sigma_v_array = get_sigma_v_fusion(T_eV_array, reaction=reaction)
+        sigma_v_array_ref = get_sigma_v_fusion(T_keV_array, reaction=reaction)
+    sigma_v_array = get_sigma_v_fusion(T_keV_array, reaction=reaction)
     plt.plot(T_keV_array, sigma_v_array / sigma_v_array_ref, label=label, linewidth=3, color=color)
     plt.legend()
     plt.title(sigma_v_str + ' relative to ' + get_reaction_label(reaction=reactions[0]))

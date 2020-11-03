@@ -1,12 +1,20 @@
 import numpy as np
 
 
-def get_sigma_v_fusion(T_eV, reaction='D_T_to_n_alpha', use_resonance=True):
+# def get_sigma_fusion(T_eV, reaction='D_T_to_n_alpha'):
+#     """
+#     Fit forms of <sigma*v> average for different fusion reactions.
+#     Source: "Atzeni, Mey
+#     """
+#     return
+
+
+def get_sigma_v_fusion(T, reaction='D_T_to_n_alpha', use_resonance=True):
     """
     Fit forms of <sigma*v> average for different fusion reactions.
     Source: "Atzeni, Meyer-ter-Vehn - The Physics of Inertial Fusion", chapter 1.
+    T in [keV]
     """
-    T = T_eV * 1e-3  # T in keV
     fit_type = 'Bosch_Hale'
     if reaction == 'D_T_to_n_alpha':
         C0 = 6.661
@@ -57,7 +65,7 @@ def get_sigma_v_fusion(T_eV, reaction='D_T_to_n_alpha', use_resonance=True):
     elif reaction == 'D_D_to_p_T_n_He3':
         reactions = ['D_D_to_p_T', 'D_D_to_n_He3']
         branching_ratios = [0.5, 0.5]
-        return sum([get_sigma_v_fusion(T_eV, reaction=reaction_branch)
+        return sum([get_sigma_v_fusion(T, reaction=reaction_branch)
                     for reaction_branch, branching_ratios in zip(reactions, branching_ratios)])
     else:
         raise ValueError('invalid reaction: ' + reaction)
@@ -97,7 +105,10 @@ def get_reaction_label(reaction='D_T_to_n_alpha'):
 
 
 def get_E_reaction(reaction='D_T_to_n_alpha'):
-    # in MeV, from https://en.wikipedia.org/wiki/Nuclear_fusion
+    """
+    Fusion reaction total output energy, in [MeV].
+    Source https://en.wikipedia.org/wiki/Nuclear_fusion.
+    """
     if reaction == 'D_T_to_n_alpha':
         E_reaction = 17.6
     elif reaction == 'D_D_to_p_T':
@@ -116,7 +127,10 @@ def get_E_reaction(reaction='D_T_to_n_alpha'):
 
 
 def get_E_charged(reaction='D_T_to_n_alpha'):
-    # in MeV, from https://en.wikipedia.org/wiki/Nuclear_fusion
+    """
+    Fusion reaction output energy of charged particle only, in [MeV].
+    Source https://en.wikipedia.org/wiki/Nuclear_fusion.
+    """
     if reaction == 'D_T_to_n_alpha':
         E_charged = 3.5
     elif reaction == 'D_D_to_p_T':
@@ -152,21 +166,29 @@ def get_Z_ion_for_reaction(reaction='D_T_to_n_alpha'):
     return Z_ion
 
 
-def get_fusion_sigma_v_E_reaction(T_eV, reaction='D_T_to_n_alpha'):
+def get_fusion_sigma_v_E_reaction(T, reaction='D_T_to_n_alpha'):
+    """
+    Multiple sigma*v by the reaction energy and return in J.
+    T in [keV].
+    """
     if reaction == 'D_D_to_p_T_n_He3':
-        sigma_v_E = get_sigma_v_fusion(T_eV, reaction='D_D_to_p_T') * get_E_reaction(reaction='D_D_to_p_T') \
-                    + get_sigma_v_fusion(T_eV, reaction='D_D_to_n_He3') * get_E_reaction(reaction='D_D_to_n_He3')
+        sigma_v_E = get_sigma_v_fusion(T, reaction='D_D_to_p_T') * get_E_reaction(reaction='D_D_to_p_T') \
+                    + get_sigma_v_fusion(T, reaction='D_D_to_n_He3') * get_E_reaction(reaction='D_D_to_n_He3')
     else:
-        sigma_v_E = get_sigma_v_fusion(T_eV, reaction=reaction) * get_E_reaction(reaction=reaction)
+        sigma_v_E = get_sigma_v_fusion(T, reaction=reaction) * get_E_reaction(reaction=reaction)
     return sigma_v_E * 1e6 * 1.6e-19  # MeV to J
 
 
-def get_fusion_power(ni, T_keV, reaction='D_T_to_n_alpha'):
-    return (ni / 2.0) ** 2 * get_fusion_sigma_v_E_reaction(T_keV * 1e3, reaction=reaction)
+def get_fusion_power(ni, T, reaction='D_T_to_n_alpha'):
+    """
+    Fusion power reaction rate, assuming 50-50 split of reacting ions.
+    T in [keV].
+    """
+    return (ni / 2.0) ** 2 * get_fusion_sigma_v_E_reaction(T, reaction=reaction)
 
 
-def get_fusion_charged_power(ni, T_keV, reaction='D_T_to_n_alpha'):
-    return (ni / 2.0) ** 2 * get_sigma_v_fusion(T_keV * 1e3, reaction=reaction) \
+def get_fusion_charged_power(ni, T, reaction='D_T_to_n_alpha'):
+    return (ni / 2.0) ** 2 * get_sigma_v_fusion(T, reaction=reaction) \
            * get_E_charged(reaction=reaction) * 1e6 * 1.6e-19  # MeV to J
 
 
