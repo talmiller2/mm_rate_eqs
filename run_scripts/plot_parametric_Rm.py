@@ -42,8 +42,8 @@ plt.close('all')
 # main_dir = '../runs/slurm_runs/set3_N_20/'
 # main_dir = '../runs/slurm_runs/set8_N_30_mfp_over_cell_1_mfp_limitX100/'
 # main_dir = '../runs/slurm_runs/set9_N_30_mfp_over_cell_40_mfp_limitX100/'
-main_dir = '../runs/slurm_runs/set18_MM_N_30_ni_2e22/'
-# main_dir = '../runs/slurm_runs/set19_MM_N_30_ni_1e21/'
+# main_dir = '../runs/slurm_runs/set18_MM_N_30_ni_2e22/'
+main_dir = '../runs/slurm_runs/set19_MM_N_30_ni_1e21/'
 
 colors = []
 colors += ['b']
