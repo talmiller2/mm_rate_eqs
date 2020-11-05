@@ -1,21 +1,16 @@
 import numpy as np
 
 from mm_rate_eqs.fusion_functions import define_plasma_parameters
-
+from mm_rate_eqs.constants_functions import define_electron_charge, define_electron_mass, define_proton_mass, \
+    define_fine_structure_constant, define_speed_of_light, define_factor_eV_to_K
 
 def define_default_settings(settings=None):
     if settings == None:
         settings = {}
 
     #### physical constants
-    settings['eV'] = 1.0
+    settings['eV'] = 1.0  # normalize temperatures to eV
     settings['keV'] = 1e3 * settings['eV']
-    settings['eV_to_K'] = 1.16e4
-    settings['MeV_to_J'] = 1e6 * 1.6e-19
-    settings['kB_K'] = 1.380649e-23  # J/K
-    settings['e'] = 1.60217662e-19  # Coulomb (elementary charge)
-    settings['kB_eV'] = settings['kB_K'] * settings['eV_to_K']  # J/eV (numerically same as e)
-    settings['eps0'] = 8.85418781e-12  # Farad/m^2 (vacuum permittivity)
 
     ### plasma parameters5
     if 'gas_name' not in settings:

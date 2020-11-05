@@ -11,9 +11,7 @@ from mm_rate_eqs.rate_functions import get_thermal_velocity
 ### Plot fusion and radiation loss parameters
 
 settings = define_default_settings()
-keV = settings['keV']
-kB_eV = settings['kB_eV']
-eV_to_K = settings['eV_to_K']
+
 # Z_ion = settings['Z_ion']
 Z_ion = 1
 # B = 7 # [Tesla]

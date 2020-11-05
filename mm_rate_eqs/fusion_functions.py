@@ -1,5 +1,8 @@
 import numpy as np
 
+from mm_rate_eqs.constants_functions import define_electron_charge, define_electron_mass, define_proton_mass, \
+    define_fine_structure_constant, define_speed_of_light, define_factor_eV_to_K
+
 
 def get_sigma_v_fusion(T, reaction='D_T_to_n_alpha', use_resonance=True):
     """
@@ -173,12 +176,6 @@ def get_E_charged(reaction='D_T_to_n_alpha'):
     return E_charged
 
 
-def define_electron_charge():
-    # unit of charge [Coulomb], and relates energy units E_J = E_eV * e
-    e = 1.60217662e-19
-    return e
-
-
 def get_fusion_sigma_v_E_reaction(T, reaction='D_T_to_n_alpha'):
     """
     Multiply sigma*v by the reaction energy and return in J.
@@ -230,20 +227,11 @@ def get_cyclotron_radiation_loss(ne, Te, B):
 def get_lawson_parameters(ni, Ti, settings, reaction='D_T_to_n_alpha'):
     sigma_v_fusion = get_sigma_v_fusion(Ti, reaction=reaction)
     E_charged = get_E_charged(reaction=reaction) * settings['MeV_to_J']  # J
-    n_tau_lawson = 12 * settings['kB_eV'] * Ti / (E_charged * sigma_v_fusion)
+    kB_eV = define_electron_charge()
+    n_tau_lawson = 12 * kB_eV * Ti / (E_charged * sigma_v_fusion)
     tau_lawson = n_tau_lawson / ni
     flux_lawson = 1 / n_tau_lawson * settings['volume_main_cell'] * ni ** 2
     return tau_lawson, flux_lawson
-
-
-def define_electron_mass():
-    m_e = 9.10938356e-31  # kg
-    return m_e
-
-
-def define_proton_mass():
-    m_p = 1.67262192e-27  # kg
-    return m_p
 
 
 def define_plasma_parameters(gas_name='hydrogen', ionization_level=1):
@@ -278,8 +266,10 @@ def define_plasma_parameters(gas_name='hydrogen', ionization_level=1):
     mi = A * mp
     # for non-fusion experiments with low temperature, the ions are not fully ionized
     if ionization_level is not None:
-        # TODO: cant be larger than Z already defined
-        Z = ionization_level
+        if ionization_level <= Z:
+            Z = ionization_level
+        else:
+            raise ValueError('ionization level cannot be larger that the atomic charge Z.')
     return me, mp, mi, A, Z
 
 
@@ -373,7 +363,6 @@ def get_Zs_for_reaction(reaction='D_T_to_n_alpha'):
 
 def get_As_for_reaction(reaction='D_T_to_n_alpha'):
     A_1, A_2 = None, None
-    # TODO: refactor the numbers below and reuse
     A_p = 1.008
     A_D = 2.014
     A_T = 3.0160492
@@ -416,19 +405,6 @@ def get_gamow_energy(reaction='D_T_to_n_alpha'):
     A_r = A_1 * A_2 / (A_1 + A_2)  # reduced A
     E_g = 986.1 * (Z_1 * Z_2) ** 2 * A_r
     return E_g
-
-
-# def get_gamow_energy(reaction='D_T_to_n_alpha'):
-#     """
-#     Return Gamow energy (tunneling barrier) in [keV]
-#     Source: "1006 - Kippenhahn, Weigert - Stellar Structure and Evolution", chapter 18, eq 18.25
-#     """
-#     # alpha_fine = 1 / 137.035999084 # fine structure constant
-#     A_1, A_2 = get_As_for_reaction(reaction=reaction)
-#     Z_1, Z_2 = get_Zs_for_reaction(reaction=reaction)
-#     A_r = A_1 * A_2 / (A_1 + A_2)  # reduced A
-#     E_g = 986.1 * (Z_1 * Z_2) ** 2 * A_r
-#     return E_g
 
 
 def get_astrophysical_S_factor(reaction='D_T_to_n_alpha'):
@@ -497,16 +473,6 @@ def get_sigma_fusion(E, reaction='D_T_to_n_alpha'):
         return sigma
 
 
-def define_fine_structure_constant():
-    alpha = 1 / 137.035999084  # fine structure constant = e^2/hbar*c
-    return alpha
-
-
-def define_speed_of_light():
-    c = 3e8  # [m/s]
-    return c
-
-
 def get_sigma_v_fusion_approx(T, reaction='D_T_to_n_alpha', n=None):
     """
     Approximation of <sigma*v> (Maxwell averaged reactivity), applicable for non-resonant reactions.
@@ -546,7 +512,7 @@ def get_sigma_v_fusion_approx(T, reaction='D_T_to_n_alpha', n=None):
             rho_kg_over_cm3 = n * m_r  # specific density [kg/cm^3] since n [cm^3]
             rho0 = rho_kg_over_cm3 * 1e3  # [g/cm^3]
             T_eV = T * 1e3
-            T_K = T_eV * 1.16e4
+            T_K = T_eV * define_factor_eV_to_K()
             T_6 = T_K / 1e6  # in 10^6 Kelvin
             f0 = np.exp(0.188 * Z_1 * Z_2 * zeta * rho0 ** 0.5 * T_6 ** (-3 / 2))
 
