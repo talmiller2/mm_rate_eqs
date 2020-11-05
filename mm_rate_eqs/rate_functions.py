@@ -4,7 +4,7 @@ import numpy as np
 
 from mm_rate_eqs.aux_functions import theta_fun_generic
 from mm_rate_eqs.loss_cone_functions import get_solid_angles
-
+from mm_rate_eqs.plasma_functions import define_boltzmann_constant, define_factor_eV_to_K
 
 def get_gamma_dimension(d=1):
     """
@@ -64,8 +64,8 @@ def get_thermal_velocity(T, settings, species='ions'):
             T = settings['Te_0'] + 0 * T
     else:
         raise ValueError('invalid option for species = ' + str(species))
-
-    return np.sqrt(3.0 * settings['kB_eV'] * T / m)
+    kB_eV = define_boltzmann_constant() * define_factor_eV_to_K()
+    return np.sqrt(3.0 * kB_eV * T / m)
 
 
 def get_collective_velocity(state, settings):
@@ -80,20 +80,21 @@ def get_collective_velocity(state, settings):
     Ti = state['Ti']
     n_tR = state['n_tR']
     n_tL = state['n_tL']
-    kB = settings['kB_eV']
+    kB_eV = define_boltzmann_constant() * define_factor_eV_to_K()
+
     mi = settings['mi']  # ion particle mass
     l = state['mirror_cell_sizes']
 
     if settings['energy_conservation_scheme'] == 'none':
         # no collective velocity
         v_col = 0 * state['v_th']
-        flux_E = v_th * (n_tR - n_tL) * kB * Ti
+        flux_E = v_th * (n_tR - n_tL) * kB_eV * Ti
 
     elif settings['energy_conservation_scheme'] == 'simple':
         # assume the collective velocity is fixed to the main cell thermal velocity
         # in the isothermal approximation, this will be the same as previous case
         v_col = state['v_th'][0] - state['v_th']
-        flux_E = v_th * (n_tR - n_tL) * kB * Ti
+        flux_E = v_th * (n_tR - n_tL) * kB_eV * Ti
 
     elif settings['energy_conservation_scheme'] == 'detailed':
         # when the plasma expands it loses internal energy (even if does not cool),
@@ -104,12 +105,12 @@ def get_collective_velocity(state, settings):
         for k in range(settings['number_of_cells']):
             if k == 0:
                 v_col[0] = 0
-                flux_E[0] = v_th[0] * (n_tR[0] - n_tL[0]) * (kB * Ti[0] + 0.5 * mi * v_th[0] ** 2.0) / l[0]
+                flux_E[0] = v_th[0] * (n_tR[0] - n_tL[0]) * (kB_eV * Ti[0] + 0.5 * mi * v_th[0] ** 2.0) / l[0]
             else:
                 coef_p_3 = (n_tR[k] + n_tL[k]) * 0.5 * mi / l[k]
                 coef_p_2 = (n_tR[k] - n_tL[k]) * 0.5 * mi * v_th[k] / l[k]
-                coef_p_1 = (n_tR[k] + n_tL[k]) * kB * Ti[k] / l[k]
-                coef_p_0 = (n_tR[k] - n_tL[k]) * kB * Ti[k] * v_th[k] / l[k]
+                coef_p_1 = (n_tR[k] + n_tL[k]) * kB_eV * Ti[k] / l[k]
+                coef_p_0 = (n_tR[k] - n_tL[k]) * kB_eV * Ti[k] * v_th[k] / l[k]
                 coef_p_0_shifted = coef_p_0 - flux_E[k - 1]
                 p_shifted = [coef_p_3, coef_p_2, coef_p_1, coef_p_0_shifted]
                 roots = np.roots(p_shifted)

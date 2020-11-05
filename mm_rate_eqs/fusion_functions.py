@@ -1,6 +1,6 @@
 import numpy as np
 
-from mm_rate_eqs.constants_functions import define_electron_charge, define_electron_mass, define_proton_mass, \
+from mm_rate_eqs.constants_functions import define_electron_charge, define_proton_mass, \
     define_fine_structure_constant, define_speed_of_light, define_factor_eV_to_K
 
 
@@ -60,8 +60,8 @@ def get_sigma_v_fusion(T, reaction='D_T_to_n_alpha', use_resonance=True):
     elif reaction == 'D_D_to_p_T_n_He3':
         reactions = ['D_D_to_p_T', 'D_D_to_n_He3']
         branching_ratios = [0.5, 0.5]
-        return sum([get_sigma_v_fusion(T, reaction=reaction_branch)
-                    for reaction_branch, branching_ratios in zip(reactions, branching_ratios)])
+        return sum([branching_ratio * get_sigma_v_fusion(T, reaction=reaction_branch)
+                    for reaction_branch, branching_ratio in zip(reactions, branching_ratios)])
     else:
         raise ValueError('invalid reaction: ' + reaction)
 
@@ -182,8 +182,12 @@ def get_fusion_sigma_v_E_reaction(T, reaction='D_T_to_n_alpha'):
     T in [keV].
     """
     if reaction == 'D_D_to_p_T_n_He3':
-        sigma_v_E = get_sigma_v_fusion(T, reaction='D_D_to_p_T') * get_E_reaction(reaction='D_D_to_p_T') \
-                    + get_sigma_v_fusion(T, reaction='D_D_to_n_He3') * get_E_reaction(reaction='D_D_to_n_He3')
+        reactions = ['D_D_to_p_T', 'D_D_to_n_He3']
+        branching_ratios = [0.5, 0.5]
+        return sum([branching_ratio * get_sigma_v_fusion(T, reaction=reaction_branch)
+                    * get_E_reaction(reaction=reaction_branch)
+                    for reaction_branch, branching_ratio in zip(reactions, branching_ratios)])
+
     else:
         sigma_v_E = get_sigma_v_fusion(T, reaction=reaction) * get_E_reaction(reaction=reaction)
     e = define_electron_charge()
@@ -203,134 +207,15 @@ def get_fusion_charged_power(ni, T, reaction='D_T_to_n_alpha'):
            * get_E_charged(reaction=reaction) * 1e6 * 1.6e-19  # MeV to J
 
 
-def get_brem_radiation_loss(ni, ne, Te, Z_ion):
-    """
-    Bremsstrahlung radiation (source "Fusion Plasma Analysis", p. 228)
-    input T in [keV], n in [m^-3] (mks)
-    output in [W/m^3]
-    """
-    return 4.8e-37 * Z_ion ** 2 * ni * ne * Te ** (0.5)
-
-
-def get_cyclotron_radiation_loss(ne, Te, B):
-    """
-    Cyclotron/synchrotron radiation (source "Fusion Plasma Analysis", p. 231)
-    Majority self-absorbs so only 1e-2 of it escapes (source Wesson "Tokamaks" p. 230)
-    input T in [keV], n in [m^-3] (mks)
-    output in [W/m^3]
-    """
-    cyclotron_power = 6.2e-17 * B ** 2 * ne * Te
-    radiated_fraction = 1e-2
-    return radiated_fraction * cyclotron_power
-
-
 def get_lawson_parameters(ni, Ti, settings, reaction='D_T_to_n_alpha'):
     sigma_v_fusion = get_sigma_v_fusion(Ti, reaction=reaction)
-    E_charged = get_E_charged(reaction=reaction) * settings['MeV_to_J']  # J
+    MeV_to_J = define_electron_charge() * 1e6
+    E_charged = get_E_charged(reaction=reaction) * MeV_to_J  # J
     kB_eV = define_electron_charge()
     n_tau_lawson = 12 * kB_eV * Ti / (E_charged * sigma_v_fusion)
     tau_lawson = n_tau_lawson / ni
     flux_lawson = 1 / n_tau_lawson * settings['volume_main_cell'] * ni ** 2
     return tau_lawson, flux_lawson
-
-
-def define_plasma_parameters(gas_name='hydrogen', ionization_level=1):
-    me = define_electron_mass()
-    mp = define_proton_mass()
-    if gas_name == 'hydrogen':
-        A = 1.00784
-        Z = 1.0
-    elif gas_name == 'deuterium':
-        A = 2.01410177811
-        Z = 1.0
-    elif gas_name == 'tritium':
-        A = 3.0160492
-        Z = 1.0
-    elif gas_name == 'DT_mix':
-        A = np.mean([2.01410177811, 3.0160492])  # approximate as mean of D and T
-        Z = 1.0
-    elif gas_name == 'helium':
-        A = 4.002602
-        Z = 2.0
-    elif gas_name == 'lithium':
-        A = 6.941  # 92.41% Li7 A=7.016, 7.59% Li6 A=6.015 (Wikipedia)
-        Z = 3.0
-    elif gas_name == 'sodium':
-        A = 22.9897
-        Z = 11.0
-    elif gas_name == 'potassium':
-        A = 39.0983
-        Z = 19.0
-    else:
-        raise TypeError('invalid gas: ' + gas_name)
-    mi = A * mp
-    # for non-fusion experiments with low temperature, the ions are not fully ionized
-    if ionization_level is not None:
-        if ionization_level <= Z:
-            Z = ionization_level
-        else:
-            raise ValueError('ionization level cannot be larger that the atomic charge Z.')
-    return me, mp, mi, A, Z
-
-
-def get_debye_length(n, Te):
-    """
-    scale above which quasi-neutrality holds, dominated by the fast electrons.
-    From Bellan 'Funamentals of Plasma Physics' p. 9, 20
-    n in [m^-3], Te in [keV], return in [m]
-    """
-    return 0.76e-4 * np.sqrt(Te / 5.0 / (n / 1e20))
-
-
-def get_larmor_radius(Ti, B, gas_name='hydrogen', ionization_level=None):
-    """
-    Gyration radius, dominated by the heavy ions
-    source https://en.wikipedia.org/wiki/Gyroradius
-    Ti in [keV], B in [Tesla], return in [m]
-    """
-    electron_gyration_radius = 2.2e-5 * np.sqrt(Ti / 5.0) / (B / 1.0)
-    me, mp, mi, A, Z = define_plasma_parameters(gas_name=gas_name, ionization_level=ionization_level)
-    ion_gyration_radius = np.sqrt(mp / me) * np.sqrt(A) / Z * electron_gyration_radius
-    return ion_gyration_radius
-
-
-def get_magnetic_pressure(B):
-    """
-    Magnetic pressure B^2/(2*mu0)
-    source https://en.wikipedia.org/wiki/Magnetic_pressure
-    B in [Tesla], return in [bar]
-    """
-    return (B / 0.501) ** 2.0
-
-
-def get_magnetic_field_for_given_pressure(P, beta=1.0):
-    """
-    Calculate the magnetic field associated with some beta value for a given pressure
-    Inverse of get_magnetic_pressure function.
-    P in [bar], return in [Tesla]
-    """
-    return 0.501 * (P / beta) ** 0.5
-
-
-def get_ideal_gas_pressure(n, T, settings):
-    """
-    Ideal gas pressure kB*n*T
-    source https://en.wikipedia.org/wiki/Boltzmann_constant
-    n in total density [m^-3], T in [eV], return in [bar]
-    """
-    Pa_to_bar = 1e-5
-    return settings['kB_K'] * n * settings['eV_to_K'] * T * Pa_to_bar
-
-
-def get_ideal_gas_energy_per_volume(n, T, settings):
-    """
-    Ideal gas energy for monoatomic gas 3/2*kB*n*T
-    n in total density [m^-3], T in [eV], return in [J/m^3]=[bar]
-    """
-    return 3.0 / 2 * settings['kB_K'] * n * settings['eV_to_K'] * T
-
-
-# TODO: refactor the plasma functions to different file
 
 
 def get_Zs_for_reaction(reaction='D_T_to_n_alpha'):

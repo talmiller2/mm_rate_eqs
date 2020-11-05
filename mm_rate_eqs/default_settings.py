@@ -1,8 +1,7 @@
 import numpy as np
 
-from mm_rate_eqs.fusion_functions import define_plasma_parameters
-from mm_rate_eqs.constants_functions import define_electron_charge, define_electron_mass, define_proton_mass, \
-    define_fine_structure_constant, define_speed_of_light, define_factor_eV_to_K
+from mm_rate_eqs.plasma_functions import define_plasma_parameters
+
 
 def define_default_settings(settings=None):
     if settings == None:

@@ -36,6 +36,8 @@ def define_factor_eV_to_K():
     eV_to_K = e / kB  # turns out to be 11604.518020148495
     return eV_to_K
 
+def define_factor_Pa_to_bar():
+    return 1e-5
 
 def define_vacuum_permittivity():
     eps0 = 8.85418781e-12  # [Farad/m^2]

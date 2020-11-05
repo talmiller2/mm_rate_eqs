@@ -3,9 +3,9 @@ import numpy as np
 from matplotlib import cm
 
 from mm_rate_eqs.default_settings import define_default_settings
-from mm_rate_eqs.fusion_functions import get_sigma_v_fusion, get_E_reaction, get_brem_radiation_loss, \
-    get_cyclotron_radiation_loss, \
-    get_fusion_power, get_lawson_parameters, get_reaction_label, get_sigma_fusion, get_sigma_v_fusion_approx
+from mm_rate_eqs.fusion_functions import get_sigma_v_fusion, get_fusion_power, get_lawson_parameters, \
+    get_reaction_label, get_sigma_fusion, get_sigma_v_fusion_approx
+from mm_rate_eqs.plasma_functions import get_brem_radiation_loss, get_cyclotron_radiation_loss
 from mm_rate_eqs.rate_functions import get_thermal_velocity
 
 ### Plot fusion and radiation loss parameters

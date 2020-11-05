@@ -6,22 +6,12 @@ import time
 import numpy as np
 from scipy.io import savemat, loadmat
 
-from mm_rate_eqs.fusion_functions import get_ideal_gas_pressure, \
-    get_magnetic_field_for_given_pressure
+from mm_rate_eqs.plasma_functions import get_ideal_gas_pressure, get_magnetic_field_for_given_pressure
 from mm_rate_eqs.plot_functions import plot_relaxation_status, save_plots
-from mm_rate_eqs.rate_functions import calculate_transition_density, \
-    get_density_time_derivatives, \
-    get_isentrope_temperature, \
-    get_thermal_velocity, \
-    get_coulomb_scattering_rate, \
-    get_mirror_cell_sizes, \
-    get_transmission_velocities, \
-    calculate_mean_free_path, \
-    get_mmm_velocity, \
-    define_loss_cone_fractions, \
-    get_fluxes, \
-    get_transition_filters, \
-    get_collective_velocity
+from mm_rate_eqs.rate_functions import calculate_transition_density, get_density_time_derivatives, \
+    get_isentrope_temperature, get_thermal_velocity, get_coulomb_scattering_rate, get_mirror_cell_sizes, \
+    get_transmission_velocities, calculate_mean_free_path, get_mmm_velocity, define_loss_cone_fractions, get_fluxes, \
+    get_transition_filters, get_collective_velocity
 
 
 def find_rate_equations_steady_state(settings):
