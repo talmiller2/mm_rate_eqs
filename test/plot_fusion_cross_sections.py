@@ -1,4 +1,8 @@
+import matplotlib
+
+matplotlib.use('TkAgg')  # to avoid macOS bug where plots cant get minimized
 import matplotlib.pyplot as plt
+
 import numpy as np
 from matplotlib import cm
 
