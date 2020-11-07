@@ -1,7 +1,7 @@
 import numpy as np
 
 from mm_rate_eqs.constants_functions import define_electron_charge, define_proton_mass, \
-    define_fine_structure_constant, define_speed_of_light, define_factor_eV_to_K
+    define_fine_structure_constant, define_speed_of_light, define_factor_eV_to_K, define_barn
 
 
 def get_sigma_v_fusion(T, reaction='D_T_to_n_alpha', use_resonance=True):
@@ -288,7 +288,16 @@ def get_gamow_energy(reaction='D_T_to_n_alpha'):
     A_1, A_2 = get_As_for_reaction(reaction=reaction)
     Z_1, Z_2 = get_Zs_for_reaction(reaction=reaction)
     A_r = A_1 * A_2 / (A_1 + A_2)  # reduced A
-    E_g = 986.1 * (Z_1 * Z_2) ** 2 * A_r
+    # E_g = 986.1 * (Z_1 * Z_2) ** 2 * A_r # shortened form
+
+    m_p = define_proton_mass()  # kg
+    m_r = m_p * A_1 * A_2 / (A_1 + A_2)  # reduced mass
+    alpha = define_fine_structure_constant()
+    e = define_electron_charge()
+    c = define_speed_of_light()  # m/s
+    m_r_keV = m_r * c ** 2 / e / 1e3
+    E_g = (np.pi * alpha * Z_1 * Z_2) ** 2 * 2 * m_r_keV
+
     return E_g
 
 
@@ -379,33 +388,32 @@ def get_sigma_v_fusion_approx(T, reaction='D_T_to_n_alpha', n=None):
         alpha = define_fine_structure_constant()
         e = define_electron_charge()
         c = define_speed_of_light()  # m/s
-        m_r_keV = m_r * c ** 2 / e / 1e3
+        c_cm = c * 1e2
+        m_r_keV_over_c2 = m_r * c ** 2 / e / 1e3
+        m_r_keV_cm = m_r_keV_over_c2 / c_cm ** 2
 
         # effective S factor
-        E0 = T * (np.pi * alpha * Z_1 * Z_2 / np.sqrt(2)) ** (2 / 3) * (m_r_keV / T) ** (1 / 3)  # keV
+        E0 = T * (np.pi * alpha * Z_1 * Z_2 / np.sqrt(2)) ** (2 / 3) * (m_r_keV_over_c2 / T) ** (1 / 3)  # keV
         delta_E0 = T * 4 * np.sqrt(E0 / (3 * T))  # keV
         S0, S0_der, S0_der2 = get_astrophysical_S_factor(reaction=reaction)
         S_eff = S0 * (1 + 5 * T / (36 * E0)) + S0_der * E0 * (1 + 35 * T / (36 * E0)) \
                 + 0.5 * S0_der2 * E0 ** 2 * (1 + 89 * T / (36 * E0))  # [keV * barn]
-        S_eff_cm2 = S_eff * 1e-24
+        barn = define_barn()
+        barn_cm = barn * 1e4
+        S_eff_cm2 = S_eff * barn_cm
 
         # electron screening factor
         if n is None:
             f0 = 1  # assume no electron screening
         else:
             zeta = ((0.5 * Z_1 ** 2 / A_1 + 0.5 * Z_2 ** 2 / A_2) + 0.92 * (0.5 * Z_1 / A_1 + 0.5 * Z_2 / A_2)) ** 0.5
-            rho_kg_over_cm3 = n * m_r  # specific density [kg/cm^3] since n [cm^3]
+            rho_kg_over_cm3 = n * m_r  # specific density [kg/cm^3] since n in [cm^3]
             rho0 = rho_kg_over_cm3 * 1e3  # [g/cm^3]
             T_eV = T * 1e3
             T_K = T_eV * define_factor_eV_to_K()
             T_6 = T_K / 1e6  # in 10^6 Kelvin
             f0 = np.exp(0.188 * Z_1 * Z_2 * zeta * rho0 ** 0.5 * T_6 ** (-3 / 2))
 
-        sigma_v_cm3_over_s = np.sqrt(2 / (m_r_keV * T)) * delta_E0 / T * f0 * S_eff_cm2 * np.exp(-3 * E0 / T)
-
-        # Note an extra factor of c up front is necessary for the units. It comes from the mass in the lower sqrt.
-        c_cm = c * 1e2
-        sigma_v_cm3_over_s *= c_cm
-
+        sigma_v_cm3_over_s = np.sqrt(2 / (m_r_keV_cm * T)) * delta_E0 / T * f0 * S_eff_cm2 * np.exp(-3 * E0 / T)
         sigma_v_m3_over_s = 1e-6 * sigma_v_cm3_over_s
         return sigma_v_m3_over_s
