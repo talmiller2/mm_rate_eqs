@@ -3,6 +3,10 @@ import matplotlib.pyplot as plt
 # plt.rcParams.update({'font.size': 16})
 plt.rcParams.update({'font.size': 14})
 
+import matplotlib
+
+matplotlib.use('TkAgg')  # to avoid macOS bug where plots cant get minimized
+
 import numpy as np
 
 from mm_rate_eqs.relaxation_algorithm_functions import load_simulation

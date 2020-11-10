@@ -2,6 +2,10 @@ import matplotlib.pyplot as plt
 
 plt.rcParams.update({'font.size': 14})
 
+import matplotlib
+
+matplotlib.use('TkAgg')  # to avoid macOS bug where plots cant get minimized
+
 import numpy as np
 
 from mm_rate_eqs.relaxation_algorithm_functions import load_simulation
@@ -42,14 +46,15 @@ plt.close('all')
 # main_dir = '../runs/slurm_runs/set3_N_20/'
 # main_dir = '../runs/slurm_runs/set8_N_30_mfp_over_cell_1_mfp_limitX100/'
 # main_dir = '../runs/slurm_runs/set9_N_30_mfp_over_cell_40_mfp_limitX100/'
-# main_dir = '../runs/slurm_runs/set18_MM_N_30_ni_2e22/'
-main_dir = '../runs/slurm_runs/set19_MM_N_30_ni_1e21/'
+main_dir = '../runs/slurm_runs/set18_MM_N_30_ni_2e22/'
+# main_dir = '../runs/slurm_runs/set19_MM_N_30_ni_1e21/'
 
 colors = []
 colors += ['b']
 colors += ['g']
 colors += ['r']
 colors += ['m']
+colors += ['k']
 colors += ['c']
 
 plasma_modes = []
@@ -77,6 +82,8 @@ linestyles = []
 linestyles += ['-']
 linestyles += ['--']
 
+linewidth = 3
+
 LC_modes = []
 LC_modes += ['sLC']
 # LC_modes += ['dLC']
@@ -103,6 +110,12 @@ for ind_mode in range(len(plasma_modes)):
             settings_file = save_dir + '/settings.pickle'
             try:
                 state, settings = load_simulation(state_file, settings_file)
+
+                # post process the flux normalization
+                norm_factor = 2.0 * settings['cross_section_main_cell'] * settings['transmission_factor']
+                norm_factor *= state['n'][0] * state['v_th'][0]
+                state['flux_mean'] /= norm_factor
+
                 if state['successful_termination'] == True:
                     flux_list[ind_Rm] = state['flux_mean']
             except:
@@ -115,7 +128,7 @@ for ind_mode in range(len(plasma_modes)):
         # label_flux = define_label(plasma_mode, LC_mode)
         label_flux = define_plasma_mode_label(plasma_mode)
         plt.figure(1)
-        plt.plot(Rm_list, flux_list, '-', label=label_flux, linestyle=linestyle, color=color)
+        plt.plot(Rm_list, flux_list, '-', label=label_flux, linestyle=linestyle, color=color, linewidth=linewidth)
         plt.yscale("log")
         plt.xscale("log")
 
@@ -127,24 +140,29 @@ for ind_mode in range(len(plasma_modes)):
         flux_list_for_fit = flux_list[ind_min:]
 
         # clear nans for fit
-        norm_factor = 1e27
+        # norm_factor = 1e27
+        norm_factor = np.nanmax(flux_list_for_fit)
+        # norm_factor = 1
         Rm_list_for_fit = np.array(Rm_list_for_fit)
         inds_flux_not_nan = [i for i in range(len(flux_list_for_fit)) if not np.isnan(flux_list_for_fit[i])]
         Rm_cells = Rm_list_for_fit[inds_flux_not_nan]
         flux_cells = flux_list_for_fit[inds_flux_not_nan] / norm_factor
         # fit_function = lambda x, a, b, gamma: a + b / x ** gamma
-        fit_function = lambda x, b, gamma: b / x ** gamma
+        # fit_function = lambda x, b, gamma: b / x ** gamma
+        fit_function = lambda x, b, gamma: b * x ** gamma
         # fit_function = lambda x, b: b / x
         popt, pcov = curve_fit(fit_function, Rm_cells, flux_cells)
         # flux_cells_fit = fit_function(Rm_cells, *popt) * norm_factor
         flux_cells_fit = fit_function(Rm_list, *popt) * norm_factor
-        label = 'fit decay power: ' + '{:0.3f}'.format(popt[-1])
+        # label = 'fit decay power: ' + '{:0.3f}'.format(popt[-1])
+        label = 'fit power: ' + '{:0.3f}'.format(popt[-1])
         # plt.plot(Rm_cells, flux_cells_fit, label=label, linestyle='--', color=color)
-        plt.plot(Rm_list, flux_cells_fit, label=label, linestyle='--', color=color)
+        plt.plot(Rm_list, flux_cells_fit, label=label, linestyle='--', color=color, linewidth=linewidth)
 
 plt.figure(1)
 plt.xlabel('$R_m$')
-plt.ylabel('flux [$s^{-1}$]')
+# plt.ylabel('flux [$s^{-1}$]')
+plt.ylabel('$\\phi_{p} / \\phi_{p,0}$')
 # plt.title('flux as a function of mirror ratio (N=' + str(number_of_cells) + ', $U/v_{th}$=' + str(U) + ')')
 # plt.title('flux as a function of mirror ratio (N=' + str(number_of_cells) + ')')
 plt.tight_layout()

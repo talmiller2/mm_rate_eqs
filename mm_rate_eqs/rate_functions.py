@@ -5,6 +5,7 @@ import numpy as np
 from mm_rate_eqs.aux_functions import theta_fun_generic
 from mm_rate_eqs.loss_cone_functions import get_solid_angles
 from mm_rate_eqs.plasma_functions import define_boltzmann_constant, define_factor_eV_to_K
+from mm_rate_eqs.constants_functions import define_electron_charge, define_vacuum_permittivity
 
 def get_gamma_dimension(d=1):
     """
@@ -163,8 +164,8 @@ def get_specific_coulomb_scattering_rate(ne, Te, ni, Ti, settings, impact_specie
     Plasma Physics and Magnetically Confined Fusion Literature"
     densities in m^-3 and temperatures in eV
     """
-    eps0 = settings['eps0']
-    e = settings['e']
+    eps0 = define_vacuum_permittivity()
+    e = define_electron_charge()
     coulomb_log_dict = calculate_coulomb_logarithm(ne, Te, ni, Ti,
                                                    Z=settings['Z_ion'],
                                                    A=settings['A_atomic_weight'],
@@ -446,19 +447,27 @@ def get_fluxes(state, settings):
     flux_trans_L = np.nan * np.zeros(settings['number_of_cells'])
     flux_mmm_drag = np.nan * np.zeros(settings['number_of_cells'])
 
-    # calculate fluxes
-    flux_factor = 2.0 * settings['cross_section_main_cell']
+    # calculate fluxes (normalized to the single mirror flux)
     for k in range(0, settings['number_of_cells'] - 1):
-        flux_trans_R[k] = v_R[k] * n_tR[k] * flux_factor * settings['transmission_factor']
-        flux_trans_L[k] = - v_L[k + 1] * n_tL[k + 1] * flux_factor * settings['transmission_factor']
-        flux_mmm_drag[k] = - U[k + 1] * n_c[k + 1] * flux_factor
+        flux_trans_R[k] = v_R[k] * n_tR[k]
+        flux_trans_L[k] = - v_L[k + 1] * n_tL[k + 1]
+        flux_mmm_drag[k] = - U[k + 1] * n_c[k + 1]
+    flux_single = state['n'][0] * state['v_th'][0]
+
+    # # calculate fluxes (normalized to the single mirror flux)
+    # flux_factor = 2.0 * settings['cross_section_main_cell']
+    # for k in range(0, settings['number_of_cells'] - 1):
+    #     flux_trans_R[k] = v_R[k] * n_tR[k] * flux_factor * settings['transmission_factor']
+    #     flux_trans_L[k] = - v_L[k + 1] * n_tL[k + 1] * flux_factor * settings['transmission_factor']
+    #     flux_mmm_drag[k] = - U[k + 1] * n_c[k + 1] * flux_factor
+
     flux = flux_trans_R + flux_trans_L + flux_mmm_drag
 
     # save fluxes to state
-    state['flux_trans_R'] = flux_trans_R
-    state['flux_trans_L'] = flux_trans_L
-    state['flux_mmm_drag'] = flux_mmm_drag
-    state['flux'] = flux
+    state['flux_trans_R'] = flux_trans_R / flux_single
+    state['flux_trans_L'] = flux_trans_L / flux_single
+    state['flux_mmm_drag'] = flux_mmm_drag / flux_single
+    state['flux'] = flux / flux_single
 
     # calculate flux  statistics
     state['flux_max'] = np.nanmax(flux)

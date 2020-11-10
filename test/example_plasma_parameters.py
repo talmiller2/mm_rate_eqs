@@ -1,9 +1,8 @@
 from mm_rate_eqs.default_settings import define_default_settings
-from mm_rate_eqs.fusion_functions import get_lawson_parameters, get_brem_radiation_loss, get_cyclotron_radiation_loss, \
-    get_fusion_power, get_magnetic_pressure, get_ideal_gas_pressure, get_fusion_charged_power, \
-    get_ideal_gas_energy_per_volume, get_magnetic_field_for_given_pressure
-from mm_rate_eqs.rate_functions import calculate_coulomb_logarithm, get_specific_coulomb_scattering_rate, \
-    get_thermal_velocity, get_coulomb_scattering_rate
+from mm_rate_eqs.fusion_functions import get_lawson_parameters, get_fusion_power, get_fusion_charged_power
+from mm_rate_eqs.plasma_functions import get_brem_radiation_loss, get_cyclotron_radiation_loss, get_magnetic_pressure, \
+    get_ideal_gas_pressure, get_ideal_gas_energy_per_volume, get_magnetic_field_for_given_pressure
+from mm_rate_eqs.rate_functions import calculate_coulomb_logarithm, get_thermal_velocity, get_coulomb_scattering_rate
 
 # lab plasma
 # settings = {'gas_name': 'potassium'}
@@ -36,8 +35,9 @@ n_list = [4e22]
 
 #
 # # B = 3.5 #T
-B = 5.0  # T
+# B = 5.0  # T
 # B = 7.0 #T
+B = 10.0  # T
 
 # fusion plasma (ITER)
 # settings = {'gas_name': 'DT_mix'}
@@ -50,6 +50,9 @@ B = 5.0  # T
 # T = 12900
 # n_list = [8.7e19]
 # B = 5.6  # T
+
+settings['length_main_cell'] = 10  # m
+settings['diameter_main_cell'] = 1  # m
 
 settings = define_default_settings(settings=settings)
 # settings['volume_main_cell'] = 1.0
@@ -90,8 +93,13 @@ for n in n_list:
     print('beta = ' + str(beta))
     B_for_given_P = get_magnetic_field_for_given_pressure(P_plasma, beta=1.0)  # [Tesla]
     print('B (for beta=1) = ' + str(B_for_given_P) + ' T')
+    B_for_given_P = get_magnetic_field_for_given_pressure(P_plasma, beta=0.5)  # [Tesla]
+    print('B (for beta=0.5) = ' + str(B_for_given_P) + ' T')
 
     # Summary of Lawson criterion
+    print('mirror length = ' + str(settings['length_main_cell']) + ' m')
+    print('mirror diameter = ' + str(settings['diameter_main_cell']) + ' m')
+    print('mirror cross section = ' + str(settings['cross_section_main_cell']) + ' m^2')
     tau_lawson, flux_lawson = get_lawson_parameters(ni, Ti, settings)
     print('tau_lawson: ', '{:.3e}'.format(tau_lawson), 's')
     print('flux_lawson: ', '{:.3e}'.format(flux_lawson), 's^-1')
@@ -146,5 +154,5 @@ for n in n_list:
     print('Q_factor_total = ' + str(Q_factor_total))
 
     Q_factor_total_2 = (P_fusion - P_fusion_charged) / (
-                P_confinement_loss + max(0, P_total_radiation_loss - P_fusion_charged))
+            P_confinement_loss + max(0, P_total_radiation_loss - P_fusion_charged))
     print('Q_factor_total_2 = ' + str(Q_factor_total_2))

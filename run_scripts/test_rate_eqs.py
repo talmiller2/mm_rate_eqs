@@ -1,3 +1,7 @@
+import matplotlib
+
+matplotlib.use('TkAgg')  # to avoid macOS bug where plots cant get minimized
+
 import matplotlib.pyplot as plt
 import os
 
@@ -10,10 +14,10 @@ plt.close('all')
 settings = {}
 # settings['gas_name'] = 'hydrogen'
 # settings['save_state'] = 'False'
-settings['assume_constant_density'] = False
-# settings['assume_constant_density'] = True
-settings['assume_constant_temperature'] = False
-# settings['assume_constant_temperature'] = True
+# settings['assume_constant_density'] = False
+settings['assume_constant_density'] = True
+# settings['assume_constant_temperature'] = False
+settings['assume_constant_temperature'] = True
 # settings['ion_scattering_rate_factor'] = 10
 # settings['cell_size'] = 50
 settings['plasma_dimension'] = 1
@@ -23,9 +27,9 @@ settings['plasma_dimension'] = 1
 # settings['plasma_dimension'] = 10
 # settings['plasma_dimension'] = 100
 # settings['number_of_cells'] = 20
-# settings['number_of_cells'] = 30
+settings['number_of_cells'] = 30
 # settings['number_of_cells'] = 40
-settings['number_of_cells'] = 100
+# settings['number_of_cells'] = 100
 # settings['number_of_cells'] = 150
 # settings['number_of_cells'] = 200
 

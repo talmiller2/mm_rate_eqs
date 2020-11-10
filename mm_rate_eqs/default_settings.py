@@ -77,6 +77,7 @@ def define_default_settings(settings=None):
         settings['length_main_cell'] = 100  # m
     if 'diameter_main_cell' not in settings:
         settings['diameter_main_cell'] = 0.5  # m
+        # settings['diameter_main_cell'] = 1.0  # m
     settings['cross_section_main_cell'] = np.pi * (settings['diameter_main_cell'] / 2) ** 2  # m^3
     settings['volume_main_cell'] = settings['length_main_cell'] * settings['cross_section_main_cell']  # m^3
 
