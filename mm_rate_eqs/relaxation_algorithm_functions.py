@@ -396,7 +396,7 @@ def save_fluxes_evolution(state, t_curr):
             state[var_name_evolution] = []
 
         # append progress
-        if var_name is 't':
+        if var_name == 't':
             state[var_name_evolution] += [t_curr]
         else:
             state[var_name_evolution] += [state[var_name]]

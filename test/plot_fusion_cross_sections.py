@@ -1,6 +1,6 @@
 import matplotlib
 
-matplotlib.use('TkAgg')  # to a1void macOS bug where plots cant get minimized
+matplotlib.use('TkAgg')  # to avoid macOS bug where plots cant get minimized
 import matplotlib.pyplot as plt
 
 import numpy as np
@@ -33,9 +33,9 @@ reactions += ['D_D_to_p_T_n_He3']
 reactions += ['D_He3_to_p_alpha']
 reactions += ['T_T_to_alpha_2n']
 reactions += ['p_B_to_3alpha']
-# reactions += ['p_D_to_He3_gamma']
-# reactions += ['He3_He3_to_alpha_2p']
-# reactions += ['p_p_to_D_e_nu']
+reactions += ['p_D_to_He3_gamma']
+reactions += ['He3_He3_to_alpha_2p']
+reactions += ['p_p_to_D_e_nu']
 
 # colors = ['b', 'g', 'r', 'k', 'm', 'y', 'c', 'b']
 colors = cm.rainbow(np.linspace(0, 1, len(reactions)))
