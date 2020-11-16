@@ -68,13 +68,15 @@ plasma_modes += ['coold3']
 
 # colors = cm.rainbow(np.linspace(0, 1, len(plasma_modes)))
 # colors = ['b', 'g', 'r', 'm', 'c', 'k']
-colors = ['b', 'g', 'r', 'k', 'm', 'c']
+# colors = ['b', 'g', 'r', 'k', 'm', 'c']
+# colors = ['b', 'g', 'r', 'k', 'orange', 'c']
+colors = ['k', 'b', 'g', 'orange', 'r']
 
 linewidth = 3
 
-# number_of_cells = 30
+number_of_cells = 30
 # number_of_cells = 70
-number_of_cells = 100
+# number_of_cells = 100
 # number_of_cells = 150
 U = 0
 
@@ -114,7 +116,7 @@ for ind_mode in range(len(plasma_modes)):
         n0 = settings['n0']
 
         plt.figure(1)
-        plt.subplot(1, 2, 1)
+        plt.subplot(2, 1, 1)
         plt.plot(x, state['n_c'] / n0, label='$n_{c}$ ' + label, linestyle='solid', color=color, linewidth=linewidth)
         plt.xlabel('cell number')
         # plt.ylabel('[$m^{-3}$]')
@@ -124,7 +126,7 @@ for ind_mode in range(len(plasma_modes)):
         plt.grid(True)
         plt.legend()
 
-        plt.subplot(1, 2, 2)
+        plt.subplot(2, 1, 2)
         plt.plot(x, state['n_tR'] / n0, label='$n_{tR}$', linestyle='solid', color=color, linewidth=linewidth)
         plt.plot(x, state['n_tL'] / n0, label='$n_{tL}$', linestyle='dashed', color=color, linewidth=linewidth)
         plt.xlabel('cell number')
@@ -134,6 +136,7 @@ for ind_mode in range(len(plasma_modes)):
         # plt.tight_layout()
         plt.grid(True)
         plt.legend()
+        # plt.tight_layout()
 
         plt.figure(2)
         x = np.linspace(0, number_of_cells, number_of_cells)

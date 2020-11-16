@@ -49,13 +49,14 @@ plt.close('all')
 main_dir = '../runs/slurm_runs/set18_MM_N_30_ni_2e22/'
 # main_dir = '../runs/slurm_runs/set19_MM_N_30_ni_1e21/'
 
-colors = []
-colors += ['b']
-colors += ['g']
-colors += ['r']
-colors += ['m']
-colors += ['k']
-colors += ['c']
+# colors = []
+# colors += ['b']
+# colors += ['g']
+# colors += ['r']
+# colors += ['m']
+# colors += ['k']
+# colors += ['c']
+colors = ['k', 'b', 'g', 'orange', 'r']
 
 plasma_modes = []
 plasma_modes += ['isoT']
