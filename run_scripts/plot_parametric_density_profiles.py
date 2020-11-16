@@ -1,3 +1,6 @@
+import matplotlib
+
+matplotlib.use('TkAgg')  # to avoid ma
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
@@ -56,11 +59,11 @@ main_dir = '../runs/slurm_runs/set14_MM_Rm_3_ni_2e22/'
 # main_dir = '../runs/slurm_runs/set17_MM_Rm_3_ni_1e21/'
 
 plasma_modes = []
-plasma_modes += ['isoT']
+# plasma_modes += ['isoT']
 plasma_modes += ['isoTmfp']
-plasma_modes += ['coold1']
-plasma_modes += ['coold2']
-plasma_modes += ['coold3']
+# plasma_modes += ['coold1']
+# plasma_modes += ['coold2']
+# plasma_modes += ['coold3']
 # plasma_modes += ['cool']
 # plasma_modes += ['cool_mfpcutoff']
 
@@ -89,6 +92,8 @@ U = 0
 linestyles = []
 linestyles += ['-']
 linestyles += ['--']
+
+linewidth = 3
 
 LC_modes = []
 LC_modes += ['sLC']
@@ -126,26 +131,26 @@ for ind_mode in range(len(plasma_modes)):
                 # label = 'N=' + str(number_of_cells) + ', ' + define_LC_mode_label(LC_mode)
                 # label = define_label(plasma_mode, LC_mode)
                 label = 'N=' + str(number_of_cells)
-                # plt.figure(1 + 2 * ind_mode)
-                plt.figure(1 + ind_mode)
-                plt.subplot(1, 2, 1)
+                plt.figure(1 + 2 * ind_mode)
+                # plt.figure(1 + ind_mode)
+                # plt.subplot(1, 2, 1)
                 x = np.linspace(0, number_of_cells, number_of_cells)
-                plt.plot(x, state['n'] / n0, '-', label=label, linestyle=linestyle, color=color)
+                plt.plot(x, state['n'] / n0, '-', label=label, linestyle=linestyle, color=color, linewidth=linewidth)
 
-                # plt.figure(2 + 2 * ind_mode)
-                plt.subplot(1, 2, 2)
+                plt.figure(2 + 2 * ind_mode)
+                # plt.subplot(1, 2, 2)
                 x = np.linspace(0, 1, number_of_cells)
-                plt.plot(x, state['n'] / n0, '-', label=label, linestyle=linestyle, color=color)
+                plt.plot(x, state['n'] / n0, '-', label=label, linestyle=linestyle, color=color, linewidth=linewidth)
 
             except:
                 pass
 
 for ind_mode, mode in enumerate(plasma_modes):
-    # plt.figure(1 + 2 * ind_mode)
-    plt.figure(1 + ind_mode)
+    plt.figure(1 + 2 * ind_mode)
+    # plt.figure(1 + ind_mode)
     plt.tight_layout()
 
-    plt.subplot(1, 2, 1)
+    # plt.subplot(1, 2, 1)
     plt.xlabel('cell number')
     # plt.ylabel('density [$m^{-3}$]')
     plt.ylabel('$n/n_{i,0}$')
@@ -156,12 +161,12 @@ for ind_mode, mode in enumerate(plasma_modes):
     plt.grid(True)
     plt.legend()
 
-    # plt.figure(2 + 2 * ind_mode)
-    plt.subplot(1, 2, 2)
+    plt.figure(2 + 2 * ind_mode)
+    # plt.subplot(1, 2, 2)
     plt.xlabel('cell number / N')
     # plt.ylabel('density [$m^{-3}$]')
     plt.ylabel('$n/n_{i,0}$')
     # plt.title(define_plasma_mode_label(mode) + ' density profiles')
     # plt.tight_layout()
     plt.grid(True)
-    # plt.legend()
+    plt.legend()

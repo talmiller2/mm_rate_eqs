@@ -1,11 +1,11 @@
+import matplotlib
+
+matplotlib.use('TkAgg')  # to avoid macOS bug where plots cant get minimized
+
 import matplotlib.pyplot as plt
 
 # plt.rcParams.update({'font.size': 16})
 plt.rcParams.update({'font.size': 14})
-
-import matplotlib
-
-matplotlib.use('TkAgg')  # to avoid macOS bug where plots cant get minimized
 
 import numpy as np
 
@@ -67,7 +67,10 @@ plasma_modes += ['coold3']
 # plasma_modes += ['cool_mfpcutoff']
 
 # colors = cm.rainbow(np.linspace(0, 1, len(plasma_modes)))
-colors = ['b', 'g', 'r', 'm', 'c', 'k']
+# colors = ['b', 'g', 'r', 'm', 'c', 'k']
+colors = ['b', 'g', 'r', 'k', 'm', 'c']
+
+linewidth = 3
 
 # number_of_cells = 30
 # number_of_cells = 70
@@ -112,7 +115,7 @@ for ind_mode in range(len(plasma_modes)):
 
         plt.figure(1)
         plt.subplot(1, 2, 1)
-        plt.plot(x, state['n_c'] / n0, label='$n_{c}$ ' + label, linestyle='solid', color=color)
+        plt.plot(x, state['n_c'] / n0, label='$n_{c}$ ' + label, linestyle='solid', color=color, linewidth=linewidth)
         plt.xlabel('cell number')
         # plt.ylabel('[$m^{-3}$]')
         plt.ylabel('$n/n_{i,0}$')
@@ -122,8 +125,8 @@ for ind_mode in range(len(plasma_modes)):
         plt.legend()
 
         plt.subplot(1, 2, 2)
-        plt.plot(x, state['n_tR'] / n0, label='$n_{tR}$', linestyle='solid', color=color)
-        plt.plot(x, state['n_tL'] / n0, label='$n_{tL}$', linestyle='dashed', color=color)
+        plt.plot(x, state['n_tR'] / n0, label='$n_{tR}$', linestyle='solid', color=color, linewidth=linewidth)
+        plt.plot(x, state['n_tL'] / n0, label='$n_{tL}$', linestyle='dashed', color=color, linewidth=linewidth)
         plt.xlabel('cell number')
         # plt.ylabel('[$m^{-3}$]')
         plt.ylabel('$n/n_{i,0}$')
@@ -134,9 +137,8 @@ for ind_mode in range(len(plasma_modes)):
 
         plt.figure(2)
         x = np.linspace(0, number_of_cells, number_of_cells)
-        plt.plot(x, state['n'] / n0, label=label, linestyle='solid', color=color)
+        plt.plot(x, state['n'] / n0, label=label, linestyle='solid', color=color, linewidth=linewidth)
         plt.xlabel('cell number')
-        # plt.ylabel('[$m^{-3}$]')
         plt.ylabel('$n/n_{i,0}$')
         # plt.title('density profile for N=' + str(number_of_cells))
         plt.tight_layout()
@@ -145,9 +147,11 @@ for ind_mode in range(len(plasma_modes)):
 
         plt.figure(3)
         x = np.linspace(0, number_of_cells, number_of_cells)
-        plt.plot(x, state['mean_free_path'] / settings['cell_size'], label=label, linestyle='solid', color=color)
+        plt.plot(x, state['mean_free_path'] / settings['cell_size'], label=label, linestyle='solid', color=color,
+                 linewidth=linewidth)
         plt.yscale('log')
         plt.xlabel('cell number')
+        plt.ylabel('$\\lambda/l$')
         # plt.title('$\\lambda/l$ profiles for N=' + str(number_of_cells))
         plt.tight_layout()
         plt.grid(True)
@@ -155,7 +159,7 @@ for ind_mode in range(len(plasma_modes)):
 
         plt.figure(4)
         x = np.linspace(0, number_of_cells, number_of_cells)
-        plt.plot(x, state['flux'], label=label, linestyle='solid', color=color)
+        plt.plot(x, state['flux'], label=label, linestyle='solid', color=color, linewidth=linewidth)
         # plt.yscale('log')
         plt.xlabel('cell number')
         # plt.title('flux profile for N=' + str(number_of_cells))
@@ -164,9 +168,10 @@ for ind_mode in range(len(plasma_modes)):
         plt.legend()
 
         plt.figure(5)
-        plt.plot((state['n_tR'] - state['n_tL']) / n0, label='$n_{tR}-n_{tL}$ ' + label, linestyle='solid', color=color)
+        plt.plot((state['n_tR'] - state['n_tL']) / n0, label='$n_{tR}-n_{tL}$ ' + label, linestyle='solid', color=color,
+                 linewidth=linewidth)
         plt.plot((state['n_tR'][:-1] - state['n_tL'][1:]) / n0, label='$n_{tR}-n_{tL}$ neighbours ' + label,
-                 linestyle='dashed', color=color)
+                 linestyle='dashed', color=color, linewidth=linewidth)
         # diff = np.zeros(len(x)-1)
         # for i in range(len(diff)):
         #     diff[i] = (state['n_tR'][i] - state['n_tL'][i+1]) / n0
@@ -180,7 +185,7 @@ for ind_mode in range(len(plasma_modes)):
 
         plt.figure(6)
         # plt.plot(x, state['v_th'], label=label, linestyle='solid', color=color)
-        plt.plot(x, state['v_th'] / state['v_th'][0], label=label, linestyle='solid', color=color)
+        plt.plot(x, state['v_th'] / state['v_th'][0], label=label, linestyle='solid', color=color, linewidth=linewidth)
         plt.xlabel('cell number')
         # plt.ylabel('$v_{th}$')
         plt.ylabel('$v_{th}/v_{th,0}$')
