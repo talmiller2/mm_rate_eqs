@@ -18,11 +18,16 @@ rate_eqs_script = get_script_rate_eqs_slave()
 # n0 = 2e22  # m^-3
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set18_MM_N_30_ni_2e22'
 
-n0 = 1e21  # m^-3
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set19_MM_N_30_ni_1e21'
+# n0 = 1e21  # m^-3
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set19_MM_N_30_ni_1e21'
 
-slurm_kwargs = {'partition': 'core'}  # default
-# slurm_kwargs = {'partition': 'socket'}
+###########
+
+n0 = 2e22  # m^-3
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set23_MM_N_30_ni_2e22'
+
+# slurm_kwargs = {'partition': 'core'}  # default
+slurm_kwargs = {'partition': 'socket'}
 # slurm_kwargs = {'partition': 'testing'}
 
 plasma_modes = []
@@ -87,7 +92,8 @@ for plasma_mode in plasma_modes:
 
                 # if plasma_mode == 'cool_mfpcutoff':
                 #     settings['transition_type'] = 'smooth_transition_to_free_flow'
-                settings['transition_type'] = 'smooth_transition_to_free_flow'
+                # settings['transition_type'] = 'smooth_transition_to_free_flow'
+                settings['transition_type'] = 'none'
 
                 settings['save_dir'] = main_folder + '/' + run_name
                 print('save dir: ' + str(settings['save_dir']))

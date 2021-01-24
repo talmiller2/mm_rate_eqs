@@ -25,8 +25,8 @@ rate_eqs_script = get_script_rate_eqs_slave()
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set10_Rm_3_mfp_over_cell_0.04_mfp_limitX100/'
 # n0 = 1e24  # m^-3
 
-n0 = 2e22  # m^-3
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set14_MM_Rm_3_ni_2e22'
+# n0 = 2e22  # m^-3
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set14_MM_Rm_3_ni_2e22'
 
 # n0 = 2e22  # m^-3
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set15_MM_Rm_3_ni_2e22_nend_1e-2_rbc_adjust_ntR'
@@ -36,6 +36,17 @@ main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set14_MM_Rm_3_ni_2e22
 
 # n0 = 1e21  # m^-3
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set17_MM_Rm_3_ni_1e21'
+
+############
+
+n0 = 2e22  # m^-3
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set20_MM_Rm_3_ni_2e22'
+
+# n0 = 2e22  # m^-3
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set21_MM_Rm_3_ni_2e22_trans_fac_1'
+
+# n0 = 1e21  # m^-3
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set22_MM_Rm_3_ni_1e21'
 
 
 slurm_kwargs = {'partition': 'core'}  # default
@@ -53,14 +64,14 @@ plasma_modes += ['coold3']
 
 LC_modes = []
 LC_modes += ['sLC']  # static loss cone
-LC_modes += ['dLC']  # dynamic loss cone
+# LC_modes += ['dLC']  # dynamic loss cone
 
 # num_cells_list = [3, 5, 8, 10, 12, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 # U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5]
 # num_cells_list = [3, 5, 8, 10, 15, 30, 50, 70, 100]
 num_cells_list = [3, 5, 8, 10, 15, 20, 30, 50, 70, 100, 130, 150]
-U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0]
-# U_list = [0]
+# U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0]
+U_list = [0]
 
 total_number_of_combinations = len(plasma_modes) * len(LC_modes) * len(num_cells_list) * len(U_list)
 print('total_number_of_combinations = ' + str(total_number_of_combinations))
@@ -98,8 +109,8 @@ for plasma_mode in plasma_modes:
                 # settings['right_boundary_condition'] = 'adjust_ntL_for_nend'
                 # settings['right_boundary_condition'] = 'adjust_ntR_for_nend'
                 # settings['right_boundary_condition'] = 'adjust_all_species_for_nend'
-                settings['right_boundary_condition_density_type'] = 'n_expander'
-                settings['n_expander_factor'] = 1e-2
+                # settings['right_boundary_condition_density_type'] = 'n_expander'
+                # settings['n_expander_factor'] = 1e-2
                 # settings['n_min'] = n0 * 1e-3
                 # settings['time_step_definition_using_species'] = 'only_c_tR'
 
@@ -111,7 +122,11 @@ for plasma_mode in plasma_modes:
                 elif LC_mode == 'dLC':
                     settings['alpha_definition'] = 'geometric_local'
 
-                settings['transition_type'] = 'smooth_transition_to_free_flow'
+                # settings['transition_type'] = 'smooth_transition_to_free_flow'
+                settings['transition_type'] = 'none'
+
+                settings['transmission_factor'] = 2.0
+                # settings['transmission_factor'] = 1.0
 
                 settings['save_dir'] = main_folder + '/' + run_name
                 print('save dir: ' + str(settings['save_dir']))

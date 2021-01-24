@@ -26,8 +26,9 @@ settings['plasma_dimension'] = 1
 # settings['plasma_dimension'] = 3
 # settings['plasma_dimension'] = 10
 # settings['plasma_dimension'] = 100
+settings['number_of_cells'] = 10
 # settings['number_of_cells'] = 20
-settings['number_of_cells'] = 30
+# settings['number_of_cells'] = 30
 # settings['number_of_cells'] = 40
 # settings['number_of_cells'] = 100
 # settings['number_of_cells'] = 150
@@ -45,9 +46,9 @@ settings['U0'] = 0
 
 # settings['flux_normalized_termination_cutoff'] = 0.5
 # settings['flux_normalized_termination_cutoff'] = 0.1
-settings['flux_normalized_termination_cutoff'] = 0.05
+# settings['flux_normalized_termination_cutoff'] = 0.05
 # settings['flux_normalized_termination_cutoff'] = 0.03
-# settings['flux_normalized_termination_cutoff'] = 0.01
+settings['flux_normalized_termination_cutoff'] = 0.01
 
 settings['alpha_definition'] = 'geometric_constant'
 # settings['alpha_definition'] = 'geometric_local'
@@ -59,11 +60,11 @@ settings['U_for_loss_cone_factor'] = 1.0
 # settings['adaptive_mirror'] = 'adjust_cell_size_with_vth'
 
 
-settings['right_boundary_condition'] = 'none'
+# settings['right_boundary_condition'] = 'none'
 # settings['right_boundary_condition'] = 'adjust_ntL_for_nend'
 # settings['right_boundary_condition'] = 'adjust_ntR_for_nend'
 # settings['right_boundary_condition'] = 'adjust_nc_for_nend'
-# settings['right_boundary_condition'] = 'adjust_all_species_for_nend'
+settings['right_boundary_condition'] = 'adjust_all_species_for_nend'
 # settings['right_boundary_condition'] = 'nullify_ntL'
 
 # settings['right_boundary_condition_density_type'] = 'none'
@@ -98,7 +99,8 @@ settings = define_default_settings(settings)
 
 # settings['save_dir'] = '../runs/runs_August_2020/'
 # settings['save_dir'] = '../runs/runs_September_2020/'
-settings['save_dir'] = '../runs/runs_October_2020/'
+# settings['save_dir'] = '../runs/runs_October_2020/'
+settings['save_dir'] = '../runs/tests/'
 
 os.makedirs(settings['save_dir'], exist_ok=True)
 
