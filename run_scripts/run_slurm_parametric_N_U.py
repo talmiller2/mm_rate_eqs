@@ -69,8 +69,9 @@ LC_modes += ['sLC']  # static loss cone
 # num_cells_list = [3, 5, 8, 10, 12, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 # U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5]
 # num_cells_list = [3, 5, 8, 10, 15, 30, 50, 70, 100]
-num_cells_list = [3, 5, 8, 10, 15, 20, 30, 50, 70, 100, 130, 150]
+# num_cells_list = [3, 5, 8, 10, 15, 20, 30, 50, 70, 100, 130, 150]
 # U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0]
+num_cells_list = [50, 70, 100, 130, 150]
 U_list = [0]
 
 total_number_of_combinations = len(plasma_modes) * len(LC_modes) * len(num_cells_list) * len(U_list)

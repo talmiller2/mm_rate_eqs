@@ -1,6 +1,6 @@
 import matplotlib
 
-matplotlib.use('TkAgg')  # to avoid macOS bug where plots cant get minimized
+# matplotlib.use('TkAgg')  # to avoid macOS bug where plots cant get minimized
 
 import matplotlib.pyplot as plt
 
@@ -42,7 +42,7 @@ def define_label(plasma_mode, LC_mode):
     return label
 
 
-plt.close('all')
+# plt.close('all')
 
 # main_dir = '../runs/slurm_runs/set2_Rm_3/'
 # main_dir = '../runs/slurm_runs/set4_Rm_3_mfp_over_cell_4/'
@@ -50,10 +50,13 @@ plt.close('all')
 # main_dir = '../runs/slurm_runs/set6_Rm_3_mfp_over_cell_1_mfp_limitX100/'
 # main_dir = '../runs/slurm_runs/set7_Rm_3_mfp_over_cell_20_mfp_limitX100/'
 # main_dir = '../runs/slurm_runs/set10_Rm_3_mfp_over_cell_0.04_mfp_limitX100/'
-main_dir = '../runs/slurm_runs/set14_MM_Rm_3_ni_2e22/'
+# main_dir = '../runs/slurm_runs/set14_MM_Rm_3_ni_2e22/'
 # main_dir = '../runs/slurm_runs/set15_MM_Rm_3_ni_2e22_nend_1e-2_rbc_adjust_ntR/'
 # main_dir = '../runs/slurm_runs/set16_MM_Rm_3_ni_4e23/'
 # main_dir = '../runs/slurm_runs/set17_MM_Rm_3_ni_1e21/'
+# main_dir = '../runs/slurm_runs/set20_MM_Rm_3_ni_2e22_trans_type_none/'
+main_dir = '../runs/slurm_runs/set21_MM_Rm_3_ni_2e22_trans_type_none_trans_fac_1/'
+# main_dir = '../runs/slurm_runs/set22_MM_Rm_3_ni_1e21_trans_type_none/'
 
 colors = []
 # colors += ['b']

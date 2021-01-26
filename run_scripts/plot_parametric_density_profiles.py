@@ -53,17 +53,21 @@ plt.close('all')
 # main_dir = '../runs/slurm_runs/set11_Rm_3_mfp_over_cell_1_mfp_limitX100_nend_1e-2/'
 # main_dir = '../runs/slurm_runs/set12_Rm_3_mfp_over_cell_1_mfp_limitX100_nend_1e-2_rbc_adjut_ntL_timestepdef_without_ntL/'
 # main_dir = '../runs/slurm_runs/set13_Rm_3_mfp_over_cell_1_mfp_limitX100_nend_1e-2_rbc_adjut_ntR/'
-main_dir = '../runs/slurm_runs/set14_MM_Rm_3_ni_2e22/'
+# main_dir = '../runs/slurm_runs/set14_MM_Rm_3_ni_2e22/'
 # main_dir = '../runs/slurm_runs/set15_MM_Rm_3_ni_2e22_nend_1e-2_rbc_adjust_ntR/'
 # main_dir = '../runs/slurm_runs/set16_MM_Rm_3_ni_4e23/'
 # main_dir = '../runs/slurm_runs/set17_MM_Rm_3_ni_1e21/'
+main_dir = '../runs/slurm_runs/set20_MM_Rm_3_ni_2e22_trans_type_none/'
+# main_dir = '../runs/slurm_runs/set21_MM_Rm_3_ni_2e22_trans_type_none_trans_fac_1/'
+# main_dir = '../runs/slurm_runs/set22_MM_Rm_3_ni_1e21_trans_type_none/'
+# main_dir = '../runs/slurm_runs/set23_MM_N_30_ni_2e22_trans_type_none/'
 
 plasma_modes = []
-# plasma_modes += ['isoT']
+plasma_modes += ['isoT']
 plasma_modes += ['isoTmfp']
-# plasma_modes += ['coold1']
-# plasma_modes += ['coold2']
-# plasma_modes += ['coold3']
+plasma_modes += ['coold1']
+plasma_modes += ['coold2']
+plasma_modes += ['coold3']
 # plasma_modes += ['cool']
 # plasma_modes += ['cool_mfpcutoff']
 
