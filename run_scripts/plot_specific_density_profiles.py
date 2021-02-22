@@ -62,14 +62,16 @@ def define_label(plasma_mode, LC_mode):
 # main_dir = '../runs/slurm_runs/set22_MM_Rm_3_ni_1e21_trans_type_none/'
 # main_dir = '../runs/slurm_runs/set24_MM_Rm_3_ni_2e20_trans_type_none/'
 # main_dir = '../runs/slurm_runs/set25_MM_Rm_3_ni_4e23_trans_type_none/'
-main_dir = '../runs/slurm_runs/set26_MM_Rm_3_ni_2e20_trans_type_none_flux_cutoff_0.01/'
+# main_dir = '../runs/slurm_runs/set26_MM_Rm_3_ni_2e20_trans_type_none_flux_cutoff_0.01/'
+main_dir = '../runs/slurm_runs/set27_MM_Rm_3_ni_2e22_trans_type_none_flux_cutoff_1e-3/'
+# main_dir = '../runs/slurm_runs/set28_MM_Rm_3_ni_2e22_trans_type_none_flux_cutoff_1e-4/'
 
 plasma_modes = []
 plasma_modes += ['isoTmfp']
 plasma_modes += ['isoT']
-# plasma_modes += ['coold1']
-# plasma_modes += ['coold2']
-# plasma_modes += ['coold3']
+plasma_modes += ['coold1']
+plasma_modes += ['coold2']
+plasma_modes += ['coold3']
 # plasma_modes += ['cool']
 # plasma_modes += ['cool_mfpcutoff']
 
@@ -81,9 +83,9 @@ colors = ['k', 'b', 'g', 'orange', 'r']
 
 linewidth = 3
 
-# number_of_cells = 30
+number_of_cells = 30
 # number_of_cells = 70
-number_of_cells = 100
+# number_of_cells = 100
 # number_of_cells = 150
 U = 0
 
