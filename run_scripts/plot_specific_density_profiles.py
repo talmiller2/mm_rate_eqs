@@ -60,16 +60,16 @@ def define_label(plasma_mode, LC_mode):
 # main_dir = '../runs/slurm_runs/set20_MM_Rm_3_ni_2e22_trans_type_none/'
 # main_dir = '../runs/slurm_runs/set21_MM_Rm_3_ni_2e22_trans_type_none_trans_fac_1/'
 # main_dir = '../runs/slurm_runs/set22_MM_Rm_3_ni_1e21_trans_type_none/'
-main_dir = '../runs/slurm_runs/set24_MM_Rm_3_ni_2e20_trans_type_none/'
+# main_dir = '../runs/slurm_runs/set24_MM_Rm_3_ni_2e20_trans_type_none/'
 # main_dir = '../runs/slurm_runs/set25_MM_Rm_3_ni_4e23_trans_type_none/'
-
+main_dir = '../runs/slurm_runs/set26_MM_Rm_3_ni_2e20_trans_type_none_flux_cutoff_0.01/'
 
 plasma_modes = []
 plasma_modes += ['isoTmfp']
 plasma_modes += ['isoT']
-plasma_modes += ['coold1']
-plasma_modes += ['coold2']
-plasma_modes += ['coold3']
+# plasma_modes += ['coold1']
+# plasma_modes += ['coold2']
+# plasma_modes += ['coold3']
 # plasma_modes += ['cool']
 # plasma_modes += ['cool_mfpcutoff']
 
@@ -123,6 +123,7 @@ for ind_mode in range(len(plasma_modes)):
 
         x = np.linspace(0, number_of_cells, number_of_cells)
         n0 = settings['n0']
+        print('n0 = ', n0)
 
         # plt.figure(1)
         # plt.subplot(2, 1, 1)
@@ -202,8 +203,11 @@ for ind_mode in range(len(plasma_modes)):
         plt.figure(4)
         x = np.linspace(0, number_of_cells, number_of_cells)
         plt.plot(x, state['flux'], label=label, linestyle='solid', color=color, linewidth=linewidth)
+        # phi0 = n0 * state['v_th'][0]
+        # plt.plot(x, state['flux'] / phi0, label=label, linestyle='solid', color=color, linewidth=linewidth)
         # plt.yscale('log')
         plt.xlabel('cell number')
+        plt.ylabel('$\\phi/\\phi_0$')
         # plt.title('flux profile for N=' + str(number_of_cells))
         plt.tight_layout()
         plt.grid(True)
