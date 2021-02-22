@@ -4,7 +4,7 @@ plt.rcParams.update({'font.size': 14})
 
 import matplotlib
 
-matplotlib.use('TkAgg')  # to avoid macOS bug where plots cant get minimized
+# matplotlib.use('TkAgg')  # to avoid macOS bug where plots cant get minimized
 
 import numpy as np
 
@@ -60,8 +60,8 @@ main_dir = '../runs/slurm_runs/set23_MM_N_30_ni_2e22_trans_type_none/'
 colors = ['k', 'b', 'g', 'orange', 'r']
 
 plasma_modes = []
-plasma_modes += ['isoT']
 plasma_modes += ['isoTmfp']
+plasma_modes += ['isoT']
 plasma_modes += ['coold1']
 plasma_modes += ['coold2']
 plasma_modes += ['coold3']
@@ -131,8 +131,6 @@ for ind_mode in range(len(plasma_modes)):
         label_flux = define_plasma_mode_label(plasma_mode)
         plt.figure(1)
         plt.plot(Rm_list, flux_list, '-', label=label_flux, linestyle=linestyle, color=color, linewidth=linewidth)
-        plt.yscale("log")
-        plt.xscale("log")
 
         # remove some of the values prior to fit
         # ind_min = 0
@@ -159,9 +157,17 @@ for ind_mode in range(len(plasma_modes)):
         # label = 'fit decay power: ' + '{:0.3f}'.format(popt[-1])
         label = 'fit power: ' + '{:0.3f}'.format(popt[-1])
         # plt.plot(Rm_cells, flux_cells_fit, label=label, linestyle='--', color=color)
-        plt.plot(Rm_list, flux_cells_fit, label=label, linestyle='--', color=color, linewidth=linewidth)
+        # plt.plot(Rm_list, flux_cells_fit, label=label, linestyle='--', color=color, linewidth=linewidth)
+
+# plot a 1/Rm reference line
+const = 0.049
+# const = 14
+plt.plot(Rm_list, const / np.array(Rm_list), '-', label='$1/R_m$ reference', linestyle='--', color='k',
+         linewidth=linewidth)
 
 plt.figure(1)
+plt.yscale("log")
+plt.xscale("log")
 plt.xlabel('$R_m$')
 # plt.ylabel('flux [$s^{-1}$]')
 plt.ylabel('$\\phi_{p} / \\phi_{p,0}$')
@@ -170,3 +176,10 @@ plt.ylabel('$\\phi_{p} / \\phi_{p,0}$')
 plt.tight_layout()
 plt.grid(True)
 plt.legend()
+
+# save pics in high res
+save_dir = '../../../Papers/texts/paper2020/pics/'
+
+# file_name = 'flux_function_of_Rm'
+# beingsaved = plt.figure(1)
+# beingsaved.savefig(save_dir + file_name + '.JPG', format='jpg', dpi=500)

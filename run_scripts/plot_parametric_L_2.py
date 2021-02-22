@@ -54,8 +54,8 @@ def define_label(plasma_mode, LC_mode):
 # main_dir = '../runs/slurm_runs/set15_MM_Rm_3_ni_2e22_nend_1e-2_rbc_adjust_ntR/'
 # main_dir = '../runs/slurm_runs/set16_MM_Rm_3_ni_4e23/'
 # main_dir = '../runs/slurm_runs/set17_MM_Rm_3_ni_1e21/'
-# main_dir = '../runs/slurm_runs/set20_MM_Rm_3_ni_2e22_trans_type_none/'
-main_dir = '../runs/slurm_runs/set21_MM_Rm_3_ni_2e22_trans_type_none_trans_fac_1/'
+main_dir = '../runs/slurm_runs/set20_MM_Rm_3_ni_2e22_trans_type_none/'
+# main_dir = '../runs/slurm_runs/set21_MM_Rm_3_ni_2e22_trans_type_none_trans_fac_1/'
 # main_dir = '../runs/slurm_runs/set22_MM_Rm_3_ni_1e21_trans_type_none/'
 
 colors = []
@@ -125,7 +125,8 @@ for ind_mode in range(len(plasma_modes)):
                 state, settings = load_simulation(state_file, settings_file)
 
                 # post process the flux normalization
-                norm_factor = 2.0 * settings['cross_section_main_cell'] * settings['transmission_factor']
+                # norm_factor = 2.0 * settings['cross_section_main_cell'] * settings['transmission_factor']
+                norm_factor = 2.0 * settings['cross_section_main_cell']
                 norm_factor *= state['n'][0] * state['v_th'][0]
                 state['flux_mean'] /= norm_factor
 
@@ -152,15 +153,13 @@ for ind_mode in range(len(plasma_modes)):
         plt.figure(1)
         plt.plot(num_cells_list, flux_list, '-', label=label_flux, linestyle=linestyle, color=color,
                  linewidth=linewidth)
-        plt.yscale("log")
-        plt.xscale("log")
 
         # remove some of the values prior to fit
         # ind_min = 0
         ind_min = 5
         ind_max = len(num_cells_list)
-        if plasma_mode == 'coold1':
-            ind_max -= 4
+        # if plasma_mode == 'coold1':
+        #     ind_max -= 4
         num_cells_list_for_fit = num_cells_list[ind_min:ind_max]
         flux_list_for_fit = flux_list[ind_min:ind_max]
 
@@ -178,12 +177,21 @@ for ind_mode in range(len(plasma_modes)):
         popt, pcov = curve_fit(fit_function, n_cells, flux_cells)
         # flux_cells_fit = fit_function(n_cells, *popt) * norm_factor
         flux_cells_fit = fit_function(num_cells_list, *popt) * norm_factor
+        # print('popt:' + str(popt))
         # label = 'fit decay power: ' + '{:0.3f}'.format(popt[-1])
         label = 'fit power: ' + '{:0.3f}'.format(popt[-1])
         # plt.plot(n_cells, flux_cells_fit, label=label, linestyle='--', color=color)
-        plt.plot(num_cells_list, flux_cells_fit, label=label, linestyle='--', color=color, linewidth=linewidth)
+        # plt.plot(num_cells_list, flux_cells_fit, label=label, linestyle='--', color=color, linewidth=linewidth)
+
+# plot a 1/N reference line
+# const = 1.1
+const = 14
+plt.plot(num_cells_list, const / np.array(num_cells_list), '-', label='$1/N$ reference', linestyle='--', color='k',
+         linewidth=linewidth)
 
 plt.figure(1)
+plt.yscale("log")
+plt.xscale("log")
 plt.xlabel('N')
 # plt.ylabel('flux [$s^{-1}$]')
 plt.ylabel('$\\phi_{p} / \\phi_{p,0}$')
@@ -201,3 +209,21 @@ plt.legend()
 # plt.tight_layout()
 # plt.grid(True)
 # plt.legend()
+
+# test
+# flux_list1 = flux_list
+# flux_list2 = flux_list
+# plt.figure(3)
+# plt.plot(num_cells_list, flux_list1 / flux_list2)
+# plt.xlabel('N')
+# plt.tight_layout()
+# plt.grid(True)
+# plt.legend()
+
+# save pics in high res
+save_dir = '../../../Papers/texts/paper2020/pics/'
+
+# file_name = 'flux_function_of_N'
+# file_name = 'flux_function_of_N_suboptimal_regime'
+# beingsaved = plt.figure(1)
+# beingsaved.savefig(save_dir + file_name + '.JPG', format='jpg', dpi=500)

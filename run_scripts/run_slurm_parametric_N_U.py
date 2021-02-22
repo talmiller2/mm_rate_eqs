@@ -39,14 +39,20 @@ rate_eqs_script = get_script_rate_eqs_slave()
 
 ############
 
-n0 = 2e22  # m^-3
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set20_MM_Rm_3_ni_2e22_trans_type_none'
+# n0 = 2e22  # m^-3
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set20_MM_Rm_3_ni_2e22_trans_type_none'
 
 # n0 = 2e22  # m^-3
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set21_MM_Rm_3_ni_2e22_trans_type_none_trans_fac_1'
 
 # n0 = 1e21  # m^-3
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set22_MM_Rm_3_ni_1e21_trans_type_none'
+
+n0 = 2e20  # m^-3
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set24_MM_Rm_3_ni_2e20_trans_type_none'
+
+# n0 = 4e23  # m^-3
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set25_MM_Rm_3_ni_4e23_trans_type_none'
 
 
 slurm_kwargs = {'partition': 'core'}  # default
@@ -66,12 +72,12 @@ LC_modes = []
 LC_modes += ['sLC']  # static loss cone
 # LC_modes += ['dLC']  # dynamic loss cone
 
-# num_cells_list = [3, 5, 8, 10, 12, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+num_cells_list = [3, 5, 8, 10, 12, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 # U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5]
 # num_cells_list = [3, 5, 8, 10, 15, 30, 50, 70, 100]
 # num_cells_list = [3, 5, 8, 10, 15, 20, 30, 50, 70, 100, 130, 150]
 # U_list = [0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0]
-num_cells_list = [50, 70, 100, 130, 150]
+# num_cells_list = [50, 70, 100, 130, 150]
 U_list = [0]
 
 total_number_of_combinations = len(plasma_modes) * len(LC_modes) * len(num_cells_list) * len(U_list)

@@ -174,3 +174,10 @@ for ind_mode, mode in enumerate(plasma_modes):
     # plt.tight_layout()
     plt.grid(True)
     plt.legend()
+
+# save pics in high res
+save_dir = '../../../Papers/texts/paper2020/pics/'
+
+# file_name = 'density_profiles_rainbow_diffusion_free_flow'
+# beingsaved = plt.figure(4)
+# beingsaved.savefig(save_dir + file_name + '.JPG', format='jpg', dpi=500)
