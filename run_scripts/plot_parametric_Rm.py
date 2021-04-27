@@ -10,6 +10,7 @@ import numpy as np
 
 from mm_rate_eqs.relaxation_algorithm_functions import load_simulation
 from scipy.optimize import curve_fit
+from mm_rate_eqs.fusion_functions import get_lawson_parameters
 
 
 def define_plasma_mode_label(plasma_mode):
@@ -18,7 +19,8 @@ def define_plasma_mode_label(plasma_mode):
         label += 'isothermal'
     elif plasma_mode == 'isoTmfp':
         # label += 'isothermal iso-mfp'
-        label += 'diffusion'
+        # label += 'diffusion'
+        label += 'linear diffusion'
     elif 'cool' in plasma_mode:
         plasma_dimension = int(plasma_mode.split('d')[-1])
         label += 'cooling d=' + str(plasma_dimension)
@@ -114,9 +116,14 @@ for ind_mode in range(len(plasma_modes)):
                 state, settings = load_simulation(state_file, settings_file)
 
                 # post process the flux normalization
-                norm_factor = 2.0 * settings['cross_section_main_cell'] * settings['transmission_factor']
-                norm_factor *= state['n'][0] * state['v_th'][0]
-                state['flux_mean'] /= norm_factor
+                # norm_factor = 2.0 * settings['cross_section_main_cell'] * settings['transmission_factor']
+                # norm_factor *= state['n'][0] * state['v_th'][0]
+                # state['flux_mean'] /= norm_factor
+                ni = state['n'][0]
+                Ti_keV = state['Ti'][0] / 1e3
+                _, flux_lawson = get_lawson_parameters(ni, Ti_keV, settings)
+                state['flux_mean'] *= settings['cross_section_main_cell']
+                state['flux_mean'] /= flux_lawson
 
                 if state['successful_termination'] == True:
                     flux_list[ind_Rm] = state['flux_mean']
@@ -133,44 +140,48 @@ for ind_mode in range(len(plasma_modes)):
         plt.plot(Rm_list, flux_list, '-', label=label_flux, linestyle=linestyle, color=color, linewidth=linewidth)
 
         # remove some of the values prior to fit
-        # ind_min = 0
-        # ind_min = 3
-        ind_min = 5
-        Rm_list_for_fit = Rm_list[ind_min:]
-        flux_list_for_fit = flux_list[ind_min:]
-
-        # clear nans for fit
-        # norm_factor = 1e27
-        norm_factor = np.nanmax(flux_list_for_fit)
-        # norm_factor = 1
-        Rm_list_for_fit = np.array(Rm_list_for_fit)
-        inds_flux_not_nan = [i for i in range(len(flux_list_for_fit)) if not np.isnan(flux_list_for_fit[i])]
-        Rm_cells = Rm_list_for_fit[inds_flux_not_nan]
-        flux_cells = flux_list_for_fit[inds_flux_not_nan] / norm_factor
-        # fit_function = lambda x, a, b, gamma: a + b / x ** gamma
-        # fit_function = lambda x, b, gamma: b / x ** gamma
-        fit_function = lambda x, b, gamma: b * x ** gamma
-        # fit_function = lambda x, b: b / x
-        popt, pcov = curve_fit(fit_function, Rm_cells, flux_cells)
-        # flux_cells_fit = fit_function(Rm_cells, *popt) * norm_factor
-        flux_cells_fit = fit_function(Rm_list, *popt) * norm_factor
-        # label = 'fit decay power: ' + '{:0.3f}'.format(popt[-1])
-        label = 'fit power: ' + '{:0.3f}'.format(popt[-1])
-        # plt.plot(Rm_cells, flux_cells_fit, label=label, linestyle='--', color=color)
-        # plt.plot(Rm_list, flux_cells_fit, label=label, linestyle='--', color=color, linewidth=linewidth)
+        # # ind_min = 0
+        # # ind_min = 3
+        # ind_min = 5
+        # Rm_list_for_fit = Rm_list[ind_min:]
+        # flux_list_for_fit = flux_list[ind_min:]
+        #
+        # # clear nans for fit
+        # # norm_factor = 1e27
+        # norm_factor = np.nanmax(flux_list_for_fit)
+        # # norm_factor = 1
+        # Rm_list_for_fit = np.array(Rm_list_for_fit)
+        # inds_flux_not_nan = [i for i in range(len(flux_list_for_fit)) if not np.isnan(flux_list_for_fit[i])]
+        # Rm_cells = Rm_list_for_fit[inds_flux_not_nan]
+        # flux_cells = flux_list_for_fit[inds_flux_not_nan] / norm_factor
+        # # fit_function = lambda x, a, b, gamma: a + b / x ** gamma
+        # # fit_function = lambda x, b, gamma: b / x ** gamma
+        # fit_function = lambda x, b, gamma: b * x ** gamma
+        # # fit_function = lambda x, b: b / x
+        # popt, pcov = curve_fit(fit_function, Rm_cells, flux_cells)
+        # # flux_cells_fit = fit_function(Rm_cells, *popt) * norm_factor
+        # flux_cells_fit = fit_function(Rm_list, *popt) * norm_factor
+        # # label = 'fit decay power: ' + '{:0.3f}'.format(popt[-1])
+        # label = 'fit power: ' + '{:0.3f}'.format(popt[-1])
+        # # plt.plot(Rm_cells, flux_cells_fit, label=label, linestyle='--', color=color)
+        # # plt.plot(Rm_list, flux_cells_fit, label=label, linestyle='--', color=color, linewidth=linewidth)
 
 # plot a 1/Rm reference line
-const = 0.049
+const = 2e2
+# const = 0.75e27
+# const = 14
 # const = 14
 plt.plot(Rm_list, const / np.array(Rm_list), '-', label='$1/R_m$ reference', linestyle='--', color='k',
-         linewidth=linewidth)
+         linewidth=2)
 
 plt.figure(1)
 plt.yscale("log")
 plt.xscale("log")
 plt.xlabel('$R_m$')
 # plt.ylabel('flux [$s^{-1}$]')
-plt.ylabel('$\\phi_{p} / \\phi_{p,0}$')
+# plt.ylabel('$\\phi_{p}$ [$m^{-2}s^{-1}$]')
+# plt.ylabel('$\\phi_{p} / \\phi_{p,0}$')
+plt.ylabel('$\\phi_{ss} / \\phi_{lawson}$')
 # plt.title('flux as a function of mirror ratio (N=' + str(number_of_cells) + ', $U/v_{th}$=' + str(U) + ')')
 # plt.title('flux as a function of mirror ratio (N=' + str(number_of_cells) + ')')
 plt.tight_layout()
@@ -182,4 +193,4 @@ save_dir = '../../../Papers/texts/paper2020/pics/'
 
 # file_name = 'flux_function_of_Rm'
 # beingsaved = plt.figure(1)
-# beingsaved.savefig(save_dir + file_name + '.JPG', format='jpg', dpi=500)
+# beingsaved.savefig(save_dir + file_name + '.eps', format='eps')

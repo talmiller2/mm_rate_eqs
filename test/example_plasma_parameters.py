@@ -17,15 +17,17 @@ from mm_rate_eqs.rate_functions import calculate_coulomb_logarithm, get_thermal_
 
 settings = {'gas_name': 'DT_mix'}
 T = 3000
-# n_list = [8e22]
+# T = 26000
+# n_list = [2e21]
 n_list = [4e22]
+# n_list = [8e22]
 # n_list = [3.875e22]
 # n_list = [3.875e22]
 
 # fusion plasma
 # settings = {'gas_name': 'DT_mix'}
 # T = 10000
-# n_list = [1e21]
+# n_list = [2e21]
 
 # fusion plasma
 # settings = {'gas_name': 'DT_mix'}
@@ -51,7 +53,7 @@ B = 10.0  # T
 # n_list = [8.7e19]
 # B = 5.6  # T
 
-settings['length_main_cell'] = 10  # m
+settings['length_main_cell'] = 100  # m
 settings['diameter_main_cell'] = 1  # m
 
 settings = define_default_settings(settings=settings)
@@ -102,10 +104,16 @@ for n in n_list:
     print('mirror cross section = ' + str(settings['cross_section_main_cell']) + ' m^2')
     tau_lawson, flux_lawson = get_lawson_parameters(ni, Ti, settings)
     print('tau_lawson: ', '{:.3e}'.format(tau_lawson), 's')
+    print('ni * tau_lawson: ', '{:.3e}'.format(ni * tau_lawson))
     print('flux_lawson: ', '{:.3e}'.format(flux_lawson), 's^-1')
-    flux_single_mirror = 2 * v_th * n * settings['cross_section_main_cell']
-    print('flux single mirror: ', '{:.3e}'.format(flux_single_mirror), 's^-1')
-    print('flux_single_mirror / flux_lawson: ', '{:.3e}'.format(flux_single_mirror / flux_lawson))
+
+    # flux_single_mirror = 2 * v_th * n * settings['cross_section_main_cell']
+    # print('flux single mirror: ', '{:.3e}'.format(flux_single_mirror), 's^-1')
+    # print('flux_single_mirror / flux_lawson: ', '{:.3e}'.format(flux_single_mirror / flux_lawson))
+
+    flux_naive = v_th * ni * settings['cross_section_main_cell']
+    print('flux_naive: ', '{:.3e}'.format(flux_naive), 's^-1')
+    print('flux_naive / flux_lawson: ', '{:.3e}'.format(flux_naive / flux_lawson))
 
     # Fusion power in nominal parameters
     # print('Main cell volume: ', '{:.3e}'.format(settings['volume_main_cell']), 'm^3')

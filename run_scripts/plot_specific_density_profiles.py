@@ -19,7 +19,8 @@ def define_plasma_mode_label(plasma_mode):
         label += 'isothermal'
     elif plasma_mode == 'isoTmfp':
         # label += 'isothermal iso-mfp'
-        label += 'diffusion'
+        # label += 'diffusion'
+        label += 'linear diffusion'
     elif 'cool' in plasma_mode:
         plasma_dimension = int(plasma_mode.split('d')[-1])
         label += 'cooling d=' + str(plasma_dimension)
@@ -59,12 +60,15 @@ def define_label(plasma_mode, LC_mode):
 # main_dir = '../runs/slurm_runs/set17_MM_Rm_3_ni_1e21/'
 # main_dir = '../runs/slurm_runs/set20_MM_Rm_3_ni_2e22_trans_type_none/'
 # main_dir = '../runs/slurm_runs/set21_MM_Rm_3_ni_2e22_trans_type_none_trans_fac_1/'
-# main_dir = '../runs/slurm_runs/set22_MM_Rm_3_ni_1e21_trans_type_none/'
+main_dir = '../runs/slurm_runs/set22_MM_Rm_3_ni_1e21_trans_type_none/'
 # main_dir = '../runs/slurm_runs/set24_MM_Rm_3_ni_2e20_trans_type_none/'
 # main_dir = '../runs/slurm_runs/set25_MM_Rm_3_ni_4e23_trans_type_none/'
 # main_dir = '../runs/slurm_runs/set26_MM_Rm_3_ni_2e20_trans_type_none_flux_cutoff_0.01/'
-main_dir = '../runs/slurm_runs/set27_MM_Rm_3_ni_2e22_trans_type_none_flux_cutoff_1e-3/'
+# main_dir = '../runs/slurm_runs/set27_MM_Rm_3_ni_2e22_trans_type_none_flux_cutoff_1e-3/'
 # main_dir = '../runs/slurm_runs/set28_MM_Rm_3_ni_2e22_trans_type_none_flux_cutoff_1e-4/'
+# main_dir = '../runs/slurm_runs/set29_MM_Rm_3_ni_2e20_trans_type_none_flux_cutoff_1e-4/'
+# main_dir = '../runs/slurm_runs/set30_MM_Rm_3_ni_4e23_trans_type_none_flux_cutoff_1e-4/'
+
 
 plasma_modes = []
 plasma_modes += ['isoTmfp']
@@ -83,6 +87,7 @@ colors = ['k', 'b', 'g', 'orange', 'r']
 
 linewidth = 3
 
+# number_of_cells = 10
 number_of_cells = 30
 # number_of_cells = 70
 # number_of_cells = 100
@@ -129,16 +134,17 @@ for ind_mode in range(len(plasma_modes)):
 
         # plt.figure(1)
         # plt.subplot(2, 1, 1)
-        plt.figure(10)
+        fig = plt.figure(10)
         # plt.plot(x, state['n_c'] / n0, label='$n_{c}$ ' + label, linestyle='solid', color=color, linewidth=linewidth)
         plt.plot(x, state['n_c'] / n0, label=label, linestyle='solid', color=color, linewidth=linewidth)
         plt.xlabel('cell number')
         # plt.ylabel('[$m^{-3}$]')
         plt.ylabel('$n/n_{i,0}$')
         # plt.title('density profiles for N=' + str(number_of_cells))
-        # plt.tight_layout()
+        plt.tight_layout()
         plt.grid(True)
         plt.legend()
+
 
         # plt.subplot(2, 1, 2)
         plt.figure(11)
@@ -155,7 +161,7 @@ for ind_mode in range(len(plasma_modes)):
         # plt.legend()
         plt.tight_layout()
 
-        plt.figure(2)
+        fig = plt.figure(2)
         x = np.linspace(0, number_of_cells, number_of_cells)
         plt.plot(x, state['n'] / n0, label=label, linestyle='solid', color=color, linewidth=linewidth)
         plt.xlabel('cell number')
@@ -166,29 +172,49 @@ for ind_mode in range(len(plasma_modes)):
         plt.legend()
         # plt.yscale('log')
 
-        ## for analytic form to numeric density solution
-        if 'cool' in plasma_mode:
-            d = int(plasma_mode[-1])
-            fit_function = lambda x, a: (1 + a * x) ** (d / 5.0)
-            if d == 1: a_guess = -0.02
-            if d == 2: a_guess = -0.02
-            if d == 3: a_guess = -0.02
+        # ## for analytic form to numeric density solution
+        # # if 'cool' in plasma_mode:
+        # #     d = int(plasma_mode[-1])
+        # #     fit_function = lambda x, a: (1 + a * x) ** (d / 5.0)
+        # #     if d == 1: a_guess = -0.02
+        # #     if d == 2: a_guess = -0.02
+        # #     if d == 3: a_guess = -0.02
+        # # elif plasma_mode == 'isoT':
+        # #     fit_function = lambda x, a: np.exp(-a * x)
+        # #     a_guess = 0.025
+        # # else:
+        # #     fit_function = lambda x, a: 1 - a * x
+        # #     a_guess = 0.01
+        # #
+        # # n_normed = state['n'] / n0
+        # # popt, pcov = curve_fit(fit_function, x, n_normed)
+        # # print('popt', popt)
+        # # print('pcov', pcov)
+        # # n_normed_fit = fit_function(x, *popt)
+        # # plt.plot(x, n_normed_fit, label='fit', linestyle='dashdot', color=color, linewidth=linewidth)
+        # # n_normed_guess_fit = fit_function(x, a_guess)
+        # # # plt.plot(x, n_normed_guess_fit, label='guess', linestyle='dashdot', color=color, linewidth=linewidth)
+        # # plt.legend()
+        #
+        # plot analytic model
+        n0 = 1.0
+        # n1 = n0 * 0.2
+        n1 = state['n'][-1] / state['n'][0]
+        L = x * state['mirror_cell_sizes'][0]
+        lambda_over_l = '{:.2f}'.format(state['mean_free_path'][0] / state['mirror_cell_sizes'][0])
+        n1_over_n0 = '{:.2f}'.format(n1 / n0)
+        if plasma_mode == 'isoTmfp':
+            # linear diffusion
+            n_analytic = n0 * (1 - x / number_of_cells) + n1 * x / number_of_cells
         elif plasma_mode == 'isoT':
-            fit_function = lambda x, a: np.exp(-a * x)
-            a_guess = 0.025
-        else:
-            fit_function = lambda x, a: 1 - a * x
-            a_guess = 0.01
-
-        n_normed = state['n'] / n0
-        popt, pcov = curve_fit(fit_function, x, n_normed)
-        print('popt', popt)
-        print('pcov', pcov)
-        n_normed_fit = fit_function(x, *popt)
-        plt.plot(x, n_normed_fit, label='fit', linestyle='dashed', color=color, linewidth=linewidth)
-        n_normed_guess_fit = fit_function(x, a_guess)
-        # plt.plot(x, n_normed_guess_fit, label='guess', linestyle='dashdot', color=color, linewidth=linewidth)
-        plt.legend()
+            n_analytic = n0 * (n0 / n1) ** (- x / number_of_cells)
+        elif 'cool' in plasma_mode:
+            d = int(plasma_mode[-1]) * 1.0
+            n_analytic = n0 * (1 + ((n1 / n0) ** (5 / d) - 1) * x / number_of_cells) ** (d / 5)
+        plt.figure(2)
+        plt.plot(x, n_analytic, linestyle='dashdot', color=color, linewidth=2)
+        # plt.title('rate eqs vs theory ($\\lambda/l=$' + lambda_over_l + ', $n_1/n_0=$' + n1_over_n0 + ')')
+        # plt.title('rate eqs vs theory ($\\lambda/l=$' + lambda_over_l + ')')
 
         plt.figure(3)
         x = np.linspace(0, number_of_cells, number_of_cells)
@@ -202,18 +228,24 @@ for ind_mode in range(len(plasma_modes)):
         plt.grid(True)
         plt.legend()
 
-        plt.figure(4)
-        x = np.linspace(0, number_of_cells, number_of_cells)
-        plt.plot(x, state['flux'], label=label, linestyle='solid', color=color, linewidth=linewidth)
-        # phi0 = n0 * state['v_th'][0]
-        # plt.plot(x, state['flux'] / phi0, label=label, linestyle='solid', color=color, linewidth=linewidth)
-        # plt.yscale('log')
-        plt.xlabel('cell number')
-        plt.ylabel('$\\phi/\\phi_0$')
-        # plt.title('flux profile for N=' + str(number_of_cells))
-        plt.tight_layout()
-        plt.grid(True)
-        plt.legend()
+        if ind_mode == len(plasma_modes) - 1:
+            # plt.text(0.05, 0.97, text, fontdict={'fontname': 'times new roman', 'weight': 'bold', 'size': 20},
+            plt.text(0.08, 0.97, text, fontdict={'fontname': 'times new roman', 'weight': 'bold', 'size': 20},
+                     horizontalalignment='left', verticalalignment='top',
+                     transform=fig.axes[0].transAxes)
+
+        # plt.figure(4)
+        # x = np.linspace(0, number_of_cells, number_of_cells)
+        # plt.plot(x, state['flux'], label=label, linestyle='solid', color=color, linewidth=linewidth)
+        # # phi0 = n0 * state['v_th'][0]
+        # # plt.plot(x, state['flux'] / phi0, label=label, linestyle='solid', color=color, linewidth=linewidth)
+        # # plt.yscale('log')
+        # plt.xlabel('cell number')
+        # plt.ylabel('$\\phi/\\phi_0$')
+        # # plt.title('flux profile for N=' + str(number_of_cells))
+        # plt.tight_layout()
+        # plt.grid(True)
+        # plt.legend()
 
         # plt.figure(5)
         # plt.plot((state['n_tR'] - state['n_tL']) / n0, label='$n_{tR}-n_{tL}$ ' + label, linestyle='solid', color=color,
@@ -245,36 +277,59 @@ for ind_mode in range(len(plasma_modes)):
     except:
         pass
 
-# save pics in high res
+##### add text for paper
+fig = plt.figure(10)
+plt.text(0.98, 0.97, '(a)', fontdict={'fontname': 'times new roman', 'weight': 'bold', 'size': 20},
+         horizontalalignment='right', verticalalignment='top',
+         transform=fig.axes[0].transAxes)
+fig = plt.figure(11)
+plt.text(0.98, 0.97, '(b)', fontdict={'fontname': 'times new roman', 'weight': 'bold', 'size': 20},
+         horizontalalignment='right', verticalalignment='top',
+         transform=fig.axes[0].transAxes)
+
+# text = '(a)'
+text = '(b)'
+
+fig = plt.figure(2)
+plt.text(0.98, 0.97, text, fontdict={'fontname': 'times new roman', 'weight': 'bold', 'size': 20},
+         horizontalalignment='right', verticalalignment='top',
+         transform=fig.axes[0].transAxes)
+
+fig = plt.figure(3)
+plt.text(0.04, 0.97, text, fontdict={'fontname': 'times new roman', 'weight': 'bold', 'size': 20},
+         horizontalalignment='left', verticalalignment='top',
+         transform=fig.axes[0].transAxes)
+
+##### save pics in high res
 save_dir = '../../../Papers/texts/paper2020/pics/'
 
-# file_name = 'density_profiles_N_30_3_populations'
-# file_name = 'density_profiles_N_100_3_populations'
-# beingsaved = plt.figure(1)
-# beingsaved.savefig(save_dir + file_name + '.JPG', format='jpg', dpi=500)
-
 # file_name = 'density_profiles_N_30_nc'
-# file_name = 'density_profiles_N_100_nc'
-# file_name = 'density_profiles_N_30_nc_suboptimal'
-# file_name = 'density_profiles_N_100_nc_suboptimal'
+# # file_name = 'density_profiles_N_100_nc'
+# # file_name = 'density_profiles_N_30_nc_suboptimal'
+# # file_name = 'density_profiles_N_100_nc_suboptimal'
 # beingsaved = plt.figure(10)
-# beingsaved.savefig(save_dir + file_name + '.JPG', format='jpg', dpi=500)
-
-# file_name = 'density_profiles_N_30_nr_nl'
-# file_name = 'density_profiles_N_100_nr_nl'
-# file_name = 'density_profiles_N_30_nr_nl_suboptimal'
-# file_name = 'density_profiles_N_100_nr_nl_suboptimal'
-# beingsaved = plt.figure(11)
-# beingsaved.savefig(save_dir + file_name + '.JPG', format='jpg', dpi=500)
-
-
+# beingsaved.savefig(save_dir + file_name + '.eps', format='eps')
 #
+# file_name = 'density_profiles_N_30_nr_nl'
+# # file_name = 'density_profiles_N_100_nr_nl'
+# # file_name = 'density_profiles_N_30_nr_nl_suboptimal'
+# # file_name = 'density_profiles_N_100_nr_nl_suboptimal'
+# beingsaved = plt.figure(11)
+# beingsaved.savefig(save_dir + file_name + '.eps', format='eps')
+
+
 # file_name = 'density_profiles_N_30'
-# # file_name = 'density_profiles_N_100'
-# beingsaved = plt.figure(2)
-# beingsaved.savefig(save_dir + file_name + '.JPG', format='jpg', dpi=500)
+# file_name = 'density_profiles_N_30'
+# file_name = 'density_profiles_N_100'
+# file_name = 'density_profiles_N_100_with_fit'
+# file_name = 'density_profiles_N_100_with_fit_suboptimal'
+# file_name = 'density_profiles_N_30_with_theory'
+file_name = 'density_profiles_N_30_suboptimal_with_theory'
+beingsaved = plt.figure(2)
+beingsaved.savefig(save_dir + file_name + '.eps', format='eps')
 
 # file_name = 'mfp_profiles_N_30'
-file_name = 'mfp_profiles_N_100'
-beingsaved = plt.figure(3)
-beingsaved.savefig(save_dir + file_name + '.JPG', format='jpg', dpi=500)
+# # file_name = 'mfp_profiles_N_30_suboptimal'
+# # file_name = 'mfp_profiles_N_100'
+# beingsaved = plt.figure(3)
+# beingsaved.savefig(save_dir + file_name + '.eps', format='eps')

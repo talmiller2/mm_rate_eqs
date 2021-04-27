@@ -178,7 +178,7 @@ def get_E_charged(reaction='D_T_to_n_alpha'):
 
 def get_fusion_sigma_v_E_reaction(T, reaction='D_T_to_n_alpha'):
     """
-    Multiply sigma*v by the reaction energy and return in J.
+    Multiply sigma*v by the reaction energy and return in [J].
     T in [keV].
     """
     if reaction == 'D_D_to_p_T_n_He3':
@@ -196,25 +196,33 @@ def get_fusion_sigma_v_E_reaction(T, reaction='D_T_to_n_alpha'):
 
 def get_fusion_power(ni, T, reaction='D_T_to_n_alpha'):
     """
-    Fusion power reaction rate, assuming 50-50 split of reacting ions.
-    T in [keV].
+    Fusion power in [W/m^3], assuming 50-50 split of reacting ions.
+    T in [keV], ni in [m^-3].
     """
     return (ni / 2.0) ** 2 * get_fusion_sigma_v_E_reaction(T, reaction=reaction)
 
 
 def get_fusion_charged_power(ni, T, reaction='D_T_to_n_alpha'):
+    """
+    Fusion power (only from charged particles) in [W/m^3], assuming 50-50 split of reacting ions.
+    T in [keV], ni in [m^-3].
+    """
     return (ni / 2.0) ** 2 * get_sigma_v_fusion(T, reaction=reaction) \
            * get_E_charged(reaction=reaction) * 1e6 * 1.6e-19  # MeV to J
 
 
 def get_lawson_parameters(ni, Ti, settings, reaction='D_T_to_n_alpha'):
+    """
+    Lawson minimal confinement time [s], and maximal flux [s^-1] from each end assuming some fusion volume.
+    T in [keV], ni in [m^-3].
+    """
     sigma_v_fusion = get_sigma_v_fusion(Ti, reaction=reaction)
     MeV_to_J = define_electron_charge() * 1e6
     E_charged = get_E_charged(reaction=reaction) * MeV_to_J  # J
-    kB_eV = define_electron_charge()
-    n_tau_lawson = 12 * kB_eV * Ti / (E_charged * sigma_v_fusion)
+    kB_keV = define_electron_charge() * 1e3
+    n_tau_lawson = 12 * kB_keV * Ti / (E_charged * sigma_v_fusion)
     tau_lawson = n_tau_lawson / ni
-    flux_lawson = 1 / n_tau_lawson * settings['volume_main_cell'] * ni ** 2
+    flux_lawson = 0.5 / n_tau_lawson * settings['volume_main_cell'] * ni ** 2
     return tau_lawson, flux_lawson
 
 
@@ -281,7 +289,7 @@ def get_As_for_reaction(reaction='D_T_to_n_alpha'):
 
 def get_gamow_energy(reaction='D_T_to_n_alpha'):
     """
-    Return Gamow energy (tunneling barrier) in [keV]
+    Return Gamow energy (tunneling barrier) in [keV].
     Source: "Atzeni, Meyer-ter-Vehn - The Physics of Inertial Fusion", chapter 1.
     """
     # alpha_fine = 1 / 137.035999084 # fine structure constant

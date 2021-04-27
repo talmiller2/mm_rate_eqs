@@ -17,7 +17,7 @@ Z_ion = 1
 # B = 7 # [Tesla]
 B = 15  # [Tesla]
 # n0 = settings['n0']
-n0 = 1e22  # = ni = ne
+n0 = 2e22  # = ni = ne
 n_tot = 2 * n0
 Ti_0 = settings['Ti_0']
 Te_0 = settings['Te_0']
