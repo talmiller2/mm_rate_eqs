@@ -63,11 +63,15 @@ rate_eqs_script = get_script_rate_eqs_slave()
 # n0 = 2e22  # m^-3
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set28_MM_Rm_3_ni_2e22_trans_type_none_flux_cutoff_1e-4'
 
-n0 = 2e20  # m^-3
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set29_MM_Rm_3_ni_2e20_trans_type_none_flux_cutoff_1e-4'
+# n0 = 2e20  # m^-3
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set29_MM_Rm_3_ni_2e20_trans_type_none_flux_cutoff_1e-4'
 
 # n0 = 4e23  # m^-3
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set30_MM_Rm_3_ni_4e23_trans_type_none_flux_cutoff_1e-4'
+
+n0 = 1e21  # m^-3
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set31_MM_Rm_3_ni_1e21_trans_type_none_right_scat_fac_10'
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set32_MM_Rm_3_ni_1e21_trans_type_none_right_scat_fac_100'
 
 
 slurm_kwargs = {'partition': 'core'}  # default
@@ -154,6 +158,11 @@ for plasma_mode in plasma_modes:
 
                 settings['transmission_factor'] = 2.0
                 # settings['transmission_factor'] = 1.0
+
+                # effectively increasing the scattering rate for the right going particles only
+                # settings['right_scat_factor'] = 1.0
+                settings['right_scat_factor'] = 10.0
+                # settings['right_scat_factor'] = 100.0
 
                 settings['save_dir'] = main_folder + '/' + run_name
                 print('save dir: ' + str(settings['save_dir']))

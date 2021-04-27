@@ -14,8 +14,8 @@ plt.close('all')
 settings = {}
 # settings['gas_name'] = 'hydrogen'
 # settings['save_state'] = 'False'
-# settings['assume_constant_density'] = False
-settings['assume_constant_density'] = True
+settings['assume_constant_density'] = False
+# settings['assume_constant_density'] = True
 # settings['assume_constant_temperature'] = False
 settings['assume_constant_temperature'] = True
 # settings['ion_scattering_rate_factor'] = 10
@@ -33,6 +33,13 @@ settings['number_of_cells'] = 10
 # settings['number_of_cells'] = 100
 # settings['number_of_cells'] = 150
 # settings['number_of_cells'] = 200
+
+# settings['n0'] = 2e22  # m^-3
+settings['n0'] = 1e21  # m^-3
+
+# settings['right_scat_factor'] = 1.0
+# settings['right_scat_factor'] = 10.0
+settings['right_scat_factor'] = 100.0
 
 settings['U0'] = 0
 # settings['U0'] = 0.01
@@ -53,40 +60,40 @@ settings['flux_normalized_termination_cutoff'] = 0.01
 settings['alpha_definition'] = 'geometric_constant'
 # settings['alpha_definition'] = 'geometric_local'
 
-settings['U_for_loss_cone_factor'] = 1.0
+# settings['U_for_loss_cone_factor'] = 1.0
 # settings['U_for_loss_cone_factor'] = 0.5
 
 # settings['adaptive_mirror'] = 'adjust_cell_size_with_mfp'
 # settings['adaptive_mirror'] = 'adjust_cell_size_with_vth'
 
 
-# settings['right_boundary_condition'] = 'none'
+settings['right_boundary_condition'] = 'none'
 # settings['right_boundary_condition'] = 'adjust_ntL_for_nend'
 # settings['right_boundary_condition'] = 'adjust_ntR_for_nend'
 # settings['right_boundary_condition'] = 'adjust_nc_for_nend'
-settings['right_boundary_condition'] = 'adjust_all_species_for_nend'
+# settings['right_boundary_condition'] = 'adjust_all_species_for_nend'
 # settings['right_boundary_condition'] = 'nullify_ntL'
 
 # settings['right_boundary_condition_density_type'] = 'none'
 # settings['right_boundary_condition_density_type'] = 'n_transition'
-settings['right_boundary_condition_density_type'] = 'n_expander'
+# settings['right_boundary_condition_density_type'] = 'n_expander'
 
 # settings['n_expander_factor'] = 0.5
 # settings['n_expander_factor'] = 0.1
 # settings['n_expander_factor'] = 0.05
-settings['n_expander_factor'] = 0.01
+# settings['n_expander_factor'] = 0.01
 
-settings['time_step_definition_using_species'] = 'all'
+# settings['time_step_definition_using_species'] = 'all'
 # settings['time_step_definition_using_species'] = 'only_c_tR'
 
 # settings['nullify_ntL_factor'] = 0.05
 # settings['nullify_ntL_factor'] = 0.05
 # settings['nullify_ntL_factor'] = 0.01
 
-# settings['transition_type'] = 'none'
-settings['transition_type'] = 'smooth_transition_to_free_flow'
+settings['transition_type'] = 'none'
+# settings['transition_type'] = 'smooth_transition_to_free_flow'
 
-settings['energy_conservation_scheme'] = 'none'
+# settings['energy_conservation_scheme'] = 'none'
 # settings['energy_conservation_scheme'] = 'simple'
 # settings['energy_conservation_scheme'] = 'detailed'
 
@@ -168,9 +175,9 @@ if settings['time_step_definition_using_species'] == 'only_c_tR':
 # settings['t_stop'] = 10e-4
 # settings['max_num_time_steps'] = int(2e4) - 1
 
-
 print('save dir: ' + str(settings['save_dir']))
 
-print('right_boundary_condition_density_type = ' + str(settings['right_boundary_condition_density_type']))
+# settings['save_state'] = True
+settings['save_state'] = False
 
 state = find_rate_equations_steady_state(settings)

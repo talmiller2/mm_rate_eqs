@@ -402,14 +402,14 @@ def get_density_time_derivatives(state, settings):
 
     # define density time derivative
     for k in range(settings['number_of_cells']):
-        f_scat_c[k] = + nu_s[k] * (alpha_c[k] * (n_tL[k] + n_tR[k])
+        f_scat_c[k] = + nu_s[k] * (alpha_c[k] * (n_tL[k] + n_tR[k] * settings['right_scat_factor'])
                                    - (alpha_tL[k] + alpha_tR[k]) * n_c[k])
 
         f_scat_tL[k] = + nu_s[k] * (-(alpha_c[k] + alpha_tR[k]) * n_tL[k]
-                                    + alpha_tL[k] * n_tR[k]
+                                    + alpha_tL[k] * n_tR[k] * settings['right_scat_factor']
                                     + alpha_tL[k] * n_c[k])
 
-        f_scat_tR[k] = + nu_s[k] * (-(alpha_c[k] + alpha_tL[k]) * n_tR[k]
+        f_scat_tR[k] = + nu_s[k] * (-(alpha_c[k] + alpha_tL[k]) * n_tR[k] * settings['right_scat_factor']
                                     + alpha_tR[k] * n_tL[k]
                                     + alpha_tR[k] * n_c[k])
 

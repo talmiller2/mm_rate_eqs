@@ -152,6 +152,8 @@ def define_default_settings(settings=None):
         # settings['ion_scattering_rate_factor'] = 100.0
     if 'electron_scattering_rate_factor' not in settings:
         settings['electron_scattering_rate_factor'] = 1.0
+    if 'right_scat_factor' not in settings:
+        settings['right_scat_factor'] = 1.0
 
     ### relaxation solver parameters
     if 'max_num_time_steps' not in settings:
