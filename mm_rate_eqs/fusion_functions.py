@@ -222,7 +222,8 @@ def get_lawson_parameters(ni, Ti, settings, reaction='D_T_to_n_alpha'):
     kB_keV = define_electron_charge() * 1e3
     n_tau_lawson = 12 * kB_keV * Ti / (E_charged * sigma_v_fusion)
     tau_lawson = n_tau_lawson / ni
-    flux_lawson = 0.5 / n_tau_lawson * settings['volume_main_cell'] * ni ** 2
+    # flux_lawson = 0.5 / n_tau_lawson * settings['volume_main_cell'] * ni ** 2
+    flux_lawson = 0.5 * ni * settings['volume_main_cell'] / tau_lawson
     return tau_lawson, flux_lawson
 
 

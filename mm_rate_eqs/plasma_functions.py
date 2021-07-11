@@ -120,3 +120,13 @@ def get_ideal_gas_energy_per_volume(n, T, settings):
     """
     kB = define_boltzmann_constant()
     return 3.0 / 2 * kB * n * T * define_factor_eV_to_K()
+
+
+def get_bohm_diffusion_constant(Te, B):
+    """
+    Bohm diffusion coefficient D_bohm = kB*T/e / 16B. Note the units [kB*T/e]=[Volts]
+    source https://en.wikipedia.org/wiki/Bohm_diffusion
+    Te is the electron temperature in [eV], B the magnetic field in [Tesla]=[Volt*s/m^2]
+    The diffusion coefficient output is in units [Volt/Tesla]=[m^2/s]
+    """
+    return Te / B / 16

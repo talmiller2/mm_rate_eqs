@@ -1,8 +1,14 @@
+import numpy as np
+
 from mm_rate_eqs.default_settings import define_default_settings
 from mm_rate_eqs.fusion_functions import get_lawson_parameters, get_fusion_power, get_fusion_charged_power
 from mm_rate_eqs.plasma_functions import get_brem_radiation_loss, get_cyclotron_radiation_loss, get_magnetic_pressure, \
-    get_ideal_gas_pressure, get_ideal_gas_energy_per_volume, get_magnetic_field_for_given_pressure
+    get_ideal_gas_pressure, get_ideal_gas_energy_per_volume, get_magnetic_field_for_given_pressure, \
+    get_bohm_diffusion_constant
 from mm_rate_eqs.rate_functions import calculate_coulomb_logarithm, get_thermal_velocity, get_coulomb_scattering_rate
+
+from mm_rate_eqs.constants_functions import define_electron_mass, define_proton_mass, define_factor_eV_to_K, \
+    define_boltzmann_constant, define_factor_Pa_to_bar
 
 # lab plasma
 # settings = {'gas_name': 'potassium'}
@@ -15,18 +21,23 @@ from mm_rate_eqs.rate_functions import calculate_coulomb_logarithm, get_thermal_
 # T = 3500
 # n_list = [1e22]
 
-settings = {'gas_name': 'DT_mix'}
-T = 3000
+# settings = {'gas_name': 'DT_mix'}
+# T = 3000
 # T = 26000
 # n_list = [2e21]
-n_list = [4e22]
+# n_list = [4e22]
 # n_list = [8e22]
 # n_list = [3.875e22]
 # n_list = [3.875e22]
 
 # fusion plasma
-# settings = {'gas_name': 'DT_mix'}
-# T = 10000
+settings = {'gas_name': 'DT_mix'}
+# T = 10000.0
+# n_list = [2e21]
+T = 3000
+n_list = [4e22]
+
+# T = 50000.0
 # n_list = [2e21]
 
 # fusion plasma
@@ -35,7 +46,6 @@ n_list = [4e22]
 # T = 9000
 # n_list = [5e21]
 
-#
 # # B = 3.5 #T
 # B = 5.0  # T
 # B = 7.0 #T
@@ -75,6 +85,8 @@ for n in n_list:
     print('Coulomb log = ' + str(calculate_coulomb_logarithm(ne, Te, ni, Ti)['ii']))
     # scat_rate = get_specific_coulomb_scattering_rate(ne, Te, ni, Ti, settings, impact_specie='i', target_specie='i')
     scat_rate = get_coulomb_scattering_rate(ni, Ti, Te, settings, species='ions')
+    tau_scat = 1 / scat_rate
+    flux_scat = 0.5 * ni * settings['volume_main_cell'] / tau_scat
 
     print('ii scattering rate = ' + str(scat_rate) + ' 1/s')
     # belan_scat_rate = get_coulomb_scattering_rate(n, T, T, settings, species='ions')
@@ -104,8 +116,12 @@ for n in n_list:
     print('mirror cross section = ' + str(settings['cross_section_main_cell']) + ' m^2')
     tau_lawson, flux_lawson = get_lawson_parameters(ni, Ti, settings)
     print('tau_lawson: ', '{:.3e}'.format(tau_lawson), 's')
+    print('tau_scat: ', '{:.3e}'.format(tau_scat), 's')
     print('ni * tau_lawson: ', '{:.3e}'.format(ni * tau_lawson))
     print('flux_lawson: ', '{:.3e}'.format(flux_lawson), 's^-1')
+
+    print('flux_scat: ', '{:.3e}'.format(flux_scat), 's^-1')
+    print('flux_scat / flux_lawson: ', '{:.3e}'.format(flux_scat / flux_lawson))
 
     # flux_single_mirror = 2 * v_th * n * settings['cross_section_main_cell']
     # print('flux single mirror: ', '{:.3e}'.format(flux_single_mirror), 's^-1')
@@ -164,3 +180,14 @@ for n in n_list:
     Q_factor_total_2 = (P_fusion - P_fusion_charged) / (
             P_confinement_loss + max(0, P_total_radiation_loss - P_fusion_charged))
     print('Q_factor_total_2 = ' + str(Q_factor_total_2))
+
+    # Figuring out the radial diffusion flux
+    D_bohm = get_bohm_diffusion_constant(Te, B)  # [m^2/s]
+    dndx = ne / (settings['diameter_main_cell'] / 2)
+    radial_flux_density = D_bohm * dndx
+    # system_total_length = settings['length_main_cell']
+    system_total_length = 100  # m
+    cyllinder_radial_cross_section = np.pi * settings['diameter_main_cell'] * system_total_length
+    radial_flux = radial_flux_density * cyllinder_radial_cross_section
+    print('radial_flux: ', '{:.3e}'.format(radial_flux), 's^-1')
+    print('radial_flux / flux_naive: ', '{:.3e}'.format(radial_flux / flux_naive))

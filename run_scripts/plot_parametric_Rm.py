@@ -20,7 +20,8 @@ def define_plasma_mode_label(plasma_mode):
     elif plasma_mode == 'isoTmfp':
         # label += 'isothermal iso-mfp'
         # label += 'diffusion'
-        label += 'linear diffusion'
+        # label += 'linear diffusion'
+        label += 'constant diffusion'
     elif 'cool' in plasma_mode:
         plasma_dimension = int(plasma_mode.split('d')[-1])
         label += 'cooling d=' + str(plasma_dimension)
@@ -45,12 +46,16 @@ def define_label(plasma_mode, LC_mode):
 
 plt.close('all')
 
+# main_dir = '/Users/talmiller/Downloads/mm_rate_eqs/run_scripts/'
+main_dir = '/Users/talmiller/Downloads/mm_rate_eqs/'
+
 # main_dir = '../runs/slurm_runs/set3_N_20/'
 # main_dir = '../runs/slurm_runs/set8_N_30_mfp_over_cell_1_mfp_limitX100/'
 # main_dir = '../runs/slurm_runs/set9_N_30_mfp_over_cell_40_mfp_limitX100/'
 # main_dir = '../runs/slurm_runs/set18_MM_N_30_ni_2e22/'
 # main_dir = '../runs/slurm_runs/set19_MM_N_30_ni_1e21/'
-main_dir = '../runs/slurm_runs/set23_MM_N_30_ni_2e22_trans_type_none/'
+# main_dir += '../runs/slurm_runs/set23_MM_N_30_ni_2e22_trans_type_none/'
+main_dir += '/runs/slurm_runs/set23_MM_N_30_ni_2e22_trans_type_none/'
 
 # colors = []
 # colors += ['b']
@@ -77,7 +82,8 @@ U = 0
 # U = 0.3
 # U = 0.5
 # Rm_list = [1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
-Rm_list = [1.1, 1.3, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0, 20.0]
+# Rm_list = [1.1, 1.3, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0, 20.0]
+Rm_list = [3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0, 20.0]
 # Rm_list = [3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0, 20.0]
 # Rm_list = [1.1, 1.3, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5]
 # Rm_list = [5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0, 20.0]
@@ -176,7 +182,7 @@ plt.plot(Rm_list, const / np.array(Rm_list), '-', label='$1/R_m$ reference', lin
 
 plt.figure(1)
 plt.yscale("log")
-plt.xscale("log")
+# plt.xscale("log")
 plt.xlabel('$R_m$')
 # plt.ylabel('flux [$s^{-1}$]')
 # plt.ylabel('$\\phi_{p}$ [$m^{-2}s^{-1}$]')
@@ -189,7 +195,8 @@ plt.grid(True)
 plt.legend()
 
 # save pics in high res
-save_dir = '../../../Papers/texts/paper2020/pics/'
+# save_dir = '../../../Papers/texts/paper2020/pics/'
+save_dir = '/Users/talmiller/Dropbox/UNI/Courses Graduate/Plasma/Papers/texts/paper2020/pics/'
 
 # file_name = 'flux_function_of_Rm'
 # beingsaved = plt.figure(1)

@@ -20,7 +20,8 @@ def define_plasma_mode_label(plasma_mode):
     elif plasma_mode == 'isoTmfp':
         # label += 'isothermal iso-mfp'
         # label += 'diffusion'
-        label += 'linear diffusion'
+        # label += 'linear diffusion'
+        label += 'constant diffusion'
     elif 'cool' in plasma_mode:
         plasma_dimension = int(plasma_mode.split('d')[-1])
         label += 'cooling d=' + str(plasma_dimension)
@@ -45,6 +46,8 @@ def define_label(plasma_mode, LC_mode):
 
 # plt.close('all')
 
+main_dir = '/Users/talmiller/Downloads/mm_rate_eqs/'
+
 # main_dir = '../runs/slurm_runs/set2_Rm_3/'
 # main_dir = '../runs/slurm_runs/set4_Rm_3_mfp_over_cell_4/'
 # main_dir = '../runs/slurm_runs/set5_Rm_3_mfp_over_cell_20/'
@@ -57,15 +60,17 @@ def define_label(plasma_mode, LC_mode):
 # main_dir = '../runs/slurm_runs/set17_MM_Rm_3_ni_1e21/'
 # main_dir = '../runs/slurm_runs/set20_MM_Rm_3_ni_2e22_trans_type_none/'
 # main_dir = '../runs/slurm_runs/set21_MM_Rm_3_ni_2e22_trans_type_none_trans_fac_1/'
-main_dir = '../runs/slurm_runs/set22_MM_Rm_3_ni_1e21_trans_type_none/'
+# main_dir = '../runs/slurm_runs/set22_MM_Rm_3_ni_1e21_trans_type_none/'
 # main_dir = '../runs/slurm_runs/set24_MM_Rm_3_ni_2e20_trans_type_none/'
 # main_dir = '../runs/slurm_runs/set25_MM_Rm_3_ni_4e23_trans_type_none/'
-# main_dir = '../runs/slurm_runs/set26_MM_Rm_3_ni_2e20_trans_type_none_flux_cutoff_0.01/'
-# main_dir = '../runs/slurm_runs/set27_MM_Rm_3_ni_2e22_trans_type_none_flux_cutoff_1e-3/'
+# main_dir += '/runs/slurm_runs/set26_MM_Rm_3_ni_2e20_trans_type_none_flux_cutoff_0.01/'
+# main_dir += '/runs/slurm_runs/set27_MM_Rm_3_ni_2e22_trans_type_none_flux_cutoff_1e-3/'
 # main_dir = '../runs/slurm_runs/set28_MM_Rm_3_ni_2e22_trans_type_none_flux_cutoff_1e-4/'
-# main_dir = '../runs/slurm_runs/set29_MM_Rm_3_ni_2e20_trans_type_none_flux_cutoff_1e-4/'
+# main_dir += '/runs/slurm_runs/set29_MM_Rm_3_ni_2e20_trans_type_none_flux_cutoff_1e-4/'
 # main_dir = '../runs/slurm_runs/set30_MM_Rm_3_ni_4e23_trans_type_none_flux_cutoff_1e-4/'
-
+# main_dir = '../runs/slurm_runs/set31_MM_Rm_3_ni_1e21_trans_type_none_right_scat_fac_10/'
+# main_dir = '../runs/slurm_runs/set32_MM_Rm_3_ni_1e21_trans_type_none_right_scat_fac_100/'
+main_dir += '/runs/slurm_runs/set33_MM_Rm_3_ni_1e21_trans_type_none_right_scat_fac_1/'
 
 colors = []
 # colors += ['b']
@@ -116,6 +121,7 @@ for ind_mode in range(len(plasma_modes)):
 
     for ind_LC in range(len(LC_modes)):
         linestyle = linestyles[ind_LC]
+        # linestyle = '--'
         LC_mode = LC_modes[ind_LC]
 
         flux_list = np.nan * np.zeros(len(num_cells_list))
@@ -175,7 +181,7 @@ for ind_mode in range(len(plasma_modes)):
         # label_flux = define_label(plasma_mode, LC_mode)
         label_flux = define_plasma_mode_label(plasma_mode)
         plt.figure(1)
-        plt.plot(num_cells_list, flux_list, '-', label=label_flux, linestyle=linestyle, color=color,
+        plt.plot(num_cells_list, flux_list, label=label_flux, linestyle=linestyle, color=color,
                  # plt.plot(num_cells_list, n1_list, '-', label=label_flux, linestyle=linestyle, color=color,
                  linewidth=linewidth)
 
@@ -291,9 +297,10 @@ plt.text(0.98, 0.97, text, fontdict={'fontname': 'times new roman', 'weight': 'b
 # plt.legend()
 
 # save pics in high res
-save_dir = '../../../Papers/texts/paper2020/pics/'
+# save_dir = '../../../Papers/texts/paper2020/pics/'
+save_dir = '/Users/talmiller/Dropbox/UNI/Courses Graduate/Plasma/Papers/texts/paper2020/pics/'
 
 # file_name = 'flux_function_of_N'
-file_name = 'flux_function_of_N_suboptimal'
-beingsaved = plt.figure(1)
-beingsaved.savefig(save_dir + file_name + '.eps', format='eps')
+# file_name = 'flux_function_of_N_suboptimal'
+# beingsaved = plt.figure(1)
+# beingsaved.savefig(save_dir + file_name + '.eps', format='eps')
