@@ -55,7 +55,8 @@ main_dir = '/Users/talmiller/Downloads/mm_rate_eqs/'
 # main_dir = '../runs/slurm_runs/set18_MM_N_30_ni_2e22/'
 # main_dir = '../runs/slurm_runs/set19_MM_N_30_ni_1e21/'
 # main_dir += '../runs/slurm_runs/set23_MM_N_30_ni_2e22_trans_type_none/'
-main_dir += '/runs/slurm_runs/set23_MM_N_30_ni_2e22_trans_type_none/'
+# main_dir += '/runs/slurm_runs/set23_MM_N_30_ni_2e22_trans_type_none/'
+main_dir += '/runs/slurm_runs/set36_MM_N_30_ni_2e22_trans_type_none/'
 
 # colors = []
 # colors += ['b']
@@ -83,7 +84,9 @@ U = 0
 # U = 0.5
 # Rm_list = [1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
 # Rm_list = [1.1, 1.3, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0, 20.0]
-Rm_list = [3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0, 20.0]
+# Rm_list = [3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0, 20.0]
+# Rm_list = [1.1, 1.3, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0, 20.0, 25.0, 30.0]
+Rm_list = [2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0, 20.0, 25.0, 30.0]
 # Rm_list = [3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0, 20.0]
 # Rm_list = [1.1, 1.3, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5]
 # Rm_list = [5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0, 20.0]
@@ -188,7 +191,9 @@ plt.yscale("log")
 plt.xscale("log")
 
 ax = plt.gca()
-ax.set_xticks([3, 10, 20])
+# ax.set_xticks([3, 10, 20])
+ax.set_xticks([3, 10, 30])
+# ax.set_xticks([2, 5, 10, 20, 30])
 from matplotlib.ticker import StrMethodFormatter, NullFormatter
 
 ax.xaxis.set_major_formatter(StrMethodFormatter('{x:.1f}'))

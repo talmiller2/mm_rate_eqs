@@ -73,11 +73,12 @@ rate_eqs_script = get_script_rate_eqs_slave()
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set31_MM_Rm_3_ni_1e21_trans_type_none_right_scat_fac_10'
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set32_MM_Rm_3_ni_1e21_trans_type_none_right_scat_fac_100'
 
-n0 = 2e22  # m^-3
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set34_MM_Rm_10_ni_2e22_trans_type_none'
+# n0 = 2e22  # m^-3
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set34_MM_Rm_10_ni_2e22_trans_type_none'
 
 n0 = 1e21  # m^-3
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set35_MM_Rm_10_ni_1e21_trans_type_none'
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set35_MM_Rm_10_ni_1e21_trans_type_none'
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set37_MM_Rm_10_ni_1e21_trans_type_none_flux_cutoff_1e-4'
 
 slurm_kwargs = {'partition': 'core'}  # default
 # slurm_kwargs = {'partition': 'socket'}
@@ -137,8 +138,8 @@ for plasma_mode in plasma_modes:
 
                 # settings['flux_normalized_termination_cutoff'] = 0.05
                 # settings['flux_normalized_termination_cutoff'] = 0.01
-                settings['flux_normalized_termination_cutoff'] = 1e-3
-                # settings['flux_normalized_termination_cutoff'] = 1e-4
+                # settings['flux_normalized_termination_cutoff'] = 1e-3
+                settings['flux_normalized_termination_cutoff'] = 1e-4
 
                 # for const density right boundary condition
                 settings['right_boundary_condition'] = 'none'

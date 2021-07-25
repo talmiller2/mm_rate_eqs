@@ -53,29 +53,32 @@ def define_label(plasma_mode, LC_mode):
 
 main_dir = '/Users/talmiller/Downloads/mm_rate_eqs/'
 
-# main_dir = '../runs/slurm_runs/set2_Rm_3/'
-# main_dir = '../runs/slurm_runs/set4_Rm_3_mfp_over_cell_4/'
-# main_dir = '../runs/slurm_runs/set5_Rm_3_mfp_over_cell_20/'
-# main_dir = '../runs/slurm_runs/set6_Rm_3_mfp_over_cell_1_mfp_limitX100/'
-# main_dir = '../runs/slurm_runs/set7_Rm_3_mfp_over_cell_20_mfp_limitX100/'
-# main_dir = '../runs/slurm_runs/set10_Rm_3_mfp_over_cell_0.04_mfp_limitX100/'
-# main_dir = '../runs/slurm_runs/set14_MM_Rm_3_ni_2e22/'
-# main_dir = '../runs/slurm_runs/set15_MM_Rm_3_ni_2e22_nend_1e-2_rbc_adjust_ntR/'
-# main_dir = '../runs/slurm_runs/set16_MM_Rm_3_ni_4e23/'
-# main_dir = '../runs/slurm_runs/set17_MM_Rm_3_ni_1e21/'
-# main_dir = '../runs/slurm_runs/set20_MM_Rm_3_ni_2e22_trans_type_none/'
-# main_dir = '../runs/slurm_runs/set21_MM_Rm_3_ni_2e22_trans_type_none_trans_fac_1/'
-# main_dir = '../runs/slurm_runs/set22_MM_Rm_3_ni_1e21_trans_type_none/'
-# main_dir = '../runs/slurm_runs/set24_MM_Rm_3_ni_2e20_trans_type_none/'
-# main_dir = '../runs/slurm_runs/set25_MM_Rm_3_ni_4e23_trans_type_none/'
+# main_dir += '/runs/slurm_runs/set2_Rm_3/'
+# main_dir += '/runs/slurm_runs/set4_Rm_3_mfp_over_cell_4/'
+# main_dir += '/runs/slurm_runs/set5_Rm_3_mfp_over_cell_20/'
+# main_dir += '/runs/slurm_runs/set6_Rm_3_mfp_over_cell_1_mfp_limitX100/'
+# main_dir += '/runs/slurm_runs/set7_Rm_3_mfp_over_cell_20_mfp_limitX100/'
+# main_dir += '/runs/slurm_runs/set10_Rm_3_mfp_over_cell_0.04_mfp_limitX100/'
+# main_dir += '/runs/slurm_runs/set14_MM_Rm_3_ni_2e22/'
+# main_dir += '/runs/slurm_runs/set15_MM_Rm_3_ni_2e22_nend_1e-2_rbc_adjust_ntR/'
+# main_dir += '/runs/slurm_runs/set16_MM_Rm_3_ni_4e23/'
+# main_dir += '/runs/slurm_runs/set17_MM_Rm_3_ni_1e21/'
+# main_dir += '/runs/slurm_runs/set20_MM_Rm_3_ni_2e22_trans_type_none/'
+# main_dir += '/runs/slurm_runs/set21_MM_Rm_3_ni_2e22_trans_type_none_trans_fac_1/'
+# main_dir += '/runs/slurm_runs/set22_MM_Rm_3_ni_1e21_trans_type_none/'
+# main_dir += '/runs/slurm_runs/set24_MM_Rm_3_ni_2e20_trans_type_none/'
+# main_dir += '/runs/slurm_runs/set25_MM_Rm_3_ni_4e23_trans_type_none/'
 # main_dir += '/runs/slurm_runs/set26_MM_Rm_3_ni_2e20_trans_type_none_flux_cutoff_0.01/'
-main_dir += '/runs/slurm_runs/set27_MM_Rm_3_ni_2e22_trans_type_none_flux_cutoff_1e-3/'
-# main_dir = '../runs/slurm_runs/set28_MM_Rm_3_ni_2e22_trans_type_none_flux_cutoff_1e-4/'
+# main_dir += '/runs/slurm_runs/set27_MM_Rm_3_ni_2e22_trans_type_none_flux_cutoff_1e-3/'
+# main_dir += '/runs/slurm_runs/set28_MM_Rm_3_ni_2e22_trans_type_none_flux_cutoff_1e-4/'
 # main_dir += '/runs/slurm_runs/set29_MM_Rm_3_ni_2e20_trans_type_none_flux_cutoff_1e-4/'
-# main_dir = '../runs/slurm_runs/set30_MM_Rm_3_ni_4e23_trans_type_none_flux_cutoff_1e-4/'
-# main_dir = '../runs/slurm_runs/set31_MM_Rm_3_ni_1e21_trans_type_none_right_scat_fac_10/'
-# main_dir = '../runs/slurm_runs/set32_MM_Rm_3_ni_1e21_trans_type_none_right_scat_fac_100/'
+# main_dir += '/runs/slurm_runs/set30_MM_Rm_3_ni_4e23_trans_type_none_flux_cutoff_1e-4/'
+# main_dir += '/runs/slurm_runs/set31_MM_Rm_3_ni_1e21_trans_type_none_right_scat_fac_10/'
+# main_dir += '/runs/slurm_runs/set32_MM_Rm_3_ni_1e21_trans_type_none_right_scat_fac_100/'
 # main_dir += '/runs/slurm_runs/set33_MM_Rm_3_ni_1e21_trans_type_none_right_scat_fac_1/'
+main_dir += '/runs/slurm_runs/set34_MM_Rm_10_ni_2e22_trans_type_none/'
+# main_dir += '/runs/slurm_runs/set35_MM_Rm_10_ni_1e21_trans_type_none/'
+
 
 colors = []
 # colors += ['b']
@@ -95,10 +98,10 @@ plasma_modes += ['coold3']
 # plasma_modes += ['cool']
 # plasma_modes += ['cool_mfpcutoff']
 
-# num_cells_list = [3, 5, 8, 10, 12, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+num_cells_list = [3, 5, 8, 10, 12, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 # num_cells_list = [3, 5, 8]
 # num_cells_list = [3, 5, 8, 10, 15, 30, 50, 70, 100]
-num_cells_list = [3, 5, 8, 10, 15, 20, 30, 50, 70, 100, 130, 150]
+# num_cells_list = [3, 5, 8, 10, 15, 20, 30, 50, 70, 100, 130, 150]
 
 U = 0
 # U = 0.05
@@ -280,8 +283,8 @@ radial_flux_density = D_classical * dndx
 radial_flux_classical = radial_flux_density * cyllinder_radial_cross_section
 radial_flux_classical /= flux_lawson
 
-plt.plot(num_cells_list, radial_flux_bohm, label='radial bohm', linestyle='-.', color='k', linewidth=linewidth)
-plt.plot(num_cells_list, radial_flux_classical, label='radial classical', linestyle=':', color='k', linewidth=linewidth)
+# plt.plot(num_cells_list, radial_flux_bohm, label='radial bohm', linestyle='-.', color='k', linewidth=linewidth)
+# plt.plot(num_cells_list, radial_flux_classical, label='radial classical', linestyle=':', color='k', linewidth=linewidth)
 
 fig = plt.figure(1)
 plt.yscale("log")

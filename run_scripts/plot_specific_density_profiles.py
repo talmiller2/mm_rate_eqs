@@ -63,7 +63,7 @@ main_dir = '/Users/talmiller/Downloads/mm_rate_eqs/'
 # main_dir = '../runs/slurm_runs/set17_MM_Rm_3_ni_1e21/'
 # main_dir = '../runs/slurm_runs/set20_MM_Rm_3_ni_2e22_trans_type_none/'
 # main_dir = '../runs/slurm_runs/set21_MM_Rm_3_ni_2e22_trans_type_none_trans_fac_1/'
-main_dir += '/runs/slurm_runs/set22_MM_Rm_3_ni_1e21_trans_type_none/'
+# main_dir += '/runs/slurm_runs/set22_MM_Rm_3_ni_1e21_trans_type_none/'
 # main_dir = '../runs/slurm_runs/set24_MM_Rm_3_ni_2e20_trans_type_none/'
 # main_dir = '../runs/slurm_runs/set25_MM_Rm_3_ni_4e23_trans_type_none/'
 # main_dir = '../runs/slurm_runs/set26_MM_Rm_3_ni_2e20_trans_type_none_flux_cutoff_0.01/'
@@ -71,7 +71,8 @@ main_dir += '/runs/slurm_runs/set22_MM_Rm_3_ni_1e21_trans_type_none/'
 # main_dir += '/runs/slurm_runs/set28_MM_Rm_3_ni_2e22_trans_type_none_flux_cutoff_1e-4/'
 # main_dir = '../runs/slurm_runs/set29_MM_Rm_3_ni_2e20_trans_type_none_flux_cutoff_1e-4/'
 # main_dir = '../runs/slurm_runs/set30_MM_Rm_3_ni_4e23_trans_type_none_flux_cutoff_1e-4/'
-
+# main_dir += '/runs/slurm_runs/set34_MM_Rm_10_ni_2e22_trans_type_none/'
+main_dir += '/runs/slurm_runs/set35_MM_Rm_10_ni_1e21_trans_type_none/'
 
 plasma_modes = []
 plasma_modes += ['isoTmfp']
@@ -90,6 +91,7 @@ colors = ['k', 'b', 'g', 'orange', 'r']
 
 linewidth = 3
 
+# number_of_cells = 5
 # number_of_cells = 10
 number_of_cells = 30
 # number_of_cells = 70
@@ -323,11 +325,11 @@ save_dir = '/Users/talmiller/Dropbox/UNI/Courses Graduate/Plasma/Papers/texts/pa
 
 # file_name = 'density_profiles_N_30_with_theory'
 file_name = 'density_profiles_N_30_suboptimal_with_theory'
-beingsaved = plt.figure(2)
-beingsaved.savefig(save_dir + file_name + '.eps', format='eps')
+# beingsaved = plt.figure(2)
+# beingsaved.savefig(save_dir + file_name + '.eps', format='eps')
 
 # file_name = 'mfp_profiles_N_30'
 file_name = 'mfp_profiles_N_30_suboptimal'
 # file_name = 'mfp_profiles_N_100'
-beingsaved = plt.figure(3)
-beingsaved.savefig(save_dir + file_name + '.eps', format='eps')
+# beingsaved = plt.figure(3)
+# beingsaved.savefig(save_dir + file_name + '.eps', format='eps')
