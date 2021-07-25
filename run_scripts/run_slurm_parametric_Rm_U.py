@@ -27,7 +27,7 @@ rate_eqs_script = get_script_rate_eqs_slave()
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set23_MM_N_30_ni_2e22_trans_type_none'
 
 n0 = 2e22  # m^-3
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set34_MM_N_30_ni_2e22_trans_type_none'
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set36_MM_N_30_ni_2e22_trans_type_none'
 
 # slurm_kwargs = {'partition': 'core'}  # default
 slurm_kwargs = {'partition': 'socket'}
