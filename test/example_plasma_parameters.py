@@ -4,7 +4,7 @@ from mm_rate_eqs.default_settings import define_default_settings
 from mm_rate_eqs.fusion_functions import get_lawson_parameters, get_fusion_power, get_fusion_charged_power
 from mm_rate_eqs.plasma_functions import get_brem_radiation_loss, get_cyclotron_radiation_loss, get_magnetic_pressure, \
     get_ideal_gas_pressure, get_ideal_gas_energy_per_volume, get_magnetic_field_for_given_pressure, \
-    get_bohm_diffusion_constant
+    get_bohm_diffusion_constant, get_larmor_radius
 from mm_rate_eqs.rate_functions import calculate_coulomb_logarithm, get_thermal_velocity, get_coulomb_scattering_rate
 
 from mm_rate_eqs.constants_functions import define_electron_mass, define_proton_mass, define_factor_eV_to_K, \
@@ -32,6 +32,8 @@ from mm_rate_eqs.constants_functions import define_electron_mass, define_proton_
 
 # fusion plasma
 settings = {'gas_name': 'DT_mix'}
+# T = 100000.0
+# n_list = [2e20]
 # T = 10000.0
 # n_list = [2e21]
 T = 3000
@@ -182,12 +184,24 @@ for n in n_list:
     print('Q_factor_total_2 = ' + str(Q_factor_total_2))
 
     # Figuring out the radial diffusion flux
+    print('Radial fluxes in the MM section:')
+
+    # using Bohm diffusion
+    print('Bohm diffusion')
     D_bohm = get_bohm_diffusion_constant(Te, B)  # [m^2/s]
     dndx = ne / (settings['diameter_main_cell'] / 2)
     radial_flux_density = D_bohm * dndx
-    # system_total_length = settings['length_main_cell']
-    system_total_length = 100  # m
+    system_total_length = settings['length_main_cell']
     cyllinder_radial_cross_section = np.pi * settings['diameter_main_cell'] * system_total_length
+    radial_flux = radial_flux_density * cyllinder_radial_cross_section
+    print('radial_flux: ', '{:.3e}'.format(radial_flux), 's^-1')
+    print('radial_flux / flux_naive: ', '{:.3e}'.format(radial_flux / flux_naive))
+
+    # using classical diffusion
+    print('classical diffusion')
+    gyro_radius = get_larmor_radius(Ti, B)
+    D_classical = gyro_radius ** 2 * scat_rate
+    radial_flux_density = D_classical * dndx
     radial_flux = radial_flux_density * cyllinder_radial_cross_section
     print('radial_flux: ', '{:.3e}'.format(radial_flux), 's^-1')
     print('radial_flux / flux_naive: ', '{:.3e}'.format(radial_flux / flux_naive))

@@ -173,16 +173,27 @@ for ind_mode in range(len(plasma_modes)):
         # # plt.plot(Rm_list, flux_cells_fit, label=label, linestyle='--', color=color, linewidth=linewidth)
 
 # plot a 1/Rm reference line
-const = 2e2
-# const = 0.75e27
-# const = 14
-# const = 14
-plt.plot(Rm_list, const / np.array(Rm_list), '-', label='$1/R_m$ reference', linestyle='--', color='k',
-         linewidth=2)
+# const = 2e2
+# plt.plot(Rm_list, const / np.array(Rm_list), '-', label='$1/R_m$ reference', linestyle='--', color='k',
+#          linewidth=2)
+consts = [2e2, 3.66e2, 1.13e2, 1.45e2, 1.75e2]
+for ind_mode in range(len(plasma_modes)):
+    color = colors[ind_mode]
+    const = consts[ind_mode]
+    plt.plot(Rm_list, const / np.array(Rm_list), '-', linestyle='--', color=color, linewidth=2)
 
 plt.figure(1)
+# fig, ax = plt.figure(1)
 plt.yscale("log")
-# plt.xscale("log")
+plt.xscale("log")
+
+ax = plt.gca()
+ax.set_xticks([3, 10, 20])
+from matplotlib.ticker import StrMethodFormatter, NullFormatter
+
+ax.xaxis.set_major_formatter(StrMethodFormatter('{x:.1f}'))
+ax.xaxis.set_minor_formatter(NullFormatter())
+
 plt.xlabel('$R_m$')
 # plt.ylabel('flux [$s^{-1}$]')
 # plt.ylabel('$\\phi_{p}$ [$m^{-2}s^{-1}$]')

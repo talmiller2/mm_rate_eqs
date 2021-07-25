@@ -371,6 +371,13 @@ def define_loss_cone_fractions(state, settings):
             alpha_tR[i], alpha_tL[i], alpha_c[i] = get_solid_angles(U[i], v_th[i], alpha)
     else:
         raise ValueError('invalid alpha_definition: ' + settings['alpha_definition'])
+
+    # # testing making smaller the part that can get scattered to be trapped
+    # alpha_tR *= 2
+    # alpha_tL *= 2
+    # alpha_c = 1 - alpha_tR - alpha_tL
+    # alpha_c = 0.5 - alpha_tR - alpha_tL
+
     return alpha_tR, alpha_tL, alpha_c
 
 
@@ -453,13 +460,6 @@ def get_fluxes(state, settings):
         flux_trans_L[k] = - v_L[k + 1] * n_tL[k + 1]
         flux_mmm_drag[k] = - U[k + 1] * n_c[k + 1]
     flux_single = state['n'][0] * state['v_th'][0]
-
-    # # calculate fluxes (normalized to the single mirror flux)
-    # flux_factor = 2.0 * settings['cross_section_main_cell']
-    # for k in range(0, settings['number_of_cells'] - 1):
-    #     flux_trans_R[k] = v_R[k] * n_tR[k] * flux_factor * settings['transmission_factor']
-    #     flux_trans_L[k] = - v_L[k + 1] * n_tL[k + 1] * flux_factor * settings['transmission_factor']
-    #     flux_mmm_drag[k] = - U[k + 1] * n_c[k + 1] * flux_factor
 
     flux = flux_trans_R + flux_trans_L + flux_mmm_drag
 

@@ -16,8 +16,8 @@ settings = {}
 # settings['save_state'] = 'False'
 settings['assume_constant_density'] = False
 # settings['assume_constant_density'] = True
-# settings['assume_constant_temperature'] = False
-settings['assume_constant_temperature'] = True
+settings['assume_constant_temperature'] = False
+# settings['assume_constant_temperature'] = True
 # settings['ion_scattering_rate_factor'] = 10
 # settings['cell_size'] = 50
 settings['plasma_dimension'] = 1
@@ -34,12 +34,12 @@ settings['number_of_cells'] = 30
 # settings['number_of_cells'] = 150
 # settings['number_of_cells'] = 200
 
-# settings['n0'] = 2e22  # m^-3
-settings['n0'] = 1e21  # m^-3
+settings['n0'] = 2e22  # m^-3
+# settings['n0'] = 1e21  # m^-3
 
-# settings['right_scat_factor'] = 1.0
+settings['right_scat_factor'] = 1.0
 # settings['right_scat_factor'] = 10.0
-settings['right_scat_factor'] = 100.0
+# settings['right_scat_factor'] = 100.0
 
 settings['U0'] = 0
 # settings['U0'] = 0.01
@@ -57,7 +57,7 @@ settings['U0'] = 0
 # settings['flux_normalized_termination_cutoff'] = 0.03
 settings['flux_normalized_termination_cutoff'] = 0.01
 
-settings['alpha_definition'] = 'geometric_constant'
+# settings['alpha_definition'] = 'geometric_constant'
 # settings['alpha_definition'] = 'geometric_local'
 
 # settings['U_for_loss_cone_factor'] = 1.0

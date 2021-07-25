@@ -13,6 +13,11 @@ from scipy.optimize import curve_fit
 from mm_rate_eqs.relaxation_algorithm_functions import load_simulation
 from mm_rate_eqs.fusion_functions import get_lawson_parameters
 
+from mm_rate_eqs.plasma_functions import get_brem_radiation_loss, get_cyclotron_radiation_loss, get_magnetic_pressure, \
+    get_ideal_gas_pressure, get_ideal_gas_energy_per_volume, get_magnetic_field_for_given_pressure, \
+    get_bohm_diffusion_constant, get_larmor_radius
+
+
 def define_plasma_mode_label(plasma_mode):
     label = ''
     if plasma_mode == 'isoT':
@@ -64,13 +69,13 @@ main_dir = '/Users/talmiller/Downloads/mm_rate_eqs/'
 # main_dir = '../runs/slurm_runs/set24_MM_Rm_3_ni_2e20_trans_type_none/'
 # main_dir = '../runs/slurm_runs/set25_MM_Rm_3_ni_4e23_trans_type_none/'
 # main_dir += '/runs/slurm_runs/set26_MM_Rm_3_ni_2e20_trans_type_none_flux_cutoff_0.01/'
-# main_dir += '/runs/slurm_runs/set27_MM_Rm_3_ni_2e22_trans_type_none_flux_cutoff_1e-3/'
+main_dir += '/runs/slurm_runs/set27_MM_Rm_3_ni_2e22_trans_type_none_flux_cutoff_1e-3/'
 # main_dir = '../runs/slurm_runs/set28_MM_Rm_3_ni_2e22_trans_type_none_flux_cutoff_1e-4/'
 # main_dir += '/runs/slurm_runs/set29_MM_Rm_3_ni_2e20_trans_type_none_flux_cutoff_1e-4/'
 # main_dir = '../runs/slurm_runs/set30_MM_Rm_3_ni_4e23_trans_type_none_flux_cutoff_1e-4/'
 # main_dir = '../runs/slurm_runs/set31_MM_Rm_3_ni_1e21_trans_type_none_right_scat_fac_10/'
 # main_dir = '../runs/slurm_runs/set32_MM_Rm_3_ni_1e21_trans_type_none_right_scat_fac_100/'
-main_dir += '/runs/slurm_runs/set33_MM_Rm_3_ni_1e21_trans_type_none_right_scat_fac_1/'
+# main_dir += '/runs/slurm_runs/set33_MM_Rm_3_ni_1e21_trans_type_none_right_scat_fac_1/'
 
 colors = []
 # colors += ['b']
@@ -251,9 +256,32 @@ for ind_mode in range(len(plasma_modes)):
 
 # plot a 1/N reference line
 # const = 1.1
-const = 14
+# const = 14
 # plt.plot(num_cells_list, const / np.array(num_cells_list), '-', label='$1/N$ reference', linestyle='--', color='k',
 #          linewidth=linewidth)
+
+
+# add plot for then radial flux in the MM section alone
+
+B = 10.0  # T
+D_bohm = get_bohm_diffusion_constant(state['Te'][0], B)  # [m^2/s]
+# integral of dn/dz for linearly declining n is n*L/2
+dndx = state['n'][0] * np.ones(len(num_cells_list)) / 2 / (settings['diameter_main_cell'] / 2)
+radial_flux_density = D_bohm * dndx
+system_total_length = np.array(num_cells_list) * settings['cell_size']
+cyllinder_radial_cross_section = np.pi * settings['diameter_main_cell'] * system_total_length
+radial_flux_bohm = radial_flux_density * cyllinder_radial_cross_section
+radial_flux_bohm /= flux_lawson
+
+gyro_radius = get_larmor_radius(state['Ti'][0], B)
+D_classical = gyro_radius ** 2 * state['coulomb_scattering_rate'][0]
+dndx = state['n'][0] * np.ones(len(num_cells_list)) / 3 / (settings['diameter_main_cell'] / 2)
+radial_flux_density = D_classical * dndx
+radial_flux_classical = radial_flux_density * cyllinder_radial_cross_section
+radial_flux_classical /= flux_lawson
+
+plt.plot(num_cells_list, radial_flux_bohm, label='radial bohm', linestyle='-.', color='k', linewidth=linewidth)
+plt.plot(num_cells_list, radial_flux_classical, label='radial classical', linestyle=':', color='k', linewidth=linewidth)
 
 fig = plt.figure(1)
 plt.yscale("log")
@@ -270,10 +298,10 @@ plt.grid(True)
 plt.legend()
 
 # text = '(a)'
-text = '(b)'
-plt.text(0.98, 0.97, text, fontdict={'fontname': 'times new roman', 'weight': 'bold', 'size': 20},
-         horizontalalignment='right', verticalalignment='top',
-         transform=fig.axes[0].transAxes)
+# text = '(b)'
+# plt.text(0.98, 0.97, text, fontdict={'fontname': 'times new roman', 'weight': 'bold', 'size': 20},
+#          horizontalalignment='right', verticalalignment='top',
+#          transform=fig.axes[0].transAxes)
 
 # plt.figure(2)
 # # plt.xlabel('cell number')
