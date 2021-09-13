@@ -191,13 +191,14 @@ plt.yscale("log")
 plt.xscale("log")
 
 ax = plt.gca()
-# ax.set_xticks([3, 10, 20])
 ax.set_xticks([3, 10, 30])
-# ax.set_xticks([2, 5, 10, 20, 30])
+ax.set_yticks([10, 100])
 from matplotlib.ticker import StrMethodFormatter, NullFormatter
 
-ax.xaxis.set_major_formatter(StrMethodFormatter('{x:.1f}'))
+ax.xaxis.set_major_formatter(StrMethodFormatter('{x:.0f}'))
 ax.xaxis.set_minor_formatter(NullFormatter())
+ax.yaxis.set_major_formatter(StrMethodFormatter('{x:.0f}'))
+ax.yaxis.set_minor_formatter(NullFormatter())
 
 plt.xlabel('$R_m$')
 # plt.ylabel('flux [$s^{-1}$]')
@@ -212,7 +213,8 @@ plt.legend()
 
 # save pics in high res
 # save_dir = '../../../Papers/texts/paper2020/pics/'
-save_dir = '/Users/talmiller/Dropbox/UNI/Courses Graduate/Plasma/Papers/texts/paper2020/pics/'
+# save_dir = '/Users/talmiller/Dropbox/UNI/Courses Graduate/Plasma/Papers/texts/paper2020/pics/'
+save_dir = '/Users/talmiller/Dropbox/UNI/Courses Graduate/Plasma/Papers/texts/paper2020/pics_with_Rm_10/'
 
 # file_name = 'flux_function_of_Rm'
 # beingsaved = plt.figure(1)

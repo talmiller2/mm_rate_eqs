@@ -71,8 +71,9 @@ main_dir = '/Users/talmiller/Downloads/mm_rate_eqs/'
 # main_dir += '/runs/slurm_runs/set28_MM_Rm_3_ni_2e22_trans_type_none_flux_cutoff_1e-4/'
 # main_dir = '../runs/slurm_runs/set29_MM_Rm_3_ni_2e20_trans_type_none_flux_cutoff_1e-4/'
 # main_dir = '../runs/slurm_runs/set30_MM_Rm_3_ni_4e23_trans_type_none_flux_cutoff_1e-4/'
-# main_dir += '/runs/slurm_runs/set34_MM_Rm_10_ni_2e22_trans_type_none/'
-main_dir += '/runs/slurm_runs/set35_MM_Rm_10_ni_1e21_trans_type_none/'
+main_dir += '/runs/slurm_runs/set34_MM_Rm_10_ni_2e22_trans_type_none/'
+# main_dir += '/runs/slurm_runs/set35_MM_Rm_10_ni_1e21_trans_type_none/'
+# main_dir += '/runs/slurm_runs/set37_MM_Rm_10_ni_1e21_trans_type_none_flux_cutoff_1e-4/'
 
 plasma_modes = []
 plasma_modes += ['isoTmfp']
@@ -292,8 +293,8 @@ plt.text(0.98, 0.97, '(b)', fontdict={'fontname': 'times new roman', 'weight': '
          horizontalalignment='right', verticalalignment='top',
          transform=fig.axes[0].transAxes)
 
-# text = '(a)'
-text = '(b)'
+text = '(a)'
+# text = '(b)'
 
 fig = plt.figure(2)
 plt.text(0.98, 0.97, text, fontdict={'fontname': 'times new roman', 'weight': 'bold', 'size': 20},
@@ -305,9 +306,19 @@ plt.text(0.04, 0.97, text, fontdict={'fontname': 'times new roman', 'weight': 'b
          horizontalalignment='left', verticalalignment='top',
          transform=fig.axes[0].transAxes)
 
+ax = plt.gca()
+# ax.set_yticks([1, 10])
+# ax.set_yticks([5, 10, 20, 30])
+ax.set_yticks([0.1, 1, 10])
+from matplotlib.ticker import StrMethodFormatter, NullFormatter
+
+ax.yaxis.set_major_formatter(StrMethodFormatter('{x:.1f}'))
+ax.yaxis.set_minor_formatter(NullFormatter())
+
 ##### save pics in high res
 # save_dir = '../../../Papers/texts/paper2020/pics/'
-save_dir = '/Users/talmiller/Dropbox/UNI/Courses Graduate/Plasma/Papers/texts/paper2020/pics/'
+# save_dir = '/Users/talmiller/Dropbox/UNI/Courses Graduate/Plasma/Papers/texts/paper2020/pics/'
+save_dir = '/Users/talmiller/Dropbox/UNI/Courses Graduate/Plasma/Papers/texts/paper2020/pics_with_Rm_10/'
 
 # file_name = 'density_profiles_N_30_nc'
 # # file_name = 'density_profiles_N_100_nc'
@@ -324,12 +335,12 @@ save_dir = '/Users/talmiller/Dropbox/UNI/Courses Graduate/Plasma/Papers/texts/pa
 # beingsaved.savefig(save_dir + file_name + '.eps', format='eps')
 
 # file_name = 'density_profiles_N_30_with_theory'
-file_name = 'density_profiles_N_30_suboptimal_with_theory'
+# file_name = 'density_profiles_N_30_suboptimal_with_theory'
 # beingsaved = plt.figure(2)
 # beingsaved.savefig(save_dir + file_name + '.eps', format='eps')
 
-# file_name = 'mfp_profiles_N_30'
-file_name = 'mfp_profiles_N_30_suboptimal'
+file_name = 'mfp_profiles_N_30'
+# file_name = 'mfp_profiles_N_30_suboptimal'
 # file_name = 'mfp_profiles_N_100'
 # beingsaved = plt.figure(3)
 # beingsaved.savefig(save_dir + file_name + '.eps', format='eps')

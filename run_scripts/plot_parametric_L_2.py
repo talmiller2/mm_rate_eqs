@@ -78,6 +78,7 @@ main_dir = '/Users/talmiller/Downloads/mm_rate_eqs/'
 # main_dir += '/runs/slurm_runs/set33_MM_Rm_3_ni_1e21_trans_type_none_right_scat_fac_1/'
 main_dir += '/runs/slurm_runs/set34_MM_Rm_10_ni_2e22_trans_type_none/'
 # main_dir += '/runs/slurm_runs/set35_MM_Rm_10_ni_1e21_trans_type_none/'
+# main_dir += '/runs/slurm_runs/set37_MM_Rm_10_ni_1e21_trans_type_none_flux_cutoff_1e-4/'
 
 
 colors = []
@@ -166,6 +167,7 @@ for ind_mode in range(len(plasma_modes)):
 
                 flux_list[ind_N] = state['flux_mean']
                 n1_list[ind_N] = state['n'][-1]
+                # n1_list[ind_N] = state['n'][-2]
 
             except:
                 pass
@@ -181,7 +183,6 @@ for ind_mode in range(len(plasma_modes)):
             #     plt.plot(state['n'], '-', label=label, linestyle=linestyle, color=color)
 
         # plot flux as a function of N
-        flux_norm = flux_list[5]
         # flux_list /= flux_norm
         # flux_list /= flux_list[3]
         # label_flux = plasma_modes[ind_mode] + '_U_' + str(U) + '_' + LC_mode
@@ -241,7 +242,11 @@ for ind_mode in range(len(plasma_modes)):
         elif 'cool' in plasma_mode:
             d = int(plasma_mode[-1]) * 1.0
             flux_analytic = - pre_factor * d / 5 * ((n1 / n0) ** (5 / d) - 1)
-        flux_analytic /= flux_analytic[5]
+        # ind_flux_fit = 6
+        num_cells_for_fit = 20
+        ind_flux_fit = np.where(np.array(num_cells_list) >= num_cells_for_fit)[0][0]
+        flux_norm = flux_list[ind_flux_fit]
+        flux_analytic /= flux_analytic[ind_flux_fit]
         flux_analytic *= flux_norm
         # plt.plot(num_cells_list, n1_list,
         plt.plot(num_cells_list, flux_analytic,
@@ -300,11 +305,22 @@ plt.tight_layout()
 plt.grid(True)
 plt.legend()
 
-# text = '(a)'
+text = '(a)'
 # text = '(b)'
-# plt.text(0.98, 0.97, text, fontdict={'fontname': 'times new roman', 'weight': 'bold', 'size': 20},
-#          horizontalalignment='right', verticalalignment='top',
-#          transform=fig.axes[0].transAxes)
+plt.text(0.98, 0.97, text, fontdict={'fontname': 'times new roman', 'weight': 'bold', 'size': 20},
+         horizontalalignment='right', verticalalignment='top',
+         transform=fig.axes[0].transAxes)
+
+ax = plt.gca()
+ax.set_xticks([10, 100])
+ax.set_yticks([10, 100])
+# ax.set_yticks([1000, 2000, 4000])
+from matplotlib.ticker import StrMethodFormatter, NullFormatter
+
+ax.xaxis.set_major_formatter(StrMethodFormatter('{x:.0f}'))
+ax.xaxis.set_minor_formatter(NullFormatter())
+ax.yaxis.set_major_formatter(StrMethodFormatter('{x:.0f}'))
+ax.yaxis.set_minor_formatter(NullFormatter())
 
 # plt.figure(2)
 # # plt.xlabel('cell number')
@@ -329,9 +345,10 @@ plt.legend()
 
 # save pics in high res
 # save_dir = '../../../Papers/texts/paper2020/pics/'
-save_dir = '/Users/talmiller/Dropbox/UNI/Courses Graduate/Plasma/Papers/texts/paper2020/pics/'
+# save_dir = '/Users/talmiller/Dropbox/UNI/Courses Graduate/Plasma/Papers/texts/paper2020/pics/'
+save_dir = '/Users/talmiller/Dropbox/UNI/Courses Graduate/Plasma/Papers/texts/paper2020/pics_with_Rm_10/'
 
-# file_name = 'flux_function_of_N'
+file_name = 'flux_function_of_N'
 # file_name = 'flux_function_of_N_suboptimal'
-# beingsaved = plt.figure(1)
-# beingsaved.savefig(save_dir + file_name + '.eps', format='eps')
+beingsaved = plt.figure(1)
+beingsaved.savefig(save_dir + file_name + '.eps', format='eps')
