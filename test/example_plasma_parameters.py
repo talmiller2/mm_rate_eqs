@@ -36,8 +36,14 @@ settings = {'gas_name': 'DT_mix'}
 # n_list = [2e20]
 # T = 10000.0
 # n_list = [2e21]
-T = 3000
-n_list = [4e22]
+# T = 3000
+# n_list = [4e22]
+# n_list = [2e21]
+
+# GOL-NB parameters
+T = 40
+n_list = [3e19]
+settings['cell_size'] = 0.22
 
 # T = 50000.0
 # n_list = [2e21]
@@ -90,7 +96,7 @@ for n in n_list:
     tau_scat = 1 / scat_rate
     flux_scat = 0.5 * ni * settings['volume_main_cell'] / tau_scat
 
-    print('ii scattering rate = ' + str(scat_rate) + ' 1/s')
+    print('ii scattering rate = ' + str(scat_rate) + ' [1/s]')
     # belan_scat_rate = get_coulomb_scattering_rate(n, T, T, settings, species='ions')
     # print('ii belan_scat_rate = ' + str(belan_scat_rate) + ' 1/s')
     v_th = get_thermal_velocity(Ti, settings, species='ions')
@@ -98,6 +104,20 @@ for n in n_list:
     mfp = v_th / scat_rate
     print('mfp = ' + str(mfp) + ' m')
     print('mfp = ' + str(mfp * 1e2) + ' cm')
+    print('l = ' + str(settings['cell_size']) + ' m')
+    print('mfp / l = ' + str(mfp / settings['cell_size']))
+
+    # comparing scattering rate to referee #2 new model suggestion
+    settings['Rm'] = 10.0
+    alpha_approx = 1 / (4 * settings['Rm'])
+    # from mm_rate_eqs.loss_cone_functions import get_solid_angles
+    # alpha_tR, alpha_tL, alpha_c = get_solid_angles(0, v_th, 1 / settings['Rm'])
+    scat_rate_term_original = alpha_approx * scat_rate
+    scat_rate_term_referee2 = np.sqrt(scat_rate * v_th / settings['cell_size'])
+    print('scat_rate_term_original = ' + str(scat_rate_term_original) + ' [1/s]')
+    print('scat_rate_term_referee2 = ' + str(scat_rate_term_referee2) + ' [1/s]')
+    print(
+        'scat_rate_term_referee2 / scat_rate_term_original = ' + str(scat_rate_term_referee2 / scat_rate_term_original))
 
     # Plasma beta
     P_magnetic = get_magnetic_pressure(B)
