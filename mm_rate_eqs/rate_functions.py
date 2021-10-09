@@ -399,38 +399,30 @@ def get_density_time_derivatives(state, settings):
     alpha_tR = state['alpha_tR']
     alpha_c = state['alpha_c']
 
-    # initializations
-    f_scat_c = np.zeros(settings['number_of_cells'])
-    f_scat_tL = np.zeros(settings['number_of_cells'])
-    f_scat_tR = np.zeros(settings['number_of_cells'])
-    f_trans_L = np.zeros(settings['number_of_cells'])
-    f_trans_R = np.zeros(settings['number_of_cells'])
-    f_drag = np.zeros(settings['number_of_cells'])
-
     # define density time derivative
-    for k in range(settings['number_of_cells']):
-        f_scat_c[k] = + nu_s[k] * (alpha_c[k] * (n_tL[k] + n_tR[k] * settings['right_scat_factor'])
-                                   - (alpha_tL[k] + alpha_tR[k]) * n_c[k])
+    f_scat_c = + nu_s * (alpha_c * (n_tL + n_tR * settings['right_scat_factor'])
+                         - (alpha_tL + alpha_tR) * n_c)
 
-        f_scat_tL[k] = + nu_s[k] * (-(alpha_c[k] + alpha_tR[k]) * n_tL[k]
-                                    + alpha_tL[k] * n_tR[k] * settings['right_scat_factor']
-                                    + alpha_tL[k] * n_c[k])
+    f_scat_tL = + nu_s * (-(alpha_c + alpha_tR) * n_tL
+                          + alpha_tL * n_tR * settings['right_scat_factor']
+                          + alpha_tL * n_c)
 
-        f_scat_tR[k] = + nu_s[k] * (-(alpha_c[k] + alpha_tL[k]) * n_tR[k] * settings['right_scat_factor']
-                                    + alpha_tR[k] * n_tL[k]
-                                    + alpha_tR[k] * n_c[k])
+    f_scat_tR = + nu_s * (-(alpha_c + alpha_tL) * n_tR * settings['right_scat_factor']
+                          + alpha_tR * n_tL
+                          + alpha_tR * n_c)
 
-        f_trans_L[k] = - v_L[k] * n_tL[k] / cell_sizes[k] * settings['transmission_factor']
-        if k < settings['number_of_cells'] - 1:
-            f_trans_L[k] += v_L[k + 1] * n_tL[k + 1] / cell_sizes[k] * settings['transmission_factor']
+    coeff_mat_L = - np.eye(settings['number_of_cells']) + np.eye(settings['number_of_cells'], k=1)
+    f_trans_L = coeff_mat_L.dot(v_L * n_tL)
+    f_trans_L *= settings['transmission_factor']
+    f_trans_L /= cell_sizes
 
-        f_trans_R[k] = - v_R[k] * n_tR[k] / cell_sizes[k] * settings['transmission_factor']
-        if k > 0:
-            f_trans_R[k] += v_R[k - 1] * n_tR[k - 1] / cell_sizes[k] * settings['transmission_factor']
+    coeff_mat_R = - np.eye(settings['number_of_cells']) + np.eye(settings['number_of_cells'], k=-1)
+    f_trans_R = coeff_mat_R.dot(v_R * n_tR)
+    f_trans_R *= settings['transmission_factor']
+    f_trans_R /= cell_sizes
 
-        f_drag[k] = - U[k] * n_c[k] / cell_sizes[k]
-        if k < settings['number_of_cells'] - 1:
-            f_drag[k] += U[k + 1] * n_c[k + 1] / cell_sizes[k]
+    f_drag = coeff_mat_L.dot(U * n_c)
+    f_drag /= cell_sizes
 
     # combine rates
     dn_c_dt = f_scat_c + f_drag

@@ -1,7 +1,8 @@
 import numpy as np
 
 from mm_rate_eqs.default_settings import define_default_settings
-from mm_rate_eqs.fusion_functions import get_lawson_parameters, get_fusion_power, get_fusion_charged_power
+from mm_rate_eqs.fusion_functions import get_lawson_parameters, get_fusion_power, get_fusion_charged_power, \
+    get_sigma_v_fusion
 from mm_rate_eqs.plasma_functions import get_brem_radiation_loss, get_cyclotron_radiation_loss, get_magnetic_pressure, \
     get_ideal_gas_pressure, get_ideal_gas_energy_per_volume, get_magnetic_field_for_given_pressure, \
     get_bohm_diffusion_constant, get_larmor_radius
@@ -32,18 +33,22 @@ from mm_rate_eqs.constants_functions import define_electron_mass, define_proton_
 
 # fusion plasma
 settings = {'gas_name': 'DT_mix'}
-# T = 100000.0
-# n_list = [2e20]
+T = 10000.0
+n_list = [2e20]
 # T = 10000.0
 # n_list = [2e21]
+# T = 26000.0
+# n_list = [2e20]
+# T = 1e3 * 100
+# n_list = [2e20]
 # T = 3000
 # n_list = [4e22]
 # n_list = [2e21]
 
 # GOL-NB parameters
-T = 40
-n_list = [3e19]
-settings['cell_size'] = 0.22
+# T = 40
+# n_list = [3e19]
+# settings['cell_size'] = 0.22
 
 # T = 50000.0
 # n_list = [2e21]
@@ -55,9 +60,10 @@ settings['cell_size'] = 0.22
 # n_list = [5e21]
 
 # # B = 3.5 #T
+B = 4.0  # T
 # B = 5.0  # T
 # B = 7.0 #T
-B = 10.0  # T
+# B = 10.0  # T
 
 # fusion plasma (ITER)
 # settings = {'gas_name': 'DT_mix'}
@@ -112,12 +118,12 @@ for n in n_list:
     alpha_approx = 1 / (4 * settings['Rm'])
     # from mm_rate_eqs.loss_cone_functions import get_solid_angles
     # alpha_tR, alpha_tL, alpha_c = get_solid_angles(0, v_th, 1 / settings['Rm'])
-    scat_rate_term_original = alpha_approx * scat_rate
-    scat_rate_term_referee2 = np.sqrt(scat_rate * v_th / settings['cell_size'])
-    print('scat_rate_term_original = ' + str(scat_rate_term_original) + ' [1/s]')
-    print('scat_rate_term_referee2 = ' + str(scat_rate_term_referee2) + ' [1/s]')
-    print(
-        'scat_rate_term_referee2 / scat_rate_term_original = ' + str(scat_rate_term_referee2 / scat_rate_term_original))
+    # scat_rate_term_original = alpha_approx * scat_rate
+    # scat_rate_term_referee2 = np.sqrt(scat_rate * v_th / settings['cell_size'])
+    # print('scat_rate_term_original = ' + str(scat_rate_term_original) + ' [1/s]')
+    # print('scat_rate_term_referee2 = ' + str(scat_rate_term_referee2) + ' [1/s]')
+    # print(
+    #     'scat_rate_term_referee2 / scat_rate_term_original = ' + str(scat_rate_term_referee2 / scat_rate_term_original))
 
     # Plasma beta
     P_magnetic = get_magnetic_pressure(B)
@@ -156,6 +162,13 @@ for n in n_list:
     # Fusion power in nominal parameters
     # print('Main cell volume: ', '{:.3e}'.format(settings['volume_main_cell']), 'm^3')
     print('Main cell volume = ' + str(settings['volume_main_cell']) + ' m^3')
+    sigma_v_fusion = get_sigma_v_fusion(Ti_keV)  # units m^3/s
+    fusion_rate = 0.25 * ni * sigma_v_fusion  # scattering rate before multiplication by ni (so the units are 1/s)
+    print('fusion_rate = ' + str(fusion_rate) + ' [1/s]')
+    print('scat_rate / fusion_rate = ' + str(scat_rate / fusion_rate))
+    Q_factor_collisions = 17600 * (1 / (1 + scat_rate / fusion_rate)) / (2 * Ti_keV)
+    print('Q_factor_collisions = ' + str(Q_factor_collisions))
+
     P_fusion_volumetric = get_fusion_power(ni, Ti_keV)
     P_fusion = P_fusion_volumetric * settings['volume_main_cell']  # Watt
     print('P_fusion = ' + str(P_fusion / 1e6) + ' MW')
