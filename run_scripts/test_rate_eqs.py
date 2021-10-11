@@ -7,6 +7,7 @@ import os
 
 from mm_rate_eqs.default_settings import define_default_settings
 from mm_rate_eqs.relaxation_algorithm_functions import find_rate_equations_steady_state
+from mm_rate_eqs.fusion_functions import get_lawson_parameters
 
 plt.close('all')
 
@@ -16,8 +17,8 @@ settings = {}
 # settings['save_state'] = 'False'
 settings['assume_constant_density'] = False
 # settings['assume_constant_density'] = True
-settings['assume_constant_temperature'] = False
-# settings['assume_constant_temperature'] = True
+# settings['assume_constant_temperature'] = False
+settings['assume_constant_temperature'] = True
 # settings['ion_scattering_rate_factor'] = 10
 # settings['cell_size'] = 50
 settings['plasma_dimension'] = 1
@@ -27,15 +28,21 @@ settings['plasma_dimension'] = 1
 # settings['plasma_dimension'] = 10
 # settings['plasma_dimension'] = 100
 # settings['number_of_cells'] = 10
-# settings['number_of_cells'] = 20
-settings['number_of_cells'] = 30
+settings['number_of_cells'] = 20
+# settings['number_of_cells'] = 30
 # settings['number_of_cells'] = 40
 # settings['number_of_cells'] = 100
 # settings['number_of_cells'] = 150
 # settings['number_of_cells'] = 200
 
-settings['n0'] = 2e22  # m^-3
+# settings['n0'] = 2e22  # m^-3
 # settings['n0'] = 1e21  # m^-3
+settings['n0'] = 1e20  # m^-3
+
+# settings['Ti_0'] = 3 * 1e3 # eV
+# settings['Te_0'] = 3 * 1e3 # eV
+settings['Ti_0'] = 10 * 1e3  # eV
+settings['Te_0'] = 10 * 1e3  # eV
 
 settings['right_scat_factor'] = 1.0
 # settings['right_scat_factor'] = 10.0
@@ -100,6 +107,29 @@ settings['transition_type'] = 'none'
 # settings['dt_status'] = 1e-5
 # settings['dt_status'] = 1e-4
 # settings['dt_status'] = 1e-3
+
+settings['use_effective_RF_scattering'] = True
+# settings['nu_RF_c'] = 0.2
+settings['nu_RF_c'] = 0.1
+# settings['nu_RF_c'] = 0.05
+# settings['nu_RF_c'] = 0.5
+
+# settings['nu_RF_tL'] = 1.0
+settings['nu_RF_tL'] = 0.5
+# settings['nu_RF_tL'] = 0.3
+# settings['nu_RF_tL'] = 0.1
+
+# settings['nu_RF_tR'] = 10.0
+settings['nu_RF_tR'] = 1.0
+# settings['nu_RF_tR'] = 0.1
+
+settings['nu_RF_c'] *= 10
+settings['nu_RF_tL'] *= 10
+settings['nu_RF_tR'] *= 10
+
+settings['nu_RF_c'] *= 3
+settings['nu_RF_tL'] *= 3
+settings['nu_RF_tR'] *= 3
 
 settings = define_default_settings(settings)
 # settings['n_end_min'] = 0.3 * settings['n0']
@@ -181,3 +211,9 @@ print('save dir: ' + str(settings['save_dir']))
 settings['save_state'] = False
 
 state = find_rate_equations_steady_state(settings)
+
+ni = state['n'][0]
+Ti_keV = state['Ti'][0] / 1e3
+_, flux_lawson = get_lawson_parameters(ni, Ti_keV, settings)
+flux_axial_over_flux_lawson = state['flux_mean'] * settings['cross_section_main_cell'] / flux_lawson
+print('flux_axial_over_flux_lawson = ' + str(flux_axial_over_flux_lawson))

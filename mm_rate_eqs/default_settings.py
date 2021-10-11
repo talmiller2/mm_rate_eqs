@@ -154,6 +154,14 @@ def define_default_settings(settings=None):
         settings['electron_scattering_rate_factor'] = 1.0
     if 'right_scat_factor' not in settings:
         settings['right_scat_factor'] = 1.0
+    if 'use_effective_RF_scattering' not in settings:
+        settings['use_effective_RF_scattering'] = False
+    if 'nu_RF_c' not in settings:
+        settings['nu_RF_c'] = 0
+    if 'nu_RF_tL' not in settings:
+        settings['nu_RF_tL'] = 0
+    if 'nu_RF_tR' not in settings:
+        settings['nu_RF_tR'] = 0
 
     ### relaxation solver parameters
     if 'max_num_time_steps' not in settings:
