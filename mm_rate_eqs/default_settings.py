@@ -106,8 +106,8 @@ def define_default_settings(settings=None):
         settings['adaptive_dimension'] = False
         # settings['adaptive_dimension'] = True
     if 'transition_type' not in settings:
-        # settings['transition_type'] = 'none'
-        settings['transition_type'] = 'smooth_transition_to_free_flow'
+        settings['transition_type'] = 'none'
+        # settings['transition_type'] = 'smooth_transition_to_free_flow'
         # settings['transition_type'] = 'sharp_transition_to_free_flow'
     if 'adaptive_mirror' not in settings:
         settings['adaptive_mirror'] = 'none'

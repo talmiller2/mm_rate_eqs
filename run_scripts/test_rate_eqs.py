@@ -108,28 +108,28 @@ settings['transition_type'] = 'none'
 # settings['dt_status'] = 1e-4
 # settings['dt_status'] = 1e-3
 
-settings['use_effective_RF_scattering'] = True
-# settings['nu_RF_c'] = 0.2
-settings['nu_RF_c'] = 0.1
-# settings['nu_RF_c'] = 0.05
-# settings['nu_RF_c'] = 0.5
-
-# settings['nu_RF_tL'] = 1.0
-settings['nu_RF_tL'] = 0.5
-# settings['nu_RF_tL'] = 0.3
-# settings['nu_RF_tL'] = 0.1
-
-# settings['nu_RF_tR'] = 10.0
-settings['nu_RF_tR'] = 1.0
-# settings['nu_RF_tR'] = 0.1
-
-settings['nu_RF_c'] *= 10
-settings['nu_RF_tL'] *= 10
-settings['nu_RF_tR'] *= 10
-
-settings['nu_RF_c'] *= 3
-settings['nu_RF_tL'] *= 3
-settings['nu_RF_tR'] *= 3
+# settings['use_effective_RF_scattering'] = True
+# # settings['nu_RF_c'] = 0.2
+# settings['nu_RF_c'] = 0.1
+# # settings['nu_RF_c'] = 0.05
+# # settings['nu_RF_c'] = 0.5
+#
+# # settings['nu_RF_tL'] = 1.0
+# settings['nu_RF_tL'] = 0.5
+# # settings['nu_RF_tL'] = 0.3
+# # settings['nu_RF_tL'] = 0.1
+#
+# # settings['nu_RF_tR'] = 10.0
+# settings['nu_RF_tR'] = 1.0
+# # settings['nu_RF_tR'] = 0.1
+#
+# settings['nu_RF_c'] *= 10
+# settings['nu_RF_tL'] *= 10
+# settings['nu_RF_tR'] *= 10
+#
+# settings['nu_RF_c'] *= 3
+# settings['nu_RF_tL'] *= 3
+# settings['nu_RF_tR'] *= 3
 
 settings = define_default_settings(settings)
 # settings['n_end_min'] = 0.3 * settings['n0']

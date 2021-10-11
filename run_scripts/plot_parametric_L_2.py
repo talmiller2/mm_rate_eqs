@@ -348,7 +348,7 @@ ax.yaxis.set_minor_formatter(NullFormatter())
 # save_dir = '/Users/talmiller/Dropbox/UNI/Courses Graduate/Plasma/Papers/texts/paper2020/pics/'
 save_dir = '/Users/talmiller/Dropbox/UNI/Courses Graduate/Plasma/Papers/texts/paper2020/pics_with_Rm_10/'
 
-file_name = 'flux_function_of_N'
-# file_name = 'flux_function_of_N_suboptimal'
-beingsaved = plt.figure(1)
-beingsaved.savefig(save_dir + file_name + '.eps', format='eps')
+# file_name = 'flux_function_of_N'
+# # file_name = 'flux_function_of_N_suboptimal'
+# beingsaved = plt.figure(1)
+# beingsaved.savefig(save_dir + file_name + '.eps', format='eps')
