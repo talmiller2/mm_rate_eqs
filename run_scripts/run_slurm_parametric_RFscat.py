@@ -12,7 +12,8 @@ slurm_kwargs = {'partition': 'core'}  # default
 # slurm_kwargs = {'partition': 'socket'}
 # slurm_kwargs = {'partition': 'testing'}
 
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set36_RFscat_ni_1e20_T_10keV_N_20'
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set38_RFscat_ni_1e20_T_10keV_N_20'
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set39_RFscat_ni_1e20_T_10keV_N_10'
 
 nu_RF_c_list = [0.05, 0.1, 0.5, 0.05, 0.1, 0.5, 0.05, 0.1, 0.5]
 nu_RF_tL_list = [1.0, 1.0, 1.0, 0.5, 0.5, 0.5, 0.3, 0.3, 0.3]
@@ -47,7 +48,8 @@ for nu_RF_factor in nu_RF_factor_list:
         settings['n0'] = 1e20  # m^-3
         settings['Ti_0'] = 10 * 1e3  # eV
         settings['Te_0'] = 10 * 1e3  # eV
-        settings['number_of_cells'] = 20
+        # settings['number_of_cells'] = 20
+        settings['number_of_cells'] = 10
         settings['Rm'] = 3.0
 
         settings['flux_normalized_termination_cutoff'] = 1e-3
