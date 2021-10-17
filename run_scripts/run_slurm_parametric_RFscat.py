@@ -23,8 +23,8 @@ slurm_kwargs = {'partition': 'core'}  # default
 main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set40_RFscat_ni_1e20_T_10keV_N_20'
 
 nu_RF_tL_list = [1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
-nu_RF_tR_list = [1.0 for _ in range(nu_RF_tL_list)]
-nu_RF_c_list = [0.1 for _ in range(nu_RF_tL_list)]
+nu_RF_tR_list = [1.0 for _ in range(len(nu_RF_tL_list))]
+nu_RF_c_list = [0.1 for _ in range(len(nu_RF_tL_list))]
 nu_RF_factor_list = [1, 10]
 
 if len(nu_RF_c_list) != len(nu_RF_tL_list) or len(nu_RF_c_list) != len(nu_RF_tR_list) \
