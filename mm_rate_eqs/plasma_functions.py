@@ -4,7 +4,7 @@ from mm_rate_eqs.constants_functions import define_electron_mass, define_proton_
     define_boltzmann_constant, define_factor_Pa_to_bar
 
 
-def bdefine_plasma_parameters(gas_name='hydrogen', ionization_level=1):
+def define_plasma_parameters(gas_name='hydrogen', ionization_level=1):
     me = define_electron_mass()
     mp = define_proton_mass()
     if gas_name == 'hydrogen':
