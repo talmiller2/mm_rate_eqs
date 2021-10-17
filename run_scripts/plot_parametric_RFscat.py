@@ -67,16 +67,10 @@ for ind_set, (nu_RF_c, nu_RF_tL, nu_RF_tR) in enumerate(zip(nu_RF_c_list, nu_RF_
             state, settings = load_simulation(state_file, settings_file)
 
             # post process the flux normalization
-            # norm_factor = 2.0 * settings['cross_section_main_cell'] * settings['transmission_factor']
-            # norm_factor = 2.0 * settings['cross_section_main_cell']
-            # norm_factor *= state['n'][0] * state['v_th'][0]
-            # norm_factor = state['n'][0] * state['v_th'][0]
-            # state['flux_mean'] /= norm_factor
             ni = state['n'][0]
             Ti_keV = state['Ti'][0] / 1e3
             _, flux_lawson = get_lawson_parameters(ni, Ti_keV, settings)
             state['flux_mean'] *= settings['cross_section_main_cell']
-
             flux_list[ind_fac] = state['flux_mean'] / flux_lawson
 
         except:
@@ -86,19 +80,12 @@ for ind_set, (nu_RF_c, nu_RF_tL, nu_RF_tR) in enumerate(zip(nu_RF_c_list, nu_RF_
     label_plot = 'c=' + str(nu_RF_c) + ', tL=' + str(nu_RF_tL)
     plt.plot(nu_RF_factor_list, flux_list, label=label_plot,
              linestyle=linestyle_list[ind_set], color=color_list[ind_set], linewidth=2)
-    # plt.plot(num_cells_list, n1_list, '-', label=label_flux, linestyle=linestyle, color=color,
-    # linewidth=linewidth)
 
 fig = plt.figure(1)
 plt.yscale("log")
 # plt.xscale("log")
 plt.xlabel('$\\nu_{RF}$ factor')
 plt.ylabel('$\\phi_{axial}/\\phi_{Lawson}$')
-# plt.ylabel('$\\phi_{p}$ [$m^{-2}s^{-1}$]')
-# plt.ylabel('$\\phi_{p} / \\phi_{p,0}$')
-# plt.ylabel('$\\phi_{ss} / \\phi_{lawson}$')
-# plt.title('flux as a function of system size')
-# plt.title('flux as a function of system size ($U/v_{th}$=' + str(U) + ')')
 plt.tight_layout()
 plt.grid(True)
 plt.legend()

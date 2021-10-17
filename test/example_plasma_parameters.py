@@ -32,9 +32,9 @@ from mm_rate_eqs.constants_functions import define_electron_mass, define_proton_
 # n_list = [3.875e22]
 
 # fusion plasma
-settings = {'gas_name': 'DT_mix'}
-T = 10000.0
-n_list = [2e20]
+# settings = {'gas_name': 'DT_mix'}
+# T = 10000.0
+# n_list = [2e20]
 # T = 10000.0
 # n_list = [2e21]
 # T = 26000.0
@@ -46,9 +46,11 @@ n_list = [2e20]
 # n_list = [2e21]
 
 # GOL-NB parameters
-# T = 40
-# n_list = [3e19]
-# settings['cell_size'] = 0.22
+# settings = {'gas_name': 'hydrogen'}
+settings = {'gas_name': 'helium'}
+T = 40
+n_list = [3e19]
+settings['cell_size'] = 0.22
 
 # T = 50000.0
 # n_list = [2e21]

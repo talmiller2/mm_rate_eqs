@@ -13,17 +13,23 @@ slurm_kwargs = {'partition': 'core'}  # default
 # slurm_kwargs = {'partition': 'testing'}
 
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set38_RFscat_ni_1e20_T_10keV_N_20'
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set39_RFscat_ni_1e20_T_10keV_N_10'
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set39_RFscat_ni_1e20_T_10keV_N_10'
+#
+# nu_RF_c_list = [0.05, 0.1, 0.5, 0.05, 0.1, 0.5, 0.05, 0.1, 0.5]
+# nu_RF_tL_list = [1.0, 1.0, 1.0, 0.5, 0.5, 0.5, 0.3, 0.3, 0.3]
+# nu_RF_tR_list = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+# nu_RF_factor_list = [0.1, 0.2, 0.5, 0.8, 1, 2, 5, 10, 15, 20, 25, 30]
 
-nu_RF_c_list = [0.05, 0.1, 0.5, 0.05, 0.1, 0.5, 0.05, 0.1, 0.5]
-nu_RF_tL_list = [1.0, 1.0, 1.0, 0.5, 0.5, 0.5, 0.3, 0.3, 0.3]
-nu_RF_tR_list = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set40_RFscat_ni_1e20_T_10keV_N_20'
+
+nu_RF_tL_list = [1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
+nu_RF_tR_list = [1.0 for _ in range(nu_RF_tL_list)]
+nu_RF_c_list = [0.1 for _ in range(nu_RF_tL_list)]
+nu_RF_factor_list = [1, 10]
 
 if len(nu_RF_c_list) != len(nu_RF_tL_list) or len(nu_RF_c_list) != len(nu_RF_tR_list) \
         or len(nu_RF_tL_list) != len(nu_RF_tR_list):
     raise ValueError('lengths incompatible.')
-
-nu_RF_factor_list = [0.1, 0.2, 0.5, 0.8, 1, 2, 5, 10, 15, 20, 25, 30]
 
 total_number_of_combinations = len(nu_RF_factor_list) * len(nu_RF_c_list)
 print('total_number_of_combinations = ' + str(total_number_of_combinations))
@@ -48,8 +54,8 @@ for nu_RF_factor in nu_RF_factor_list:
         settings['n0'] = 1e20  # m^-3
         settings['Ti_0'] = 10 * 1e3  # eV
         settings['Te_0'] = 10 * 1e3  # eV
-        # settings['number_of_cells'] = 20
-        settings['number_of_cells'] = 10
+        settings['number_of_cells'] = 20
+        # settings['number_of_cells'] = 10
         settings['Rm'] = 3.0
 
         settings['flux_normalized_termination_cutoff'] = 1e-3
