@@ -1,7 +1,7 @@
 import numpy as np
 
 from mm_rate_eqs.constants_functions import define_electron_mass, define_proton_mass, define_factor_eV_to_K, \
-    define_boltzmann_constant, define_factor_Pa_to_bar
+    define_boltzmann_constant, define_factor_Pa_to_bar, define_vacuum_permeability
 
 
 def define_plasma_parameters(gas_name='hydrogen', ionization_level=1):
@@ -130,3 +130,15 @@ def get_bohm_diffusion_constant(Te, B):
     The diffusion coefficient output is in units [Volt/Tesla]=[m^2/s]
     """
     return Te / B / 16
+
+
+def get_alfven_wave_group_velocity(B, ni, gas_name='hydrogen', ionization_level=None):
+    """
+    Calculate the Alfven wave group velocity
+    source https://en.wikipedia.org/wiki/Alfv%C3%A9n_wave
+    n is ion number density [m^-3], B in [T], return in [m/s]
+    """
+    mu0 = define_vacuum_permeability()
+    me, mp, mi, A, Z = define_plasma_parameters(gas_name=gas_name, ionization_level=ionization_level)
+    rho_ions = mi * ni  # ions specific density
+    return B / np.sqrt(mu0 * rho_ions)

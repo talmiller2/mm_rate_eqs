@@ -5,7 +5,7 @@ from mm_rate_eqs.fusion_functions import get_lawson_parameters, get_fusion_power
     get_sigma_v_fusion
 from mm_rate_eqs.plasma_functions import get_brem_radiation_loss, get_cyclotron_radiation_loss, get_magnetic_pressure, \
     get_ideal_gas_pressure, get_ideal_gas_energy_per_volume, get_magnetic_field_for_given_pressure, \
-    get_bohm_diffusion_constant, get_larmor_radius
+    get_bohm_diffusion_constant, get_larmor_radius, get_alfven_wave_group_velocity
 from mm_rate_eqs.rate_functions import calculate_coulomb_logarithm, get_thermal_velocity, get_coulomb_scattering_rate
 
 from mm_rate_eqs.constants_functions import define_electron_mass, define_proton_mass, define_factor_eV_to_K, \
@@ -32,11 +32,11 @@ from mm_rate_eqs.constants_functions import define_electron_mass, define_proton_
 # n_list = [3.875e22]
 
 # fusion plasma
-# settings = {'gas_name': 'DT_mix'}
+settings = {'gas_name': 'DT_mix'}
 # T = 10000.0
 # n_list = [2e20]
-# T = 10000.0
-# n_list = [2e21]
+T = 10000.0
+n_list = [2e21]
 # T = 26000.0
 # n_list = [2e20]
 # T = 1e3 * 100
@@ -47,10 +47,10 @@ from mm_rate_eqs.constants_functions import define_electron_mass, define_proton_
 
 # GOL-NB parameters
 # settings = {'gas_name': 'hydrogen'}
-settings = {'gas_name': 'helium'}
-T = 40
-n_list = [3e19]
-settings['cell_size'] = 0.22
+# settings = {'gas_name': 'helium'}
+# T = 40
+# n_list = [3e19]
+# settings['cell_size'] = 0.22
 
 # T = 50000.0
 # n_list = [2e21]
@@ -61,8 +61,9 @@ settings['cell_size'] = 0.22
 # T = 9000
 # n_list = [5e21]
 
-# # B = 3.5 #T
-B = 4.0  # T
+B = 1  # T
+# B = 3.5 #T
+# B = 4.0  # T
 # B = 5.0  # T
 # B = 7.0 #T
 # B = 10.0  # T
@@ -240,3 +241,8 @@ for n in n_list:
     radial_flux = radial_flux_density * cyllinder_radial_cross_section
     print('radial_flux: ', '{:.3e}'.format(radial_flux), 's^-1')
     print('radial_flux / flux_naive: ', '{:.3e}'.format(radial_flux / flux_naive))
+
+    # Alfven waves
+    v_alfven = get_alfven_wave_group_velocity(B, ni, gas_name=settings['gas_name'])
+    print('v_alfven = ', '{:.3e}'.format(v_alfven), 'm/s')
+    print('v_alfven / v_th: ', '{:.3e}'.format(v_alfven / v_th))

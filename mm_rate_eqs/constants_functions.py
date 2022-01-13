@@ -49,3 +49,8 @@ def define_factor_Pa_to_bar():
 def define_vacuum_permittivity():
     eps0 = 8.85418781e-12  # [Farad/m^2]
     return eps0
+
+
+def define_vacuum_permeability():
+    mu0 = 1.25663706212e-6  # [Henry/m]=[kg*m/s^2/Amp^2]
+    return mu0
