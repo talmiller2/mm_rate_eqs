@@ -5,7 +5,7 @@ from mm_rate_eqs.fusion_functions import get_lawson_parameters, get_fusion_power
     get_sigma_v_fusion
 from mm_rate_eqs.plasma_functions import get_brem_radiation_loss, get_cyclotron_radiation_loss, get_magnetic_pressure, \
     get_ideal_gas_pressure, get_ideal_gas_energy_per_volume, get_magnetic_field_for_given_pressure, \
-    get_bohm_diffusion_constant, get_larmor_radius, get_alfven_wave_group_velocity
+    get_bohm_diffusion_constant, get_larmor_radius, get_alfven_wave_group_velocity, get_larmor_frequency
 from mm_rate_eqs.rate_functions import calculate_coulomb_logarithm, get_thermal_velocity, get_coulomb_scattering_rate
 
 from mm_rate_eqs.constants_functions import define_electron_mass, define_proton_mass, define_factor_eV_to_K, \
@@ -246,3 +246,7 @@ for n in n_list:
     v_alfven = get_alfven_wave_group_velocity(B, ni, gas_name=settings['gas_name'])
     print('v_alfven = ', '{:.3e}'.format(v_alfven), 'm/s')
     print('v_alfven / v_th: ', '{:.3e}'.format(v_alfven / v_th))
+
+    # cyclotron frequency
+    f_cyclotron = get_larmor_frequency(B, settings['gas_name'])
+    print('f_cyclotron = ', '{:.3e}'.format(f_cyclotron), '1/s')  # RF spans kHz to Ghz range, MHz in the middle

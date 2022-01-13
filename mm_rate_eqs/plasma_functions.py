@@ -1,7 +1,7 @@
 import numpy as np
 
 from mm_rate_eqs.constants_functions import define_electron_mass, define_proton_mass, define_factor_eV_to_K, \
-    define_boltzmann_constant, define_factor_Pa_to_bar, define_vacuum_permeability
+    define_boltzmann_constant, define_factor_Pa_to_bar, define_vacuum_permeability, define_electron_charge
 
 
 def define_plasma_parameters(gas_name='hydrogen', ionization_level=1):
@@ -83,6 +83,21 @@ def get_larmor_radius(Ti, B, gas_name='hydrogen', ionization_level=None):
     me, mp, mi, A, Z = define_plasma_parameters(gas_name=gas_name, ionization_level=ionization_level)
     ion_gyration_radius = np.sqrt(mp / me) * np.sqrt(A) / Z * electron_gyration_radius
     return ion_gyration_radius
+
+
+def get_larmor_frequency(B, gas_name='hydrogen', ionization_level=None):
+    """
+    Ti in [keV], B in [Tesla], return in [m]
+    """
+    e = define_electron_charge()
+    if ionization_level is not None:
+        qi = ionization_level * e
+    else:
+        qi = e
+    me, mp, mi, A, Z = define_plasma_parameters(gas_name=gas_name, ionization_level=ionization_level)
+    omega_cyclotron = qi * B / mi
+    f_cyclotron = omega_cyclotron / (2 * np.pi)
+    return f_cyclotron
 
 
 def get_magnetic_pressure(B):
