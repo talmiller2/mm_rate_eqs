@@ -25,6 +25,12 @@ RF_capacity_cr_list = []
 RF_capacity_lc_list = []
 RF_capacity_rc_list = []
 
+# no RF
+RF_capacity_cl_list += [0]
+RF_capacity_cr_list += [0]
+RF_capacity_lc_list += [0]
+RF_capacity_rc_list += [0]
+
 # Rm=3, l=1m, ERF=50kV/m, alpha=1, beta=0, selectivity=1
 RF_capacity_cl_list += [0.026]
 RF_capacity_cr_list += [0.026]
@@ -86,8 +92,8 @@ for ind_RF in range(len(RF_capacity_cl_list)):
 
         # settings['flux_normalized_termination_cutoff'] = 0.05
         # settings['flux_normalized_termination_cutoff'] = 0.01
-        settings['flux_normalized_termination_cutoff'] = 1e-3
-        # settings['flux_normalized_termination_cutoff'] = 1e-4
+        # settings['flux_normalized_termination_cutoff'] = 1e-3
+        settings['flux_normalized_termination_cutoff'] = 1e-4
 
         # for const density right boundary condition
         settings['right_boundary_condition'] = 'none'
