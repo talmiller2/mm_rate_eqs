@@ -9,6 +9,7 @@ pwd = os.getcwd()
 rate_eqs_script = get_script_rate_eqs_slave()
 
 n0 = 1e21  # m^-3
+Ti = 10 * 1e3  # eV
 main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set41_MM_Rm_3_ni_1e21_Ti_10keV_withRF'
 
 slurm_kwargs = {'partition': 'core'}  # default
@@ -56,7 +57,6 @@ for ind_RF in range(len(RF_capacity_cl_list)):
 
     for num_cells in num_cells_list:
         run_name = plasma_mode
-
         run_name += '_RF_terms_' + 'cl_' + str(RF_capacity_cl_list[ind_RF]) \
                     + '_cr_' + str(RF_capacity_cr_list[ind_RF]) \
                     + '_lc_' + str(RF_capacity_lc_list[ind_RF]) \
@@ -81,6 +81,8 @@ for ind_RF in range(len(RF_capacity_cl_list)):
             settings['plasma_dimension'] = int(plasma_mode.split('d')[-1])
 
         settings['n0'] = n0
+        settings['Ti_0'] = Ti
+        settings['Te_0'] = Ti
 
         # settings['flux_normalized_termination_cutoff'] = 0.05
         # settings['flux_normalized_termination_cutoff'] = 0.01
@@ -105,6 +107,7 @@ for ind_RF in range(len(RF_capacity_cl_list)):
         settings['Rm'] = 3.0
         # settings['Rm'] = 10.0
 
+        settings['use_RF_terms'] = True
         settings['RF_capacity_cl'] = RF_capacity_cl_list[ind_RF]
         settings['RF_capacity_cr'] = RF_capacity_cr_list[ind_RF]
         settings['RF_capacity_lc'] = RF_capacity_lc_list[ind_RF]
