@@ -13,14 +13,22 @@ plt.close('all')
 
 ### test the algorithm
 settings = {}
-# settings['gas_name'] = 'hydrogen'
+settings['fontsize'] = 12
+
+settings['gas_name'] = 'hydrogen'
+# settings['gas_name'] = 'DT-mix'
+
 # settings['save_state'] = 'False'
 settings['assume_constant_density'] = False
 # settings['assume_constant_density'] = True
 # settings['assume_constant_temperature'] = False
 settings['assume_constant_temperature'] = True
 # settings['ion_scattering_rate_factor'] = 10
-# settings['cell_size'] = 50
+
+settings['cell_size'] = 1
+# settings['cell_size'] = 3
+# settings['cell_size'] = 10
+
 settings['plasma_dimension'] = 1
 # settings['plasma_dimension'] = 1.5
 # settings['plasma_dimension'] = 2
@@ -28,23 +36,24 @@ settings['plasma_dimension'] = 1
 # settings['plasma_dimension'] = 10
 # settings['plasma_dimension'] = 100
 # settings['number_of_cells'] = 10
-settings['number_of_cells'] = 20
+settings['number_of_cells'] = 20  # nominal value
 # settings['number_of_cells'] = 30
 # settings['number_of_cells'] = 40
+# settings['number_of_cells'] = 50
 # settings['number_of_cells'] = 100
 # settings['number_of_cells'] = 150
 # settings['number_of_cells'] = 200
 
 # settings['n0'] = 2e22  # m^-3
-# settings['n0'] = 1e21  # m^-3
-settings['n0'] = 1e20  # m^-3
+settings['n0'] = 1e21  # m^-3
+# settings['n0'] = 1e20  # m^-3
 
 # settings['Ti_0'] = 3 * 1e3 # eV
 # settings['Te_0'] = 3 * 1e3 # eV
 settings['Ti_0'] = 10 * 1e3  # eV
 settings['Te_0'] = 10 * 1e3  # eV
 
-settings['right_scat_factor'] = 1.0
+# settings['right_scat_factor'] = 1.0
 # settings['right_scat_factor'] = 10.0
 # settings['right_scat_factor'] = 100.0
 
@@ -63,6 +72,7 @@ settings['U0'] = 0
 # settings['flux_normalized_termination_cutoff'] = 0.05
 # settings['flux_normalized_termination_cutoff'] = 0.03
 settings['flux_normalized_termination_cutoff'] = 0.01
+# settings['flux_normalized_termination_cutoff'] = 1e-4
 
 # settings['alpha_definition'] = 'geometric_constant'
 # settings['alpha_definition'] = 'geometric_local'
@@ -72,7 +82,6 @@ settings['flux_normalized_termination_cutoff'] = 0.01
 
 # settings['adaptive_mirror'] = 'adjust_cell_size_with_mfp'
 # settings['adaptive_mirror'] = 'adjust_cell_size_with_vth'
-
 
 settings['right_boundary_condition'] = 'none'
 # settings['right_boundary_condition'] = 'adjust_ntL_for_nend'
@@ -107,29 +116,122 @@ settings['transition_type'] = 'none'
 # settings['dt_status'] = 1e-5
 # settings['dt_status'] = 1e-4
 # settings['dt_status'] = 1e-3
+settings['time_steps_status'] = int(1e3)
 
-# settings['use_effective_RF_scattering'] = True
-# # settings['nu_RF_c'] = 0.2
-# settings['nu_RF_c'] = 0.1
-# # settings['nu_RF_c'] = 0.05
-# # settings['nu_RF_c'] = 0.5
-#
-# # settings['nu_RF_tL'] = 1.0
-# settings['nu_RF_tL'] = 0.5
-# # settings['nu_RF_tL'] = 0.3
-# # settings['nu_RF_tL'] = 0.1
-#
-# # settings['nu_RF_tR'] = 10.0
-# settings['nu_RF_tR'] = 1.0
-# # settings['nu_RF_tR'] = 0.1
-#
-# settings['nu_RF_c'] *= 10
-# settings['nu_RF_tL'] *= 10
-# settings['nu_RF_tR'] *= 10
-#
-# settings['nu_RF_c'] *= 3
-# settings['nu_RF_tL'] *= 3
-# settings['nu_RF_tR'] *= 3
+settings['use_RF_terms'] = True
+
+# settings['RF_capacity_cl'] = 0
+# settings['RF_capacity_cr'] = 0
+# settings['RF_capacity_lc'] = 0
+# settings['RF_capacity_rc'] = 0
+
+# settings['RF_capacity_cl'] = 0.03 # set32_B0_1T_l_1m_Post_Rm_3_intervals, E_RF_kVm = 25 kV/m, alpha = 1.0, beta = 0.0
+# settings['RF_capacity_cr'] = 0.03
+# settings['RF_capacity_lc'] = 0.39
+# settings['RF_capacity_rc'] = 0.39 # flux_axial_over_flux_lawson = 304.8318045226798
+
+# settings['RF_capacity_cl'] = 0.03 # set32_B0_1T_l_1m_Post_Rm_3_intervals, E_RF_kVm = 25 kV/m, alpha = 0.9, beta = -1.0
+# settings['RF_capacity_cr'] = 0.01
+# settings['RF_capacity_lc'] = 0.1
+# settings['RF_capacity_rc'] = 0.35 # flux_axial_over_flux_lawson = 84.7490096952208
+
+# settings['RF_capacity_cl'] = 0.025 # set32_B0_1T_l_1m_Post_Rm_3_intervals, E_RF_kVm = 25 kV/m, alpha = 0.8, beta = -5.0
+# settings['RF_capacity_cr'] = 0.004
+# settings['RF_capacity_lc'] = 0.038
+# settings['RF_capacity_rc'] = 0.324 # flux_axial_over_flux_lawson = 60.071421918239636
+
+# settings['RF_capacity_cl'] = 0.023 # set32_B0_1T_l_1m_Post_Rm_3_intervals, E_RF_kVm = 50 kV/m, alpha = 0.8, beta = -5.0
+# settings['RF_capacity_cr'] = 0.008
+# settings['RF_capacity_lc'] = 0.074
+# settings['RF_capacity_rc'] = 0.484 # flux_axial_over_flux_lawson = 24.98291050008519
+
+# settings['RF_capacity_cl'] = 0.013 # set32_B0_1T_l_1m_Post_Rm_3_intervals, E_RF_kVm = 100 kV/m, alpha = 0.8, beta = -5.0
+# settings['RF_capacity_cr'] = 0.016
+# settings['RF_capacity_lc'] = 0.132
+# settings['RF_capacity_rc'] = 0.638 # flux_axial_over_flux_lawson = 43.693868033664494
+
+# settings['RF_capacity_cl'] = 0.027 # set33_B0_1T_l_3m_Post_Rm_3_intervals, E_RF_kVm = 100 kV/m, alpha = 0.8, beta = -5.0
+# settings['RF_capacity_cr'] = 0.023
+# settings['RF_capacity_lc'] = 0.215
+# settings['RF_capacity_rc'] = 0.953 # flux_axial_over_flux_lawson = 10.186296048238205 (N=50: 0.0442)
+
+# settings['RF_capacity_cl'] = 0.018 # set32_B0_1T_l_1m_Post_Rm_3_intervals, E_RF_kVm = 100 kV/m, alpha = 0.8, beta = -10.0
+# settings['RF_capacity_cr'] = 0.011
+# settings['RF_capacity_lc'] = 0.094
+# settings['RF_capacity_rc'] = 0.392 # flux_axial_over_flux_lawson = 221.05007062678922
+
+# settings['RF_capacity_cl'] = 0.078 # set32_B0_1T_l_1m_Post_Rm_3_intervals, B_RF = 0.04 T, alpha = 0.8, beta = -5.0
+# settings['RF_capacity_cr'] = 0.015
+# settings['RF_capacity_lc'] = 0.074
+# settings['RF_capacity_rc'] = 0.55 # flux_axial_over_flux_lawson = 23.49605415012276 (with N=20)
+
+# settings['RF_capacity_cl'] = 0.02 # artificial test
+# settings['RF_capacity_cr'] = 0.02
+# settings['RF_capacity_lc'] = 0.2
+# settings['RF_capacity_rc'] = 0.2 # flux_axial_over_flux_lawson = 26.97957449292672
+
+# settings['RF_capacity_cl'] = 0.2 # artificial test
+# settings['RF_capacity_cr'] = 0.2
+# settings['RF_capacity_lc'] = 0.2
+# settings['RF_capacity_rc'] = 0.2 # flux_axial_over_flux_lawson = 26.97957449292672
+
+settings['RF_capacity_cl'] = 0.1  # artificial test
+settings['RF_capacity_cr'] = 0.1
+settings['RF_capacity_lc'] = 0.1
+settings['RF_capacity_rc'] = 1.0  # flux_axial_over_flux_lawson = 26.97957449292672
+
+# settings['RF_capacity_cl'] = 0.1 # artificial test
+# settings['RF_capacity_cr'] = 0.05
+# settings['RF_capacity_lc'] = 0.1
+# settings['RF_capacity_rc'] = 1.0 # flux_axial_over_flux_lawson = 5.663855952708682
+
+# settings['RF_capacity_cl'] = 0.02 # artificial test
+# settings['RF_capacity_cr'] = 0.02
+# settings['RF_capacity_lc'] = 0.1
+# settings['RF_capacity_rc'] = 1.0 # flux_axial_over_flux_lawson = 7.058074719004123
+
+# settings['RF_capacity_cl'] = 0.1 # artificial test
+# settings['RF_capacity_cr'] = 0.02
+# settings['RF_capacity_lc'] = 0.2
+# settings['RF_capacity_rc'] = 1.0 # flux_axial_over_flux_lawson = 1.3713367871050115
+
+# settings['RF_capacity_cl'] = 0.025 # artificial test
+# settings['RF_capacity_cr'] = 0.004
+# settings['RF_capacity_lc'] = 0.2
+# settings['RF_capacity_rc'] = 1.0 # flux_axial_over_flux_lawson = 0.31197067374025955
+
+# settings['RF_capacity_cl'] = 0.025 # artificial test
+# settings['RF_capacity_cr'] = 0.004
+# settings['RF_capacity_lc'] = 0.038
+# settings['RF_capacity_rc'] = 1.0 # flux_axial_over_flux_lawson = 0.3105717517410081
+
+# settings['RF_capacity_cl'] = 0.025 # artificial test
+# settings['RF_capacity_cr'] = 0.004
+# settings['RF_capacity_lc'] = 0.038
+# settings['RF_capacity_rc'] = 0.324
+
+# settings['RF_capacity_cl'] = 0.025 # artificial test
+# settings['RF_capacity_cr'] = 0.024
+# settings['RF_capacity_lc'] = 0.324
+# settings['RF_capacity_rc'] = 0.324
+
+# settings['RF_capacity_cl'] += 0.01 # artificial addition of sometime that has no selectivity but enhances the rates
+# settings['RF_capacity_cr'] += 0.01
+# settings['RF_capacity_lc'] += 0.1
+# settings['RF_capacity_rc'] += 0.1
+
+# fac = 0
+# fac = 0.2
+fac = 1
+# fac = 10
+# fac = 50
+# fac = 100
+# fac = 200
+
+settings['RF_capacity_cl'] *= fac
+settings['RF_capacity_cr'] *= fac
+settings['RF_capacity_lc'] *= fac
+settings['RF_capacity_rc'] *= fac
 
 settings = define_default_settings(settings)
 # settings['n_end_min'] = 0.3 * settings['n0']
@@ -217,3 +319,14 @@ Ti_keV = state['Ti'][0] / 1e3
 _, flux_lawson = get_lawson_parameters(ni, Ti_keV, settings)
 flux_axial_over_flux_lawson = state['flux_mean'] * settings['cross_section_main_cell'] / flux_lawson
 print('flux_axial_over_flux_lawson = ' + str(flux_axial_over_flux_lawson))
+
+plt.figure(1)
+title = ''
+# title += '$\\bar{N}_{LC \\rightarrow T}=$' + str(settings['RF_capacity_rc'])
+# title += ', $\\bar{N}_{T \\rightarrow LC}=$' + str(settings['RF_capacity_cr']) + ', '
+title += '$\\bar{N}_{rc}=$' + str(settings['RF_capacity_rc'])
+title += ', $\\bar{N}_{lc}=$' + str(settings['RF_capacity_lc'])
+title += ', $\\bar{N}_{cr}=$' + str(settings['RF_capacity_cr'])
+title += ', $\\bar{N}_{cl}=$' + str(settings['RF_capacity_cl']) + ', '
+title += '$\\phi_{ss}/\\phi_{Lawson}=$' + '{:.2f}'.format(flux_axial_over_flux_lawson)
+plt.title(title, fontsize=12)

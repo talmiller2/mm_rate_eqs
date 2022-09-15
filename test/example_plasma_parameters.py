@@ -32,7 +32,8 @@ from mm_rate_eqs.constants_functions import define_electron_mass, define_proton_
 # n_list = [3.875e22]
 
 # fusion plasma
-settings = {'gas_name': 'DT_mix'}
+# settings = {'gas_name': 'DT_mix'}
+settings = {'gas_name': 'hydrogen'}
 # T = 10000.0
 # n_list = [2e20]
 T = 10000.0
@@ -61,7 +62,8 @@ n_list = [2e21]
 # T = 9000
 # n_list = [5e21]
 
-B = 1  # T
+# B = 1  # T
+B = 0.35  # T
 # B = 3.5 #T
 # B = 4.0  # T
 # B = 5.0  # T
@@ -236,6 +238,7 @@ for n in n_list:
     # using classical diffusion
     print('classical diffusion')
     gyro_radius = get_larmor_radius(Ti, B)
+    print('gyro_radius: ', '{:.3e}'.format(gyro_radius), 'm')
     D_classical = gyro_radius ** 2 * scat_rate
     radial_flux_density = D_classical * dndx
     radial_flux = radial_flux_density * cyllinder_radial_cross_section
@@ -250,3 +253,44 @@ for n in n_list:
     # cyclotron frequency
     f_cyclotron = get_larmor_frequency(B, settings['gas_name'])
     print('f_cyclotron = ', '{:.3e}'.format(f_cyclotron), '1/s')  # RF spans kHz to Ghz range, MHz in the middle
+    omega_cyclotron = 2 * np.pi * f_cyclotron
+    print('omega_cyclotron = ', '{:.3e}'.format(omega_cyclotron), '1/s')
+
+    # RF parameters
+    # alpha_RF = 1.00001
+    # vz_res = 1.0 * v_th
+    alpha_RF = 0.9
+    vz_res = 0.5 * v_th
+    # alpha_RF = 1.03
+    # vz_res = 1.5 * v_th
+    omega_RF = alpha_RF * omega_cyclotron
+    if alpha_RF != 1.0:
+        v_RF = vz_res * alpha_RF / (alpha_RF - 1.0)
+    else:
+        v_RF = vz_res
+    f_RF = omega_RF / (2 * np.pi)
+    lambda_RF = v_RF / f_RF
+    print('lambda_RF = ', '{:.3e}'.format(lambda_RF), 'm')
+    print('lambda_RF / gyro_radius = ', '{:.3e}'.format(lambda_RF / gyro_radius))
+
+    # relative strength of magnetic and electric fields in Maxwell consistent RF field
+    r = 1  # m (typical particle distance from mirror axis)
+    c = 3e8  # m/s (speed of light)
+    relativistic_error_dimensionless = (r * omega_cyclotron / c) ** 2
+    print('relativistic_error_dimensionless = ', '{:.3e}'.format(relativistic_error_dimensionless), )
+
+    E_RF = 10 * 1e3  # V/m
+    B_RF = E_RF * r * omega_cyclotron / c ** 2  # in [Tesla]=[V*s/m^2]
+    print('input E=' + '{:.3e}'.format(E_RF / 1e3) + 'kV/m gives B=' + '{:.3e}'.format(B_RF) + 'T')
+    F_magnetic_over_electric = B_RF * v_th / E_RF  # forces comparison
+    # print('Force ratio vB/E = ' + '{:.3e}'.format(F_magnetic_over_electric))
+    print('Force ratio E/vB = ' + '{:.3e}'.format(1 / F_magnetic_over_electric))
+
+    # B_RF = 1e-3 # T
+    B_RF = 3e-4  # T
+    E_RF = B_RF * r * omega_cyclotron  # in [V/m]
+    print('input B=' + '{:.3e}'.format(B_RF) + 'T, gives E=' + '{:.3e}'.format(E_RF / 1e3) + 'kV/m')
+    F_magnetic_over_electric = B_RF * v_th / E_RF  # forces comparison
+    print('Force ratio vB/E = ' + '{:.3e}'.format(F_magnetic_over_electric))
+    # F_electric_over_magnetic = B_RF * v_th / E_RF # forces comparison
+    # print('Force ratio vB/E = ' + '{:.3e}'.format(F_magnetic_over_electric))

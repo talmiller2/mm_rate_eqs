@@ -77,19 +77,18 @@ rate_eqs_script = get_script_rate_eqs_slave()
 # main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set34_MM_Rm_10_ni_2e22_trans_type_none'
 
 n0 = 1e21  # m^-3
-# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set35_MM_Rm_10_ni_1e21_trans_type_none'
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set37_MM_Rm_10_ni_1e21_trans_type_none_flux_cutoff_1e-4'
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set35_MM_Rm_10_ni_1e21_trans_type_none'
 
 slurm_kwargs = {'partition': 'core'}  # default
 # slurm_kwargs = {'partition': 'socket'}
 # slurm_kwargs = {'partition': 'testing'}
 
 plasma_modes = []
-plasma_modes += ['isoTmfp']
+# plasma_modes += ['isoTmfp']
 plasma_modes += ['isoT']
-plasma_modes += ['coold1']
-plasma_modes += ['coold2']
-plasma_modes += ['coold3']
+# plasma_modes += ['coold1']
+# plasma_modes += ['coold2']
+# plasma_modes += ['coold3']
 # plasma_modes += ['coold']
 # plasma_modes += ['cool_mfpcutoff']
 
@@ -131,7 +130,7 @@ for plasma_mode in plasma_modes:
                     settings['assume_constant_temperature'] = True
                 elif 'cool' in plasma_mode:
                     settings['assume_constant_density'] = False
-                    settings['assume_constant_density'] = False
+                    settings['assume_constant_temperature'] = False
                     settings['plasma_dimension'] = int(plasma_mode.split('d')[-1])
 
                 settings['n0'] = n0

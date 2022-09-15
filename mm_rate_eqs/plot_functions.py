@@ -7,7 +7,7 @@ import numpy as np
 num_plots = 14
 
 def plot_relaxation_status(state, settings):
-    plt.rcParams.update({'font.size': 16})
+    plt.rcParams.update({'font.size': settings['fontsize']})
 
     if state['termination_criterion_reached'] is True:
         linewidth = 3

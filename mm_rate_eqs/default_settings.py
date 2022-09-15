@@ -11,9 +11,10 @@ def define_default_settings(settings=None):
     settings['eV'] = 1.0  # normalize temperatures to eV
     settings['keV'] = 1e3 * settings['eV']
 
-    ### plasma parameters5
+    ### plasma parameters
     if 'gas_name' not in settings:
         settings['gas_name'] = 'hydrogen'
+        # settings['gas_name'] = 'DT-mix'
     if 'ionization_level' not in settings:
         settings['ionization_level'] = 1.0
         # settings['ionization_level'] = None
@@ -154,14 +155,17 @@ def define_default_settings(settings=None):
         settings['electron_scattering_rate_factor'] = 1.0
     if 'right_scat_factor' not in settings:
         settings['right_scat_factor'] = 1.0
-    if 'use_effective_RF_scattering' not in settings:
-        settings['use_effective_RF_scattering'] = False
-    if 'nu_RF_c' not in settings:
-        settings['nu_RF_c'] = 0
-    if 'nu_RF_tL' not in settings:
-        settings['nu_RF_tL'] = 0
-    if 'nu_RF_tR' not in settings:
-        settings['nu_RF_tR'] = 0
+
+    if 'use_RF_terms' not in settings:
+        settings['use_RF_terms'] = False
+    if 'RF_capacity_cl' not in settings:
+        settings['RF_capacity_cl'] = 0
+    if 'RF_capacity_cr' not in settings:
+        settings['RF_capacity_cr'] = 0
+    if 'RF_capacity_lc' not in settings:
+        settings['RF_capacity_lc'] = 0
+    if 'RF_capacity_rc' not in settings:
+        settings['RF_capacity_rc'] = 0
 
     ### relaxation solver parameters
     if 'max_num_time_steps' not in settings:
@@ -254,5 +258,8 @@ def define_default_settings(settings=None):
     if 'plots_x_axis' not in settings:
         # settings['plots_x_axis'] = 'total_length'
         settings['plots_x_axis'] = 'cell_number'
+
+    if 'fontsize' not in settings:
+        settings['fontsize'] = 16
 
     return settings

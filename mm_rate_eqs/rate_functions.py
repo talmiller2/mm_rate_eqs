@@ -429,15 +429,16 @@ def get_density_time_derivatives(state, settings):
     dn_tL_dt = f_scat_tL + f_trans_L
     dn_tR_dt = f_scat_tR + f_trans_R
 
-    if settings['use_effective_RF_scattering']:
-        nu_mfp_cell = state['v_th'][0] / settings['cell_size']
-        nu_RF_c = settings['nu_RF_c'] * nu_mfp_cell
-        nu_RF_tL = settings['nu_RF_tL'] * nu_mfp_cell
-        nu_RF_tR = settings['nu_RF_tR'] * nu_mfp_cell
+    if settings['use_RF_terms'] == True:
+        tau_th = settings['cell_size'] / state['v_th']
+        nu_RF_cl = settings['RF_capacity_cl'] / tau_th
+        nu_RF_cr = settings['RF_capacity_cr'] / tau_th
+        nu_RF_lc = settings['RF_capacity_lc'] / tau_th
+        nu_RF_rc = settings['RF_capacity_rc'] / tau_th
 
-        f_RF_c = - nu_RF_c * n_c + nu_RF_tL * n_tL + nu_RF_tR * n_tR
-        f_RF_tL = - nu_RF_tL * n_tL + 0.5 * nu_RF_c * n_c
-        f_RF_tR = - nu_RF_tR * n_tR + 0.5 * nu_RF_c * n_c
+        f_RF_c = - (nu_RF_cl + nu_RF_cr) * n_c + nu_RF_lc * n_tL + nu_RF_rc * n_tR
+        f_RF_tL = - nu_RF_lc * n_tL + nu_RF_cl * n_c
+        f_RF_tR = - nu_RF_rc * n_tR + nu_RF_cr * n_c
 
         dn_c_dt += f_RF_c
         dn_tL_dt += f_RF_tL
