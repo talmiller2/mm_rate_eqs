@@ -34,20 +34,20 @@ RF_capacity_rc_list += [0.61]
 # Rm=3, l=1m, ERF=50kV/m, alpha=1, beta=-1, selectivity=1.46
 RF_capacity_cl_list += [0.02]
 RF_capacity_cr_list += [0.031]
-RF_capacity_lc_list += [0.664]
-RF_capacity_rc_list += [0.455]
+RF_capacity_lc_list += [0.455]
+RF_capacity_rc_list += [0.664]
 
 # Rm=3, l=1m, ERF=50kV/m, alpha=0.9, beta=-5, selectivity=3.31
 RF_capacity_cl_list += [0.018]
 RF_capacity_cr_list += [0.01]
-RF_capacity_lc_list += [0.296]
-RF_capacity_rc_list += [0.089]
+RF_capacity_lc_list += [0.089]
+RF_capacity_rc_list += [0.296]
 
 # Rm=3, l=1m, ERF=50kV/m, alpha=0.8, beta=-5, selectivity=6.52
 RF_capacity_cl_list += [0.023]
 RF_capacity_cr_list += [0.008]
-RF_capacity_lc_list += [0.484]
-RF_capacity_rc_list += [0.074]
+RF_capacity_lc_list += [0.074]
+RF_capacity_rc_list += [0.484]
 
 total_number_of_combinations = len(RF_capacity_cl_list) * len(num_cells_list)
 print('total_number_of_combinations = ' + str(total_number_of_combinations))

@@ -139,7 +139,7 @@ for ind_RF in range(len(RF_capacity_cl_list)):
         #     flux_list[ind_N] = state['flux_mean']
         #     n1_list[ind_N] = state['n'][-1]
 
-        # flux_list[ind_N] = state['flux_mean']
+        flux_list[ind_N] = state['flux_mean']
         # n1_list[ind_N] = state['n'][-1]
         # n1_list[ind_N] = state['n'][-2]
 
@@ -229,8 +229,8 @@ for ind_RF in range(len(RF_capacity_cl_list)):
 # plt.plot(num_cells_list, radial_flux_classical, label='radial classical', linestyle=':', color='k', linewidth=linewidth)
 
 fig = plt.figure(1)
-# plt.yscale("log")
-# plt.xscale("log")
+plt.yscale("log")
+plt.xscale("log")
 plt.xlabel('N')
 # plt.ylabel('flux [$s^{-1}$]')
 # plt.ylabel('$\\phi_{p}$ [$m^{-2}s^{-1}$]')
