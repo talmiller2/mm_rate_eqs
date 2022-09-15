@@ -9,7 +9,7 @@ pwd = os.getcwd()
 rate_eqs_script = get_script_rate_eqs_slave()
 
 n0 = 1e21  # m^-3
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set36_MM_Rm_3_ni_1e21_Ti_10keV_withRF'
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set41_MM_Rm_3_ni_1e21_Ti_10keV_withRF'
 
 slurm_kwargs = {'partition': 'core'}  # default
 # slurm_kwargs = {'partition': 'socket'}
