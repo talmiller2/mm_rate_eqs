@@ -10,7 +10,8 @@ rate_eqs_script = get_script_rate_eqs_slave()
 
 n0 = 1e21  # m^-3
 Ti = 10 * 1e3  # eV
-main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set41_MM_Rm_3_ni_1e21_Ti_10keV_withRF'
+# main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set41_MM_Rm_3_ni_1e21_Ti_10keV_withRF'
+main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set42_MM_Rm_3_ni_1e21_Ti_10keV_withRF'
 
 slurm_kwargs = {'partition': 'core'}  # default
 # slurm_kwargs = {'partition': 'socket'}
@@ -63,10 +64,11 @@ for ind_RF in range(len(RF_capacity_cl_list)):
 
     for num_cells in num_cells_list:
         run_name = plasma_mode
-        run_name += '_RF_terms_' + 'cl_' + str(RF_capacity_cl_list[ind_RF]) \
-                    + '_cr_' + str(RF_capacity_cr_list[ind_RF]) \
-                    + '_lc_' + str(RF_capacity_lc_list[ind_RF]) \
-                    + '_rc_' + str(RF_capacity_rc_list[ind_RF])
+        RF_label = 'RF_terms_' + 'cl_' + str(RF_capacity_cl_list[ind_RF]) \
+                   + '_cr_' + str(RF_capacity_cr_list[ind_RF]) \
+                   + '_lc_' + str(RF_capacity_lc_list[ind_RF]) \
+                   + '_rc_' + str(RF_capacity_rc_list[ind_RF])
+        run_name += '_' + RF_label
         run_name += '_N_' + str(num_cells)
 
         print('run_name = ' + run_name)
@@ -90,10 +92,12 @@ for ind_RF in range(len(RF_capacity_cl_list)):
         settings['Ti_0'] = Ti
         settings['Te_0'] = Ti
 
+        settings['cell_size'] = 1.0  # m
+
         # settings['flux_normalized_termination_cutoff'] = 0.05
         # settings['flux_normalized_termination_cutoff'] = 0.01
-        # settings['flux_normalized_termination_cutoff'] = 1e-3
-        settings['flux_normalized_termination_cutoff'] = 1e-4
+        settings['flux_normalized_termination_cutoff'] = 1e-3
+        # settings['flux_normalized_termination_cutoff'] = 1e-4
 
         # for const density right boundary condition
         settings['right_boundary_condition'] = 'none'

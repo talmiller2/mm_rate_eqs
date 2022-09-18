@@ -5,7 +5,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 # plt.rcParams.update({'font.size': 16})
-plt.rcParams.update({'font.size': 14})
+# plt.rcParams.update({'font.size': 14})
+plt.rcParams.update({'font.size': 12})
 
 import numpy as np
 from scipy.optimize import curve_fit
@@ -53,7 +54,8 @@ def define_label(plasma_mode, LC_mode):
 
 main_dir = '/Users/talmiller/Downloads/mm_rate_eqs/'
 
-main_dir += '/runs/slurm_runs/set41_MM_Rm_3_ni_1e21_Ti_10keV_withRF'
+# main_dir += '/runs/slurm_runs/set41_MM_Rm_3_ni_1e21_Ti_10keV_withRF'
+main_dir += '/runs/slurm_runs/set42_MM_Rm_3_ni_1e21_Ti_10keV_withRF'
 
 colors = []
 # colors += ['b']
@@ -75,6 +77,12 @@ RF_capacity_cr_list = []
 RF_capacity_lc_list = []
 RF_capacity_rc_list = []
 
+# no RF
+RF_capacity_cl_list += [0]
+RF_capacity_cr_list += [0]
+RF_capacity_lc_list += [0]
+RF_capacity_rc_list += [0]
+
 # Rm=3, l=1m, ERF=50kV/m, alpha=1, beta=0, selectivity=1
 RF_capacity_cl_list += [0.026]
 RF_capacity_cr_list += [0.026]
@@ -84,20 +92,20 @@ RF_capacity_rc_list += [0.61]
 # Rm=3, l=1m, ERF=50kV/m, alpha=1, beta=-1, selectivity=1.46
 RF_capacity_cl_list += [0.02]
 RF_capacity_cr_list += [0.031]
-RF_capacity_lc_list += [0.664]
-RF_capacity_rc_list += [0.455]
+RF_capacity_lc_list += [0.455]
+RF_capacity_rc_list += [0.664]
 
 # Rm=3, l=1m, ERF=50kV/m, alpha=0.9, beta=-5, selectivity=3.31
 RF_capacity_cl_list += [0.018]
 RF_capacity_cr_list += [0.01]
-RF_capacity_lc_list += [0.296]
-RF_capacity_rc_list += [0.089]
+RF_capacity_lc_list += [0.089]
+RF_capacity_rc_list += [0.296]
 
 # Rm=3, l=1m, ERF=50kV/m, alpha=0.8, beta=-5, selectivity=6.52
 RF_capacity_cl_list += [0.023]
 RF_capacity_cr_list += [0.008]
-RF_capacity_lc_list += [0.484]
-RF_capacity_rc_list += [0.074]
+RF_capacity_lc_list += [0.074]
+RF_capacity_rc_list += [0.484]
 
 for ind_RF in range(len(RF_capacity_cl_list)):
     color = colors[ind_RF]
@@ -107,10 +115,11 @@ for ind_RF in range(len(RF_capacity_cl_list)):
     n1_list = np.nan * np.zeros(len(num_cells_list))
     for ind_N, number_of_cells in enumerate(num_cells_list):
         run_name = plasma_mode
-        run_name += '_RF_terms_' + 'cl_' + str(RF_capacity_cl_list[ind_RF]) \
-                    + '_cr_' + str(RF_capacity_cr_list[ind_RF]) \
-                    + '_lc_' + str(RF_capacity_lc_list[ind_RF]) \
-                    + '_rc_' + str(RF_capacity_rc_list[ind_RF])
+        RF_label = 'RF_terms_' + 'cl_' + str(RF_capacity_cl_list[ind_RF]) \
+                   + '_cr_' + str(RF_capacity_cr_list[ind_RF]) \
+                   + '_lc_' + str(RF_capacity_lc_list[ind_RF]) \
+                   + '_rc_' + str(RF_capacity_rc_list[ind_RF])
+        run_name += '_' + RF_label
         run_name += '_N_' + str(number_of_cells)
 
         print('run_name = ' + run_name)
@@ -120,31 +129,31 @@ for ind_RF in range(len(RF_capacity_cl_list)):
         state_file = save_dir + '/state.pickle'
         settings_file = save_dir + '/settings.pickle'
 
-        # try:
-        state, settings = load_simulation(state_file, settings_file)
+        try:
+            state, settings = load_simulation(state_file, settings_file)
 
-        # post process the flux normalization
-        # norm_factor = 2.0 * settings['cross_section_main_cell'] * settings['transmission_factor']
-        # norm_factor = 2.0 * settings['cross_section_main_cell']
-        # norm_factor *= state['n'][0] * state['v_th'][0]
-        # norm_factor = state['n'][0] * state['v_th'][0]
-        # state['flux_mean'] /= norm_factor
-        ni = state['n'][0]
-        Ti_keV = state['Ti'][0] / 1e3
-        _, flux_lawson = get_lawson_parameters(ni, Ti_keV, settings)
-        state['flux_mean'] *= settings['cross_section_main_cell']
-        state['flux_mean'] /= flux_lawson
+            # post process the flux normalization
+            # norm_factor = 2.0 * settings['cross_section_main_cell'] * settings['transmission_factor']
+            # norm_factor = 2.0 * settings['cross_section_main_cell']
+            # norm_factor *= state['n'][0] * state['v_th'][0]
+            # norm_factor = state['n'][0] * state['v_th'][0]
+            # state['flux_mean'] /= norm_factor
+            ni = state['n'][0]
+            Ti_keV = state['Ti'][0] / 1e3
+            _, flux_lawson = get_lawson_parameters(ni, Ti_keV, settings)
+            state['flux_mean'] *= settings['cross_section_main_cell']
+            state['flux_mean'] /= flux_lawson
 
-        # if state['successful_termination'] == True:
-        #     flux_list[ind_N] = state['flux_mean']
-        #     n1_list[ind_N] = state['n'][-1]
+            # if state['successful_termination'] == True:
+            #     flux_list[ind_N] = state['flux_mean']
+            #     n1_list[ind_N] = state['n'][-1]
 
-        flux_list[ind_N] = state['flux_mean']
-        # n1_list[ind_N] = state['n'][-1]
-        # n1_list[ind_N] = state['n'][-2]
+            flux_list[ind_N] = state['flux_mean']
+            # n1_list[ind_N] = state['n'][-1]
+            # n1_list[ind_N] = state['n'][-2]
 
-        # except:
-        #     pass
+        except:
+            pass
 
     # # extract the density profile
     # chosen_num_cells = 30
@@ -163,7 +172,13 @@ for ind_RF in range(len(RF_capacity_cl_list)):
     # label_flux = plasma_modes[ind_mode] + ', mfp/l=4'
     # label_flux = define_label(plasma_mode, LC_mode)
     # label_flux = define_plasma_mode_label(plasma_mode)
-    label_flux = run_name
+    # label_flux = run_name
+
+    if RF_capacity_lc_list[ind_RF] > 0:
+        selectivity = '{:.2f}'.format(RF_capacity_rc_list[ind_RF] / RF_capacity_lc_list[ind_RF])
+    else:
+        selectivity = '1'
+    label_flux = 's=' + selectivity + ' (' + RF_label + ')'
 
     plt.figure(1)
     plt.plot(num_cells_list, flux_list, label=label_flux, linestyle=linestyle, color=color,
@@ -208,29 +223,30 @@ for ind_RF in range(len(RF_capacity_cl_list)):
 
 # add plot for then radial flux in the MM section alone
 
+B = 3.0  # T
 # B = 10.0  # T
-# D_bohm = get_bohm_diffusion_constant(state['Te'][0], B)  # [m^2/s]
-# # integral of dn/dz for linearly declining n is n*L/2
-# dndx = state['n'][0] * np.ones(len(num_cells_list)) / 2 / (settings['diameter_main_cell'] / 2)
-# radial_flux_density = D_bohm * dndx
-# system_total_length = np.array(num_cells_list) * settings['cell_size']
-# cyllinder_radial_cross_section = np.pi * settings['diameter_main_cell'] * system_total_length
-# radial_flux_bohm = radial_flux_density * cyllinder_radial_cross_section
-# radial_flux_bohm /= flux_lawson
-#
-# gyro_radius = get_larmor_radius(state['Ti'][0], B)
-# D_classical = gyro_radius ** 2 * state['coulomb_scattering_rate'][0]
-# dndx = state['n'][0] * np.ones(len(num_cells_list)) / 3 / (settings['diameter_main_cell'] / 2)
-# radial_flux_density = D_classical * dndx
-# radial_flux_classical = radial_flux_density * cyllinder_radial_cross_section
-# radial_flux_classical /= flux_lawson
+D_bohm = get_bohm_diffusion_constant(state['Te'][0], B)  # [m^2/s]
+# integral of dn/dz for linearly declining n is n*L/2
+dndx = state['n'][0] * np.ones(len(num_cells_list)) / 2 / (settings['diameter_main_cell'] / 2)
+radial_flux_density = D_bohm * dndx
+system_total_length = np.array(num_cells_list) * settings['cell_size']
+cyllinder_radial_cross_section = np.pi * settings['diameter_main_cell'] * system_total_length
+radial_flux_bohm = radial_flux_density * cyllinder_radial_cross_section
+radial_flux_bohm /= flux_lawson
 
-# plt.plot(num_cells_list, radial_flux_bohm, label='radial bohm', linestyle='-.', color='k', linewidth=linewidth)
-# plt.plot(num_cells_list, radial_flux_classical, label='radial classical', linestyle=':', color='k', linewidth=linewidth)
+gyro_radius = get_larmor_radius(state['Ti'][0], B)
+D_classical = gyro_radius ** 2 * state['coulomb_scattering_rate'][0]
+dndx = state['n'][0] * np.ones(len(num_cells_list)) / 3 / (settings['diameter_main_cell'] / 2)
+radial_flux_density = D_classical * dndx
+radial_flux_classical = radial_flux_density * cyllinder_radial_cross_section
+radial_flux_classical /= flux_lawson
+
+plt.plot(num_cells_list, radial_flux_bohm, label='radial bohm', linestyle='-.', color='k', linewidth=linewidth)
+plt.plot(num_cells_list, radial_flux_classical, label='radial classical', linestyle=':', color='k', linewidth=linewidth)
 
 fig = plt.figure(1)
 plt.yscale("log")
-plt.xscale("log")
+# plt.xscale("log")
 plt.xlabel('N')
 # plt.ylabel('flux [$s^{-1}$]')
 # plt.ylabel('$\\phi_{p}$ [$m^{-2}s^{-1}$]')
