@@ -227,8 +227,8 @@ B = 3.0  # T
 # B = 10.0  # T
 D_bohm = get_bohm_diffusion_constant(state['Te'][0], B)  # [m^2/s]
 # integral of dn/dz for linearly declining n is n*L/2
-dndx = state['n'][0] * np.ones(len(num_cells_list)) / 2 / (settings['diameter_main_cell'] / 2)
-radial_flux_density = D_bohm * dndx
+dn_dr = state['n'][0] * np.ones(len(num_cells_list)) / 2 / (settings['diameter_main_cell'] / 2)
+radial_flux_density = D_bohm * dn_dr
 system_total_length = np.array(num_cells_list) * settings['cell_size']
 cyllinder_radial_cross_section = np.pi * settings['diameter_main_cell'] * system_total_length
 radial_flux_bohm = radial_flux_density * cyllinder_radial_cross_section
@@ -236,13 +236,15 @@ radial_flux_bohm /= flux_lawson
 
 gyro_radius = get_larmor_radius(state['Ti'][0], B)
 D_classical = gyro_radius ** 2 * state['coulomb_scattering_rate'][0]
-dndx = state['n'][0] * np.ones(len(num_cells_list)) / 3 / (settings['diameter_main_cell'] / 2)
-radial_flux_density = D_classical * dndx
+dn_dr = state['n'][0] * np.ones(len(num_cells_list)) / 3 / (settings['diameter_main_cell'] / 2)
+radial_flux_density = D_classical * dn_dr
 radial_flux_classical = radial_flux_density * cyllinder_radial_cross_section
 radial_flux_classical /= flux_lawson
 
 plt.plot(num_cells_list, radial_flux_bohm, label='radial bohm', linestyle='-.', color='k', linewidth=linewidth)
 plt.plot(num_cells_list, radial_flux_classical, label='radial classical', linestyle=':', color='k', linewidth=linewidth)
+plt.plot(num_cells_list, np.array(num_cells_list) * 0 + 1, label='Laswson', linestyle='--', color='grey',
+         linewidth=linewidth)
 
 fig = plt.figure(1)
 plt.yscale("log")
@@ -298,10 +300,11 @@ plt.legend()
 
 # save pics in high res
 # save_dir = '../../../Papers/texts/paper2020/pics/'
+save_dir = '../../../Papers/texts/paper2022/pics/'
 # save_dir = '/Users/talmiller/Dropbox/UNI/Courses Graduate/Plasma/Papers/texts/paper2020/pics/'
 # save_dir = '/Users/talmiller/Dropbox/UNI/Courses Graduate/Plasma/Papers/texts/paper2020/pics_with_Rm_10/'
 
-# file_name = 'flux_function_of_N'
+file_name = 'flux_function_of_N'
 # # file_name = 'flux_function_of_N_suboptimal'
-# beingsaved = plt.figure(1)
-# beingsaved.savefig(save_dir + file_name + '.eps', format='eps')
+beingsaved = plt.figure(1)
+beingsaved.savefig(save_dir + file_name + '.eps', format='eps')
