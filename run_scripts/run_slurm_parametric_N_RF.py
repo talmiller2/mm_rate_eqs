@@ -26,59 +26,107 @@ RF_capacity_cr_list = []
 RF_capacity_lc_list = []
 RF_capacity_rc_list = []
 
-# # no RF
+# no RF
 # RF_capacity_cl_list += [0]
 # RF_capacity_cr_list += [0]
 # RF_capacity_lc_list += [0]
 # RF_capacity_rc_list += [0]
-
+#
 # # Rm=3, l=1m, ERF=50kV/m, alpha=1, beta=0, selectivity=1
 # RF_capacity_cl_list += [0.026]
 # RF_capacity_cr_list += [0.026]
 # RF_capacity_lc_list += [0.61]
 # RF_capacity_rc_list += [0.61]
-
+#
 # # Rm=3, l=1m, ERF=50kV/m, alpha=1, beta=-1, selectivity=1.46
 # RF_capacity_cl_list += [0.02]
 # RF_capacity_cr_list += [0.031]
 # RF_capacity_lc_list += [0.455]
 # RF_capacity_rc_list += [0.664]
-
-# Rm=3, l=1m, ERF=50kV/m, alpha=0.8, beta=-1, selectivity=2.72
-RF_capacity_cl_list += [0.024]
-RF_capacity_cr_list += [0.013]
-RF_capacity_lc_list += [0.125]
-RF_capacity_rc_list += [0.341]
-
+#
+# # Rm=3, l=1m, ERF=50kV/m, alpha=0.8, beta=-1, selectivity=2.72
+# RF_capacity_cl_list += [0.024]
+# RF_capacity_cr_list += [0.013]
+# RF_capacity_lc_list += [0.125]
+# RF_capacity_rc_list += [0.341]
+#
 # # Rm=3, l=1m, ERF=50kV/m, alpha=0.9, beta=-5, selectivity=3.31
 # RF_capacity_cl_list += [0.018]
 # RF_capacity_cr_list += [0.01]
 # RF_capacity_lc_list += [0.089]
 # RF_capacity_rc_list += [0.296]
-
-# Rm=3, l=1m, ERF=50kV/m, alpha=0.9, beta=-4, selectivity=4.46
-RF_capacity_cl_list += [0.021]
-RF_capacity_cr_list += [0.012]
-RF_capacity_lc_list += [0.1]
-RF_capacity_rc_list += [0.446]
-
-# Rm=3, l=1m, ERF=50kV/m, alpha=0.9, beta=-2, selectivity=5.16
-RF_capacity_cl_list += [0.026]
-RF_capacity_cr_list += [0.014]
-RF_capacity_lc_list += [0.130]
-RF_capacity_rc_list += [0.671]
-
+#
+# # Rm=3, l=1m, ERF=50kV/m, alpha=0.9, beta=-4, selectivity=4.46
+# RF_capacity_cl_list += [0.021]
+# RF_capacity_cr_list += [0.012]
+# RF_capacity_lc_list += [0.1]
+# RF_capacity_rc_list += [0.446]
+#
+# # Rm=3, l=1m, ERF=50kV/m, alpha=0.9, beta=-2, selectivity=5.16
+# RF_capacity_cl_list += [0.026]
+# RF_capacity_cr_list += [0.014]
+# RF_capacity_lc_list += [0.130]
+# RF_capacity_rc_list += [0.671]
+#
 # # Rm=3, l=1m, ERF=50kV/m, alpha=0.8, beta=-5, selectivity=6.52
 # RF_capacity_cl_list += [0.023]
 # RF_capacity_cr_list += [0.008]
 # RF_capacity_lc_list += [0.074]
 # RF_capacity_rc_list += [0.484]
+#
+# # Rm=3, l=1m, ERF=50kV/m, alpha=0.8, beta=-4, selectivity=7.46
+# RF_capacity_cl_list += [0.027]
+# RF_capacity_cr_list += [0.009]
+# RF_capacity_lc_list += [0.079]
+# RF_capacity_rc_list += [0.593]
 
-# Rm=3, l=1m, ERF=50kV/m, alpha=0.8, beta=-4, selectivity=7.46
-RF_capacity_cl_list += [0.027]
-RF_capacity_cr_list += [0.009]
-RF_capacity_lc_list += [0.079]
-RF_capacity_rc_list += [0.593]
+
+## some sensitivity checks around the s=5.16 set
+
+RF_capacity_cl_list += [0.026 * 0.5]
+RF_capacity_cr_list += [0.014 * 0.5]
+RF_capacity_lc_list += [0.130 * 0.5]
+RF_capacity_rc_list += [0.671 * 0.5]
+
+RF_capacity_cl_list += [0.026 * 2]
+RF_capacity_cr_list += [0.014 * 2]
+RF_capacity_lc_list += [0.130 * 2]
+RF_capacity_rc_list += [0.671 * 2]
+
+RF_capacity_cl_list += [0.026]
+RF_capacity_cr_list += [0.014]
+RF_capacity_lc_list += [0.130 * 0.5]
+RF_capacity_rc_list += [0.671 * 0.5]
+
+RF_capacity_cl_list += [0.026]
+RF_capacity_cr_list += [0.014]
+RF_capacity_lc_list += [0.130 * 2]
+RF_capacity_rc_list += [0.671 * 2]
+
+RF_capacity_cl_list += [0.026 * 0.5]
+RF_capacity_cr_list += [0.014 * 0.5]
+RF_capacity_lc_list += [0.130]
+RF_capacity_rc_list += [0.671]
+
+RF_capacity_cl_list += [0.026 * 2]
+RF_capacity_cr_list += [0.014 * 2]
+RF_capacity_lc_list += [0.130]
+RF_capacity_rc_list += [0.671]
+
+RF_capacity_cl_list += [0.026]
+RF_capacity_cr_list += [0.026]
+RF_capacity_lc_list += [0.130]
+RF_capacity_rc_list += [0.671]
+
+RF_capacity_cl_list += [0.014]
+RF_capacity_cr_list += [0.014]
+RF_capacity_lc_list += [0.130]
+RF_capacity_rc_list += [0.671]
+
+RF_capacity_cl_list += [0.014]
+RF_capacity_cr_list += [0.026]
+RF_capacity_lc_list += [0.130]
+RF_capacity_rc_list += [0.671]
 
 total_number_of_combinations = len(RF_capacity_cl_list) * len(num_cells_list)
 print('total_number_of_combinations = ' + str(total_number_of_combinations))

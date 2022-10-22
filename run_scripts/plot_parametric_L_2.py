@@ -185,13 +185,13 @@ for ind_mode in range(len(plasma_modes)):
         # plot flux as a function of N
         # flux_list /= flux_norm
         # flux_list /= flux_list[3]
-        # label_flux = plasma_modes[ind_mode] + '_U_' + str(U) + '_' + LC_mode
-        # label_flux = plasma_modes[ind_mode] + ', mfp/l=4'
-        # label_flux = define_label(plasma_mode, LC_mode)
+        # label = plasma_modes[ind_mode] + '_U_' + str(U) + '_' + LC_mode
+        # label = plasma_modes[ind_mode] + ', mfp/l=4'
+        # label = define_label(plasma_mode, LC_mode)
         label_flux = define_plasma_mode_label(plasma_mode)
         plt.figure(1)
         plt.plot(num_cells_list, flux_list, label=label_flux, linestyle=linestyle, color=color,
-                 # plt.plot(num_cells_list, n1_list, '-', label=label_flux, linestyle=linestyle, color=color,
+                 # plt.plot(num_cells_list, n1_list, '-', label=label, linestyle=linestyle, color=color,
                  linewidth=linewidth)
 
         # remove some of the values prior to fit
@@ -260,7 +260,7 @@ for ind_mode in range(len(plasma_modes)):
         # plt.title('rate eqs vs theory ($\\lambda/l=$' + lambda_over_l + ', $n_1$ from rate eqs)')
 
         # plt.figure(2)
-        # plt.plot(num_cells_list, n1_list, '-', label=label_flux, linestyle=linestyle, color=color, linewidth=linewidth)
+        # plt.plot(num_cells_list, n1_list, '-', label=label, linestyle=linestyle, color=color, linewidth=linewidth)
 
 # plot a 1/N reference line
 # const = 1.1

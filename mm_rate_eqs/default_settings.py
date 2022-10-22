@@ -76,6 +76,7 @@ def define_default_settings(settings=None):
         # settings['number_of_cells'] = 1000
     if 'length_main_cell' not in settings:
         settings['length_main_cell'] = 100  # m
+        # settings['length_main_cell'] = 30  # m
     if 'diameter_main_cell' not in settings:
         settings['diameter_main_cell'] = 0.5  # m
         # settings['diameter_main_cell'] = 1.0  # m

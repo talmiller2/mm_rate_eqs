@@ -154,16 +154,16 @@ def get_E_charged(reaction='D_T_to_n_alpha'):
     elif reaction == 'D_D_to_p_T':
         E_charged = 3.02
     elif reaction == 'D_D_to_n_He3':
-        E_charged = 0
+        E_charged = 0.82
     elif reaction == 'D_D_to_p_T_n_He3':
-        E_charged = 3.02
+        E_charged = 0.5 * 3.02 + 0.5 * 0.82
     elif reaction == 'T_T_to_alpha_2n':
         E_charged = 0  # ???
     # advanced controlled fusion fuels
     elif reaction == 'D_He3_to_p_alpha':
         E_charged = 14.7
     elif reaction == 'p_B_to_3alpha':
-        E_charged = 0
+        E_charged = 8.7  # TODO: not sure
     # pp chain fuels
     elif reaction == 'p_p_to_D_e_nu':
         E_charged = 0  # ???

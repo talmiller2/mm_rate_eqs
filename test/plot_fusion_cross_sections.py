@@ -1,6 +1,6 @@
 import matplotlib
 
-matplotlib.use('TkAgg')  # to avoid macOS bug where plots cant get minimized
+# matplotlib.use('TkAgg')  # to avoid macOS bug where plots cant get minimized
 import matplotlib.pyplot as plt
 
 import numpy as np
@@ -25,7 +25,8 @@ Te_0 = settings['Te_0']
 
 v_th = get_thermal_velocity(Ti_0, settings, species='ions')
 
-T_keV_array = np.linspace(0.2, 200, 1000)
+# T_keV_array = np.linspace(0.2, 200, 1000)
+T_keV_array = np.logspace(-1, 3, 1000)
 
 reactions = []
 reactions += ['D_T_to_n_alpha']
@@ -66,7 +67,7 @@ for ind_r, reaction in enumerate(reactions):
 
     sigma_v_approx_array = get_sigma_v_fusion_approx(T_keV_array, reaction=reaction)
     label_approx = get_reaction_label(reaction=reaction) + ' (Gamow approx)'
-    plt.plot(T_keV_array, sigma_v_approx_array, label=label_approx, linewidth=3, color=color, linestyle='--')
+    # plt.plot(T_keV_array, sigma_v_approx_array, label=label_approx, linewidth=3, color=color, linestyle='--')
     # label_approx = get_reaction_label(reaction=reaction)
     # plt.plot(T_keV_array, sigma_v_approx_array, label=label_approx, linewidth=3, color=color, linestyle='-')
 

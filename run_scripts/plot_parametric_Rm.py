@@ -140,10 +140,10 @@ for ind_mode in range(len(plasma_modes)):
                 pass
 
         # plot flux as a function of U
-        # label_flux = plasma_modes[ind_mode] + '_N_' + str(number_of_cells) + '_' + LC_mode
-        # label_flux = plasma_modes[ind_mode] + '_' + LC_mode
-        # label_flux = plasma_modes[ind_mode] + '_U_' + str(U) + '_' + LC_mode
-        # label_flux = define_label(plasma_mode, LC_mode)
+        # label = plasma_modes[ind_mode] + '_N_' + str(number_of_cells) + '_' + LC_mode
+        # label = plasma_modes[ind_mode] + '_' + LC_mode
+        # label = plasma_modes[ind_mode] + '_U_' + str(U) + '_' + LC_mode
+        # label = define_label(plasma_mode, LC_mode)
         label_flux = define_plasma_mode_label(plasma_mode)
         plt.figure(1)
         plt.plot(Rm_list, flux_list, '-', label=label_flux, linestyle=linestyle, color=color, linewidth=linewidth)

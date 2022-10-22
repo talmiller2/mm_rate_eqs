@@ -1,4 +1,5 @@
 import numpy as np
+from matplotlib import pyplot as plt
 
 from mm_rate_eqs.default_settings import define_default_settings
 from mm_rate_eqs.fusion_functions import get_lawson_parameters, get_fusion_power, get_fusion_charged_power, \
@@ -33,10 +34,12 @@ from mm_rate_eqs.constants_functions import define_electron_mass, define_proton_
 
 # fusion plasma
 # settings = {'gas_name': 'DT_mix'}
-settings = {'gas_name': 'hydrogen'}
+# settings = {'gas_name': 'hydrogen'}
+settings = {'gas_name': 'tritium'}
 # T = 10000.0
 # n_list = [2e20]
 T = 10000.0
+# T = 25000.0
 n_list = [2e21]
 # T = 26000.0
 # n_list = [2e20]
@@ -147,7 +150,7 @@ for n in n_list:
     print('mirror length = ' + str(settings['length_main_cell']) + ' m')
     print('mirror diameter = ' + str(settings['diameter_main_cell']) + ' m')
     print('mirror cross section = ' + str(settings['cross_section_main_cell']) + ' m^2')
-    tau_lawson, flux_lawson = get_lawson_parameters(ni, Ti, settings)
+    tau_lawson, flux_lawson = get_lawson_parameters(ni, Ti_keV, settings)
     print('tau_lawson: ', '{:.3e}'.format(tau_lawson), 's')
     print('tau_scat: ', '{:.3e}'.format(tau_scat), 's')
     print('ni * tau_lawson: ', '{:.3e}'.format(ni * tau_lawson))
