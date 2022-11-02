@@ -80,53 +80,85 @@ RF_capacity_rc_list = []
 # RF_capacity_lc_list += [0.079]
 # RF_capacity_rc_list += [0.593]
 
-
 ## some sensitivity checks around the s=5.16 set
 
-RF_capacity_cl_list += [0.026 * 0.5]
-RF_capacity_cr_list += [0.014 * 0.5]
-RF_capacity_lc_list += [0.130 * 0.5]
-RF_capacity_rc_list += [0.671 * 0.5]
+# RF_capacity_cl_list += [0.026 * 0.5]
+# RF_capacity_cr_list += [0.014 * 0.5]
+# RF_capacity_lc_list += [0.130 * 0.5]
+# RF_capacity_rc_list += [0.671 * 0.5]
+#
+# RF_capacity_cl_list += [0.026 * 2]
+# RF_capacity_cr_list += [0.014 * 2]
+# RF_capacity_lc_list += [0.130 * 2]
+# RF_capacity_rc_list += [0.671 * 2]
+#
+# RF_capacity_cl_list += [0.026]
+# RF_capacity_cr_list += [0.014]
+# RF_capacity_lc_list += [0.130 * 0.5]
+# RF_capacity_rc_list += [0.671 * 0.5]
+#
+# RF_capacity_cl_list += [0.026]
+# RF_capacity_cr_list += [0.014]
+# RF_capacity_lc_list += [0.130 * 2]
+# RF_capacity_rc_list += [0.671 * 2]
+#
+# RF_capacity_cl_list += [0.026 * 0.5]
+# RF_capacity_cr_list += [0.014 * 0.5]
+# RF_capacity_lc_list += [0.130]
+# RF_capacity_rc_list += [0.671]
+#
+# RF_capacity_cl_list += [0.026 * 2]
+# RF_capacity_cr_list += [0.014 * 2]
+# RF_capacity_lc_list += [0.130]
+# RF_capacity_rc_list += [0.671]
+#
+# RF_capacity_cl_list += [0.026]
+# RF_capacity_cr_list += [0.026]
+# RF_capacity_lc_list += [0.130]
+# RF_capacity_rc_list += [0.671]
+#
+# RF_capacity_cl_list += [0.014]
+# RF_capacity_cr_list += [0.014]
+# RF_capacity_lc_list += [0.130]
+# RF_capacity_rc_list += [0.671]
+#
+# RF_capacity_cl_list += [0.014]
+# RF_capacity_cr_list += [0.026]
+# RF_capacity_lc_list += [0.130]
+# RF_capacity_rc_list += [0.671]
 
-RF_capacity_cl_list += [0.026 * 2]
-RF_capacity_cr_list += [0.014 * 2]
-RF_capacity_lc_list += [0.130 * 2]
-RF_capacity_rc_list += [0.671 * 2]
 
-RF_capacity_cl_list += [0.026]
-RF_capacity_cr_list += [0.014]
-RF_capacity_lc_list += [0.130 * 0.5]
-RF_capacity_rc_list += [0.671 * 0.5]
+#### some sensitivity checks around the s=1.46 set
 
-RF_capacity_cl_list += [0.026]
-RF_capacity_cr_list += [0.014]
-RF_capacity_lc_list += [0.130 * 2]
-RF_capacity_rc_list += [0.671 * 2]
+RF_capacity_cl_list += [0.02]
+RF_capacity_cr_list += [0.031]
+RF_capacity_lc_list += [0.455 * 0.5]
+RF_capacity_rc_list += [0.664 * 0.5]
 
-RF_capacity_cl_list += [0.026 * 0.5]
-RF_capacity_cr_list += [0.014 * 0.5]
-RF_capacity_lc_list += [0.130]
-RF_capacity_rc_list += [0.671]
+RF_capacity_cl_list += [0.02]
+RF_capacity_cr_list += [0.031]
+RF_capacity_lc_list += [0.455 * 2]
+RF_capacity_rc_list += [0.664 * 2]
 
-RF_capacity_cl_list += [0.026 * 2]
-RF_capacity_cr_list += [0.014 * 2]
-RF_capacity_lc_list += [0.130]
-RF_capacity_rc_list += [0.671]
+RF_capacity_cl_list += [0.02 * 0.5]
+RF_capacity_cr_list += [0.031 * 0.5]
+RF_capacity_lc_list += [0.455]
+RF_capacity_rc_list += [0.664]
 
-RF_capacity_cl_list += [0.026]
-RF_capacity_cr_list += [0.026]
-RF_capacity_lc_list += [0.130]
-RF_capacity_rc_list += [0.671]
+RF_capacity_cl_list += [0.02 * 2]
+RF_capacity_cr_list += [0.031 * 2]
+RF_capacity_lc_list += [0.455]
+RF_capacity_rc_list += [0.664]
 
-RF_capacity_cl_list += [0.014]
-RF_capacity_cr_list += [0.014]
-RF_capacity_lc_list += [0.130]
-RF_capacity_rc_list += [0.671]
+RF_capacity_cl_list += [0.02]
+RF_capacity_cr_list += [0.02]
+RF_capacity_lc_list += [0.455]
+RF_capacity_rc_list += [0.664]
 
-RF_capacity_cl_list += [0.014]
-RF_capacity_cr_list += [0.026]
-RF_capacity_lc_list += [0.130]
-RF_capacity_rc_list += [0.671]
+RF_capacity_cl_list += [0.031]
+RF_capacity_cr_list += [0.031]
+RF_capacity_lc_list += [0.455]
+RF_capacity_rc_list += [0.664]
 
 total_number_of_combinations = len(RF_capacity_cl_list) * len(num_cells_list)
 print('total_number_of_combinations = ' + str(total_number_of_combinations))

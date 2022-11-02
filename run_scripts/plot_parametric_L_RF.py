@@ -25,12 +25,14 @@ main_dir = '/Users/talmiller/Downloads/mm_rate_eqs/'
 # main_dir += '/runs/slurm_runs/set41_MM_Rm_3_ni_1e21_Ti_10keV_withRF'
 main_dir += '/runs/slurm_runs/set42_MM_Rm_3_ni_1e21_Ti_10keV_withRF'
 
-colors = ['b', 'g', 'c', 'orange', 'r', 'm']
-linestyles = ['-', '-', '-', '-', '-', '-']
+# colors = ['b', 'g', 'c', 'orange', 'r', 'm']
+# linestyles = ['-', '-', '-', '-', '-', '-']
 # colors     = ['k', 'b', 'g', 'c', 'orange', 'r', 'm']
 # linestyles = ['-', '-', '-', '-',      '-', '-', '-']
 # colors     = ['k', 'b', 'g', 'c', 'orange', 'r', 'm',  'b',  'g']
 # linestyles = ['-', '-', '-', '-',      '-', '-', '-', '--', '--']
+colors = ['b', 'b', 'b', 'g', 'g', 'g', 'r', 'r', 'r', 'orange', 'm', 'y']
+linestyles = ['-', '--', ':', '-', '--', ':', '-', '--', ':', '-', '-', '-']
 
 num_cells_list = [3, 5, 8, 10, 12, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 
@@ -48,12 +50,12 @@ set_name_list = []
 # RF_capacity_lc_list += [0]
 # RF_capacity_rc_list += [0]
 
-# Rm=3, l=1m, ERF=50kV/m, alpha=1, beta=0, selectivity=1
-RF_capacity_cl_list += [0.026]
-RF_capacity_cr_list += [0.026]
-RF_capacity_lc_list += [0.61]
-RF_capacity_rc_list += [0.61]
-set_name_list += ['A']
+# # Rm=3, l=1m, ERF=50kV/m, alpha=1, beta=0, selectivity=1
+# RF_capacity_cl_list += [0.026]
+# RF_capacity_cr_list += [0.026]
+# RF_capacity_lc_list += [0.61]
+# RF_capacity_rc_list += [0.61]
+# set_name_list += ['A']
 
 # # Rm=3, l=1m, ERF=50kV/m, alpha=1, beta=-1, selectivity=1.46
 # RF_capacity_cl_list += [0.02]
@@ -61,46 +63,125 @@ set_name_list += ['A']
 # RF_capacity_lc_list += [0.455]
 # RF_capacity_rc_list += [0.664]
 
-# Rm=3, l=1m, ERF=50kV/m, alpha=0.8, beta=-1, selectivity=2.72
-RF_capacity_cl_list += [0.024]
-RF_capacity_cr_list += [0.013]
-RF_capacity_lc_list += [0.125]
-RF_capacity_rc_list += [0.341]
-set_name_list += ['B']
+# # Rm=3, l=1m, ERF=50kV/m, alpha=0.8, beta=-1, selectivity=2.72
+# RF_capacity_cl_list += [0.024]
+# RF_capacity_cr_list += [0.013]
+# RF_capacity_lc_list += [0.125]
+# RF_capacity_rc_list += [0.341]
+# set_name_list += ['B']
 
-# Rm=3, l=1m, ERF=50kV/m, alpha=0.9, beta=-5, selectivity=3.31
-RF_capacity_cl_list += [0.018]
-RF_capacity_cr_list += [0.01]
-RF_capacity_lc_list += [0.089]
-RF_capacity_rc_list += [0.296]
-set_name_list += ['C']
-
-# Rm=3, l=1m, ERF=50kV/m, alpha=0.9, beta=-4, selectivity=4.46
-RF_capacity_cl_list += [0.021]
-RF_capacity_cr_list += [0.012]
-RF_capacity_lc_list += [0.1]
-RF_capacity_rc_list += [0.446]
-set_name_list += ['D']
-
+# # Rm=3, l=1m, ERF=50kV/m, alpha=0.9, beta=-5, selectivity=3.31
+# RF_capacity_cl_list += [0.018]
+# RF_capacity_cr_list += [0.01]
+# RF_capacity_lc_list += [0.089]
+# RF_capacity_rc_list += [0.296]
+# set_name_list += ['C']
+#
+# # Rm=3, l=1m, ERF=50kV/m, alpha=0.9, beta=-4, selectivity=4.46
+# RF_capacity_cl_list += [0.021]
+# RF_capacity_cr_list += [0.012]
+# RF_capacity_lc_list += [0.1]
+# RF_capacity_rc_list += [0.446]
+# set_name_list += ['D']
+#
 # Rm=3, l=1m, ERF=50kV/m, alpha=0.9, beta=-2, selectivity=5.16
-RF_capacity_cl_list += [0.026]
-RF_capacity_cr_list += [0.014]
-RF_capacity_lc_list += [0.130]
-RF_capacity_rc_list += [0.671]
-set_name_list += ['E']
-
-# Rm=3, l=1m, ERF=50kV/m, alpha=0.8, beta=-5, selectivity=6.52
-RF_capacity_cl_list += [0.023]
-RF_capacity_cr_list += [0.008]
-RF_capacity_lc_list += [0.074]
-RF_capacity_rc_list += [0.484]
-set_name_list += ['F']
+# RF_capacity_cl_list += [0.026]
+# RF_capacity_cr_list += [0.014]
+# RF_capacity_lc_list += [0.130]
+# RF_capacity_rc_list += [0.671]
+# set_name_list += ['E']
+#
+# # Rm=3, l=1m, ERF=50kV/m, alpha=0.8, beta=-5, selectivity=6.52
+# RF_capacity_cl_list += [0.023]
+# RF_capacity_cr_list += [0.008]
+# RF_capacity_lc_list += [0.074]
+# RF_capacity_rc_list += [0.484]
+# set_name_list += ['F']
 
 # # Rm=3, l=1m, ERF=50kV/m, alpha=0.8, beta=-4, selectivity=7.46
 # RF_capacity_cl_list += [0.027]
 # RF_capacity_cr_list += [0.009]
 # RF_capacity_lc_list += [0.079]
 # RF_capacity_rc_list += [0.593]
+
+## some sensitivity checks around the s=5.16 set
+
+# RF_capacity_cl_list += [0.026 * 0.5]
+# RF_capacity_cr_list += [0.014 * 0.5]
+# RF_capacity_lc_list += [0.130 * 0.5]
+# RF_capacity_rc_list += [0.671 * 0.5]
+#
+# RF_capacity_cl_list += [0.026 * 2]
+# RF_capacity_cr_list += [0.014 * 2]
+# RF_capacity_lc_list += [0.130 * 2]
+# RF_capacity_rc_list += [0.671 * 2]
+
+# RF_capacity_cl_list += [0.026]
+# RF_capacity_cr_list += [0.014]
+# RF_capacity_lc_list += [0.130 * 0.5]
+# RF_capacity_rc_list += [0.671 * 0.5]
+#
+# RF_capacity_cl_list += [0.026]
+# RF_capacity_cr_list += [0.014]
+# RF_capacity_lc_list += [0.130 * 2]
+# RF_capacity_rc_list += [0.671 * 2]
+# #
+# RF_capacity_cl_list += [0.026 * 0.5]
+# RF_capacity_cr_list += [0.014 * 0.5]
+# RF_capacity_lc_list += [0.130]
+# RF_capacity_rc_list += [0.671]
+#
+# RF_capacity_cl_list += [0.026 * 2]
+# RF_capacity_cr_list += [0.014 * 2]
+# RF_capacity_lc_list += [0.130]
+# RF_capacity_rc_list += [0.671]
+
+# RF_capacity_cl_list += [0.026]
+# RF_capacity_cr_list += [0.026]
+# RF_capacity_lc_list += [0.130]
+# RF_capacity_rc_list += [0.671]
+
+# RF_capacity_cl_list += [0.014]
+# RF_capacity_cr_list += [0.014]
+# RF_capacity_lc_list += [0.130]
+# RF_capacity_rc_list += [0.671]
+# #
+# RF_capacity_cl_list += [0.014]
+# RF_capacity_cr_list += [0.026]
+# RF_capacity_lc_list += [0.130]
+# RF_capacity_rc_list += [0.671]
+
+#### some sensitivity checks around the s=1.46 set
+
+RF_capacity_cl_list += [0.02]
+RF_capacity_cr_list += [0.031]
+RF_capacity_lc_list += [0.455 * 0.5]
+RF_capacity_rc_list += [0.664 * 0.5]
+
+RF_capacity_cl_list += [0.02]
+RF_capacity_cr_list += [0.031]
+RF_capacity_lc_list += [0.455 * 2]
+RF_capacity_rc_list += [0.664 * 2]
+
+RF_capacity_cl_list += [0.02 * 0.5]
+RF_capacity_cr_list += [0.031 * 0.5]
+RF_capacity_lc_list += [0.455]
+RF_capacity_rc_list += [0.664]
+
+RF_capacity_cl_list += [0.02 * 2]
+RF_capacity_cr_list += [0.031 * 2]
+RF_capacity_lc_list += [0.455]
+RF_capacity_rc_list += [0.664]
+
+RF_capacity_cl_list += [0.02]
+RF_capacity_cr_list += [0.02]
+RF_capacity_lc_list += [0.455]
+RF_capacity_rc_list += [0.664]
+
+RF_capacity_cl_list += [0.031]
+RF_capacity_cr_list += [0.031]
+RF_capacity_lc_list += [0.455]
+RF_capacity_rc_list += [0.664]
 
 for ind_RF in range(len(RF_capacity_cl_list)):
     color = colors[ind_RF]
