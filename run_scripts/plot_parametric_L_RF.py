@@ -33,18 +33,20 @@ main_dir += '/runs/slurm_runs/set42_MM_Rm_3_ni_1e21_Ti_10keV_withRF'
 # linestyles = ['-', '-', '-', '-',      '-', '-', '-', '--', '--']
 # colors = ['b', 'b', 'b', 'g', 'g', 'g', 'r', 'r', 'r', 'orange', 'm', 'y']
 # linestyles = ['-', '--', ':', '-', '--', ':', '-', '--', ':', '-', '-', '-']
-colors = ['b', 'b', 'b', 'g', 'g', 'r', 'r', 'k', 'k', 'k', 'y', 'y']
-linestyles = ['-', '--', ':', '-', '--', '-', '--', '-', '--', ':', '--', ':']
+# colors     = ['b',  'b', 'b', 'g', 'g', 'r', 'r', 'k', 'k', 'k', 'y', 'y']
+# linestyles = ['-', '--', ':', '-', '--', '-', '--', '-', '--', ':', '--', ':']
+colors = ['b', 'b', 'g', 'g', 'r', 'r', 'k', 'k']
+linestyles = ['-', '--', '-', '--', '-', '--', '-', '--']
 
 num_cells_list = [3, 5, 8, 10, 12, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 
 linewidth = 2
 
-RF_capacity_cl_list = []
-RF_capacity_cr_list = []
-RF_capacity_lc_list = []
-RF_capacity_rc_list = []
-set_name_list = []
+# RF_capacity_cl_list = []
+# RF_capacity_cr_list = []
+# RF_capacity_lc_list = []
+# RF_capacity_rc_list = []
+# set_name_list = []
 
 # no RF
 # RF_capacity_cl_list += [0]
@@ -107,6 +109,61 @@ set_name_list = []
 # RF_capacity_rc_list += [0.593]
 
 
+###########################
+gas_type_list = []
+RF_capacity_rc_list = []
+RF_capacity_lc_list = []
+RF_capacity_cr_list = []
+RF_capacity_cl_list = []
+
+# set1, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=1.679, k/2pi=-3
+gas_type_list += ['deuterium']
+RF_capacity_rc_list += [0.311]
+RF_capacity_lc_list += [0.388]
+RF_capacity_cr_list += [0.025]
+RF_capacity_cl_list += [0.021]
+gas_type_list += ['tritium']
+RF_capacity_rc_list += [0.629]
+RF_capacity_lc_list += [0.165]
+RF_capacity_cr_list += [0.017]
+RF_capacity_cl_list += [0.025]
+
+# set2, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=1.559, k/2pi=0
+gas_type_list += ['deuterium']
+RF_capacity_rc_list += [0.832]
+RF_capacity_lc_list += [0.805]
+RF_capacity_cr_list += [0.018]
+RF_capacity_cl_list += [0.015]
+gas_type_list += ['tritium']
+RF_capacity_rc_list += [0.300]
+RF_capacity_lc_list += [0.299]
+RF_capacity_cr_list += [0.023]
+RF_capacity_cl_list += [0.020]
+
+# set3, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=1.199, k/2pi=-3
+gas_type_list += ['deuterium']
+RF_capacity_rc_list += [0.640]
+RF_capacity_lc_list += [0.122]
+RF_capacity_cr_list += [0.014]
+RF_capacity_cl_list += [0.020]
+gas_type_list += ['tritium']
+RF_capacity_rc_list += [0.376]
+RF_capacity_lc_list += [0.401]
+RF_capacity_cr_list += [0.026]
+RF_capacity_cl_list += [0.023]
+
+# set4, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=0.720, k/2pi=-2
+gas_type_list += ['deuterium']
+RF_capacity_rc_list += [0.297]
+RF_capacity_lc_list += [0.081]
+RF_capacity_cr_list += [0.017]
+RF_capacity_cl_list += [0.010]
+gas_type_list += ['tritium']
+RF_capacity_rc_list += [0.818]
+RF_capacity_lc_list += [0.131]
+RF_capacity_cr_list += [0.024]
+RF_capacity_cl_list += [0.027]
+
 for ind_RF in range(len(RF_capacity_cl_list)):
     color = colors[ind_RF]
     linestyle = linestyles[ind_RF]
@@ -116,7 +173,9 @@ for ind_RF in range(len(RF_capacity_cl_list)):
     n1_list = np.nan * np.zeros(len(num_cells_list))
     for ind_N, number_of_cells in enumerate(num_cells_list):
         run_name = plasma_mode
-        RF_label = 'RF_terms_' + 'cl_' + str(RF_capacity_cl_list[ind_RF]) \
+        run_name += '_' + gas_type_list[ind_RF]
+        RF_label = 'RF_terms_' \
+                   + 'cl_' + str(RF_capacity_cl_list[ind_RF]) \
                    + '_cr_' + str(RF_capacity_cr_list[ind_RF]) \
                    + '_lc_' + str(RF_capacity_lc_list[ind_RF]) \
                    + '_rc_' + str(RF_capacity_rc_list[ind_RF])
@@ -158,7 +217,7 @@ for ind_RF in range(len(RF_capacity_cl_list)):
             pass
 
     if RF_capacity_lc_list[ind_RF] > 0:
-        selectivity = '{:.2f}'.format(RF_capacity_rc_list[ind_RF] / RF_capacity_lc_list[ind_RF])
+        selectivity = '{:.1f}'.format(RF_capacity_rc_list[ind_RF] / RF_capacity_lc_list[ind_RF])
         selectivity_trapped = '{:.2f}'.format(RF_capacity_cr_list[ind_RF] / RF_capacity_cl_list[ind_RF])
     else:
         selectivity = '1'
@@ -169,7 +228,8 @@ for ind_RF in range(len(RF_capacity_cl_list)):
              + ', \\bar{N}_{cr}=' + str(RF_capacity_cr_list[ind_RF]) \
              + ', \\bar{N}_{lc}=' + str(RF_capacity_lc_list[ind_RF]) \
              + ', \\bar{N}_{rc}=' + str(RF_capacity_rc_list[ind_RF]) + '$'
-    # label = 'set ' + set_name_list[ind_RF]
+    # label = 'set ' + set_name_list[ind_RF]1
+    label = 'set ' + str(int(np.ceil((ind_RF + 1) / 2))) + ' ' + settings['gas_name']
     print(label)
 
     # plot flux as a function of N
