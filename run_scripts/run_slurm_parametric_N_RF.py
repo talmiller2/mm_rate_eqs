@@ -21,10 +21,10 @@ plasma_mode = 'isoT'
 
 num_cells_list = [3, 5, 8, 10, 12, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 
-RF_capacity_cl_list = []
-RF_capacity_cr_list = []
-RF_capacity_lc_list = []
-RF_capacity_rc_list = []
+# RF_capacity_cl_list = []
+# RF_capacity_cr_list = []
+# RF_capacity_lc_list = []
+# RF_capacity_rc_list = []
 
 # no RF
 # RF_capacity_cl_list += [0]
@@ -80,138 +80,60 @@ RF_capacity_rc_list = []
 # RF_capacity_lc_list += [0.079]
 # RF_capacity_rc_list += [0.593]
 
-## some sensitivity checks around the s=5.16 set
+###########################
+gas_type_list = []
+RF_capacity_rc_list = []
+RF_capacity_lc_list = []
+RF_capacity_cr_list = []
+RF_capacity_cl_list = []
 
-# RF_capacity_cl_list += [0.026 * 0.5]
-# RF_capacity_cr_list += [0.014 * 0.5]
-# RF_capacity_lc_list += [0.130 * 0.5]
-# RF_capacity_rc_list += [0.671 * 0.5]
-#
-# RF_capacity_cl_list += [0.026 * 2]
-# RF_capacity_cr_list += [0.014 * 2]
-# RF_capacity_lc_list += [0.130 * 2]
-# RF_capacity_rc_list += [0.671 * 2]
-#
-# RF_capacity_cl_list += [0.026]
-# RF_capacity_cr_list += [0.014]
-# RF_capacity_lc_list += [0.130 * 0.5]
-# RF_capacity_rc_list += [0.671 * 0.5]
-#
-# RF_capacity_cl_list += [0.026]
-# RF_capacity_cr_list += [0.014]
-# RF_capacity_lc_list += [0.130 * 2]
-# RF_capacity_rc_list += [0.671 * 2]
-#
-# RF_capacity_cl_list += [0.026 * 0.5]
-# RF_capacity_cr_list += [0.014 * 0.5]
-# RF_capacity_lc_list += [0.130]
-# RF_capacity_rc_list += [0.671]
-#
-# RF_capacity_cl_list += [0.026 * 2]
-# RF_capacity_cr_list += [0.014 * 2]
-# RF_capacity_lc_list += [0.130]
-# RF_capacity_rc_list += [0.671]
-#
-# RF_capacity_cl_list += [0.026]
-# RF_capacity_cr_list += [0.026]
-# RF_capacity_lc_list += [0.130]
-# RF_capacity_rc_list += [0.671]
-#
-# RF_capacity_cl_list += [0.014]
-# RF_capacity_cr_list += [0.014]
-# RF_capacity_lc_list += [0.130]
-# RF_capacity_rc_list += [0.671]
-#
-# RF_capacity_cl_list += [0.014]
-# RF_capacity_cr_list += [0.026]
-# RF_capacity_lc_list += [0.130]
-# RF_capacity_rc_list += [0.671]
+# set1, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=1.679, k/2pi=3
+gas_type_list += ['deuterium']
+RF_capacity_rc_list += [0.311]
+RF_capacity_lc_list += [0.388]
+RF_capacity_cr_list += [0.025]
+RF_capacity_cl_list += [0.021]
+gas_type_list += ['tritium']
+RF_capacity_rc_list += [0.629]
+RF_capacity_lc_list += [0.165]
+RF_capacity_cr_list += [0.017]
+RF_capacity_cl_list += [0.025]
 
+# set2, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=1.559, k/2pi=0
+gas_type_list += ['deuterium']
+RF_capacity_rc_list += [0.832]
+RF_capacity_lc_list += [0.805]
+RF_capacity_cr_list += [0.018]
+RF_capacity_cl_list += [0.015]
+gas_type_list += ['tritium']
+RF_capacity_rc_list += [0.300]
+RF_capacity_lc_list += [0.299]
+RF_capacity_cr_list += [0.023]
+RF_capacity_cl_list += [0.020]
 
-#### some sensitivity checks around the s=1.46 set
+# set3, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=1.199, k/2pi=-3
+gas_type_list += ['deuterium']
+RF_capacity_rc_list += [0.640]
+RF_capacity_lc_list += [0.122]
+RF_capacity_cr_list += [0.014]
+RF_capacity_cl_list += [0.020]
+gas_type_list += ['tritium']
+RF_capacity_rc_list += [0.376]
+RF_capacity_lc_list += [0.401]
+RF_capacity_cr_list += [0.026]
+RF_capacity_cl_list += [0.023]
 
-# RF_capacity_cl_list += [0.02]
-# RF_capacity_cr_list += [0.031]
-# RF_capacity_lc_list += [0.455 * 0.5]
-# RF_capacity_rc_list += [0.664 * 0.5]
-#
-# RF_capacity_cl_list += [0.02]
-# RF_capacity_cr_list += [0.031]
-# RF_capacity_lc_list += [0.455 * 2]
-# RF_capacity_rc_list += [0.664 * 2]
-#
-# RF_capacity_cl_list += [0.02 * 0.5]
-# RF_capacity_cr_list += [0.031 * 0.5]
-# RF_capacity_lc_list += [0.455]
-# RF_capacity_rc_list += [0.664]
-#
-# RF_capacity_cl_list += [0.02 * 2]
-# RF_capacity_cr_list += [0.031 * 2]
-# RF_capacity_lc_list += [0.455]
-# RF_capacity_rc_list += [0.664]
-#
-# RF_capacity_cl_list += [0.02]
-# RF_capacity_cr_list += [0.02]
-# RF_capacity_lc_list += [0.455]
-# RF_capacity_rc_list += [0.664]
-#
-# RF_capacity_cl_list += [0.031]
-# RF_capacity_cr_list += [0.031]
-# RF_capacity_lc_list += [0.455]
-# RF_capacity_rc_list += [0.664]
-
-
-#### some sensitivity checks around a synthetic s=2 set
-
-RF_capacity_cl_list += [0.02]
-RF_capacity_cr_list += [0.01]
-RF_capacity_lc_list += [0.2]
-RF_capacity_rc_list += [0.4]
-
-RF_capacity_cl_list += [0.02 * 2]
-RF_capacity_cr_list += [0.01 * 2]
-RF_capacity_lc_list += [0.2 * 2]
-RF_capacity_rc_list += [0.4 * 2]
-
-RF_capacity_cl_list += [0.02 * 0.5]
-RF_capacity_cr_list += [0.01 * 0.5]
-RF_capacity_lc_list += [0.2 * 0.5]
-RF_capacity_rc_list += [0.4 * 0.5]
-
-RF_capacity_cl_list += [0.02 * 2]
-RF_capacity_cr_list += [0.01 * 2]
-RF_capacity_lc_list += [0.2]
-RF_capacity_rc_list += [0.4]
-
-RF_capacity_cl_list += [0.02 * 0.5]
-RF_capacity_cr_list += [0.01 * 0.5]
-RF_capacity_lc_list += [0.2]
-RF_capacity_rc_list += [0.4]
-
-RF_capacity_cl_list += [0.02]
-RF_capacity_cr_list += [0.01]
-RF_capacity_lc_list += [0.2 * 2]
-RF_capacity_rc_list += [0.4 * 2]
-
-RF_capacity_cl_list += [0.02]
-RF_capacity_cr_list += [0.01]
-RF_capacity_lc_list += [0.2 * 0.5]
-RF_capacity_rc_list += [0.4 * 0.5]
-
-RF_capacity_cl_list += [0.01]
-RF_capacity_cr_list += [0.02]
-RF_capacity_lc_list += [0.2]
-RF_capacity_rc_list += [0.4]
-
-RF_capacity_cl_list += [0.02]
-RF_capacity_cr_list += [0.02]
-RF_capacity_lc_list += [0.2]
-RF_capacity_rc_list += [0.4]
-
-RF_capacity_cl_list += [0.01]
-RF_capacity_cr_list += [0.01]
-RF_capacity_lc_list += [0.2]
-RF_capacity_rc_list += [0.4]
+# set4, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=0.720, k/2pi=-2
+gas_type_list += ['deuterium']
+RF_capacity_rc_list += [0.297]
+RF_capacity_lc_list += [0.081]
+RF_capacity_cr_list += [0.017]
+RF_capacity_cl_list += [0.010]
+gas_type_list += ['tritium']
+RF_capacity_rc_list += [0.818]
+RF_capacity_lc_list += [0.131]
+RF_capacity_cr_list += [0.024]
+RF_capacity_cl_list += [0.027]
 
 total_number_of_combinations = len(RF_capacity_cl_list) * len(num_cells_list)
 print('total_number_of_combinations = ' + str(total_number_of_combinations))
@@ -221,7 +143,9 @@ for ind_RF in range(len(RF_capacity_cl_list)):
 
     for num_cells in num_cells_list:
         run_name = plasma_mode
-        RF_label = 'RF_terms_' + 'cl_' + str(RF_capacity_cl_list[ind_RF]) \
+        run_name += '_' + gas_type_list[ind_RF]
+        RF_label = 'RF_terms' \
+                   + '_cl_' + str(RF_capacity_cl_list[ind_RF]) \
                    + '_cr_' + str(RF_capacity_cr_list[ind_RF]) \
                    + '_lc_' + str(RF_capacity_lc_list[ind_RF]) \
                    + '_rc_' + str(RF_capacity_rc_list[ind_RF])
@@ -231,6 +155,11 @@ for ind_RF in range(len(RF_capacity_cl_list)):
         print('run_name = ' + run_name)
 
         settings = {}
+        # settings['gas_name'] = 'hydrogen'
+        # settings['gas_name'] = 'deuterium'
+        # settings['gas_name'] = 'tritium'
+        settings['gas_name'] = gas_type_list[ind_RF]
+
         settings = define_default_settings(settings)
         settings['draw_plots'] = False  # plotting not possible on slurm computers without display
 
