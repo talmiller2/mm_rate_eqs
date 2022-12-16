@@ -1,9 +1,12 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
+plt.rcParams['font.size'] = 12
+plt.close('all')
+
 from mm_rate_eqs.default_settings import define_default_settings
 from mm_rate_eqs.fusion_functions import get_lawson_parameters, get_fusion_power, get_fusion_charged_power, \
-    get_sigma_v_fusion
+    get_sigma_v_fusion, get_reaction_label, get_lawson_criterion_piel
 from mm_rate_eqs.plasma_functions import get_brem_radiation_loss, get_cyclotron_radiation_loss, get_magnetic_pressure, \
     get_ideal_gas_pressure, get_ideal_gas_energy_per_volume, get_magnetic_field_for_given_pressure, \
     get_bohm_diffusion_constant, get_larmor_radius, get_alfven_wave_group_velocity, get_larmor_frequency
@@ -34,11 +37,13 @@ ni = n / 2
 
 # Ti_keV_list = np.logspace(0.1, 2.5, 1000)
 Ti_keV_list = np.linspace(1, 300, 1000)
-reaction_list = ['D_T_to_n_alpha', 'D_D_to_p_T_n_He3', 'D_He3_to_p_alpha', 'p_B_to_3alpha']
-for reaction in reaction_list:
+# reaction_list = ['D_T_to_n_alpha', 'D_D_to_p_T_n_He3', 'D_He3_to_p_alpha', 'p_B_to_3alpha']
+reaction_list = ['D_T_to_n_alpha']
+color_list = ['b', 'g', 'r', 'k']
+for reaction, color in zip(reaction_list, color_list):
     tau_lawson_list = []
-    for Ti2_keV in Ti_keV_list:
-        tau_lawson, flux_lawson = get_lawson_parameters(ni, Ti2_keV, settings, reaction=reaction)
+    for curr_Ti_keV in Ti_keV_list:
+        tau_lawson, flux_lawson = get_lawson_parameters(ni, curr_Ti_keV, settings, reaction=reaction)
         tau_lawson_list += [tau_lawson]
     tau_lawson_list = np.array(tau_lawson_list)
 
@@ -46,26 +51,50 @@ for reaction in reaction_list:
     # metric = 1 / (ni * Ti_keV_list * tau_lawson_list)
     ind_min = np.argmin(metric)
     # ind_min = np.argmax(metric)
-    label = reaction
+    # label = reaction
+    label = get_reaction_label(reaction=reaction)
     label += ', T=' + '{:.1f}'.format(Ti_keV_list[ind_min]) + 'keV'
     plt.figure(1)
-    plt.plot(Ti_keV_list, metric, label=label, linewidth=2)
+    plt.plot(Ti_keV_list, metric, label=label, linewidth=2, color=color)
     plt.plot(Ti_keV_list[ind_min], metric[ind_min], 'k', marker='o')
+    print(reaction, ', min(nTtau)=', metric[ind_min], ' at T=', '{:.1f}'.format(Ti_keV_list[ind_min]) + 'keV')
+
+    # add the Lawson cretirion plot from Piel (2007) book, page 105
+    tau_lawson_piel_list = []
+    tau_lawson_ignition_piel_list = []
+    for curr_Ti_keV in Ti_keV_list:
+        tau_lawson_piel, tau_lawson_ignition_piel = get_lawson_criterion_piel(ni, curr_Ti_keV, settings, eta=0.154,
+                                                                              reaction=reaction)
+        tau_lawson_piel_list += [tau_lawson_piel]
+        tau_lawson_ignition_piel_list += [tau_lawson_ignition_piel]
+    tau_lawson_piel_list = np.array(tau_lawson_piel_list)
+    tau_lawson_ignition_piel_list = np.array(tau_lawson_ignition_piel_list)
+    metric2 = ni * Ti_keV_list * tau_lawson_piel_list
+    metric3 = ni * Ti_keV_list * tau_lawson_ignition_piel_list
+    label = get_reaction_label(reaction=reaction)
+    plt.plot(Ti_keV_list, metric2, label=label, linewidth=2, color=color, linestyle='--')
+    plt.plot(Ti_keV_list, metric3, label=label, linewidth=2, color=color, linestyle=':')
+
+    ##########
 
     metric = ni * tau_lawson_list
     ind_min = np.argmin(metric)
-    label = reaction
+    # label = reaction
+    label = get_reaction_label(reaction=reaction)
     label += ', T=' + '{:.1f}'.format(Ti_keV_list[ind_min]) + 'keV'
     plt.figure(2)
-    plt.plot(Ti_keV_list, metric, label=label, linewidth=2)
+    plt.plot(Ti_keV_list, metric, label=label, linewidth=2, color=color)
     plt.plot(Ti_keV_list[ind_min], metric[ind_min], 'k', marker='o')
+
+    #############
 
     sigma_v_fusion = get_sigma_v_fusion(Ti_keV_list, reaction=reaction)
     metric = sigma_v_fusion
     ind_max = np.argmax(metric)
     plt.figure(3)
-    label = reaction
-    plt.plot(Ti_keV_list, metric, label=label, linewidth=2)
+    # label = reaction
+    label = get_reaction_label(reaction=reaction)
+    plt.plot(Ti_keV_list, metric, label=label, linewidth=2, color=color)
     plt.plot(Ti_keV_list[ind_max], metric[ind_max], 'k', marker='o')
 
 plt.figure(1)

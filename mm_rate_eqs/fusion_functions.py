@@ -2,6 +2,7 @@ import numpy as np
 
 from mm_rate_eqs.constants_functions import define_electron_charge, define_proton_mass, \
     define_fine_structure_constant, define_speed_of_light, define_factor_eV_to_K, define_barn
+from mm_rate_eqs.plasma_functions import get_brem_radiation_loss, get_cyclotron_radiation_loss
 
 
 def get_sigma_v_fusion(T, reaction='D_T_to_n_alpha', use_resonance=True):
@@ -226,6 +227,22 @@ def get_lawson_parameters(ni, Ti, settings, reaction='D_T_to_n_alpha'):
     flux_lawson = 0.5 * ni * settings['volume_main_cell'] / tau_lawson
     return tau_lawson, flux_lawson
 
+
+def get_lawson_criterion_piel(ni, Ti, settings, eta=0.3, reaction='D_T_to_n_alpha'):
+    """
+    Lawson minimal confinement time [s] based on derivation in Piel (2007) book, page 105.
+    T in [keV], ni in [m^-3].
+    """
+    sigma_v_fusion = get_sigma_v_fusion(Ti, reaction=reaction)
+    MeV_to_J = define_electron_charge() * 1e6
+    E_charged = get_E_charged(reaction=reaction) * MeV_to_J  # J
+    E_reaction = get_E_reaction(reaction=reaction) * MeV_to_J  # J
+    kB_keV = define_electron_charge() * 1e3
+    P_brem_vol = get_brem_radiation_loss(ni, ni, Ti, settings['Z_ion'])  # W/m^3
+    tau_lawson_piel = 3 * kB_keV * Ti / ni / (
+                eta / (1 - eta) * 0.25 * E_reaction * sigma_v_fusion - P_brem_vol / ni ** 2)
+    tau_lawson_ignition_piel = 3 * kB_keV * Ti / ni / (0.25 * E_charged * sigma_v_fusion - P_brem_vol / ni ** 2)
+    return tau_lawson_piel, tau_lawson_ignition_piel
 
 def get_Zs_for_reaction(reaction='D_T_to_n_alpha'):
     Z_1, Z_2 = None, None
