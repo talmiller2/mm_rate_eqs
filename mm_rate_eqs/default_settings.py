@@ -129,7 +129,7 @@ def define_default_settings(settings=None):
         settings['initialization_type'] = 'FD_decay'
     if 'left_boundary_condition' not in settings:
         settings['left_boundary_condition'] = 'adjust_ntR_for_n0'
-        # settings['left_boundary_condition'] = 'adjust_all_species_for_n0'
+        # settings['left_boundary_condition'] = 'adjust_all_cies_for_n0'
     if 'right_boundary_condition' not in settings:
         settings['right_boundary_condition'] = 'none'
         # settings['right_boundary_condition'] = 'adjust_ntL_for_nend'

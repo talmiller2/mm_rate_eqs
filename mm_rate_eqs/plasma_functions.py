@@ -1,7 +1,8 @@
 import numpy as np
 
 from mm_rate_eqs.constants_functions import define_electron_mass, define_proton_mass, define_factor_eV_to_K, \
-    define_boltzmann_constant, define_factor_Pa_to_bar, define_vacuum_permeability, define_electron_charge
+    define_boltzmann_constant, define_factor_Pa_to_bar, define_vacuum_permeability, define_electron_charge, \
+    define_vacuum_permittivity
 
 
 def define_plasma_parameters(gas_name='hydrogen', ionization_level=1):
@@ -157,3 +158,25 @@ def get_alfven_wave_group_velocity(B, ni, gas_name='hydrogen', ionization_level=
     me, mp, mi, A, Z = define_plasma_parameters(gas_name=gas_name, ionization_level=ionization_level)
     rho_ions = mi * ni  # ions specific density
     return B / np.sqrt(mu0 * rho_ions)
+
+
+def get_electron_plasma_frequency(ne):
+    """
+    Calculate the electron plasma frequency
+    n is ion number density [m^-3], return in [m/s]
+    """
+    eps0 = define_vacuum_permittivity()
+    e = define_electron_charge()
+    me = define_electron_mass()
+    return np.sqrt(ne * e ** 2 / (eps0 * me))
+
+
+def get_ion_plasma_frequency(ni, gas_name='hydrogen', ionization_level=None):
+    """
+    Calculate the electron plasma frequency
+    n is ion number density [m^-3], return in [m/s]
+    """
+    eps0 = define_vacuum_permittivity()
+    e = define_electron_charge()
+    me, mp, mi, A, Z = define_plasma_parameters(gas_name=gas_name, ionization_level=ionization_level)
+    return np.sqrt(ni * (e * Z) ** 2 / (eps0 * mi))

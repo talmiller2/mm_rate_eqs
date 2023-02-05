@@ -4,9 +4,11 @@ from matplotlib import cm
 
 from mm_rate_eqs.default_settings import define_default_settings
 from mm_rate_eqs.fusion_functions import get_sigma_v_fusion, get_fusion_power, get_lawson_parameters, \
-    get_reaction_label, get_sigma_fusion, get_sigma_v_fusion_approx
+    get_reaction_label, get_sigma_fusion, get_sigma_v_fusion_approx, get_sigma_v_fusion_sampled
 from mm_rate_eqs.plasma_functions import get_brem_radiation_loss, get_cyclotron_radiation_loss
 from mm_rate_eqs.rate_functions import get_thermal_velocity
+
+plt.close('all')
 
 ### Plot fusion and radiation loss parameters
 
@@ -24,20 +26,23 @@ Te_0 = settings['Te_0']
 
 v_th = get_thermal_velocity(Ti_0, settings, species='ions')
 
-T_keV_array = np.linspace(0.2, 200, 1000)
+# T_keV_array = np.linspace(0.2, 200, 1000)
+T_keV_array = np.linspace(0.2, 1000, 1000)
 
 reactions = []
-reactions += ['D_T_to_n_alpha']
+# reactions += ['D_T_to_n_alpha']
+reactions += ['D_D_to_p_T']
+reactions += ['D_D_to_n_He3']
 reactions += ['D_D_to_p_T_n_He3']
-reactions += ['D_He3_to_p_alpha']
+# reactions += ['D_He3_to_p_alpha']
 # reactions += ['T_T_to_alpha_2n']
-reactions += ['p_B_to_3alpha']
+# reactions += ['p_B_to_3alpha']
 # reactions += ['p_D_to_He3_gamma']
 # reactions += ['He3_He3_to_alpha_2p']
 # reactions += ['p_p_to_D_e_nu']
 
-# colors = ['b', 'g', 'r', 'k', 'm', 'y', 'c', 'b']
-colors = cm.rainbow(np.linspace(0, 1, len(reactions)))
+colors = ['b', 'g', 'r', 'k', 'm', 'y', 'c', 'b']
+# colors = cm.rainbow(np.linspace(0, 1, len(reactions)))
 
 # plt.rcParams.update({'font.size': 16})
 plt.rcParams.update({'font.size': 14})
@@ -64,15 +69,17 @@ for ind_r, reaction in enumerate(reactions):
     except:
         pass
 
-    sigma_v_approx_array = get_sigma_v_fusion_approx(T_keV_array, reaction=reaction)
-    label_approx = get_reaction_label(reaction=reaction) + ' (Gamow approx)'
-    plt.plot(T_keV_array, sigma_v_approx_array, label=label_approx, linewidth=3, color=color, linestyle='--')
-    # label_approx = get_reaction_label(reaction=reaction)
-    # plt.plot(T_keV_array, sigma_v_approx_array, label=label_approx, linewidth=3, color=color, linestyle='-')
+    # sigma_v_approx_array = get_sigma_v_fusion_approx(T_keV_array, reaction=reaction)
+    # label_approx = get_reaction_label(reaction=reaction) + ' (Gamow approx)'
+    # plt.plot(T_keV_array, sigma_v_approx_array, label=label_approx, linewidth=3, color=color, linestyle='--')
 
     # sigma_v_approx_array = get_sigma_v_fusion_approx(T_keV_array, reaction=reaction, n=n_tot)
     # label_approx = get_reaction_label(reaction=reaction) + ' (Gamow approx + screening)'
     # plt.plot(T_keV_array, sigma_v_approx_array, label=label_approx, linewidth=3, color=color, linestyle=':')
+
+    sigma_v_approx_array = get_sigma_v_fusion_sampled(T_keV_array, reaction=reaction)
+    label_approx = get_reaction_label(reaction=reaction) + ' (sampled data)'
+    plt.plot(T_keV_array, sigma_v_approx_array, label=label_approx, linewidth=3, color=color, linestyle='--')
 
     plt.legend()
     plt.ylabel(sigma_v_str + ' $[m^3/s]$')
@@ -99,8 +106,8 @@ for ind_r, reaction in enumerate(reactions):
 
     plt.figure(3)
     sigma_v_array = get_sigma_v_fusion(T_keV_array, reaction=reaction)
-    funsion_scaling_power = np.diff(np.log(sigma_v_array)) / np.diff(np.log(T_keV_array))
-    plt.plot(T_keV_array[1:], funsion_scaling_power, label=label, linewidth=3, color=color)
+    fusion_scaling_power = np.diff(np.log(sigma_v_array)) / np.diff(np.log(T_keV_array))
+    plt.plot(T_keV_array[1:], fusion_scaling_power, label=label, linewidth=3, color=color)
     plt.legend()
     plt.title(sigma_v_str + ' temperature scaling power $\propto T^{\\nu}$')
     plt.ylabel('$\\nu$ [dimensionless]')

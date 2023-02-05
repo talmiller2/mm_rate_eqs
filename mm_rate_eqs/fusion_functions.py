@@ -1,8 +1,13 @@
 import numpy as np
+import os
+from scipy.interpolate import interp1d
 
 from mm_rate_eqs.constants_functions import define_electron_charge, define_proton_mass, \
     define_fine_structure_constant, define_speed_of_light, define_factor_eV_to_K, define_barn
 from mm_rate_eqs.plasma_functions import get_brem_radiation_loss, get_cyclotron_radiation_loss
+
+
+# from mm_rate_eqs.data_fusion_reactivity import get_path
 
 
 def get_sigma_v_fusion(T, reaction='D_T_to_n_alpha', use_resonance=True):
@@ -70,13 +75,33 @@ def get_sigma_v_fusion(T, reaction='D_T_to_n_alpha', use_resonance=True):
     ksi = C0 * T ** (-1.0 / 3)
     sigma_non_resonance = C1 * zeta ** (-5.0 / 6) * ksi ** 2 * np.exp(-3 * zeta ** (1.0 / 3) * ksi)
     if fit_type == 'Nevins_Swain' and use_resonance == True:  # add a term for resonance
-        sigma_resonance = 5.41e-15 * T ** (-3 / 2) * np.exp(-147 / T)
+        sigma_resonance = 5.41e-15 * T ** (-3.0 / 2) * np.exp(-147 / T)
     else:
         sigma_resonance = 0
     sigma_v_cm3_over_s = sigma_non_resonance + sigma_resonance
     sigma_v_m3_over_s = 1e-6 * sigma_v_cm3_over_s
 
     return sigma_v_m3_over_s
+
+
+def get_fusion_data_file_path(reaction='D_T_to_n_alpha'):
+    file = os.path.dirname(__file__) + '/fusion_reactivity_data/' + reaction + '.csv'
+    return file
+
+
+def get_sigma_v_fusion_sampled(T, reaction='D_T_to_n_alpha'):
+    """
+    Sampling of plots of <sigma*v> instead of using analytic fits.
+    Most from Atzeni2004 Book, except the separate D-D reactions from Wurzel2022.
+    T in [keV], reactivity sigma*v in [m3/s].
+    """
+    file_path = get_fusion_data_file_path(reaction=reaction)
+    data = np.loadtxt(file_path, delimiter=',')
+    log10_T_list = data[:, 0]
+    log10_sigma_v_list = data[:, 1]
+    interp_fun = interp1d(log10_T_list, log10_sigma_v_list, kind='cubic', bounds_error=False)
+    sigma_v_interped = 10.0 ** (interp_fun(np.log10(T)))
+    return sigma_v_interped
 
 
 def get_reaction_label(reaction='D_T_to_n_alpha'):
@@ -92,6 +117,8 @@ def get_reaction_label(reaction='D_T_to_n_alpha'):
         label = '$D + D \\rightarrow n + {}^{3}He$'
     elif reaction == 'D_D_to_p_T_n_He3':
         label = '$D + D \\rightarrow p + T, \, n + {}^{3}He$'
+    elif reaction == 'cat_D_D_to_p_T_n_He3':
+        label = 'cat $D + D \\rightarrow p + T, \, n + {}^{3}He$'
     elif reaction == 'T_T_to_alpha_2n':
         label = '$T + T \\rightarrow \\alpha + 2n$'
     # advanced controlled fusion fuels
@@ -118,18 +145,18 @@ def get_E_reaction(reaction='D_T_to_n_alpha'):
     """
     # controlled fusion fuels
     if reaction == 'D_T_to_n_alpha':
-        E_reaction = 17.6
+        E_reaction = 17.6  # 3.5 + 14.1
     elif reaction == 'D_D_to_p_T':
-        E_reaction = 4.03
+        E_reaction = 4.03  # 3.02 + 1.01
     elif reaction == 'D_D_to_n_He3':
-        E_reaction = 3.27
+        E_reaction = 3.27  # 2.45 + 0.82
     elif reaction == 'D_D_to_p_T_n_He3':
         E_reaction = 4.03 + 3.27
     elif reaction == 'T_T_to_alpha_2n':
         E_reaction = 11.3
     # advanced controlled fusion fuels
     elif reaction == 'D_He3_to_p_alpha':
-        E_reaction = 18.2
+        E_reaction = 18.3  # 14.7 + 3.6
     elif reaction == 'p_B_to_3alpha':
         E_reaction = 8.7
     # pp chain fuels
@@ -162,9 +189,10 @@ def get_E_charged(reaction='D_T_to_n_alpha'):
         E_charged = 0  # ???
     # advanced controlled fusion fuels
     elif reaction == 'D_He3_to_p_alpha':
-        E_charged = 14.7
+        # E_charged = 14.7 # TODO: this was the version up to 31.1.23, it is wrong and missing 3.6
+        E_charged = 18.3  # 14.7 + 3.6
     elif reaction == 'p_B_to_3alpha':
-        E_charged = 8.7  # TODO: not sure
+        E_charged = 8.7
     # pp chain fuels
     elif reaction == 'p_p_to_D_e_nu':
         E_charged = 0  # ???
@@ -209,7 +237,7 @@ def get_fusion_charged_power(ni, T, reaction='D_T_to_n_alpha'):
     T in [keV], ni in [m^-3].
     """
     return (ni / 2.0) ** 2 * get_sigma_v_fusion(T, reaction=reaction) \
-           * get_E_charged(reaction=reaction) * 1e6 * 1.6e-19  # MeV to J
+           * get_E_charged(reaction=reaction) * 1e6 * define_electron_charge()  # MeV to J
 
 
 def get_lawson_parameters(ni, Ti, settings, reaction='D_T_to_n_alpha'):

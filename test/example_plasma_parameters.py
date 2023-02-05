@@ -6,7 +6,8 @@ from mm_rate_eqs.fusion_functions import get_lawson_parameters, get_fusion_power
     get_sigma_v_fusion
 from mm_rate_eqs.plasma_functions import get_brem_radiation_loss, get_cyclotron_radiation_loss, get_magnetic_pressure, \
     get_ideal_gas_pressure, get_ideal_gas_energy_per_volume, get_magnetic_field_for_given_pressure, \
-    get_bohm_diffusion_constant, get_larmor_radius, get_alfven_wave_group_velocity, get_larmor_frequency
+    get_bohm_diffusion_constant, get_larmor_radius, get_alfven_wave_group_velocity, get_larmor_frequency, \
+    get_electron_plasma_frequency, get_ion_plasma_frequency
 from mm_rate_eqs.rate_functions import calculate_coulomb_logarithm, get_thermal_velocity, get_coulomb_scattering_rate
 
 from mm_rate_eqs.constants_functions import define_electron_mass, define_proton_mass, define_factor_eV_to_K, \
@@ -33,9 +34,9 @@ from mm_rate_eqs.constants_functions import define_electron_mass, define_proton_
 # n_list = [3.875e22]
 
 # fusion plasma
-# settings = {'gas_name': 'DT_mix'}
+settings = {'gas_name': 'DT_mix'}
 # settings = {'gas_name': 'hydrogen'}
-settings = {'gas_name': 'tritium'}
+# settings = {'gas_name': 'tritium'}
 # T = 10000.0
 # n_list = [2e20]
 T = 10000.0
@@ -65,10 +66,10 @@ n_list = [2e21]
 # T = 9000
 # n_list = [5e21]
 
-# B = 1  # T
+B = 1  # T
 # B = 0.35  # T
 # B = 3.5 #T
-B = 4.0  # T
+# B = 4.0  # T
 # B = 5.0  # T
 # B = 7.0 #T
 # B = 10.0  # T
@@ -215,8 +216,8 @@ for n in n_list:
     E0_total = E0_per_vol * settings['volume_main_cell']  # J
     P_confinement_loss = E0_total / tau_confinement
     print('P_confinement_loss = ' + str(P_confinement_loss / 1e6) + ' MW')
-    print('P_fus / P_rad = ' + str(P_fusion / P_total_radiation_loss))
-    print('P_fus / P_conf = ' + str(P_fusion / P_confinement_loss))
+    print('P_fus_normalized / P_rad = ' + str(P_fusion / P_total_radiation_loss))
+    print('P_fus_normalized / P_conf = ' + str(P_fusion / P_confinement_loss))
     Q_factor_total = P_fusion / (P_confinement_loss + P_total_radiation_loss)
     print('Q_factor_total = ' + str(Q_factor_total))
 
@@ -253,11 +254,24 @@ for n in n_list:
     print('v_alfven = ', '{:.3e}'.format(v_alfven), 'm/s')
     print('v_alfven / v_th: ', '{:.3e}'.format(v_alfven / v_th))
 
+    # plasma frequency
+    omega_elec_plasma_freq = 2 * np.pi * get_electron_plasma_frequency(ne)
+    omega_ion_plasma_freq = 2 * np.pi * get_ion_plasma_frequency(ni, gas_name=settings['gas_name'])
+    print('omega_elec_plasma_freq = ', '{:.3e}'.format(omega_elec_plasma_freq), '1/s')
+    print('omega_ion_plasma_freq = ', '{:.3e}'.format(omega_ion_plasma_freq), '1/s')
+
     # cyclotron frequency
     f_cyclotron = get_larmor_frequency(B, settings['gas_name'])
     print('f_cyclotron = ', '{:.3e}'.format(f_cyclotron), '1/s')  # RF spans kHz to Ghz range, MHz in the middle
     omega_cyclotron = 2 * np.pi * f_cyclotron
     print('omega_cyclotron = ', '{:.3e}'.format(omega_cyclotron), '1/s')
+
+    # comparing
+    # TODO: make more detailed comparison of the actual legal modes
+    print('v_exp = omega_cyclotron / k_paper ~= ', '{:.3e}'.format(omega_cyclotron / 1.0), 'm/s')
+    print('v_th = ', '{:.3e}'.format(v_th), 'm/s')
+    print('k_alfven ~ omega_cyclotron / v_alfven = ', '{:.3e}'.format(omega_cyclotron / v_alfven))
+    # k_Lmode =
 
     # RF parameters
     # alpha_RF = 1.00001
