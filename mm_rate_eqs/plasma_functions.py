@@ -50,7 +50,9 @@ def get_brem_radiation_loss(ni, ne, Te, Z_ion):
     input T in [keV], n in [m^-3] (mks)
     output in [W/m^3]
     """
-    return 4.8e-37 * Z_ion ** 2 * ni * ne * Te ** (0.5)
+    # C_B = 4.8e-37 # source "Fusion Plasma Analysis", p. 228
+    C_B = 5.34e-37  # source Wurzel et al 2022
+    return C_B * Z_ion ** 2 * ni * ne * Te ** (0.5)
 
 
 def get_cyclotron_radiation_loss(ne, Te, B):

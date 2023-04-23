@@ -31,8 +31,8 @@ process_list += ['D-T']
 process_list += ['D-He3']
 process_list += ['p-B11']
 process_list += ['pure D-D']
-process_list += ['He3-catalyzed D-D']
-process_list += ['T-catalyzed D-D']
+# process_list += ['He3-catalyzed D-D']
+# process_list += ['T-catalyzed D-D']
 process_list += ['fully-catalyzed D-D']
 
 color_list = ['b', 'g', 'r', 'grey', 'k', 'k', 'k']
@@ -103,9 +103,11 @@ for ip, process in enumerate(process_list):
 
     # Q = 1e-5
     # Q = 0.5
+    # Q = 2
     # Q = 1
-    # Q = 10
-    Q = np.inf
+    Q = 10
+    # Q = 100
+    # Q = np.inf
 
     Q_fuel_inv = 1 / Q
 
@@ -136,17 +138,22 @@ for ip, process in enumerate(process_list):
                     sigma_v_curr /= 2.0  # division by (1 + delta_jk)
                 E_f_curr = get_E_reaction(reaction=reaction) * 1e3  # energy in [keV]
                 E_ch_curr = get_E_charged(reaction=reaction) * 1e3  # energy in [keV]
-                # E_ch_curr *= 0 # TODO: test
+                # E_ch_curr *= 0 # TODO: original Lawson1957 criterion, without self-heating in denominator
                 denom_f_term += nj_list[ind_r_1] * nj_list[ind_r_2] * sigma_v_curr * (Q_fuel_inv * E_f_curr + E_ch_curr)
                 P_fus_normalized += nj_list[ind_r_1] * nj_list[ind_r_2] * sigma_v_curr * E_f_curr * factor_keV_to_J
 
     f_T = 1.0  # Te / Ti
+    # f_T = 0.5  # Te / Ti
+    # f_T = 0.1  # Te / Ti
+    # f_T = 0.05  # Te / Ti
     nom_term = sum([nj * (1 + f_T * Zj) for nj, Zj in zip(nj_list, Zj_list)])
 
     # C_B = 0
     C_B = 5.34e-37  # brem constant [W m^3 keV^-0.5]
-    C_B /= 10
+    # C_B /= 10
+    # C_B /= 100
     denom_brem_term = C_B * ne ** 2.0 * (f_T * Ti_keV) ** 0.5 * gamma_eff * factor_J_to_keV
+    denom_brem_term * + 1 - Q_fuel_inv  # TODO: case where we add P_brem in the nominator of Q
 
     p_tau = 3.0 / 2 * nom_term ** 2.0 * Ti_keV ** 2.0 / (denom_f_term - denom_brem_term)
     p_tau[p_tau < 0] = np.nan
@@ -242,8 +249,8 @@ plt.legend()
 plt.grid(True)
 plt.tight_layout()
 
-# # ion fractions (interesting for catalyzed D-D process)
-# plt.figure(3)
+# ion fractions (interesting for catalyzed D-D process)
+# plt.figure(4)
 # for nj, ion in zip(nj_list, ions_list):
 #     plt.plot(Ti_keV, nj, label=ion)
 # plt.xscale('log')

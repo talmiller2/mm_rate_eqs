@@ -268,9 +268,11 @@ def get_lawson_criterion_piel(ni, Ti, settings, eta=0.3, reaction='D_T_to_n_alph
     kB_keV = define_electron_charge() * 1e3
     P_brem_vol = get_brem_radiation_loss(ni, ni, Ti, settings['Z_ion'])  # W/m^3
     tau_lawson_piel = 3 * kB_keV * Ti / ni / (
-                eta / (1 - eta) * 0.25 * E_reaction * sigma_v_fusion - P_brem_vol / ni ** 2)
+            eta / (1 - eta) * 0.25 * E_reaction * sigma_v_fusion - P_brem_vol / ni ** 2)
     tau_lawson_ignition_piel = 3 * kB_keV * Ti / ni / (0.25 * E_charged * sigma_v_fusion - P_brem_vol / ni ** 2)
-    return tau_lawson_piel, tau_lawson_ignition_piel
+    flux_lawson_ignition_piel = 0.5 * ni * settings['volume_main_cell'] / tau_lawson_ignition_piel
+    return tau_lawson_piel, tau_lawson_ignition_piel, flux_lawson_ignition_piel
+
 
 def get_Zs_for_reaction(reaction='D_T_to_n_alpha'):
     Z_1, Z_2 = None, None
