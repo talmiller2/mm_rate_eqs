@@ -5,7 +5,7 @@ from mm_rate_eqs.constants_functions import define_electron_mass, define_proton_
     define_vacuum_permittivity
 
 
-def define_plasma_parameters(gas_name='hydrogen', ionization_level=1):
+def define_plasma_parameters(gas_name='hydrogen', ionization_level=None):
     me = define_electron_mass()
     mp = define_proton_mass()
     if gas_name == 'hydrogen':
@@ -70,7 +70,7 @@ def get_cyclotron_radiation_loss(ne, Te, B):
 def get_debye_length(n, Te):
     """
     scale above which quasi-neutrality holds, dominated by the fast electrons.
-    From Bellan 'Funamentals of Plasma Physics' p. 9, 20
+    From Bellan 'Fundamentals of Plasma Physics' p. 9, 20
     n in [m^-3], Te in [keV], return in [m]
     """
     return 0.76e-4 * np.sqrt(Te / 5.0 / (n / 1e20))
@@ -165,7 +165,7 @@ def get_alfven_wave_group_velocity(B, ni, gas_name='hydrogen', ionization_level=
 def get_electron_plasma_frequency(ne):
     """
     Calculate the electron plasma frequency
-    n is ion number density [m^-3], return in [m/s]
+    n is ion number density [m^-3], return in [m/s] # TODO: Hz?
     """
     eps0 = define_vacuum_permittivity()
     e = define_electron_charge()

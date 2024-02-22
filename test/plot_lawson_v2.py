@@ -17,13 +17,16 @@ me_keV = me * c ** 2.0 / (e * 1e3)  # electron mass energy in keV [511keV]
 factor_J_to_keV = 1 / (1e3 * e)
 factor_keV_to_J = 1e4 * e
 
-# Ti_keV = np.linspace(1, 1000, 1000)
-Ti_keV = np.linspace(1, 200, 1000)
-Te_keV = Ti_keV
+Ti_keV = np.linspace(1, 300, 1000)
+# Ti_keV = np.linspace(1, 200, 1000)
+
+Ti_over_Te = 1
+Te_keV = Ti_keV / Ti_over_Te
 
 # aux calc
 sigma_v_dict = {}
-for reaction in ['D_T_to_n_alpha', 'D_D_to_p_T', 'D_He3_to_p_alpha', 'D_D_to_n_He3']:
+reactions = ['D_T_to_n_alpha', 'D_D_to_p_T', 'D_He3_to_p_alpha', 'D_D_to_n_He3']
+for reaction in reactions:
     sigma_v_dict[reaction] = get_sigma_v_fusion_sampled(Ti_keV, reaction=reaction)
 
 process_list = []
@@ -84,7 +87,7 @@ for ip, process in enumerate(process_list):
     elif process == 'T-catalyzed D-D':
         ions_list = ['D', 'T']
         Zj_list = [1, 1]
-        # densities chosen at steady state for D,He3 (T assumed as extracted instantly)
+        # densities chosen at steady state for D,T (He3 assumed as extracted instantly)
         nj_list = [1,
                    0.5 * sigma_v_dict['D_D_to_p_T'] / sigma_v_dict['D_T_to_n_alpha']]
 
@@ -109,6 +112,11 @@ for ip, process in enumerate(process_list):
     # Q = 100
     # Q = np.inf
 
+    if Q == np.inf:
+        Q_str = '$\\infty$'
+    else:
+        Q_str = str(Q)
+
     Q_fuel_inv = 1 / Q
 
     denom_f_term = 0
@@ -132,7 +140,7 @@ for ip, process in enumerate(process_list):
                 sigma_v_curr = get_sigma_v_fusion_sampled(Ti_keV, reaction=reaction)
                 if reaction == 'p_B_to_3alpha':
                     # sigma_v_curr *= 1.3 # effetive increase of pB process reactivity
-                    # sigma_v_curr *= 3.0  # effetive increase of pB process reactivity
+                    # sigma_v_curr *= 3.0 # effetive increase of pB process reactivity
                     pass
                 if reactant_1 == reactant_2:
                     sigma_v_curr /= 2.0  # division by (1 + delta_jk)
@@ -152,14 +160,13 @@ for ip, process in enumerate(process_list):
     C_B = 5.34e-37  # brem constant [W m^3 keV^-0.5]
     # C_B /= 10
     # C_B /= 100
-    denom_brem_term = C_B * ne ** 2.0 * (f_T * Ti_keV) ** 0.5 * gamma_eff * factor_J_to_keV
-    denom_brem_term * + 1 - Q_fuel_inv  # TODO: case where we add P_brem in the nominator of Q
+    denom_brem_term = C_B * ne ** 2.0 * (f_T * Te_keV) ** 0.5 * gamma_eff * factor_J_to_keV
+    # denom_brem_term *= (1 - Q_fuel_inv)  # TODO: case where we add P_brem in the nominator of Q as well as denomiantor
 
     p_tau = 3.0 / 2 * nom_term ** 2.0 * Ti_keV ** 2.0 / (denom_f_term - denom_brem_term)
     p_tau[p_tau < 0] = np.nan
 
-    ### Plot
-
+    ### plots
     label = process
     try:
         ind_min = np.nanargmin(p_tau)
@@ -173,7 +180,7 @@ for ip, process in enumerate(process_list):
         process_opt_dict[process]['T_min'] = Ti_keV[ind_min]
         process_opt_dict[process]['p_tau_min'] = p_tau[ind_min]
 
-        # calculate P_fus_normalized at opt paramters
+        # calculate P_fus_normalized at opt parameters
         tau = 1.0  # [s]
         ni_normalization = (p_tau[ind_min] / tau) / (nom_term[ind_min] * Ti_keV[ind_min])
         # ni_normalization = 1e20
@@ -183,10 +190,12 @@ for ip, process in enumerate(process_list):
         P_fus_opt = P_fus_normalized[ind_min] * ni_normalization ** 2.0 / 1e6  # [MW/m^3]
         process_opt_dict[process]['P_fus_opt'] = P_fus_opt
 
+        # TODO: P_fus at different T for const what?
         ni_normalization = (p_tau / tau) / (nom_term * Ti_keV)
         P_fus = P_fus_normalized * ni_normalization ** 2.0 / 1e6  # [MW/m^3]
         process_opt_dict[process]['P_fus'] = P_fus
 
+        # TODO: comparing P_fus at what const?
         ptaumin_rel = process_opt_dict[process]['p_tau_min'] / process_opt_dict['D-T']['p_tau_min']
         P_fus_rel = P_fus / ptaumin_rel ** 2.0
         process_opt_dict[process]['P_fus_rel'] = P_fus_rel
@@ -224,7 +233,8 @@ plt.xlabel('$T_i$ [keV]')
 # plt.ylabel('$n_i T_i \\tau_E$ [$m^{-3}$keV$\\cdot$s]')
 # plt.ylabel('$p\\tau/k_B^2$ [$m^{-3}$keV$\\cdot$s]')
 plt.ylabel('$p\\tau$ [$m^{-3}$keV$\\cdot$s]')
-plt.title('Lawson $p \\tau$ for $Q=$' + str(Q))
+# plt.title('Lawson $p \\tau$ for $Q=$' + Q_str)
+plt.title('Lawson $p \\tau$ for $Q=$' + Q_str + ' ($\\frac{T_i}{T_e}=' + str(Ti_over_Te) + '$)')
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
@@ -234,7 +244,7 @@ plt.xscale('log')
 plt.yscale('log')
 plt.xlabel('$T_i$ [keV]')
 plt.ylabel('$P_{fus}$ [$MW/m^{-3}$]')
-plt.title('Fusion power for Lawson $Q=$' + str(Q) + ' curve')
+plt.title('Fusion power for Lawson $Q=$' + Q_str + ' curve')
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
@@ -244,7 +254,7 @@ plt.xscale('log')
 plt.yscale('log')
 plt.xlabel('$T_i$ [keV]')
 plt.ylabel('$P_{fus}$ [$MW/m^{-3}$]')
-plt.title('Fusion power (relative to DT) for Lawson $Q=$' + str(Q) + ' curve')
+plt.title('Fusion power (relative to DT) for Lawson $Q=$' + Q_str + ' curve')
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
@@ -259,3 +269,16 @@ plt.tight_layout()
 # plt.legend()
 # plt.grid(True)
 # plt.tight_layout()
+
+
+plt.figure(5)
+reactions = ['D_T_to_n_alpha', 'D_D_to_p_T', 'D_He3_to_p_alpha', 'D_D_to_n_He3']
+for reaction in reactions:
+    plt.plot(Ti_keV, sigma_v_dict[reaction], label=reaction, linewidth=2)
+plt.xscale('log')
+plt.yscale('log')
+plt.xlabel('$T_i$ [keV]')
+plt.ylabel('sigma*v')
+plt.legend()
+plt.grid(True)
+plt.tight_layout()

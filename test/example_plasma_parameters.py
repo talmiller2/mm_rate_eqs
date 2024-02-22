@@ -33,10 +33,11 @@ from mm_rate_eqs.constants_functions import define_electron_mass, define_proton_
 # n_list = [3.875e22]
 # n_list = [3.875e22]
 
-# fusion plasma
+## fusion plasma
 settings = {'gas_name': 'DT_mix'}
 # settings = {'gas_name': 'hydrogen'}
 # settings = {'gas_name': 'tritium'}
+# settings = {'gas_name': 'deuterium'}
 # T = 10000.0
 # n_list = [2e20]
 T = 10000.0
@@ -49,6 +50,11 @@ n_list = [2e21]
 # T = 3000
 # n_list = [4e22]
 # n_list = [2e21]
+
+# # alpha ash
+# settings = {'gas_name': 'helium'}
+# T = 3.5e6
+# n_list = [1e22]
 
 # GOL-NB parameters
 # settings = {'gas_name': 'hydrogen'}
@@ -66,10 +72,10 @@ n_list = [2e21]
 # T = 9000
 # n_list = [5e21]
 
-B = 1  # T
+# B = 1  # T
 # B = 0.35  # T
 # B = 3.5 #T
-# B = 4.0  # T
+B = 4.0  # T
 # B = 5.0  # T
 # B = 7.0 #T
 # B = 10.0  # T
@@ -89,11 +95,23 @@ B = 1  # T
 settings['length_main_cell'] = 100  # m
 settings['diameter_main_cell'] = 1  # m
 
+# Eli parameters
+settings = {'gas_name': 'DT_mix'}
+T = 14000
+n_list = [2e19]
+# n_list = [2e21]
+B = 4  # T
+
+settings['length_main_cell'] = 3  # m
+settings['diameter_main_cell'] = 0.3  # m
+
+
 settings = define_default_settings(settings=settings)
 # settings['volume_main_cell'] = 1.0
 
 Ti = T
 Te = T
+# Te = 10e3
 # Te = T / 2.0
 Ti_keV = Ti / 1e3
 Te_keV = Te / 1e3
@@ -291,20 +309,19 @@ for n in n_list:
     print('lambda_RF / gyro_radius = ', '{:.3e}'.format(lambda_RF / gyro_radius))
 
     # relative strength of magnetic and electric fields in Maxwell consistent RF field
-    r = 1  # m (typical particle distance from mirror axis)
+    r = 0.1  # m (typical particle distance from mirror axis)
     c = 3e8  # m/s (speed of light)
     relativistic_error_dimensionless = (r * omega_cyclotron / c) ** 2
     print('relativistic_error_dimensionless = ', '{:.3e}'.format(relativistic_error_dimensionless), )
 
-    E_RF = 10 * 1e3  # V/m
+    E_RF = 50 * 1e3  # V/m
     B_RF = E_RF * r * omega_cyclotron / c ** 2  # in [Tesla]=[V*s/m^2]
     print('input E=' + '{:.3e}'.format(E_RF / 1e3) + 'kV/m gives B=' + '{:.3e}'.format(B_RF) + 'T')
     F_magnetic_over_electric = B_RF * v_th / E_RF  # forces comparison
-    # print('Force ratio vB/E = ' + '{:.3e}'.format(F_magnetic_over_electric))
-    print('Force ratio E/vB = ' + '{:.3e}'.format(1 / F_magnetic_over_electric))
+    print('Force ratio vB/E = ' + '{:.3e}'.format(F_magnetic_over_electric))
+    # print('Force ratio E/vB = ' + '{:.3e}'.format(1 / F_magnetic_over_electric))
 
-    # B_RF = 1e-3 # T
-    B_RF = 3e-4  # T
+    B_RF = 0.04  # T
     E_RF = B_RF * r * omega_cyclotron  # in [V/m]
     print('input B=' + '{:.3e}'.format(B_RF) + 'T, gives E=' + '{:.3e}'.format(E_RF / 1e3) + 'kV/m')
     F_magnetic_over_electric = B_RF * v_th / E_RF  # forces comparison

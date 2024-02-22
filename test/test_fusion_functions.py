@@ -64,7 +64,7 @@ for ind_r, reaction in enumerate(reactions):
         plt.plot(T_keV_array, sigma_v_array, label=label_sigmav, linewidth=3, color=color)
         # if reaction == 'p_B_to_3alpha':
         #     sigma_v_array = get_sigma_v_fusion(T_keV_array, reaction=reaction, use_resonance=False)
-        #     label_res = get_reaction_label(reaction=reaction) + ' (fit w/o resonance term)'
+        #     label_res = get_reaction_label(reaction=reaction) + ' (fit lamda/o resonance term)'
         #     plt.plot(T_keV_array, sigma_v_array, label=label_res, linewidth=3, linestyle=':', color=color)
     except:
         pass
