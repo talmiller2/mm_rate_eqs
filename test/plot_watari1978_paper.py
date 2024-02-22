@@ -42,8 +42,10 @@ def format_coord(x, y, X, Y, Z):
     return coords_str
 
 
-def update_format_coord(X, Y, Z):
-    plt.gca().format_coord = lambda x, y: format_coord(x, y, X, Y, Z)
+def update_format_coord(X, Y, Z, ax=None):
+    if ax == None:
+        ax = plt.gca()
+    ax.format_coord = lambda x, y: format_coord(x, y, X, Y, Z)
     plt.show()
 
 
@@ -104,10 +106,13 @@ lamda = 0.5  # plasma width [m]
 # lamda = 1e-3 # plasma width [m]
 
 # test against Watari paper (see Fig. 12)
-print('*** Compare numbers to written in the Watari 1978 paper:')
+print('*** Compare numbers to written in the Watari 1978 paper Fig 12:')
 print('(omega_pi / omega_ci) ^ 2 = ', (omega_pi / omega_ci) ** 2)
+print('paper value = ', 7600)
 print('Ti_K * lamda ^ 2 / (Te_K * r_ci ^ 2) = ', Ti_K * lamda ** 2 / (Te_K * r_ci ** 2))
+print('paper value = ', 275)
 print('(c / omega_pi / lamda) ^ 2 = ', (c / omega_pi / lamda) ** 2)
+print('paper value = ', 139)
 
 
 def get_eps(omega, lamda, omega_pi):
