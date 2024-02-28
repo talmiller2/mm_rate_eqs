@@ -21,16 +21,21 @@ def plot_pos_neg(x, y, color=None, label=None):
     plt.plot(x, -y_copy, color=color, linestyle='--', linewidth=2)
 
 
-def num_to_coords_str(x, scientific_notation_abs_scale=1e5):
-    if abs(x) > scientific_notation_abs_scale:
-        type_notation = 'e'
+def num_to_coords_str(x, notation_type='both', scilimits=(-1e5, 1e6)):
+    if notation_type in ['f', 'float']:
+        format_type = 'f'
+    elif notation_type in ['e', 'scientific']:
+        format_type = 'e'
     else:
-        type_notation = 'f'
-    return ('{:.4' + type_notation + '}').format(x)
+        if x < scilimits[0] or x > scilimits[1]:
+            format_type = 'e'
+        else:
+            format_type = 'f'
+    return ('{:.4' + format_type + '}').format(x)
 
 
-def format_coord(x, y, X, Y, Z):
-    coords_str = 'x=' + num_to_coords_str(x) + ', y=' + num_to_coords_str(y)
+def format_coord(x, y, X, Y, Z, **notation_kwargs):
+    coords_str = 'x=' + num_to_coords_str(x, **notation_kwargs) + ', y=' + num_to_coords_str(y, **notation_kwargs)
     xarr = X[0, :]
     yarr = Y[:, 0]
     if ((x > xarr.min()) & (x <= xarr.max()) &
@@ -38,14 +43,14 @@ def format_coord(x, y, X, Y, Z):
         col = np.searchsorted(xarr, x) - 1
         row = np.searchsorted(yarr, y) - 1
         z = Z[row, col]
-        coords_str += ', z=' + num_to_coords_str(z) + '  [' + str(row) + ',' + str(col) + ']'
+        coords_str += ', z=' + num_to_coords_str(z, **notation_kwargs) + '  [' + str(row) + ',' + str(col) + ']'
     return coords_str
 
 
-def update_format_coord(X, Y, Z, ax=None):
+def update_format_coord(X, Y, Z, ax=None, **notation_kwargs):
     if ax == None:
         ax = plt.gca()
-    ax.format_coord = lambda x, y: format_coord(x, y, X, Y, Z)
+    ax.format_coord = lambda x, y: format_coord(x, y, X, Y, Z, **notation_kwargs)
     plt.show()
 
 
@@ -65,13 +70,13 @@ n = 1e21  # [m^-3]
 ni = n  # [m^-3]
 ne = n  # [m^-3]
 Te_keV = 10
-# Te_keV = 0
+# Te_keV = 0.1
 Te_eV = Te_keV * 1e3
 Ti_eV = Te_eV
 # l = 0.1 # [m]
-l = 1  # [m]
+# l = 1  # [m]
 # l = 10 # [m]
-# l = 100 # [m]
+l = 100  # [m]
 
 # # Watari paper parameters
 # Z = 2
@@ -105,14 +110,14 @@ kz = np.pi / l
 lamda = 0.5  # plasma width [m]
 # lamda = 1e-3 # plasma width [m]
 
-# test against Watari paper (see Fig. 12)
-print('*** Compare numbers to written in the Watari 1978 paper Fig 12:')
-print('(omega_pi / omega_ci) ^ 2 = ', (omega_pi / omega_ci) ** 2)
-print('paper value = ', 7600)
-print('Ti_K * lamda ^ 2 / (Te_K * r_ci ^ 2) = ', Ti_K * lamda ** 2 / (Te_K * r_ci ** 2))
-print('paper value = ', 275)
-print('(c / omega_pi / lamda) ^ 2 = ', (c / omega_pi / lamda) ** 2)
-print('paper value = ', 139)
+# # test against Watari paper (see Fig. 12)
+# print('*** Compare numbers to written in the Watari 1978 paper Fig 12:')
+# print('(omega_pi / omega_ci) ^ 2 = ', (omega_pi / omega_ci) ** 2)
+# print('paper value = ', 7600)
+# print('Ti_K * lamda ^ 2 / (Te_K * r_ci ^ 2) = ', Ti_K * lamda ** 2 / (Te_K * r_ci ** 2))
+# print('paper value = ', 275)
+# print('(c / omega_pi / lamda) ^ 2 = ', (c / omega_pi / lamda) ** 2)
+# print('paper value = ', 139)
 
 
 def get_eps(omega, lamda, omega_pi):
@@ -194,13 +199,14 @@ plt.legend()
 plt.tight_layout()
 
 ## plot 2d ralations as a function of n, omega
+# lamda = 0.001  # [m]
 lamda = 0.1  # [m]
 # lamda = 0.5 # [m]
 omega = np.logspace(-2, 2, 300) * omega_ci  # [Hz]
 ni = np.logspace(15, 21, 300)  # [m^-3]
 omega_2d, ni_2d = np.meshgrid(omega, ni)
 omega_pi_2d = np.sqrt(ni_2d * qi ** 2 / (eps0 * mi))
-ni_2d /= 1e15  # just for plot to test
+# ni_2d /= 1e15  # just for plot to test
 cmap_pos = 'hot_r'
 cmap_neg = 'Greys'
 
@@ -210,6 +216,8 @@ vmin, vmax = 1e-2, 1e2
 Ex, Ey, By = get_fields_for_case_c(omega_2d, lamda, omega_pi_2d)
 X, Y, Z = omega_2d / omega_ci, ni_2d, By
 plt.figure(4, figsize=(7, 5))
+# plt.figure(4, figsize=(12, 5))
+# plt.subplot(1, 3, 1)
 plt.pcolormesh(X, Y, Z,
                norm='log',
                vmin=vmin,
@@ -239,6 +247,7 @@ update_format_coord(X, Y, Z)
 Ex, Ey, By = get_fields_for_case_a(omega_2d, lamda, omega_pi_2d)
 X, Y, Z = omega_2d / omega_ci, ni_2d, Ex
 plt.figure(5, figsize=(7, 5))
+# plt.subplot(1, 3, 2)
 plt.pcolormesh(X, Y, Z,
                norm='log',
                vmin=vmin,
@@ -268,6 +277,7 @@ update_format_coord(X, Y, Z)
 dEx_dx, Ez = get_field_case_b(omega_2d, lamda, omega_pi_2d)
 X, Y, Z = omega_2d / omega_ci, ni_2d, dEx_dx
 plt.figure(6, figsize=(7.5, 5.5))
+# plt.subplot(1, 3, 3)
 plt.pcolormesh(X, Y, Z,
                norm='log',
                vmin=vmin,
@@ -292,3 +302,4 @@ plt.title('case (b) $\\frac{\\partial E_x}{\\partial x} \\frac{V}{m^2}$ for $B_{
 plt.colorbar()
 plt.tight_layout()
 update_format_coord(X, Y, Z)
+
