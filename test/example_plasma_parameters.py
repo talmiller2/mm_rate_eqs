@@ -11,7 +11,7 @@ from mm_rate_eqs.plasma_functions import get_brem_radiation_loss, get_cyclotron_
 from mm_rate_eqs.rate_functions import calculate_coulomb_logarithm, get_thermal_velocity, get_coulomb_scattering_rate
 
 from mm_rate_eqs.constants_functions import define_electron_mass, define_proton_mass, define_factor_eV_to_K, \
-    define_boltzmann_constant, define_factor_Pa_to_bar
+    define_boltzmann_constant, define_factor_Pa_to_bar, define_electron_charge
 
 # lab plasma
 # settings = {'gas_name': 'potassium'}
@@ -72,10 +72,10 @@ n_list = [2e21]
 # T = 9000
 # n_list = [5e21]
 
-# B = 1  # T
+B = 1  # T
 # B = 0.35  # T
 # B = 3.5 #T
-B = 4.0  # T
+# B = 4.0  # T
 # B = 5.0  # T
 # B = 7.0 #T
 # B = 10.0  # T
@@ -95,12 +95,12 @@ B = 4.0  # T
 settings['length_main_cell'] = 100  # m
 settings['diameter_main_cell'] = 1  # m
 
-# Eli parameters
-settings = {'gas_name': 'DT_mix'}
-T = 14000
-n_list = [2e19]
-# n_list = [2e21]
-B = 4  # T
+# # Eli parameters
+# settings = {'gas_name': 'DT_mix'}
+# T = 14000
+# n_list = [2e19]
+# # n_list = [2e21]
+# B = 4  # T
 
 settings['length_main_cell'] = 3  # m
 settings['diameter_main_cell'] = 0.3  # m
@@ -289,7 +289,6 @@ for n in n_list:
     print('v_exp = omega_cyclotron / k_paper ~= ', '{:.3e}'.format(omega_cyclotron / 1.0), 'm/s')
     print('v_th = ', '{:.3e}'.format(v_th), 'm/s')
     print('k_alfven ~ omega_cyclotron / v_alfven = ', '{:.3e}'.format(omega_cyclotron / v_alfven))
-    # k_Lmode =
 
     # RF parameters
     # alpha_RF = 1.00001
@@ -328,3 +327,9 @@ for n in n_list:
     print('Force ratio vB/E = ' + '{:.3e}'.format(F_magnetic_over_electric))
     # F_electric_over_magnetic = B_RF * v_th / E_RF # forces comparison
     # print('Force ratio vB/E = ' + '{:.3e}'.format(F_magnetic_over_electric))
+
+    # estimating BRF amplitude to have significant effect on ion velocity
+    e = define_electron_charge()
+    vz = v_th
+    l = 1  # [m]
+    BRF_estimate = settings['mi'] * vz / (settings['Z_ion'] * e * l)  # [T]

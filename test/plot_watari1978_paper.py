@@ -61,7 +61,19 @@ eps0 = define_vacuum_permittivity()
 kB = define_boltzmann_constant()
 c = define_speed_of_light()
 
-# fusion like parameters
+# ## Watari paper parameters
+# Z = 2
+# A = 4
+# B0_gauss = 12.2e3 # [G]
+# B0 = B0_gauss / 1e4 # [T]
+# ni = 1.5e19 # [m^-3]
+# ne = 1.5e19 # [m^-3]
+# Te_eV = 13
+# Ti_eV = 15
+# lamda = 0.005 # plasma width [m]
+# l = 1 # [m]
+
+## fusion-like parameters
 Z = 1
 A = 2  # deuterium
 B0 = 1  # [T]
@@ -74,21 +86,10 @@ Te_keV = 10
 Te_eV = Te_keV * 1e3
 Ti_eV = Te_eV
 # l = 0.1 # [m]
-# l = 1  # [m]
+l = 1  # [m]
 # l = 10 # [m]
-l = 100  # [m]
+# l = 100  # [m]
 
-# # Watari paper parameters
-# Z = 2
-# A = 4
-# B0_gauss = 12.2e3 # [G]
-# B0 = B0_gauss / 1e4 # [T]
-# ni = 1.5e19 # [m^-3]
-# ne = 1.5e19 # [m^-3]
-# Te_eV = 13
-# Ti_eV = 15
-# lamda = 0.005 # plasma width [m]
-# l = 1 # [m]
 
 
 Te_K = Te_eV * define_factor_eV_to_K()
@@ -302,4 +303,3 @@ plt.title('case (b) $\\frac{\\partial E_x}{\\partial x} \\frac{V}{m^2}$ for $B_{
 plt.colorbar()
 plt.tight_layout()
 update_format_coord(X, Y, Z)
-
