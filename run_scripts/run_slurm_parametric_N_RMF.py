@@ -15,7 +15,8 @@ Ti = 10 * 1e3  # eV
 main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/set43_MM_Rm_3_ni_1e21_Ti_10keV_withRMF'
 
 slurm_kwargs = {}
-slurm_kwargs['partition'] = 'core'
+# slurm_kwargs['partition'] = 'core'
+slurm_kwargs['partition'] = 'testCore'
 # slurm_kwargs['partition'] = 'socket'
 # slurm_kwargs['partition'] = 'testSocket'
 slurm_kwargs['ntasks'] = 1
@@ -78,22 +79,124 @@ RF_capacity_lc_list += [0.625]
 RF_capacity_cr_list += [0.058]
 RF_capacity_cl_list += [0.075]
 
-# set4, Rm=3, l=1m, BRF=0.04T, omega/omega0T=0.720, k/2pi=-2
-set_name_list += ['4 (D)']
-gas_type_list += ['deuterium']
-RF_capacity_rc_list += [0.210]
-RF_capacity_lc_list += [0.066]
-RF_capacity_cr_list += [0.014]
-RF_capacity_cl_list += [0.013]
-set_name_list += ['4 (T)']
-gas_type_list += ['tritium']
-RF_capacity_rc_list += [0.345]
-RF_capacity_lc_list += [0.094]
-RF_capacity_cr_list += [0.022]
-RF_capacity_cl_list += [0.031]
-
 #######################
 
+# based on single_particle: set75_B0_1T_l_1m_Post_Rm_3_intervals_D_T:
+# compiled_BRF_0.04_iff0/1_tcycdivs40_sigmar0.1_deuterium/tritium
+
+# iff=0
+# set1, Rm=3, l=1m, BRF=0.04T, omega/omega0T=0.767, k/2pi=-1.8, iff=0
+set_name_list += ['1 (D, iff=0)']
+gas_type_list += ['deuterium']
+RF_capacity_rc_list += [0.263]
+RF_capacity_lc_list += [0.082]
+RF_capacity_cr_list += [0.016]
+RF_capacity_cl_list += [0.014]
+set_name_list += ['1 (T, iff=0)']
+gas_type_list += ['tritium']
+RF_capacity_rc_list += [0.659]
+RF_capacity_lc_list += [0.075]
+RF_capacity_cr_list += [0.032]
+RF_capacity_cl_list += [0.061]
+
+# set2, Rm=3, l=1m, BRF=0.04T, omega/omega0T=0.839, k/2pi=-0.8, iff=0
+set_name_list += ['2 (D, iff=0)']
+gas_type_list += ['deuterium']
+RF_capacity_rc_list += [0.191]
+RF_capacity_lc_list += [0.105]
+RF_capacity_cr_list += [0.009]
+RF_capacity_cl_list += [0.012]
+set_name_list += ['2 (T, iff=0)']
+gas_type_list += ['tritium']
+RF_capacity_rc_list += [0.663]
+RF_capacity_lc_list += [0.157]
+RF_capacity_cr_list += [0.035]
+RF_capacity_cl_list += [0.062]
+
+# set3, Rm=3, l=1m, BRF=0.04T, omega/omega0T=1.271, k/2pi=-1.8, iff=0
+set_name_list += ['3 (D, iff=0)']
+gas_type_list += ['deuterium']
+RF_capacity_rc_list += [0.764]
+RF_capacity_lc_list += [0.141]
+RF_capacity_cr_list += [0.046]
+RF_capacity_cl_list += [0.086]
+set_name_list += ['3 (T, iff=0)']
+gas_type_list += ['tritium']
+RF_capacity_rc_list += [0.269]
+RF_capacity_lc_list += [0.665]
+RF_capacity_cr_list += [0.063]
+RF_capacity_cl_list += [0.061]
+
+# set4, Rm=3, l=1m, BRF=0.04T, omega/omega0T=1.343, k/2pi=1.42, iff=0
+set_name_list += ['4 (D, iff=0)']
+gas_type_list += ['deuterium']
+RF_capacity_rc_list += [0.204]
+RF_capacity_lc_list += [0.829]
+RF_capacity_cr_list += [0.081]
+RF_capacity_cl_list += [0.097]
+set_name_list += ['4 (T, iff=0)']
+gas_type_list += ['tritium']
+RF_capacity_rc_list += [0.643]
+RF_capacity_lc_list += [0.229]
+RF_capacity_cr_list += [0.042]
+RF_capacity_cl_list += [0.059]
+
+# iff=1
+# set1, Rm=3, l=1m, BRF=0.04T, omega/omega0T=0.767, k/2pi=-1.8, iff=1
+set_name_list += ['1 (D, iff=1)']
+gas_type_list += ['deuterium']
+RF_capacity_rc_list += [0.269]
+RF_capacity_lc_list += [0.130]
+RF_capacity_cr_list += [0.027]
+RF_capacity_cl_list += [0.035]
+set_name_list += ['1 (T, iff=1)']
+gas_type_list += ['tritium']
+RF_capacity_rc_list += [0.447]
+RF_capacity_lc_list += [0.157]
+RF_capacity_cr_list += [0.023]
+RF_capacity_cl_list += [0.030]
+
+# set2, Rm=3, l=1m, BRF=0.04T, omega/omega0T=0.839, k/2pi=-0.8, iff=1
+set_name_list += ['2 (D, iff=1)']
+gas_type_list += ['deuterium']
+RF_capacity_rc_list += [0.192]
+RF_capacity_lc_list += [0.125]
+RF_capacity_cr_list += [0.018]
+RF_capacity_cl_list += [0.018]
+set_name_list += ['2 (T, iff=1)']
+gas_type_list += ['tritium']
+RF_capacity_rc_list += [0.450]
+RF_capacity_lc_list += [0.217]
+RF_capacity_cr_list += [0.021]
+RF_capacity_cl_list += [0.029]
+
+# set3, Rm=3, l=1m, BRF=0.04T, omega/omega0T=1.271, k/2pi=-1.8, iff=1
+set_name_list += ['3 (D, iff=1)']
+gas_type_list += ['deuterium']
+RF_capacity_rc_list += [0.575]
+RF_capacity_lc_list += [0.229]
+RF_capacity_cr_list += [0.027]
+RF_capacity_cl_list += [0.036]
+set_name_list += ['3 (T, iff=1)']
+gas_type_list += ['tritium']
+RF_capacity_rc_list += [0.250]
+RF_capacity_lc_list += [0.769]
+RF_capacity_cr_list += [0.026]
+RF_capacity_cl_list += [0.021]
+
+# set4, Rm=3, l=1m, BRF=0.04T, omega/omega0T=1.343, k/2pi=1.42, iff=1
+set_name_list += ['4 (D, iff=1)']
+gas_type_list += ['deuterium']
+RF_capacity_rc_list += [0.352]
+RF_capacity_lc_list += [0.538]
+RF_capacity_cr_list += [0.028]
+RF_capacity_cl_list += [0.024]
+set_name_list += ['4 (T, iff=1)']
+gas_type_list += ['tritium']
+RF_capacity_rc_list += [0.825]
+RF_capacity_lc_list += [0.171]
+RF_capacity_cr_list += [0.011]
+RF_capacity_cl_list += [0.022]
 
 total_number_of_combinations = len(RF_capacity_cl_list) * len(num_cells_list)
 print('total_number_of_combinations = ' + str(total_number_of_combinations))
