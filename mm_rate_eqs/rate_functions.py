@@ -431,14 +431,16 @@ def get_density_time_derivatives(state, settings):
 
     if settings['use_RF_terms'] == True:
         tau_th = settings['cell_size'] / state['v_th']
-        nu_RF_cl = settings['RF_capacity_cl'] / tau_th
-        nu_RF_cr = settings['RF_capacity_cr'] / tau_th
-        nu_RF_lc = settings['RF_capacity_lc'] / tau_th
-        nu_RF_rc = settings['RF_capacity_rc'] / tau_th
+        nu_RF_cl = settings['RF_cl'] / tau_th
+        nu_RF_cr = settings['RF_cr'] / tau_th
+        nu_RF_lc = settings['RF_lc'] / tau_th
+        nu_RF_rc = settings['RF_rc'] / tau_th
+        nu_RF_rl = settings['RF_rl'] / tau_th
+        nu_RF_lr = settings['RF_lr'] / tau_th
 
         f_RF_c = - (nu_RF_cl + nu_RF_cr) * n_c + nu_RF_lc * n_tL + nu_RF_rc * n_tR
-        f_RF_tL = - nu_RF_lc * n_tL + nu_RF_cl * n_c
-        f_RF_tR = - nu_RF_rc * n_tR + nu_RF_cr * n_c
+        f_RF_tL = - nu_RF_lc * n_tL + nu_RF_cl * n_c + nu_RF_rl * n_tR
+        f_RF_tR = - nu_RF_rc * n_tR + nu_RF_cr * n_c + nu_RF_lr * n_tL
 
         dn_c_dt += f_RF_c
         dn_tL_dt += f_RF_tL

@@ -120,105 +120,105 @@ settings['time_steps_status'] = int(1e3)
 
 settings['use_RF_terms'] = True
 
-# settings['RF_capacity_cl'] = 0
-# settings['RF_capacity_cr'] = 0
-# settings['RF_capacity_lc'] = 0
-# settings['RF_capacity_rc'] = 0
+# settings['RF_cl'] = 0
+# settings['RF_cr'] = 0
+# settings['RF_lc'] = 0
+# settings['RF_rc'] = 0
 
-# settings['RF_capacity_cl'] = 0.03 # set32_B0_1T_l_1m_Post_Rm_3_intervals, E_RF_kVm = 25 kV/m, alpha = 1.0, beta = 0.0
-# settings['RF_capacity_cr'] = 0.03
-# settings['RF_capacity_lc'] = 0.39
-# settings['RF_capacity_rc'] = 0.39 # flux_axial_over_flux_lawson = 304.8318045226798
+# settings['RF_cl'] = 0.03 # set32_B0_1T_l_1m_Post_Rm_3_intervals, E_RF_kVm = 25 kV/m, alpha = 1.0, beta = 0.0
+# settings['RF_cr'] = 0.03
+# settings['RF_lc'] = 0.39
+# settings['RF_rc'] = 0.39 # flux_axial_over_flux_lawson = 304.8318045226798
 
-# settings['RF_capacity_cl'] = 0.03 # set32_B0_1T_l_1m_Post_Rm_3_intervals, E_RF_kVm = 25 kV/m, alpha = 0.9, beta = -1.0
-# settings['RF_capacity_cr'] = 0.01
-# settings['RF_capacity_lc'] = 0.1
-# settings['RF_capacity_rc'] = 0.35 # flux_axial_over_flux_lawson = 84.7490096952208
+# settings['RF_cl'] = 0.03 # set32_B0_1T_l_1m_Post_Rm_3_intervals, E_RF_kVm = 25 kV/m, alpha = 0.9, beta = -1.0
+# settings['RF_cr'] = 0.01
+# settings['RF_lc'] = 0.1
+# settings['RF_rc'] = 0.35 # flux_axial_over_flux_lawson = 84.7490096952208
 
-# settings['RF_capacity_cl'] = 0.025 # set32_B0_1T_l_1m_Post_Rm_3_intervals, E_RF_kVm = 25 kV/m, alpha = 0.8, beta = -5.0
-# settings['RF_capacity_cr'] = 0.004
-# settings['RF_capacity_lc'] = 0.038
-# settings['RF_capacity_rc'] = 0.324 # flux_axial_over_flux_lawson = 60.071421918239636
+# settings['RF_cl'] = 0.025 # set32_B0_1T_l_1m_Post_Rm_3_intervals, E_RF_kVm = 25 kV/m, alpha = 0.8, beta = -5.0
+# settings['RF_cr'] = 0.004
+# settings['RF_lc'] = 0.038
+# settings['RF_rc'] = 0.324 # flux_axial_over_flux_lawson = 60.071421918239636
 
-# settings['RF_capacity_cl'] = 0.023 # set32_B0_1T_l_1m_Post_Rm_3_intervals, E_RF_kVm = 50 kV/m, alpha = 0.8, beta = -5.0
-# settings['RF_capacity_cr'] = 0.008
-# settings['RF_capacity_lc'] = 0.074
-# settings['RF_capacity_rc'] = 0.484 # flux_axial_over_flux_lawson = 24.98291050008519
+# settings['RF_cl'] = 0.023 # set32_B0_1T_l_1m_Post_Rm_3_intervals, E_RF_kVm = 50 kV/m, alpha = 0.8, beta = -5.0
+# settings['RF_cr'] = 0.008
+# settings['RF_lc'] = 0.074
+# settings['RF_rc'] = 0.484 # flux_axial_over_flux_lawson = 24.98291050008519
 
-# settings['RF_capacity_cl'] = 0.013 # set32_B0_1T_l_1m_Post_Rm_3_intervals, E_RF_kVm = 100 kV/m, alpha = 0.8, beta = -5.0
-# settings['RF_capacity_cr'] = 0.016
-# settings['RF_capacity_lc'] = 0.132
-# settings['RF_capacity_rc'] = 0.638 # flux_axial_over_flux_lawson = 43.693868033664494
+# settings['RF_cl'] = 0.013 # set32_B0_1T_l_1m_Post_Rm_3_intervals, E_RF_kVm = 100 kV/m, alpha = 0.8, beta = -5.0
+# settings['RF_cr'] = 0.016
+# settings['RF_lc'] = 0.132
+# settings['RF_rc'] = 0.638 # flux_axial_over_flux_lawson = 43.693868033664494
 
-# settings['RF_capacity_cl'] = 0.027 # set33_B0_1T_l_3m_Post_Rm_3_intervals, E_RF_kVm = 100 kV/m, alpha = 0.8, beta = -5.0
-# settings['RF_capacity_cr'] = 0.023
-# settings['RF_capacity_lc'] = 0.215
-# settings['RF_capacity_rc'] = 0.953 # flux_axial_over_flux_lawson = 10.186296048238205 (N=50: 0.0442)
+# settings['RF_cl'] = 0.027 # set33_B0_1T_l_3m_Post_Rm_3_intervals, E_RF_kVm = 100 kV/m, alpha = 0.8, beta = -5.0
+# settings['RF_cr'] = 0.023
+# settings['RF_lc'] = 0.215
+# settings['RF_rc'] = 0.953 # flux_axial_over_flux_lawson = 10.186296048238205 (N=50: 0.0442)
 
-# settings['RF_capacity_cl'] = 0.018 # set32_B0_1T_l_1m_Post_Rm_3_intervals, E_RF_kVm = 100 kV/m, alpha = 0.8, beta = -10.0
-# settings['RF_capacity_cr'] = 0.011
-# settings['RF_capacity_lc'] = 0.094
-# settings['RF_capacity_rc'] = 0.392 # flux_axial_over_flux_lawson = 221.05007062678922
+# settings['RF_cl'] = 0.018 # set32_B0_1T_l_1m_Post_Rm_3_intervals, E_RF_kVm = 100 kV/m, alpha = 0.8, beta = -10.0
+# settings['RF_cr'] = 0.011
+# settings['RF_lc'] = 0.094
+# settings['RF_rc'] = 0.392 # flux_axial_over_flux_lawson = 221.05007062678922
 
-# settings['RF_capacity_cl'] = 0.078 # set32_B0_1T_l_1m_Post_Rm_3_intervals, B_RF = 0.04 T, alpha = 0.8, beta = -5.0
-# settings['RF_capacity_cr'] = 0.015
-# settings['RF_capacity_lc'] = 0.074
-# settings['RF_capacity_rc'] = 0.55 # flux_axial_over_flux_lawson = 23.49605415012276 (with N=20)
+# settings['RF_cl'] = 0.078 # set32_B0_1T_l_1m_Post_Rm_3_intervals, B_RF = 0.04 T, alpha = 0.8, beta = -5.0
+# settings['RF_cr'] = 0.015
+# settings['RF_lc'] = 0.074
+# settings['RF_rc'] = 0.55 # flux_axial_over_flux_lawson = 23.49605415012276 (with N=20)
 
-# settings['RF_capacity_cl'] = 0.02 # artificial test
-# settings['RF_capacity_cr'] = 0.02
-# settings['RF_capacity_lc'] = 0.2
-# settings['RF_capacity_rc'] = 0.2 # flux_axial_over_flux_lawson = 26.97957449292672
+# settings['RF_cl'] = 0.02 # artificial test
+# settings['RF_cr'] = 0.02
+# settings['RF_lc'] = 0.2
+# settings['RF_rc'] = 0.2 # flux_axial_over_flux_lawson = 26.97957449292672
 
-# settings['RF_capacity_cl'] = 0.2 # artificial test
-# settings['RF_capacity_cr'] = 0.2
-# settings['RF_capacity_lc'] = 0.2
-# settings['RF_capacity_rc'] = 0.2 # flux_axial_over_flux_lawson = 26.97957449292672
+# settings['RF_cl'] = 0.2 # artificial test
+# settings['RF_cr'] = 0.2
+# settings['RF_lc'] = 0.2
+# settings['RF_rc'] = 0.2 # flux_axial_over_flux_lawson = 26.97957449292672
 
-settings['RF_capacity_cl'] = 0.1  # artificial test
-settings['RF_capacity_cr'] = 0.1
-settings['RF_capacity_lc'] = 0.1
-settings['RF_capacity_rc'] = 1.0  # flux_axial_over_flux_lawson = 26.97957449292672
+settings['RF_cl'] = 0.1  # artificial test
+settings['RF_cr'] = 0.1
+settings['RF_lc'] = 0.1
+settings['RF_rc'] = 1.0  # flux_axial_over_flux_lawson = 26.97957449292672
 
-# settings['RF_capacity_cl'] = 0.1 # artificial test
-# settings['RF_capacity_cr'] = 0.05
-# settings['RF_capacity_lc'] = 0.1
-# settings['RF_capacity_rc'] = 1.0 # flux_axial_over_flux_lawson = 5.663855952708682
+# settings['RF_cl'] = 0.1 # artificial test
+# settings['RF_cr'] = 0.05
+# settings['RF_lc'] = 0.1
+# settings['RF_rc'] = 1.0 # flux_axial_over_flux_lawson = 5.663855952708682
 
-# settings['RF_capacity_cl'] = 0.02 # artificial test
-# settings['RF_capacity_cr'] = 0.02
-# settings['RF_capacity_lc'] = 0.1
-# settings['RF_capacity_rc'] = 1.0 # flux_axial_over_flux_lawson = 7.058074719004123
+# settings['RF_cl'] = 0.02 # artificial test
+# settings['RF_cr'] = 0.02
+# settings['RF_lc'] = 0.1
+# settings['RF_rc'] = 1.0 # flux_axial_over_flux_lawson = 7.058074719004123
 
-# settings['RF_capacity_cl'] = 0.1 # artificial test
-# settings['RF_capacity_cr'] = 0.02
-# settings['RF_capacity_lc'] = 0.2
-# settings['RF_capacity_rc'] = 1.0 # flux_axial_over_flux_lawson = 1.3713367871050115
+# settings['RF_cl'] = 0.1 # artificial test
+# settings['RF_cr'] = 0.02
+# settings['RF_lc'] = 0.2
+# settings['RF_rc'] = 1.0 # flux_axial_over_flux_lawson = 1.3713367871050115
 
-# settings['RF_capacity_cl'] = 0.025 # artificial test
-# settings['RF_capacity_cr'] = 0.004
-# settings['RF_capacity_lc'] = 0.2
-# settings['RF_capacity_rc'] = 1.0 # flux_axial_over_flux_lawson = 0.31197067374025955
+# settings['RF_cl'] = 0.025 # artificial test
+# settings['RF_cr'] = 0.004
+# settings['RF_lc'] = 0.2
+# settings['RF_rc'] = 1.0 # flux_axial_over_flux_lawson = 0.31197067374025955
 
-# settings['RF_capacity_cl'] = 0.025 # artificial test
-# settings['RF_capacity_cr'] = 0.004
-# settings['RF_capacity_lc'] = 0.038
-# settings['RF_capacity_rc'] = 1.0 # flux_axial_over_flux_lawson = 0.3105717517410081
+# settings['RF_cl'] = 0.025 # artificial test
+# settings['RF_cr'] = 0.004
+# settings['RF_lc'] = 0.038
+# settings['RF_rc'] = 1.0 # flux_axial_over_flux_lawson = 0.3105717517410081
 
-# settings['RF_capacity_cl'] = 0.025 # artificial test
-# settings['RF_capacity_cr'] = 0.004
-# settings['RF_capacity_lc'] = 0.038
-# settings['RF_capacity_rc'] = 0.324
+# settings['RF_cl'] = 0.025 # artificial test
+# settings['RF_cr'] = 0.004
+# settings['RF_lc'] = 0.038
+# settings['RF_rc'] = 0.324
 
-# settings['RF_capacity_cl'] = 0.025 # artificial test
-# settings['RF_capacity_cr'] = 0.024
-# settings['RF_capacity_lc'] = 0.324
-# settings['RF_capacity_rc'] = 0.324
+# settings['RF_cl'] = 0.025 # artificial test
+# settings['RF_cr'] = 0.024
+# settings['RF_lc'] = 0.324
+# settings['RF_rc'] = 0.324
 
-# settings['RF_capacity_cl'] += 0.01 # artificial addition of sometime that has no selectivity but enhances the rates
-# settings['RF_capacity_cr'] += 0.01
-# settings['RF_capacity_lc'] += 0.1
-# settings['RF_capacity_rc'] += 0.1
+# settings['RF_cl'] += 0.01 # artificial addition of sometime that has no selectivity but enhances the rates
+# settings['RF_cr'] += 0.01
+# settings['RF_lc'] += 0.1
+# settings['RF_rc'] += 0.1
 
 # fac = 0
 # fac = 0.2
@@ -228,10 +228,10 @@ fac = 1
 # fac = 100
 # fac = 200
 
-settings['RF_capacity_cl'] *= fac
-settings['RF_capacity_cr'] *= fac
-settings['RF_capacity_lc'] *= fac
-settings['RF_capacity_rc'] *= fac
+settings['RF_cl'] *= fac
+settings['RF_cr'] *= fac
+settings['RF_lc'] *= fac
+settings['RF_rc'] *= fac
 
 settings = define_default_settings(settings)
 # settings['n_end_min'] = 0.3 * settings['n0']
@@ -322,11 +322,11 @@ print('flux_axial_over_flux_lawson = ' + str(flux_axial_over_flux_lawson))
 
 plt.figure(1)
 title = ''
-# title += '$\\bar{N}_{LC \\rightarrow T}=$' + str(settings['RF_capacity_rc'])
-# title += ', $\\bar{N}_{T \\rightarrow LC}=$' + str(settings['RF_capacity_cr']) + ', '
-title += '$\\bar{N}_{rc}=$' + str(settings['RF_capacity_rc'])
-title += ', $\\bar{N}_{lc}=$' + str(settings['RF_capacity_lc'])
-title += ', $\\bar{N}_{cr}=$' + str(settings['RF_capacity_cr'])
-title += ', $\\bar{N}_{cl}=$' + str(settings['RF_capacity_cl']) + ', '
+# title += '$\\bar{N}_{LC \\rightarrow T}=$' + str(settings['RF_rc'])
+# title += ', $\\bar{N}_{T \\rightarrow LC}=$' + str(settings['RF_cr']) + ', '
+title += '$\\bar{N}_{rc}=$' + str(settings['RF_rc'])
+title += ', $\\bar{N}_{lc}=$' + str(settings['RF_lc'])
+title += ', $\\bar{N}_{cr}=$' + str(settings['RF_cr'])
+title += ', $\\bar{N}_{cl}=$' + str(settings['RF_cl']) + ', '
 title += '$\\phi_{ss}/\\phi_{Lawson}=$' + '{:.2f}'.format(flux_axial_over_flux_lawson)
 plt.title(title, fontsize=12)

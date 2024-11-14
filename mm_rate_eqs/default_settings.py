@@ -159,14 +159,18 @@ def define_default_settings(settings=None):
 
     if 'use_RF_terms' not in settings:
         settings['use_RF_terms'] = False
-    if 'RF_capacity_cl' not in settings:
-        settings['RF_capacity_cl'] = 0
-    if 'RF_capacity_cr' not in settings:
-        settings['RF_capacity_cr'] = 0
-    if 'RF_capacity_lc' not in settings:
-        settings['RF_capacity_lc'] = 0
-    if 'RF_capacity_rc' not in settings:
-        settings['RF_capacity_rc'] = 0
+    if 'RF_cl' not in settings:
+        settings['RF_cl'] = 0
+    if 'RF_cr' not in settings:
+        settings['RF_cr'] = 0
+    if 'RF_lc' not in settings:
+        settings['RF_lc'] = 0
+    if 'RF_rc' not in settings:
+        settings['RF_rc'] = 0
+    if 'RF_rl' not in settings:
+        settings['RF_rl'] = 0
+    if 'RF_lr' not in settings:
+        settings['RF_lr'] = 0
 
     ### relaxation solver parameters
     if 'max_num_time_steps' not in settings:
