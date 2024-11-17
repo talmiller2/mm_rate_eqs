@@ -439,8 +439,8 @@ def get_density_time_derivatives(state, settings):
         nu_RF_lr = settings['RF_lr'] / tau_th
 
         f_RF_c = - (nu_RF_cl + nu_RF_cr) * n_c + nu_RF_lc * n_tL + nu_RF_rc * n_tR
-        f_RF_tL = - nu_RF_lc * n_tL + nu_RF_cl * n_c + nu_RF_rl * n_tR
-        f_RF_tR = - nu_RF_rc * n_tR + nu_RF_cr * n_c + nu_RF_lr * n_tL
+        f_RF_tL = - (nu_RF_lc + nu_RF_lr) * n_tL + nu_RF_cl * n_c + nu_RF_rl * n_tR
+        f_RF_tR = - (nu_RF_rc + nu_RF_rl) * n_tR + nu_RF_cr * n_c + nu_RF_lr * n_tL
 
         dn_c_dt += f_RF_c
         dn_tL_dt += f_RF_tL

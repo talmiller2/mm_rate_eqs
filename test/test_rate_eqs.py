@@ -1,6 +1,6 @@
 import matplotlib
 
-matplotlib.use('TkAgg')  # to avoid macOS bug where plots cant get minimized
+# matplotlib.use('TkAgg')  # to avoid macOS bug where plots cant get minimized
 
 import matplotlib.pyplot as plt
 import os
@@ -15,7 +15,8 @@ plt.close('all')
 settings = {}
 settings['fontsize'] = 12
 
-settings['gas_name'] = 'hydrogen'
+# settings['gas_name'] = 'hydrogen'
+settings['gas_name'] = 'deuterium'
 # settings['gas_name'] = 'DT-mix'
 
 # settings['save_state'] = 'False'
@@ -175,10 +176,10 @@ settings['use_RF_terms'] = True
 # settings['RF_lc'] = 0.2
 # settings['RF_rc'] = 0.2 # flux_axial_over_flux_lawson = 26.97957449292672
 
-settings['RF_cl'] = 0.1  # artificial test
-settings['RF_cr'] = 0.1
-settings['RF_lc'] = 0.1
-settings['RF_rc'] = 1.0  # flux_axial_over_flux_lawson = 26.97957449292672
+# settings['RF_cl'] = 0.1  # artificial test
+# settings['RF_cr'] = 0.1
+# settings['RF_lc'] = 0.1
+# settings['RF_rc'] = 1.0  # flux_axial_over_flux_lawson = 26.97957449292672
 
 # settings['RF_cl'] = 0.1 # artificial test
 # settings['RF_cr'] = 0.05
@@ -219,6 +220,26 @@ settings['RF_rc'] = 1.0  # flux_axial_over_flux_lawson = 26.97957449292672
 # settings['RF_cr'] += 0.01
 # settings['RF_lc'] += 0.1
 # settings['RF_rc'] += 0.1
+
+
+# set 1 , alpha= 1.3 , omega/omega0= 1.559 , beta= 0 , gas= deuterium , induced_fields_factor= 1
+settings['RF_rc'] = 0.862
+settings['RF_lc'] = 0.839
+settings['RF_cr'] = 0.028
+settings['RF_cl'] = 0.027
+settings['RF_rl'] = 0.061
+settings['RF_lr'] = 0.072
+# settings['RF_rl'] = 0
+# settings['RF_lr'] = 0
+
+# # set 10 , alpha= 0.64 , omega/omega0= 0.767 , beta= -1.8 , gas= deuterium , induced_fields_factor= 1
+# settings['RF_rc'] = 0.260
+# settings['RF_lc'] = 0.085
+# settings['RF_cr'] = 0.020
+# settings['RF_cl'] = 0.009
+# settings['RF_rl'] = 0.021
+# settings['RF_lr'] = 0.018
+
 
 # fac = 0
 # fac = 0.2
@@ -327,6 +348,8 @@ title = ''
 title += '$\\bar{N}_{rc}=$' + str(settings['RF_rc'])
 title += ', $\\bar{N}_{lc}=$' + str(settings['RF_lc'])
 title += ', $\\bar{N}_{cr}=$' + str(settings['RF_cr'])
-title += ', $\\bar{N}_{cl}=$' + str(settings['RF_cl']) + ', '
-title += '$\\phi_{ss}/\\phi_{Lawson}=$' + '{:.2f}'.format(flux_axial_over_flux_lawson)
+title += ', $\\bar{N}_{cl}=$' + str(settings['RF_cl'])
+title += ', $\\bar{N}_{rl}=$' + str(settings['RF_rl'])
+title += ', $\\bar{N}_{lr}=$' + str(settings['RF_lr'])
+title += ', $\\phi_{ss}/\\phi_{Lawson}=$' + '{:.2f}'.format(flux_axial_over_flux_lawson)
 plt.title(title, fontsize=12)
