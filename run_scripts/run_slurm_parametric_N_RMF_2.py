@@ -38,199 +38,199 @@ RF_rate_list = []
 
 ### RMF
 
-# # set 1 , alpha= 1.3 , omega/omega0= 1.559 , beta= 0 , gas= deuterium , induced_fields_factor= 1
-# set_name_list += ["1 (D, iff=1)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.862, 0.839, 0.028, 0.027, 0.061, 0.072, ]]
-# # set 1 , alpha= 1.3 , omega/omega0= 1.559 , beta= 0 , gas= deuterium , induced_fields_factor= 0
-# set_name_list += ["1 (D, iff=0)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.731, 0.742, 0.127, 0.128, 0.136, 0.117, ]]
-# # set 2 , alpha= 1.48 , omega/omega0= 1.775 , beta= 1.4 , gas= deuterium , induced_fields_factor= 1
-# set_name_list += ["2 (D, iff=1)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.724, 0.539, 0.025, 0.021, 0.121, 0.101, ]]
-# # set 2 , alpha= 1.48 , omega/omega0= 1.775 , beta= 1.4 , gas= deuterium , induced_fields_factor= 0
-# set_name_list += ["2 (D, iff=0)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.735, 0.598, 0.121, 0.080, 0.101, 0.115, ]]
-# # set 3 , alpha= 1.12 , omega/omega0= 1.343 , beta= -1.0 , gas= deuterium , induced_fields_factor= 1
-# set_name_list += ["3 (D, iff=1)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.838, 0.179, 0.033, 0.016, 0.014, 0.020, ]]
-# # set 3 , alpha= 1.12 , omega/omega0= 1.343 , beta= -1.0 , gas= deuterium , induced_fields_factor= 0
-# set_name_list += ["3 (D, iff=0)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.750, 0.220, 0.112, 0.033, 0.030, 0.043, ]]
-# # set 4 , alpha= 1.06 , omega/omega0= 1.271 , beta= -1.4 , gas= deuterium , induced_fields_factor= 1
-# set_name_list += ["4 (D, iff=1)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.797, 0.130, 0.036, 0.011, 0.028, 0.024, ]]
-# # set 4 , alpha= 1.06 , omega/omega0= 1.271 , beta= -1.4 , gas= deuterium , induced_fields_factor= 0
-# set_name_list += ["4 (D, iff=0)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.734, 0.168, 0.099, 0.023, 0.019, 0.036, ]]
-# # set 5 , alpha= 1.0 , omega/omega0= 1.199 , beta= -1.8 , gas= deuterium , induced_fields_factor= 1
-# set_name_list += ["5 (D, iff=1)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.827, 0.102, 0.035, 0.009, 0.006, 0.017, ]]
-# # set 5 , alpha= 1.0 , omega/omega0= 1.199 , beta= -1.8 , gas= deuterium , induced_fields_factor= 0
-# set_name_list += ["5 (D, iff=0)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.704, 0.108, 0.094, 0.016, 0.018, 0.028, ]]
-# # set 6 , alpha= 0.88 , omega/omega0= 1.055 , beta= 0 , gas= deuterium , induced_fields_factor= 1
-# set_name_list += ["6 (D, iff=1)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.130, 0.149, 0.014, 0.013, 0.012, 0.024, ]]
-# # set 6 , alpha= 0.88 , omega/omega0= 1.055 , beta= 0 , gas= deuterium , induced_fields_factor= 0
-# set_name_list += ["6 (D, iff=0)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.166, 0.177, 0.019, 0.021, 0.016, 0.017, ]]
-# # set 7 , alpha= 1.06 , omega/omega0= 1.271 , beta= 1.4 , gas= deuterium , induced_fields_factor= 1
-# set_name_list += ["7 (D, iff=1)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.118, 0.829, 0.013, 0.033, 0.017, 0.017, ]]
-# # set 7 , alpha= 1.06 , omega/omega0= 1.271 , beta= 1.4 , gas= deuterium , induced_fields_factor= 0
-# set_name_list += ["7 (D, iff=0)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.122, 0.736, 0.022, 0.102, 0.046, 0.022, ]]
-# # set 8 , alpha= 0.76 , omega/omega0= 0.911 , beta= -1.0 , gas= deuterium , induced_fields_factor= 1
-# set_name_list += ["8 (D, iff=1)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.220, 0.101, 0.019, 0.011, 0.021, 0.017, ]]
-# # set 8 , alpha= 0.76 , omega/omega0= 0.911 , beta= -1.0 , gas= deuterium , induced_fields_factor= 0
-# set_name_list += ["8 (D, iff=0)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.214, 0.090, 0.023, 0.011, 0.017, 0.022, ]]
-# # set 9 , alpha= 0.7 , omega/omega0= 0.839 , beta= -1.4 , gas= deuterium , induced_fields_factor= 1
-# set_name_list += ["9 (D, iff=1)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.257, 0.074, 0.019, 0.009, 0.017, 0.023, ]]
-# # set 9 , alpha= 0.7 , omega/omega0= 0.839 , beta= -1.4 , gas= deuterium , induced_fields_factor= 0
-# set_name_list += ["9 (D, iff=0)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.254, 0.083, 0.025, 0.008, 0.010, 0.025, ]]
-# # set 10 , alpha= 0.64 , omega/omega0= 0.767 , beta= -1.8 , gas= deuterium , induced_fields_factor= 1
-# set_name_list += ["10 (D, iff=1)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.260, 0.085, 0.020, 0.009, 0.021, 0.018, ]]
-# # set 10 , alpha= 0.64 , omega/omega0= 0.767 , beta= -1.8 , gas= deuterium , induced_fields_factor= 0
-# set_name_list += ["10 (D, iff=0)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.253, 0.078, 0.026, 0.007, 0.020, 0.023, ]]
-# # set 11 , alpha= 0.82 , omega/omega0= 0.983 , beta= -1.8 , gas= deuterium , induced_fields_factor= 1
-# set_name_list += ["11 (D, iff=1)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.546, 0.084, 0.026, 0.008, 0.013, 0.021, ]]
-# # set 11 , alpha= 0.82 , omega/omega0= 0.983 , beta= -1.8 , gas= deuterium , induced_fields_factor= 0
-# set_name_list += ["11 (D, iff=0)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.481, 0.087, 0.052, 0.010, 0.011, 0.027, ]]
-# # set 12 , alpha= 1.06 , omega/omega0= 1.271 , beta= 0 , gas= deuterium , induced_fields_factor= 1
-# set_name_list += ["12 (D, iff=1)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.418, 0.408, 0.025, 0.021, 0.069, 0.065, ]]
-# # set 12 , alpha= 1.06 , omega/omega0= 1.271 , beta= 0 , gas= deuterium , induced_fields_factor= 0
-# set_name_list += ["12 (D, iff=0)"]
-# gas_type_list += ["deuterium"]
-# RF_rate_list += [[0.390, 0.419, 0.050, 0.047, 0.068, 0.094, ]]
-#
-# # set 1 , alpha= 1.3 , omega/omega0= 1.559 , beta= 0 , gas= tritium , induced_fields_factor= 1
-# set_name_list += ["1 (T, iff=1)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.294, 0.244, 0.011, 0.017, 0.059, 0.071, ]]
-# # set 1 , alpha= 1.3 , omega/omega0= 1.559 , beta= 0 , gas= tritium , induced_fields_factor= 0
-# set_name_list += ["1 (T, iff=0)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.380, 0.350, 0.037, 0.048, 0.108, 0.098, ]]
-# # set 2 , alpha= 1.48 , omega/omega0= 1.775 , beta= 1.4 , gas= tritium , induced_fields_factor= 1
-# set_name_list += ["2 (T, iff=1)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.272, 0.166, 0.011, 0.008, 0.053, 0.037, ]]
-# # set 2 , alpha= 1.48 , omega/omega0= 1.775 , beta= 1.4 , gas= tritium , induced_fields_factor= 0
-# set_name_list += ["2 (T, iff=0)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.322, 0.253, 0.044, 0.034, 0.089, 0.070, ]]
-# # set 3 , alpha= 1.12 , omega/omega0= 1.343 , beta= -1.0 , gas= tritium , induced_fields_factor= 1
-# set_name_list += ["3 (T, iff=1)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.350, 0.667, 0.015, 0.024, 0.054, 0.097, ]]
-# # set 3 , alpha= 1.12 , omega/omega0= 1.343 , beta= -1.0 , gas= tritium , induced_fields_factor= 0
-# set_name_list += ["3 (T, iff=0)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.421, 0.622, 0.047, 0.081, 0.085, 0.106, ]]
-# # set 4 , alpha= 1.06 , omega/omega0= 1.271 , beta= -1.4 , gas= tritium , induced_fields_factor= 1
-# set_name_list += ["4 (T, iff=1)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.361, 0.725, 0.019, 0.026, 0.060, 0.078, ]]
-# # set 4 , alpha= 1.06 , omega/omega0= 1.271 , beta= -1.4 , gas= tritium , induced_fields_factor= 0
-# set_name_list += ["4 (T, iff=0)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.401, 0.692, 0.043, 0.109, 0.100, 0.094, ]]
-# # set 5 , alpha= 1.0 , omega/omega0= 1.199 , beta= -1.8 , gas= tritium , induced_fields_factor= 1
-# set_name_list += ["5 (T, iff=1)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.295, 0.517, 0.017, 0.025, 0.045, 0.082, ]]
-# # set 5 , alpha= 1.0 , omega/omega0= 1.199 , beta= -1.8 , gas= tritium , induced_fields_factor= 0
-# set_name_list += ["5 (T, iff=0)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.378, 0.638, 0.052, 0.112, 0.050, 0.069, ]]
-# # set 6 , alpha= 0.88 , omega/omega0= 1.055 , beta= 0 , gas= tritium , induced_fields_factor= 1
-# set_name_list += ["6 (T, iff=1)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.831, 0.825, 0.028, 0.029, 0.083, 0.074, ]]
-# # set 6 , alpha= 0.88 , omega/omega0= 1.055 , beta= 0 , gas= tritium , induced_fields_factor= 0
-# set_name_list += ["6 (T, iff=0)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.770, 0.730, 0.122, 0.133, 0.113, 0.114, ]]
-# # set 7 , alpha= 1.06 , omega/omega0= 1.271 , beta= 1.4 , gas= tritium , induced_fields_factor= 1
-# set_name_list += ["7 (T, iff=1)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.668, 0.308, 0.024, 0.015, 0.103, 0.041, ]]
-# # set 7 , alpha= 1.06 , omega/omega0= 1.271 , beta= 1.4 , gas= tritium , induced_fields_factor= 0
-# set_name_list += ["7 (T, iff=0)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.674, 0.391, 0.116, 0.055, 0.095, 0.077, ]]
-# # set 8 , alpha= 0.76 , omega/omega0= 0.911 , beta= -1.0 , gas= tritium , induced_fields_factor= 1
-# set_name_list += ["8 (T, iff=1)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.826, 0.206, 0.038, 0.014, 0.024, 0.017, ]]
-# # set 8 , alpha= 0.76 , omega/omega0= 0.911 , beta= -1.0 , gas= tritium , induced_fields_factor= 0
-# set_name_list += ["8 (T, iff=0)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.802, 0.236, 0.125, 0.037, 0.021, 0.032, ]]
-# # set 9 , alpha= 0.7 , omega/omega0= 0.839 , beta= -1.4 , gas= tritium , induced_fields_factor= 1
-# set_name_list += ["9 (T, iff=1)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.791, 0.130, 0.037, 0.012, 0.026, 0.019, ]]
-# # set 9 , alpha= 0.7 , omega/omega0= 0.839 , beta= -1.4 , gas= tritium , induced_fields_factor= 0
-# set_name_list += ["9 (T, iff=0)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.766, 0.157, 0.102, 0.022, 0.022, 0.034, ]]
-# # set 10 , alpha= 0.64 , omega/omega0= 0.767 , beta= -1.8 , gas= tritium , induced_fields_factor= 1
-# set_name_list += ["10 (T, iff=1)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.771, 0.097, 0.039, 0.008, 0.012, 0.014, ]]
-# # set 10 , alpha= 0.64 , omega/omega0= 0.767 , beta= -1.8 , gas= tritium , induced_fields_factor= 0
-# set_name_list += ["10 (T, iff=0)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.695, 0.104, 0.087, 0.016, 0.016, 0.030, ]]
-# # set 11 , alpha= 0.82 , omega/omega0= 0.983 , beta= -1.8 , gas= tritium , induced_fields_factor= 1
-# set_name_list += ["11 (T, iff=1)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.487, 0.147, 0.035, 0.015, 0.028, 0.024, ]]
-# # set 11 , alpha= 0.82 , omega/omega0= 0.983 , beta= -1.8 , gas= tritium , induced_fields_factor= 0
-# set_name_list += ["11 (T, iff=0)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.537, 0.211, 0.077, 0.029, 0.032, 0.034, ]]
-# # set 12 , alpha= 1.06 , omega/omega0= 1.271 , beta= 0 , gas= tritium , induced_fields_factor= 1
-# set_name_list += ["12 (T, iff=1)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.505, 0.472, 0.023, 0.022, 0.084, 0.078, ]]
-# # set 12 , alpha= 1.06 , omega/omega0= 1.271 , beta= 0 , gas= tritium , induced_fields_factor= 0
-# set_name_list += ["12 (T, iff=0)"]
-# gas_type_list += ["tritium"]
-# RF_rate_list += [[0.551, 0.479, 0.073, 0.069, 0.119, 0.112, ]]
+# set 1 , alpha= 1.3 , omega/omega0= 1.559 , beta= 0 , gas= deuterium , induced_fields_factor= 1
+set_name_list += ["1 (D, iff=1)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.862, 0.839, 0.028, 0.027, 0.061, 0.072, ]]
+# set 1 , alpha= 1.3 , omega/omega0= 1.559 , beta= 0 , gas= deuterium , induced_fields_factor= 0
+set_name_list += ["1 (D, iff=0)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.731, 0.742, 0.127, 0.128, 0.136, 0.117, ]]
+# set 2 , alpha= 1.48 , omega/omega0= 1.775 , beta= 1.4 , gas= deuterium , induced_fields_factor= 1
+set_name_list += ["2 (D, iff=1)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.724, 0.539, 0.025, 0.021, 0.121, 0.101, ]]
+# set 2 , alpha= 1.48 , omega/omega0= 1.775 , beta= 1.4 , gas= deuterium , induced_fields_factor= 0
+set_name_list += ["2 (D, iff=0)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.735, 0.598, 0.121, 0.080, 0.101, 0.115, ]]
+# set 3 , alpha= 1.12 , omega/omega0= 1.343 , beta= -1.0 , gas= deuterium , induced_fields_factor= 1
+set_name_list += ["3 (D, iff=1)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.838, 0.179, 0.033, 0.016, 0.014, 0.020, ]]
+# set 3 , alpha= 1.12 , omega/omega0= 1.343 , beta= -1.0 , gas= deuterium , induced_fields_factor= 0
+set_name_list += ["3 (D, iff=0)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.750, 0.220, 0.112, 0.033, 0.030, 0.043, ]]
+# set 4 , alpha= 1.06 , omega/omega0= 1.271 , beta= -1.4 , gas= deuterium , induced_fields_factor= 1
+set_name_list += ["4 (D, iff=1)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.797, 0.130, 0.036, 0.011, 0.028, 0.024, ]]
+# set 4 , alpha= 1.06 , omega/omega0= 1.271 , beta= -1.4 , gas= deuterium , induced_fields_factor= 0
+set_name_list += ["4 (D, iff=0)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.734, 0.168, 0.099, 0.023, 0.019, 0.036, ]]
+# set 5 , alpha= 1.0 , omega/omega0= 1.199 , beta= -1.8 , gas= deuterium , induced_fields_factor= 1
+set_name_list += ["5 (D, iff=1)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.827, 0.102, 0.035, 0.009, 0.006, 0.017, ]]
+# set 5 , alpha= 1.0 , omega/omega0= 1.199 , beta= -1.8 , gas= deuterium , induced_fields_factor= 0
+set_name_list += ["5 (D, iff=0)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.704, 0.108, 0.094, 0.016, 0.018, 0.028, ]]
+# set 6 , alpha= 0.88 , omega/omega0= 1.055 , beta= 0 , gas= deuterium , induced_fields_factor= 1
+set_name_list += ["6 (D, iff=1)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.130, 0.149, 0.014, 0.013, 0.012, 0.024, ]]
+# set 6 , alpha= 0.88 , omega/omega0= 1.055 , beta= 0 , gas= deuterium , induced_fields_factor= 0
+set_name_list += ["6 (D, iff=0)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.166, 0.177, 0.019, 0.021, 0.016, 0.017, ]]
+# set 7 , alpha= 1.06 , omega/omega0= 1.271 , beta= 1.4 , gas= deuterium , induced_fields_factor= 1
+set_name_list += ["7 (D, iff=1)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.118, 0.829, 0.013, 0.033, 0.017, 0.017, ]]
+# set 7 , alpha= 1.06 , omega/omega0= 1.271 , beta= 1.4 , gas= deuterium , induced_fields_factor= 0
+set_name_list += ["7 (D, iff=0)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.122, 0.736, 0.022, 0.102, 0.046, 0.022, ]]
+# set 8 , alpha= 0.76 , omega/omega0= 0.911 , beta= -1.0 , gas= deuterium , induced_fields_factor= 1
+set_name_list += ["8 (D, iff=1)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.220, 0.101, 0.019, 0.011, 0.021, 0.017, ]]
+# set 8 , alpha= 0.76 , omega/omega0= 0.911 , beta= -1.0 , gas= deuterium , induced_fields_factor= 0
+set_name_list += ["8 (D, iff=0)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.214, 0.090, 0.023, 0.011, 0.017, 0.022, ]]
+# set 9 , alpha= 0.7 , omega/omega0= 0.839 , beta= -1.4 , gas= deuterium , induced_fields_factor= 1
+set_name_list += ["9 (D, iff=1)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.257, 0.074, 0.019, 0.009, 0.017, 0.023, ]]
+# set 9 , alpha= 0.7 , omega/omega0= 0.839 , beta= -1.4 , gas= deuterium , induced_fields_factor= 0
+set_name_list += ["9 (D, iff=0)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.254, 0.083, 0.025, 0.008, 0.010, 0.025, ]]
+# set 10 , alpha= 0.64 , omega/omega0= 0.767 , beta= -1.8 , gas= deuterium , induced_fields_factor= 1
+set_name_list += ["10 (D, iff=1)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.260, 0.085, 0.020, 0.009, 0.021, 0.018, ]]
+# set 10 , alpha= 0.64 , omega/omega0= 0.767 , beta= -1.8 , gas= deuterium , induced_fields_factor= 0
+set_name_list += ["10 (D, iff=0)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.253, 0.078, 0.026, 0.007, 0.020, 0.023, ]]
+# set 11 , alpha= 0.82 , omega/omega0= 0.983 , beta= -1.8 , gas= deuterium , induced_fields_factor= 1
+set_name_list += ["11 (D, iff=1)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.546, 0.084, 0.026, 0.008, 0.013, 0.021, ]]
+# set 11 , alpha= 0.82 , omega/omega0= 0.983 , beta= -1.8 , gas= deuterium , induced_fields_factor= 0
+set_name_list += ["11 (D, iff=0)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.481, 0.087, 0.052, 0.010, 0.011, 0.027, ]]
+# set 12 , alpha= 1.06 , omega/omega0= 1.271 , beta= 0 , gas= deuterium , induced_fields_factor= 1
+set_name_list += ["12 (D, iff=1)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.418, 0.408, 0.025, 0.021, 0.069, 0.065, ]]
+# set 12 , alpha= 1.06 , omega/omega0= 1.271 , beta= 0 , gas= deuterium , induced_fields_factor= 0
+set_name_list += ["12 (D, iff=0)"]
+gas_type_list += ["deuterium"]
+RF_rate_list += [[0.390, 0.419, 0.050, 0.047, 0.068, 0.094, ]]
+
+# set 1 , alpha= 1.3 , omega/omega0= 1.559 , beta= 0 , gas= tritium , induced_fields_factor= 1
+set_name_list += ["1 (T, iff=1)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.294, 0.244, 0.011, 0.017, 0.059, 0.071, ]]
+# set 1 , alpha= 1.3 , omega/omega0= 1.559 , beta= 0 , gas= tritium , induced_fields_factor= 0
+set_name_list += ["1 (T, iff=0)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.380, 0.350, 0.037, 0.048, 0.108, 0.098, ]]
+# set 2 , alpha= 1.48 , omega/omega0= 1.775 , beta= 1.4 , gas= tritium , induced_fields_factor= 1
+set_name_list += ["2 (T, iff=1)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.272, 0.166, 0.011, 0.008, 0.053, 0.037, ]]
+# set 2 , alpha= 1.48 , omega/omega0= 1.775 , beta= 1.4 , gas= tritium , induced_fields_factor= 0
+set_name_list += ["2 (T, iff=0)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.322, 0.253, 0.044, 0.034, 0.089, 0.070, ]]
+# set 3 , alpha= 1.12 , omega/omega0= 1.343 , beta= -1.0 , gas= tritium , induced_fields_factor= 1
+set_name_list += ["3 (T, iff=1)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.350, 0.667, 0.015, 0.024, 0.054, 0.097, ]]
+# set 3 , alpha= 1.12 , omega/omega0= 1.343 , beta= -1.0 , gas= tritium , induced_fields_factor= 0
+set_name_list += ["3 (T, iff=0)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.421, 0.622, 0.047, 0.081, 0.085, 0.106, ]]
+# set 4 , alpha= 1.06 , omega/omega0= 1.271 , beta= -1.4 , gas= tritium , induced_fields_factor= 1
+set_name_list += ["4 (T, iff=1)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.361, 0.725, 0.019, 0.026, 0.060, 0.078, ]]
+# set 4 , alpha= 1.06 , omega/omega0= 1.271 , beta= -1.4 , gas= tritium , induced_fields_factor= 0
+set_name_list += ["4 (T, iff=0)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.401, 0.692, 0.043, 0.109, 0.100, 0.094, ]]
+# set 5 , alpha= 1.0 , omega/omega0= 1.199 , beta= -1.8 , gas= tritium , induced_fields_factor= 1
+set_name_list += ["5 (T, iff=1)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.295, 0.517, 0.017, 0.025, 0.045, 0.082, ]]
+# set 5 , alpha= 1.0 , omega/omega0= 1.199 , beta= -1.8 , gas= tritium , induced_fields_factor= 0
+set_name_list += ["5 (T, iff=0)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.378, 0.638, 0.052, 0.112, 0.050, 0.069, ]]
+# set 6 , alpha= 0.88 , omega/omega0= 1.055 , beta= 0 , gas= tritium , induced_fields_factor= 1
+set_name_list += ["6 (T, iff=1)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.831, 0.825, 0.028, 0.029, 0.083, 0.074, ]]
+# set 6 , alpha= 0.88 , omega/omega0= 1.055 , beta= 0 , gas= tritium , induced_fields_factor= 0
+set_name_list += ["6 (T, iff=0)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.770, 0.730, 0.122, 0.133, 0.113, 0.114, ]]
+# set 7 , alpha= 1.06 , omega/omega0= 1.271 , beta= 1.4 , gas= tritium , induced_fields_factor= 1
+set_name_list += ["7 (T, iff=1)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.668, 0.308, 0.024, 0.015, 0.103, 0.041, ]]
+# set 7 , alpha= 1.06 , omega/omega0= 1.271 , beta= 1.4 , gas= tritium , induced_fields_factor= 0
+set_name_list += ["7 (T, iff=0)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.674, 0.391, 0.116, 0.055, 0.095, 0.077, ]]
+# set 8 , alpha= 0.76 , omega/omega0= 0.911 , beta= -1.0 , gas= tritium , induced_fields_factor= 1
+set_name_list += ["8 (T, iff=1)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.826, 0.206, 0.038, 0.014, 0.024, 0.017, ]]
+# set 8 , alpha= 0.76 , omega/omega0= 0.911 , beta= -1.0 , gas= tritium , induced_fields_factor= 0
+set_name_list += ["8 (T, iff=0)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.802, 0.236, 0.125, 0.037, 0.021, 0.032, ]]
+# set 9 , alpha= 0.7 , omega/omega0= 0.839 , beta= -1.4 , gas= tritium , induced_fields_factor= 1
+set_name_list += ["9 (T, iff=1)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.791, 0.130, 0.037, 0.012, 0.026, 0.019, ]]
+# set 9 , alpha= 0.7 , omega/omega0= 0.839 , beta= -1.4 , gas= tritium , induced_fields_factor= 0
+set_name_list += ["9 (T, iff=0)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.766, 0.157, 0.102, 0.022, 0.022, 0.034, ]]
+# set 10 , alpha= 0.64 , omega/omega0= 0.767 , beta= -1.8 , gas= tritium , induced_fields_factor= 1
+set_name_list += ["10 (T, iff=1)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.771, 0.097, 0.039, 0.008, 0.012, 0.014, ]]
+# set 10 , alpha= 0.64 , omega/omega0= 0.767 , beta= -1.8 , gas= tritium , induced_fields_factor= 0
+set_name_list += ["10 (T, iff=0)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.695, 0.104, 0.087, 0.016, 0.016, 0.030, ]]
+# set 11 , alpha= 0.82 , omega/omega0= 0.983 , beta= -1.8 , gas= tritium , induced_fields_factor= 1
+set_name_list += ["11 (T, iff=1)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.487, 0.147, 0.035, 0.015, 0.028, 0.024, ]]
+# set 11 , alpha= 0.82 , omega/omega0= 0.983 , beta= -1.8 , gas= tritium , induced_fields_factor= 0
+set_name_list += ["11 (T, iff=0)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.537, 0.211, 0.077, 0.029, 0.032, 0.034, ]]
+# set 12 , alpha= 1.06 , omega/omega0= 1.271 , beta= 0 , gas= tritium , induced_fields_factor= 1
+set_name_list += ["12 (T, iff=1)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.505, 0.472, 0.023, 0.022, 0.084, 0.078, ]]
+# set 12 , alpha= 1.06 , omega/omega0= 1.271 , beta= 0 , gas= tritium , induced_fields_factor= 0
+set_name_list += ["12 (T, iff=0)"]
+gas_type_list += ["tritium"]
+RF_rate_list += [[0.551, 0.479, 0.073, 0.069, 0.119, 0.112, ]]
 
 
 ### REF (iff=0,1 are almost identical)

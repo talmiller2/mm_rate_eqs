@@ -135,143 +135,143 @@ RF_cl_list = []
 ###########################
 ###########################
 
-# # set1, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=1.679, k/2pi=-3
-# set_num = 1
-# set_name_list += [str(set_num) + ' (D)']
-# gas_type_list += ['deuterium']
-# RF_rc_list += [0.311]
-# RF_lc_list += [0.388]
-# RF_cr_list += [0.025]
-# RF_cl_list += [0.021]
-# set_name_list += [str(set_num) + ' (T)']
-# gas_type_list += ['tritium']
-# RF_rc_list += [0.629]
-# RF_lc_list += [0.165]
-# RF_cr_list += [0.017]
-# RF_cl_list += [0.025]
-#
-# # # set2, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=1.559, k/2pi=0
-# # set_num = 2
-# # set_name_list += [str(set_num) + ' (D)']
-# # gas_type_list += ['deuterium']
-# # RF_rc_list += [0.832]
-# # RF_lc_list += [0.805]
-# # RF_cr_list += [0.018]
-# # RF_cl_list += [0.015]
-# # set_name_list += [str(set_num) + ' (T)']
-# # gas_type_list += ['tritium']
-# # RF_rc_list += [0.300]
-# # RF_lc_list += [0.299]
-# # RF_cr_list += [0.023]
-# # RF_cl_list += [0.020]
-#
-# # set3, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=1.199, k/2pi=-3
-# # set_num = 3
+# set1, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=1.679, k/2pi=-3
+set_num = 1
+set_name_list += [str(set_num) + ' (D)']
+gas_type_list += ['deuterium']
+RF_rc_list += [0.311]
+RF_lc_list += [0.388]
+RF_cr_list += [0.025]
+RF_cl_list += [0.021]
+set_name_list += [str(set_num) + ' (T)']
+gas_type_list += ['tritium']
+RF_rc_list += [0.629]
+RF_lc_list += [0.165]
+RF_cr_list += [0.017]
+RF_cl_list += [0.025]
+
+# # set2, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=1.559, k/2pi=0
 # set_num = 2
 # set_name_list += [str(set_num) + ' (D)']
 # gas_type_list += ['deuterium']
-# RF_rc_list += [0.640]
-# RF_lc_list += [0.122]
-# RF_cr_list += [0.014]
+# RF_rc_list += [0.832]
+# RF_lc_list += [0.805]
+# RF_cr_list += [0.018]
+# RF_cl_list += [0.015]
+# set_name_list += [str(set_num) + ' (T)']
+# gas_type_list += ['tritium']
+# RF_rc_list += [0.300]
+# RF_lc_list += [0.299]
+# RF_cr_list += [0.023]
 # RF_cl_list += [0.020]
-# set_name_list += [str(set_num) + ' (T)']
-# gas_type_list += ['tritium']
-# RF_rc_list += [0.376]
-# RF_lc_list += [0.401]
-# RF_cr_list += [0.026]
-# RF_cl_list += [0.023]
-#
-# # # set4, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=0.720, k/2pi=-2
-# # set_num = 4
-# # set_name_list += [str(set_num) + ' (D)']
-# # gas_type_list += ['deuterium']
-# # RF_rc_list += [0.297]
-# # RF_lc_list += [0.081]
-# # RF_cr_list += [0.017]
-# # RF_cl_list += [0.010]
-# # set_name_list += [str(set_num) + ' (T)']
-# # gas_type_list += ['tritium']
-# # RF_rc_list += [0.818]
-# # RF_lc_list += [0.131]
-# # RF_cr_list += [0.024]
-# # RF_cl_list += [0.027]
-#
-# # set5, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=0.839, k/2pi=-3.0
-# # set_num = 5
+
+# set3, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=1.199, k/2pi=-3
 # set_num = 3
-# set_name_list += [str(set_num) + ' (D)']
-# gas_type_list += ['deuterium']
-# RF_rc_list += [0.682]
-# RF_lc_list += [0.076]
-# RF_cr_list += [0.019]
-# RF_cl_list += [0.022]
-# set_name_list += [str(set_num) + ' (T)']
-# gas_type_list += ['tritium']
-# RF_rc_list += [0.587]
-# RF_lc_list += [0.139]
-# RF_cr_list += [0.015]
-# RF_cl_list += [0.026]
-#
-# # # set6, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=0.720, k/2pi= -4.0
-# # set_num = 6
-# # set_name_list += [str(set_num) + ' (D)']
-# # gas_type_list += ['deuterium']
-# # RF_rc_list += [0.629]
-# # RF_lc_list += [0.066]
-# # RF_cr_list += [0.016]
-# # RF_cl_list += [0.018]
-# # set_name_list += [str(set_num) + ' (T)']
-# # gas_type_list += ['tritium']
-# # RF_rc_list += [0.555]
-# # RF_lc_list += [0.101]
-# # RF_cr_list += [0.015]
-# # RF_cl_list += [0.020]
-# #
-# # # set7, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=0.660, k/2pi=-3.0
-# # set_num = 7
-# # set_name_list += [str(set_num) + ' (D)']
-# # gas_type_list += ['deuterium']
-# # RF_rc_list += [0.456]
-# # RF_lc_list += [0.073]
-# # RF_cr_list += [0.018]
-# # RF_cl_list += [0.012]
-# # set_name_list += [str(set_num) + ' (T)']
-# # gas_type_list += ['tritium']
-# # RF_rc_list += [0.720]
-# # RF_lc_list += [0.103]
-# # RF_cr_list += [0.027]
-# # RF_cl_list += [0.026]
-# #
-# # # set8, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=0.600, k/2pi=-4
-# # set_num = 8
-# # set_name_list += [str(set_num) + ' (D)']
-# # gas_type_list += ['deuterium']
-# # RF_rc_list += [0.561]
-# # RF_lc_list += [0.056]
-# # RF_cr_list += [0.016]
-# # RF_cl_list += [0.016]
-# # set_name_list += [str(set_num) + ' (T)']
-# # gas_type_list += ['tritium']
-# # RF_rc_list += [0.632]
-# # RF_lc_list += [0.086]
-# # RF_cr_list += [0.021]
-# # RF_cl_list += [0.020]
-#
-# # set9, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=0.660, k/2pi=-7
-# # set_num = 9
+set_num = 2
+set_name_list += [str(set_num) + ' (D)']
+gas_type_list += ['deuterium']
+RF_rc_list += [0.640]
+RF_lc_list += [0.122]
+RF_cr_list += [0.014]
+RF_cl_list += [0.020]
+set_name_list += [str(set_num) + ' (T)']
+gas_type_list += ['tritium']
+RF_rc_list += [0.376]
+RF_lc_list += [0.401]
+RF_cr_list += [0.026]
+RF_cl_list += [0.023]
+
+# # set4, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=0.720, k/2pi=-2
 # set_num = 4
 # set_name_list += [str(set_num) + ' (D)']
 # gas_type_list += ['deuterium']
-# RF_rc_list += [0.504]
-# RF_lc_list += [0.047]
-# RF_cr_list += [0.020]
+# RF_rc_list += [0.297]
+# RF_lc_list += [0.081]
+# RF_cr_list += [0.017]
+# RF_cl_list += [0.010]
+# set_name_list += [str(set_num) + ' (T)']
+# gas_type_list += ['tritium']
+# RF_rc_list += [0.818]
+# RF_lc_list += [0.131]
+# RF_cr_list += [0.024]
+# RF_cl_list += [0.027]
+
+# set5, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=0.839, k/2pi=-3.0
+# set_num = 5
+set_num = 3
+set_name_list += [str(set_num) + ' (D)']
+gas_type_list += ['deuterium']
+RF_rc_list += [0.682]
+RF_lc_list += [0.076]
+RF_cr_list += [0.019]
+RF_cl_list += [0.022]
+set_name_list += [str(set_num) + ' (T)']
+gas_type_list += ['tritium']
+RF_rc_list += [0.587]
+RF_lc_list += [0.139]
+RF_cr_list += [0.015]
+RF_cl_list += [0.026]
+
+# # set6, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=0.720, k/2pi= -4.0
+# set_num = 6
+# set_name_list += [str(set_num) + ' (D)']
+# gas_type_list += ['deuterium']
+# RF_rc_list += [0.629]
+# RF_lc_list += [0.066]
+# RF_cr_list += [0.016]
+# RF_cl_list += [0.018]
+# set_name_list += [str(set_num) + ' (T)']
+# gas_type_list += ['tritium']
+# RF_rc_list += [0.555]
+# RF_lc_list += [0.101]
+# RF_cr_list += [0.015]
+# RF_cl_list += [0.020]
+#
+# # set7, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=0.660, k/2pi=-3.0
+# set_num = 7
+# set_name_list += [str(set_num) + ' (D)']
+# gas_type_list += ['deuterium']
+# RF_rc_list += [0.456]
+# RF_lc_list += [0.073]
+# RF_cr_list += [0.018]
+# RF_cl_list += [0.012]
+# set_name_list += [str(set_num) + ' (T)']
+# gas_type_list += ['tritium']
+# RF_rc_list += [0.720]
+# RF_lc_list += [0.103]
+# RF_cr_list += [0.027]
+# RF_cl_list += [0.026]
+#
+# # set8, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=0.600, k/2pi=-4
+# set_num = 8
+# set_name_list += [str(set_num) + ' (D)']
+# gas_type_list += ['deuterium']
+# RF_rc_list += [0.561]
+# RF_lc_list += [0.056]
+# RF_cr_list += [0.016]
 # RF_cl_list += [0.016]
 # set_name_list += [str(set_num) + ' (T)']
 # gas_type_list += ['tritium']
-# RF_rc_list += [0.361]
-# RF_lc_list += [0.058]
-# RF_cr_list += [0.013]
-# RF_cl_list += [0.018]
+# RF_rc_list += [0.632]
+# RF_lc_list += [0.086]
+# RF_cr_list += [0.021]
+# RF_cl_list += [0.020]
+
+# set9, Rm=3, l=1m, ERF=50kV/m, omega/omega0T=0.660, k/2pi=-7
+# set_num = 9
+set_num = 4
+set_name_list += [str(set_num) + ' (D)']
+gas_type_list += ['deuterium']
+RF_rc_list += [0.504]
+RF_lc_list += [0.047]
+RF_cr_list += [0.020]
+RF_cl_list += [0.016]
+set_name_list += [str(set_num) + ' (T)']
+gas_type_list += ['tritium']
+RF_rc_list += [0.361]
+RF_lc_list += [0.058]
+RF_cr_list += [0.013]
+RF_cl_list += [0.018]
 
 #########################
 
@@ -412,65 +412,67 @@ RF_cl_list = []
 #########################
 
 
-# set1, Rm=3, l=1m, ERF=25kV/m, omega/omega0=1.679 k/2pi=3.0
-set_num = 1
-set_name_list += [str(set_num) + ' (D)']
-gas_type_list += ['deuterium']
-RF_rc_list += [0.223]
-RF_lc_list += [0.211]
-RF_cr_list += [0.024]
-RF_cl_list += [0.017]
-set_name_list += [str(set_num) + ' (T)']
-gas_type_list += ['tritium']
-RF_rc_list += [0.356]
-RF_lc_list += [0.086]
-RF_cr_list += [0.014]
-RF_cl_list += [0.020]
+# # set1, Rm=3, l=1m, ERF=25kV/m, omega/omega0=1.679 k/2pi=3.0
+# set_num = 1
+# set_name_list += [str(set_num) + ' (D)']
+# gas_type_list += ['deuterium']
+# RF_rc_list += [0.223]
+# RF_lc_list += [0.211]
+# RF_cr_list += [0.024]
+# RF_cl_list += [0.017]
+# set_name_list += [str(set_num) + ' (T)']
+# gas_type_list += ['tritium']
+# RF_rc_list += [0.356]
+# RF_lc_list += [0.086]
+# RF_cr_list += [0.014]
+# RF_cl_list += [0.020]
+#
+# # set2, Rm=3, l=1m, ERF=25kV/m, omega/omega0=1.199 k/2pi=-3.0
+# set_num = 2
+# set_name_list += [str(set_num) + ' (D)']
+# gas_type_list += ['deuterium']
+# RF_rc_list += [0.440]
+# RF_lc_list += [0.053]
+# RF_cr_list += [0.023]
+# RF_cl_list += [0.024]
+# set_name_list += [str(set_num) + ' (T)']
+# gas_type_list += ['tritium']
+# RF_rc_list += [0.185]
+# RF_lc_list += [0.270]
+# RF_cr_list += [0.021]
+# RF_cl_list += [0.021]
+#
+# # set3, Rm=3, l=1m, ERF=25kV/m, omega/omega0=0.839 k/2pi=-3.0
+# set_num = 3
+# set_name_list += [str(set_num) + ' (D)']
+# gas_type_list += ['deuterium']
+# RF_rc_list += [0.371]
+# RF_lc_list += [0.032]
+# RF_cr_list += [0.012]
+# RF_cl_list += [0.015]
+# set_name_list += [str(set_num) + ' (T)']
+# gas_type_list += ['tritium']
+# RF_rc_list += [0.377]
+# RF_lc_list += [0.067]
+# RF_cr_list += [0.027]
+# RF_cl_list += [0.017]
+#
+# # set4, Rm=3, l=1m, ERF=25kV/m, omega/omega0=0.660 k/2pi=-7.0
+# set_num = 4
+# set_name_list += [str(set_num) + ' (D)']
+# gas_type_list += ['deuterium']
+# RF_rc_list += [0.298]
+# RF_lc_list += [0.025]
+# RF_cr_list += [0.014]
+# RF_cl_list += [0.014]
+# set_name_list += [str(set_num) + ' (T)']
+# gas_type_list += ['tritium']
+# RF_rc_list += [0.228]
+# RF_lc_list += [0.033]
+# RF_cr_list += [0.014]
+# RF_cl_list += [0.008]
 
-# set2, Rm=3, l=1m, ERF=25kV/m, omega/omega0=1.199 k/2pi=-3.0
-set_num = 2
-set_name_list += [str(set_num) + ' (D)']
-gas_type_list += ['deuterium']
-RF_rc_list += [0.440]
-RF_lc_list += [0.053]
-RF_cr_list += [0.023]
-RF_cl_list += [0.024]
-set_name_list += [str(set_num) + ' (T)']
-gas_type_list += ['tritium']
-RF_rc_list += [0.185]
-RF_lc_list += [0.270]
-RF_cr_list += [0.021]
-RF_cl_list += [0.021]
 
-# set3, Rm=3, l=1m, ERF=25kV/m, omega/omega0=0.839 k/2pi=-3.0
-set_num = 3
-set_name_list += [str(set_num) + ' (D)']
-gas_type_list += ['deuterium']
-RF_rc_list += [0.371]
-RF_lc_list += [0.032]
-RF_cr_list += [0.012]
-RF_cl_list += [0.015]
-set_name_list += [str(set_num) + ' (T)']
-gas_type_list += ['tritium']
-RF_rc_list += [0.377]
-RF_lc_list += [0.067]
-RF_cr_list += [0.027]
-RF_cl_list += [0.017]
-
-# set4, Rm=3, l=1m, ERF=25kV/m, omega/omega0=0.660 k/2pi=-7.0
-set_num = 4
-set_name_list += [str(set_num) + ' (D)']
-gas_type_list += ['deuterium']
-RF_rc_list += [0.298]
-RF_lc_list += [0.025]
-RF_cr_list += [0.014]
-RF_cl_list += [0.014]
-set_name_list += [str(set_num) + ' (T)']
-gas_type_list += ['tritium']
-RF_rc_list += [0.228]
-RF_lc_list += [0.033]
-RF_cr_list += [0.014]
-RF_cl_list += [0.008]
 
 for ind_RF in range(len(RF_cl_list)):
     color = colors[ind_RF]
