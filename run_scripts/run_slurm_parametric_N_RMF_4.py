@@ -307,8 +307,8 @@ for ind_RF in range(len(RF_rate_list)):
         # settings['transition_type'] = 'smooth_transition_to_free_flow'
         settings['transition_type'] = 'none'
 
-        settings['Rm'] = 3.0
-        # settings['Rm'] = 10.0
+        # settings['Rm'] = 3.0
+        settings['Rm'] = 6.0
 
         settings['use_RF_terms'] = True
         settings['RF_rc'] = RF_rc_curr
