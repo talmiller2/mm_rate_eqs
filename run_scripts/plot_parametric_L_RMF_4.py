@@ -57,8 +57,8 @@ set_name_list = []
 gas_type_list = []
 RF_rate_list = []
 
-gas_type = 'deuterium'
-# gas_type = 'tritium'
+# gas_type = 'deuterium'
+gas_type = 'tritium'
 
 
 # based on single_particle calcs: set51_B0_1T_l_1m_Post_Rm_6_intervals_D_T
