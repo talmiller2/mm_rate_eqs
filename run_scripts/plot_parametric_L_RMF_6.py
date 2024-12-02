@@ -46,6 +46,17 @@ gas_type = 'deuterium'
 # RF_type = 'electric_transverse'
 RF_type = 'magnetic_transverse'
 
+if gas_type == 'deuterium':
+    gas_type_short = 'D'
+else:
+    gas_type_short = 'T'
+
+if RF_type == 'magnetic_transverse':
+    RF_type_short = 'RMF'
+else:
+    RF_type_short = 'REF'
+
+
 if RF_type == 'magnetic_transverse':
 
     # based on single_particle calcs: set53_B0_1T_l_1m_Post_Rm_10_intervals_D_T
@@ -53,14 +64,14 @@ if RF_type == 'magnetic_transverse':
     if gas_type == 'deuterium':
         ### RMF (BRF=0.02T)
 
-        # set 1 , alpha= 1.3 , omega/omega0= 1.559 , beta= 0 , gas= deuterium , induced_fields_factor= 1
-        set_name_list += ["1 (D, iff=1)"]
-        gas_type_list += ["deuterium"]
-        RF_rate_list += [[0.804, 0.765, 0.018, 0.014, 0.087, 0.127, ]]
-        # set 1 , alpha= 1.3 , omega/omega0= 1.559 , beta= 0 , gas= deuterium , induced_fields_factor= 0
-        set_name_list += ["1 (D, iff=0)"]
-        gas_type_list += ["deuterium"]
-        RF_rate_list += [[0.865, 0.847, 0.035, 0.038, 0.053, 0.089, ]]
+        # # set 1 , alpha= 1.3 , omega/omega0= 1.559 , beta= 0 , gas= deuterium , induced_fields_factor= 1
+        # set_name_list += ["1 (D, iff=1)"]
+        # gas_type_list += ["deuterium"]
+        # RF_rate_list += [[0.804, 0.765, 0.018, 0.014, 0.087, 0.127, ]]
+        # # set 1 , alpha= 1.3 , omega/omega0= 1.559 , beta= 0 , gas= deuterium , induced_fields_factor= 0
+        # set_name_list += ["1 (D, iff=0)"]
+        # gas_type_list += ["deuterium"]
+        # RF_rate_list += [[0.865, 0.847, 0.035, 0.038, 0.053, 0.089, ]]
         # set 2 , alpha= 1.12 , omega/omega0= 1.343 , beta= -1.0 , gas= deuterium , induced_fields_factor= 1
         set_name_list += ["2 (D, iff=1)"]
         gas_type_list += ["deuterium"]
@@ -591,7 +602,8 @@ plt.ylabel('$\\phi_{ss} / \\phi_{Lawson}$')
 # plt.title('flux as a function of system size ($U/v_{th}$=' + str(U) + ')')
 plt.tight_layout()
 plt.grid(True)
-plt.title('RF ' + RF_type + ', gas ' + gas_type)
+# plt.title('RF ' + RF_type + ', gas ' + gas_type)
+plt.title(RF_type_short + ' (' + gas_type_short + ')')
 plt.tight_layout()
 plt.legend(ncols=3)
 # text = '(a)'
