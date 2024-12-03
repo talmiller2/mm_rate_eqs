@@ -149,13 +149,6 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
                 for num_cells in num_cells_list:
                     run_name = plasma_mode
                     run_name += '_' + gas_name
-                    # RF_label = 'RF_terms' \
-                    #            + '_rc_' + str(RF_rc_curr) \
-                    #            + '_lc_' + str(RF_lc_curr) \
-                    #            + '_cr_' + str(RF_cr_curr) \
-                    #            + '_cl_' + str(RF_cl_curr) \
-                    #            + '_rl_' + str(RF_rl_curr) \
-                    #            + '_lr_' + str(RF_lr_curr)
                     RF_label = 'alpha_' + str(alpha) + '_beta_' + str(beta)
                     run_name += '_' + RF_label
                     run_name += '_N_' + str(num_cells)
