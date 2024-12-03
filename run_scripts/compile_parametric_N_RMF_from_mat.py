@@ -155,6 +155,6 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
             save_mat_dict['alpha_loop_list'] = alpha_loop_list
             save_mat_dict['beta_loop_list'] = beta_loop_list
             save_mat_dict['flux_mat'] = flux_mat
-            compiled_save_file = main_folder + '/compiled_' + set_name + '_N_' + str(num_cells) + '.mat'
+            compiled_save_file = main_folder + '/' + set_name + '_N_' + str(num_cells) + '.mat'
             print('saving', compiled_save_file)
             savemat(compiled_save_file, save_mat_dict)
