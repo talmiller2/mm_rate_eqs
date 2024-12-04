@@ -23,13 +23,15 @@ slurm_kwargs['cpus-per-task'] = 1
 
 plasma_mode = 'isoT'
 
-num_cells_list = [10, 30, 50]
+# num_cells_list = [10, 30, 50]
 # num_cells_list = [30]
+num_cells_list = [50]
 
 # load single_particle compiled mat
 # single_particle_dir = '/Users/talmiller/Downloads/single_particle/'
 single_particle_dir = '/home/talm/code/single_particle/slurm_runs/'
-single_particle_dir += '/set53_B0_1T_l_1m_Post_Rm_10_intervals_D_T/'
+# single_particle_dir += '/set53_B0_1T_l_1m_Post_Rm_10_intervals_D_T/'
+single_particle_dir += '/set54_B0_1T_l_1m_Post_Rm_10_intervals_D_T_zeroRL_fluxeps1e-2/'
 
 gas_name_list = ['deuterium', 'tritium']
 
@@ -120,12 +122,6 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         RF_rates_mat_dict = loadmat(single_particle_file)
         alpha_loop_list = RF_rates_mat_dict['alpha_loop_list'][0]
         beta_loop_list = RF_rates_mat_dict['beta_loop_list'][0]
-        N_rc_1 = RF_rates_mat_dict['N_rc']
-        N_lc_1 = RF_rates_mat_dict['N_lc']
-        N_cr_1 = RF_rates_mat_dict['N_cr']
-        N_cl_1 = RF_rates_mat_dict['N_cl']
-        N_rl_1 = RF_rates_mat_dict['N_rl']
-        N_lr_1 = RF_rates_mat_dict['N_lr']
 
         total_number_of_combinations = len(num_cells_list) * len(alpha_loop_list) * len(beta_loop_list)
         print('total_number_of_combinations = ' + str(total_number_of_combinations))
@@ -143,8 +139,10 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
                 RF_lc_curr = RF_rates_mat_dict['N_lc'][ind_beta, ind_alpha]
                 RF_cr_curr = RF_rates_mat_dict['N_cr'][ind_beta, ind_alpha]
                 RF_cl_curr = RF_rates_mat_dict['N_cl'][ind_beta, ind_alpha]
-                RF_rl_curr = RF_rates_mat_dict['N_rl'][ind_beta, ind_alpha]
-                RF_lr_curr = RF_rates_mat_dict['N_lr'][ind_beta, ind_alpha]
+                # RF_rl_curr = RF_rates_mat_dict['N_rl'][ind_beta, ind_alpha]
+                # RF_lr_curr = RF_rates_mat_dict['N_lr'][ind_beta, ind_alpha]
+                RF_rl_curr = 0
+                RF_lr_curr = 0
 
                 for num_cells in num_cells_list:
                     run_name = plasma_mode
@@ -179,8 +177,8 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
                     settings['cell_size'] = 1.0  # m
 
                     # settings['flux_normalized_termination_cutoff'] = 0.05
-                    # settings['flux_normalized_termination_cutoff'] = 0.01
-                    settings['flux_normalized_termination_cutoff'] = 1e-3
+                    settings['flux_normalized_termination_cutoff'] = 1e-2
+                    # settings['flux_normalized_termination_cutoff'] = 1e-3
                     # settings['flux_normalized_termination_cutoff'] = 1e-4
 
                     # for const density right boundary condition
