@@ -9,11 +9,15 @@ from mm_rate_eqs.slurm_functions import get_script_rate_eqs_slave
 pwd = os.getcwd()
 rate_eqs_script = get_script_rate_eqs_slave()
 
-n0 = 1e21  # m^-3
+# n0 = 1e21  # m^-3
+n0 = 1e20  # m^-3
 Ti = 10 * 1e3  # eV
+
 main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/'
 # main_folder += 'set47_MM_Rm_10_ni_1e21_Ti_10keV_withRMF'
-main_folder += 'set48_MM_Rm_10_ni_1e21_Ti_10keV_withRMF_zeroRL_fluxeps1e-2'
+# main_folder += 'set48_MM_Rm_10_ni_1e21_Ti_10keV_withRMF_zeroRL_fluxeps1e-2'
+# main_folder += 'set49_MM_Rm_10_ni_1e21_Ti_10keV_withRMF_fluxeps1e-2'
+main_folder += 'set50_MM_Rm_10_ni_1e20_Ti_10keV_withRMF_fluxeps1e-2'
 
 slurm_kwargs = {}
 slurm_kwargs['partition'] = 'core'
