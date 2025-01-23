@@ -155,12 +155,12 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         for ind_beta, beta in enumerate(beta_loop_list):
             for ind_alpha, alpha in enumerate(alpha_loop_list):
 
-                RF_rc_curr = RF_rates_mat_dict['N_rc'][ind_beta, ind_alpha]
-                RF_lc_curr = RF_rates_mat_dict['N_lc'][ind_beta, ind_alpha]
-                RF_cr_curr = RF_rates_mat_dict['N_cr'][ind_beta, ind_alpha]
-                RF_cl_curr = RF_rates_mat_dict['N_cl'][ind_beta, ind_alpha]
-                RF_rl_curr = RF_rates_mat_dict['N_rl'][ind_beta, ind_alpha]
-                RF_lr_curr = RF_rates_mat_dict['N_lr'][ind_beta, ind_alpha]
+                RF_rc_curr = RF_rates_mat_dict['N_rc_end'][ind_beta, ind_alpha]
+                RF_lc_curr = RF_rates_mat_dict['N_lc_end'][ind_beta, ind_alpha]
+                RF_cr_curr = RF_rates_mat_dict['N_cr_end'][ind_beta, ind_alpha]
+                RF_cl_curr = RF_rates_mat_dict['N_cl_end'][ind_beta, ind_alpha]
+                RF_rl_curr = RF_rates_mat_dict['N_rl_end'][ind_beta, ind_alpha]
+                RF_lr_curr = RF_rates_mat_dict['N_lr_end'][ind_beta, ind_alpha]
                 # RF_rl_curr = 0
                 # RF_lr_curr = 0
 
