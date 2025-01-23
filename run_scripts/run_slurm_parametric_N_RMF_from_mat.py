@@ -1,5 +1,6 @@
 import os
 from scipy.io import loadmat
+import pickle
 
 from slurmpy.slurmpy import Slurm
 
@@ -16,8 +17,9 @@ Ti = 10 * 1e3  # eV
 main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/'
 # main_folder += 'set47_MM_Rm_10_ni_1e21_Ti_10keV_withRMF'
 # main_folder += 'set48_MM_Rm_10_ni_1e21_Ti_10keV_withRMF_zeroRL_fluxeps1e-2'
-main_folder += 'set49_MM_Rm_10_ni_1e21_Ti_10keV_withRMF_fluxeps1e-2'
+# main_folder += 'set49_MM_Rm_10_ni_1e21_Ti_10keV_withRMF_fluxeps1e-2'
 # main_folder += 'set50_MM_Rm_10_ni_1e20_Ti_10keV_withRMF_zeroRL_fluxeps1e-2'
+main_folder += 'set54_MM_Rm_10_ni_1e20_Ti_10keV_smooth_fluxeps1e-3'
 
 slurm_kwargs = {}
 slurm_kwargs['partition'] = 'core'
@@ -36,7 +38,19 @@ num_cells_list = [50]
 # load single_particle compiled mat
 # single_particle_dir = '/Users/talmiller/Downloads/single_particle/'
 single_particle_dir = '/home/talm/code/single_particle/slurm_runs/'
-single_particle_dir += '/set53_B0_1T_l_1m_Post_Rm_10_intervals_D_T/'
+# single_particle_dir += '/set53_B0_1T_l_1m_Post_Rm_10_intervals_D_T/'
+single_particle_dir += '/set54_B0_1T_l_1m_Post_Rm_10_intervals_D_T/'
+
+# extract variables from saved single particle calcs
+settings_file = single_particle_dir + 'settings.pickle'
+with open(settings_file, 'rb') as fid:
+    settings = pickle.load(fid)
+l = settings['l']
+
+field_dict_file = single_particle_dir + 'field_dict.pickle'
+with open(field_dict_file, 'rb') as fid:
+    field_dict = pickle.load(fid)
+Rm = field_dict['Rm']
 
 gas_name_list = ['deuterium', 'tritium']
 
@@ -48,7 +62,6 @@ with_kr_correction_list = []
 RF_type_list += ['electric_transverse']
 RF_amplitude_list += [25]  # kV/m
 induced_fields_factor_list += [1]
-with_kr_correction_list += [True]
 with_kr_correction_list += [True]
 
 RF_type_list += ['electric_transverse']
@@ -104,7 +117,8 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         else:
             gas_name_short = 'DTmix'
 
-        set_name = 'compiled_'
+        # set_name = 'compiled_'
+        set_name = 'smooth_compiled_'
         set_name += theta_type + '_'
         if RF_type == 'electric_transverse':
             set_name += 'ERF_' + str(RF_amplitude)
@@ -180,11 +194,12 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
                     settings['Ti_0'] = Ti
                     settings['Te_0'] = Ti
 
-                    settings['cell_size'] = 1.0  # m
+                    # settings['cell_size'] = 1.0  # m
+                    settings['cell_size'] = l
 
                     # settings['flux_normalized_termination_cutoff'] = 0.05
-                    settings['flux_normalized_termination_cutoff'] = 1e-2
-                    # settings['flux_normalized_termination_cutoff'] = 1e-3
+                    # settings['flux_normalized_termination_cutoff'] = 1e-2
+                    settings['flux_normalized_termination_cutoff'] = 1e-3
                     # settings['flux_normalized_termination_cutoff'] = 1e-4
 
                     # for const density right boundary condition
@@ -204,7 +219,8 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
 
                     # settings['Rm'] = 3.0
                     # settings['Rm'] = 6.0
-                    settings['Rm'] = 10.0
+                    # settings['Rm'] = 10.0
+                    settings['Rm'] = Rm
 
                     settings['use_RF_terms'] = True
                     settings['RF_rc'] = RF_rc_curr
