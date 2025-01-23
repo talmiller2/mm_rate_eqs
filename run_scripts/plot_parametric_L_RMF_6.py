@@ -527,7 +527,7 @@ for ind_RF in range(len(RF_rate_list)):
             ni = state['n'][0]
             Ti_keV = state['Ti'][0] / 1e3
             _, flux_lawson = get_lawson_parameters(ni, Ti_keV, settings)
-            _, _, flux_lawson_ignition_piel = get_lawson_criterion_piel(ni, Ti_keV, settings)
+            _, flux_lawson_piel, _, flux_lawson_ignition_piel = get_lawson_criterion_piel(ni, Ti_keV, settings)
             state['flux_mean'] *= settings['cross_section_main_cell']
             # state['flux_mean'] /= flux_lawson
             state['flux_mean'] /= flux_lawson_ignition_piel

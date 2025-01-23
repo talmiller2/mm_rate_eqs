@@ -27,7 +27,7 @@ settings['assume_constant_density'] = True
 settings['assume_constant_temperature'] = True
 
 # settings['ion_scattering_rate_factor'] = 1e2
-settings['ion_scattering_rate_factor'] = 2e3
+# settings['ion_scattering_rate_factor'] = 2e3
 # settings['ion_scattering_rate_factor'] = 1800
 
 settings['cell_size'] = 1
@@ -42,9 +42,9 @@ settings['plasma_dimension'] = 3
 # settings['plasma_dimension'] = 100
 # settings['number_of_cells'] = 10
 # settings['number_of_cells'] = 20  # nominal value
-settings['number_of_cells'] = 30
+# settings['number_of_cells'] = 30
 # settings['number_of_cells'] = 40
-# settings['number_of_cells'] = 50
+settings['number_of_cells'] = 50
 # settings['number_of_cells'] = 100
 # settings['number_of_cells'] = 150
 # settings['number_of_cells'] = 200
@@ -52,15 +52,15 @@ settings['number_of_cells'] = 30
 ## ions density (total density is twice this)
 # settings['n0'] = 2e24 # m^-3
 # settings['n0'] = 2e22  # m^-3 [as in 2021 paper]
-settings['n0'] = 1e21  # m^-3
-# settings['n0'] = 1e20  # m^-3
+# settings['n0'] = 1e21  # m^-3
+settings['n0'] = 1e20  # m^-3
 
 # settings['Rm'] = 2.0
-settings['Rm'] = 3.0
+# settings['Rm'] = 3.0
 # settings['Rm'] = 4.0
 # settings['Rm'] = 5.0
 # settings['Rm'] = 6.0
-# settings['Rm'] = 10.0
+settings['Rm'] = 10.0
 
 # settings['Ti_0'] = 3 * 1e3 # eV
 # settings['Te_0'] = 3 * 1e3 # eV
@@ -74,11 +74,11 @@ settings['Te_0'] = 10 * 1e3  # eV
 settings['transmission_factor'] = 2
 # settings['transmission_factor'] = 1
 
-# settings['U0'] = 0
+settings['U0'] = 0
 # settings['U0'] = 0.01
 # settings['U0'] = 0.02
 # settings['U0'] = 0.05
-settings['U0'] = 0.1
+# settings['U0'] = 0.1
 # settings['U0'] = 0.2
 # settings['U0'] = 0.3
 # settings['U0'] = 0.5
@@ -92,10 +92,10 @@ settings['U0'] = 0.1
 
 # settings['flux_normalized_termination_cutoff'] = 0.5
 # settings['flux_normalized_termination_cutoff'] = 0.1
-settings['flux_normalized_termination_cutoff'] = 0.05
+# settings['flux_normalized_termination_cutoff'] = 0.05
 # settings['flux_normalized_termination_cutoff'] = 0.03
 # settings['flux_normalized_termination_cutoff'] = 0.01
-# settings['flux_normalized_termination_cutoff'] = 1e-4
+settings['flux_normalized_termination_cutoff'] = 1e-4
 
 # settings['alpha_definition'] = 'geometric_constant'
 settings['alpha_definition'] = 'geometric_constant_U0'

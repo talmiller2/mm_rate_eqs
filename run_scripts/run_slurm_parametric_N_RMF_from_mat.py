@@ -31,9 +31,9 @@ slurm_kwargs['cpus-per-task'] = 1
 
 plasma_mode = 'isoT'
 
-# num_cells_list = [10, 30, 50]
+num_cells_list = [10, 30, 50]
 # num_cells_list = [30]
-num_cells_list = [50]
+# num_cells_list = [50]
 
 # load single_particle compiled mat
 # single_particle_dir = '/Users/talmiller/Downloads/single_particle/'

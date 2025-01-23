@@ -22,6 +22,12 @@ from mm_rate_eqs.plasma_functions import get_brem_radiation_loss, get_cyclotron_
 
 from mm_rate_eqs.plot_functions import update_format_coord
 
+from mm_rate_eqs.plasma_functions import define_plasma_parameters, get_larmor_frequency
+
+B0 = 1  # [T]
+omega_cyclotron_DTmix = 2 * np.pi * get_larmor_frequency(B0, gas_name='DT_mix')
+omega_cyclotron_T = 2 * np.pi * get_larmor_frequency(B0, gas_name='tritium')
+
 plt.close('all')
 
 main_dir = '/Users/talmiller/Downloads/mm_rate_eqs//runs/slurm_runs/'
@@ -30,8 +36,8 @@ main_dir = '/Users/talmiller/Downloads/mm_rate_eqs//runs/slurm_runs/'
 main_dir += 'set49_MM_Rm_10_ni_1e21_Ti_10keV_withRMF_fluxeps1e-2'
 # main_dir += 'set50_MM_Rm_10_ni_1e20_Ti_10keV_withRMF_zeroRL_fluxeps1e-2'
 
-# num_cells = 50
-num_cells = 80
+num_cells = 50
+# num_cells = 80
 
 # linewidth = 1
 linewidth = 2
@@ -102,7 +108,8 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
             RF_amplitude_suffix = str(int(RF_amplitude)) + '[kV/m]'
 
         # title = '$\\phi_{ss} / \\phi_{Lawson}$'
-        title = '$\ln \\left( \\phi_{ss} / \\phi_{Lawson} \\right )$'
+        # title = '$\ln \\left( \\phi_{ss} / \\phi_{Lawson} \\right )$'
+        title = '$\log_{10} \\left( \\phi_{ss} / \\phi_{0} \\right )$'
         # title = gas_name_short
         # title += ', ' + RF_type_short + ' ' + RF_amplitude_suffix
         title += ', ' + RF_type_short + '=' + RF_amplitude_suffix
@@ -158,13 +165,24 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         # post process the flux normalization
         ni = state['n'][0]
         Ti_keV = state['Ti'][0] / 1e3
-        _, _, _, flux_lawson_ignition_piel = get_lawson_criterion_piel(ni, Ti_keV, settings)
+        _, flux_lawson_piel, _, flux_lawson_ignition_piel = get_lawson_criterion_piel(ni, Ti_keV, settings)
         cross_section_main_cell = settings['cross_section_main_cell']
+        v_th = state['v_th'][0]
+        flux_single_naive = ni * v_th
 
-        X, Y = np.meshgrid(beta_loop_list, alpha_loop_list)
-        y_label = '$\\alpha$'
-        x_label = '$\\beta$'
-        Z = np.log(flux_mat * cross_section_main_cell / flux_lawson_ignition_piel)
+        # define the y axis for the 2d plots
+        y_array = alpha_loop_list * omega_cyclotron_DTmix / omega_cyclotron_T
+        # y_tick_labels = ['{:.2f}'.format(w) for w in y_array]
+
+        # X, Y = np.meshgrid(beta_loop_list, alpha_loop_list)
+        # y_label = '$\\alpha$'
+        # x_label = '$\\beta$'
+        X, Y = np.meshgrid(beta_loop_list, y_array)
+        x_label = '$k/\\left( 2 \\pi m^{-1} \\right)$'
+        y_label = '$\\omega / \\omega_{0,T}$'
+
+        # Z = np.log(flux_mat * cross_section_main_cell / flux_lawson_ignition_piel)
+        Z = np.log10(flux_mat / flux_single_naive)
         Z = Z.T
 
         vmin, vmax = None, None
