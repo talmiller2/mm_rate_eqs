@@ -107,8 +107,8 @@ for ip, process in enumerate(process_list):
     # Q = 1e-5
     # Q = 0.5
     # Q = 2
-    # Q = 1
-    Q = 10
+    Q = 1
+    # Q = 10
     # Q = 100
     # Q = np.inf
 
@@ -140,7 +140,7 @@ for ip, process in enumerate(process_list):
                 sigma_v_curr = get_sigma_v_fusion_sampled(Ti_keV, reaction=reaction)
                 if reaction == 'p_B_to_3alpha':
                     # sigma_v_curr *= 1.3 # effetive increase of pB process reactivity
-                    # sigma_v_curr *= 3.0 # effetive increase of pB process reactivity
+                    sigma_v_curr *= 3.0  # effetive increase of pB process reactivity
                     pass
                 if reactant_1 == reactant_2:
                     sigma_v_curr /= 2.0  # division by (1 + delta_jk)

@@ -9,15 +9,15 @@ from mm_rate_eqs.slurm_functions import get_script_rate_eqs_slave
 pwd = os.getcwd()
 rate_eqs_script = get_script_rate_eqs_slave()
 
-# n0 = 1e21  # m^-3
-n0 = 1e20  # m^-3
+n0 = 1e21  # m^-3
+# n0 = 1e20  # m^-3
 Ti = 10 * 1e3  # eV
 
 main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/'
 # main_folder += 'set47_MM_Rm_10_ni_1e21_Ti_10keV_withRMF'
 # main_folder += 'set48_MM_Rm_10_ni_1e21_Ti_10keV_withRMF_zeroRL_fluxeps1e-2'
-# main_folder += 'set49_MM_Rm_10_ni_1e21_Ti_10keV_withRMF_fluxeps1e-2'
-main_folder += 'set50_MM_Rm_10_ni_1e20_Ti_10keV_withRMF_fluxeps1e-2'
+main_folder += 'set49_MM_Rm_10_ni_1e21_Ti_10keV_withRMF_fluxeps1e-2'
+# main_folder += 'set50_MM_Rm_10_ni_1e20_Ti_10keV_withRMF_zeroRL_fluxeps1e-2'
 
 slurm_kwargs = {}
 slurm_kwargs['partition'] = 'core'
@@ -48,6 +48,7 @@ with_kr_correction_list = []
 RF_type_list += ['electric_transverse']
 RF_amplitude_list += [25]  # kV/m
 induced_fields_factor_list += [1]
+with_kr_correction_list += [True]
 with_kr_correction_list += [True]
 
 RF_type_list += ['electric_transverse']
@@ -144,10 +145,10 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
                 RF_lc_curr = RF_rates_mat_dict['N_lc'][ind_beta, ind_alpha]
                 RF_cr_curr = RF_rates_mat_dict['N_cr'][ind_beta, ind_alpha]
                 RF_cl_curr = RF_rates_mat_dict['N_cl'][ind_beta, ind_alpha]
-                # RF_rl_curr = RF_rates_mat_dict['N_rl'][ind_beta, ind_alpha]
-                # RF_lr_curr = RF_rates_mat_dict['N_lr'][ind_beta, ind_alpha]
-                RF_rl_curr = 0
-                RF_lr_curr = 0
+                RF_rl_curr = RF_rates_mat_dict['N_rl'][ind_beta, ind_alpha]
+                RF_lr_curr = RF_rates_mat_dict['N_lr'][ind_beta, ind_alpha]
+                # RF_rl_curr = 0
+                # RF_lr_curr = 0
 
                 for num_cells in num_cells_list:
                     run_name = plasma_mode

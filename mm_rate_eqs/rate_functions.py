@@ -359,7 +359,7 @@ def define_loss_cone_fractions(state, settings):
         alpha_tL = alpha_tL + 0 * v_th
         alpha_c = alpha_c + 0 * v_th
     elif settings['alpha_definition'] == 'geometric_constant_U0':
-        alpha_tR, alpha_tL, alpha_c = get_solid_angles(settings['U0'], v_th[0], alpha)
+        alpha_tR, alpha_tL, alpha_c = get_solid_angles(state['U'][0], v_th[0], alpha)
         alpha_tR = alpha_tR + 0 * v_th
         alpha_tL = alpha_tL + 0 * v_th
         alpha_c = alpha_c + 0 * v_th
@@ -371,12 +371,6 @@ def define_loss_cone_fractions(state, settings):
             alpha_tR[i], alpha_tL[i], alpha_c[i] = get_solid_angles(U[i], v_th[i], alpha)
     else:
         raise ValueError('invalid alpha_definition: ' + settings['alpha_definition'])
-
-    # # testing making smaller the part that can get scattered to be trapped
-    # alpha_tR *= 2
-    # alpha_tL *= 2
-    # alpha_c = 1 - alpha_tR - alpha_tL
-    # alpha_c = 0.5 - alpha_tR - alpha_tL
 
     return alpha_tR, alpha_tL, alpha_c
 
@@ -398,16 +392,17 @@ def get_density_time_derivatives(state, settings):
     alpha_tL = state['alpha_tL']
     alpha_tR = state['alpha_tR']
     alpha_c = state['alpha_c']
+    rsf = settings['right_scat_factor']
 
     # define density time derivative
-    f_scat_c = + nu_s * (alpha_c * (n_tL + n_tR * settings['right_scat_factor'])
+    f_scat_c = + nu_s * (alpha_c * (n_tL + n_tR * rsf)
                          - (alpha_tL + alpha_tR) * n_c)
 
     f_scat_tL = + nu_s * (-(alpha_c + alpha_tR) * n_tL
-                          + alpha_tL * n_tR * settings['right_scat_factor']
+                          + alpha_tL * n_tR * rsf
                           + alpha_tL * n_c)
 
-    f_scat_tR = + nu_s * (-(alpha_c + alpha_tL) * n_tR * settings['right_scat_factor']
+    f_scat_tR = + nu_s * (-(alpha_c + alpha_tL) * n_tR * rsf
                           + alpha_tR * n_tL
                           + alpha_tR * n_c)
 
@@ -421,7 +416,10 @@ def get_density_time_derivatives(state, settings):
     f_trans_R *= settings['transmission_factor']
     f_trans_R /= cell_sizes
 
-    f_drag = coeff_mat_L.dot(U * n_c)
+    if U[0] >= 0:
+        f_drag = coeff_mat_L.dot(U * n_c)
+    else:
+        f_drag = coeff_mat_R.dot(-U * n_c)
     f_drag /= cell_sizes
 
     # combine rates
@@ -465,20 +463,22 @@ def get_fluxes(state, settings):
 
     # calculate fluxes (normalized to the single mirror flux)
     for k in range(0, settings['number_of_cells'] - 1):
-        flux_trans_R[k] = v_R[k] * n_tR[k]
-        flux_trans_L[k] = - v_L[k + 1] * n_tL[k + 1]
-        flux_mmm_drag[k] = - U[k + 1] * n_c[k + 1]
-    flux_single = state['n'][0] * state['v_th'][0]
+        flux_trans_R[k] = v_R[k] * n_tR[k] * settings['transmission_factor']
+        flux_trans_L[k] = - v_L[k + 1] * n_tL[k + 1] * settings['transmission_factor']
+        if U[0] >= 0:
+            flux_mmm_drag[k] = - U[k + 1] * n_c[k + 1]
+        else:
+            flux_mmm_drag[k] = - U[k] * n_c[k]
 
     flux = flux_trans_R + flux_trans_L + flux_mmm_drag
 
     # save fluxes to state
-    state['flux_trans_R'] = flux_trans_R / flux_single
-    state['flux_trans_L'] = flux_trans_L / flux_single
-    state['flux_mmm_drag'] = flux_mmm_drag / flux_single
-    state['flux'] = flux / flux_single
+    state['flux_trans_R'] = flux_trans_R
+    state['flux_trans_L'] = flux_trans_L
+    state['flux_mmm_drag'] = flux_mmm_drag
+    state['flux'] = flux
 
-    # calculate flux  statistics
+    # calculate flux statistics
     state['flux_max'] = np.nanmax(flux)
     state['flux_min'] = np.nanmin(flux)
     state['flux_mean'] = np.nanmean(flux)

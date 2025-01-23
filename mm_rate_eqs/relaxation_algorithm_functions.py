@@ -15,7 +15,9 @@ from mm_rate_eqs.rate_functions import calculate_transition_density, get_density
 
 
 def find_rate_equations_steady_state(settings):
-    """ find the rate equations steady state using a relaxation algorithm """
+    """
+    find the rate equations steady state using a relaxation algorithm
+    """
     start_time = time.time()
     initialize_logging(settings)
 
@@ -90,7 +92,7 @@ def find_rate_equations_steady_state(settings):
 
             # plot status
             if settings['draw_plots'] is True:
-                plot_relaxation_status(state, settings)
+                settings = plot_relaxation_status(state, settings)
                 if settings['save_plots_scheme'] == 'status_plots':
                     save_plots(settings)
 
@@ -284,7 +286,7 @@ def define_time_step(state, settings):
 
     for var_name in var_names:
         der_var_name = 'd' + var_name + '_dt'
-        # prevent the derivatives from being exactly zero, so in the division by it  an error will not happen
+        # prevent the derivatives from being exactly zero, so in the division by it an error will not happen
         state[der_var_name] += 1e-50
         dt_list += [min(np.abs(state[var_name] / state[der_var_name]))]
     dt = settings['dt_factor'] * min(dt_list)
@@ -308,10 +310,15 @@ def print_time_step_info(dt, t_curr, num_time_steps):
 
 
 def print_minimal_densities(state):
-    logging.info('min values: n_tot=' + '{:.2e}'.format(min(state['n']))
-                 + ', n_c=' + '{:.2e}'.format(min(state['n_c']))
-                 + ', n_tL=' + '{:.2e}'.format(min(state['n_tL']))
-                 + ', n_tR=' + '{:.2e}'.format(min(state['n_tR'])))
+    # logging.info('min values: n_tot=' + '{:.2e}'.format(min(state['n']))
+    #              + ', n_c=' + '{:.2e}'.format(min(state['n_c']))
+    #              + ', n_tL=' + '{:.2e}'.format(min(state['n_tL']))
+    #              + ', n_tR=' + '{:.2e}'.format(min(state['n_tR'])))
+    logging.info('(ind,min) values: '
+                 + 'n_tot=(' + str(np.argmin(state['n'])) + ',' + '{:.2e}'.format(min(state['n'])) + ')'
+                 + ', n_c=(' + str(np.argmin(state['n_c'])) + ',' + '{:.2e}'.format(min(state['n_c'])) + ')'
+                 + ', n_tL=(' + str(np.argmin(state['n_tL'])) + ',' + '{:.2e}'.format(min(state['n_tL'])) + ')'
+                 + ', n_tR=(' + str(np.argmin(state['n_tR'])) + ',' + '{:.2e}'.format(min(state['n_tR'])) + ')')
     return
 
 

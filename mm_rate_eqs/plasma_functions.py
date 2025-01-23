@@ -46,11 +46,12 @@ def define_plasma_parameters(gas_name='hydrogen', ionization_level=None):
 
 def get_brem_radiation_loss(ni, ne, Te, Z_ion):
     """
-    Bremsstrahlung radiation (source "Fusion Plasma Analysis", p. 228)
+    Bremsstrahlung radiation power
     input T in [keV], n in [m^-3] (mks)
     output in [W/m^3]
     """
     # C_B = 4.8e-37 # source "Fusion Plasma Analysis", p. 228
+    # C_B = 5.35e-37  # source Piel (2007) book, page 105.
     C_B = 5.34e-37  # source Wurzel et al 2022
     return C_B * Z_ion ** 2 * ni * ne * Te ** (0.5)
 

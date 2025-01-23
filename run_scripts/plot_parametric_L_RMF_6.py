@@ -40,8 +40,8 @@ set_name_list = []
 gas_type_list = []
 RF_rate_list = []
 
-gas_type = 'deuterium'
-# gas_type = 'tritium'
+# gas_type = 'deuterium'
+gas_type = 'tritium'
 
 # RF_type = 'electric_transverse'
 RF_type = 'magnetic_transverse'

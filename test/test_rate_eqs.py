@@ -7,7 +7,7 @@ import os
 
 from mm_rate_eqs.default_settings import define_default_settings
 from mm_rate_eqs.relaxation_algorithm_functions import find_rate_equations_steady_state
-from mm_rate_eqs.fusion_functions import get_lawson_parameters
+from mm_rate_eqs.fusion_functions import get_lawson_parameters, get_lawson_criterion_piel
 
 plt.close('all')
 
@@ -16,38 +16,51 @@ settings = {}
 settings['fontsize'] = 12
 
 # settings['gas_name'] = 'hydrogen'
-settings['gas_name'] = 'deuterium'
-# settings['gas_name'] = 'DT-mix'
+# settings['gas_name'] = 'deuterium'
+# settings['gas_name'] = 'tritium'
+settings['gas_name'] = 'DT_mix'
 
 # settings['save_state'] = 'False'
-settings['assume_constant_density'] = False
-# settings['assume_constant_density'] = True
+# settings['assume_constant_density'] = False
+settings['assume_constant_density'] = True
 # settings['assume_constant_temperature'] = False
 settings['assume_constant_temperature'] = True
-# settings['ion_scattering_rate_factor'] = 10
+
+# settings['ion_scattering_rate_factor'] = 1e2
+settings['ion_scattering_rate_factor'] = 2e3
+# settings['ion_scattering_rate_factor'] = 1800
 
 settings['cell_size'] = 1
 # settings['cell_size'] = 3
 # settings['cell_size'] = 10
 
-settings['plasma_dimension'] = 1
+# settings['plasma_dimension'] = 1
 # settings['plasma_dimension'] = 1.5
 # settings['plasma_dimension'] = 2
-# settings['plasma_dimension'] = 3
+settings['plasma_dimension'] = 3
 # settings['plasma_dimension'] = 10
 # settings['plasma_dimension'] = 100
 # settings['number_of_cells'] = 10
-settings['number_of_cells'] = 20  # nominal value
-# settings['number_of_cells'] = 30
+# settings['number_of_cells'] = 20  # nominal value
+settings['number_of_cells'] = 30
 # settings['number_of_cells'] = 40
 # settings['number_of_cells'] = 50
 # settings['number_of_cells'] = 100
 # settings['number_of_cells'] = 150
 # settings['number_of_cells'] = 200
 
-# settings['n0'] = 2e22  # m^-3
+## ions density (total density is twice this)
+# settings['n0'] = 2e24 # m^-3
+# settings['n0'] = 2e22  # m^-3 [as in 2021 paper]
 settings['n0'] = 1e21  # m^-3
 # settings['n0'] = 1e20  # m^-3
+
+# settings['Rm'] = 2.0
+settings['Rm'] = 3.0
+# settings['Rm'] = 4.0
+# settings['Rm'] = 5.0
+# settings['Rm'] = 6.0
+# settings['Rm'] = 10.0
 
 # settings['Ti_0'] = 3 * 1e3 # eV
 # settings['Te_0'] = 3 * 1e3 # eV
@@ -58,24 +71,34 @@ settings['Te_0'] = 10 * 1e3  # eV
 # settings['right_scat_factor'] = 10.0
 # settings['right_scat_factor'] = 100.0
 
-settings['U0'] = 0
+settings['transmission_factor'] = 2
+# settings['transmission_factor'] = 1
+
+# settings['U0'] = 0
 # settings['U0'] = 0.01
 # settings['U0'] = 0.02
 # settings['U0'] = 0.05
-# settings['U0'] = 0.1
+settings['U0'] = 0.1
 # settings['U0'] = 0.2
 # settings['U0'] = 0.3
 # settings['U0'] = 0.5
+# settings['U0'] = 0.6
 # settings['U0'] = 0.8
+# settings['U0'] = 1.0
+# settings['U0'] = 2.0
+# settings['U0'] = -0.01
+# settings['U0'] = -0.1
+# settings['U0'] = -0.5
 
 # settings['flux_normalized_termination_cutoff'] = 0.5
 # settings['flux_normalized_termination_cutoff'] = 0.1
-# settings['flux_normalized_termination_cutoff'] = 0.05
+settings['flux_normalized_termination_cutoff'] = 0.05
 # settings['flux_normalized_termination_cutoff'] = 0.03
-settings['flux_normalized_termination_cutoff'] = 0.01
+# settings['flux_normalized_termination_cutoff'] = 0.01
 # settings['flux_normalized_termination_cutoff'] = 1e-4
 
 # settings['alpha_definition'] = 'geometric_constant'
+settings['alpha_definition'] = 'geometric_constant_U0'
 # settings['alpha_definition'] = 'geometric_local'
 
 # settings['U_for_loss_cone_factor'] = 1.0
@@ -111,6 +134,7 @@ settings['transition_type'] = 'none'
 # settings['transition_type'] = 'smooth_transition_to_free_flow'
 
 # settings['energy_conservation_scheme'] = 'none'
+# settings['energy_conservation_scheme'] = 'none'
 # settings['energy_conservation_scheme'] = 'simple'
 # settings['energy_conservation_scheme'] = 'detailed'
 
@@ -119,7 +143,8 @@ settings['transition_type'] = 'none'
 # settings['dt_status'] = 1e-3
 settings['time_steps_status'] = int(1e3)
 
-settings['use_RF_terms'] = True
+settings['use_RF_terms'] = False
+# settings['use_RF_terms'] = True
 
 # settings['RF_cl'] = 0
 # settings['RF_cr'] = 0
@@ -240,6 +265,21 @@ settings['RF_lr'] = 0.072
 # settings['RF_rl'] = 0.021
 # settings['RF_lr'] = 0.018
 
+# testing two points with similar RF rates but very different fluxes
+# RF_rates_list = [0.533, 0.397, 0.012, 0.007, 0.051, 0.069] # set1: flux = 41.512
+# RF_rates_list = [0.638, 0.235, 0.009, 0.010, 0.052, 0.068] # set2: flux = 0.826
+# RF_rates_list = [0.533, 0.397, 0.009, 0.010, 0.052, 0.068] # modset1
+RF_rates_list = [0.638, 0.235, 0.012, 0.007, 0.051, 0.069]  # modset2
+
+settings['RF_rc'] = RF_rates_list[0]
+settings['RF_lc'] = RF_rates_list[1]
+settings['RF_cr'] = RF_rates_list[2]
+settings['RF_cl'] = RF_rates_list[3]
+settings['RF_rl'] = RF_rates_list[4]
+settings['RF_lr'] = RF_rates_list[5]
+
+
+
 
 # fac = 0
 # fac = 0.2
@@ -310,6 +350,7 @@ if settings['time_step_definition_using_species'] == 'only_c_tR':
 # settings['save_dir'] += '_nmin0'
 
 # settings['dt_factor'] = 0.1 / 3.0
+# settings['dt_factor'] = 0.5
 # settings['save_dir'] += '_dt_factor_3'
 
 # settings['max_num_time_steps'] = 1000
@@ -318,6 +359,7 @@ if settings['time_step_definition_using_species'] == 'only_c_tR':
 # settings['n_min'] = 1e5
 # settings['n_min'] = 1e19
 # settings['n_min'] = 1e18
+# settings['n_min'] = settings['n0'] * 1e-3
 # settings['n_min'] = settings['n0'] * 1e-4
 # settings['n_min'] = settings['n0'] * 1e-10
 # settings['save_dir'] += '_nmin_' + str('{:.2e}'.format(settings['n_min']))
@@ -327,6 +369,11 @@ if settings['time_step_definition_using_species'] == 'only_c_tR':
 
 # settings['t_stop'] = 10e-4
 # settings['max_num_time_steps'] = int(2e4) - 1
+# settings['max_num_time_steps'] = 20000
+
+# settings['initialization_type'] = 'linear_uniform'
+# settings['initialization_type'] = 'linear_alpha'
+# settings['initialization_type'] = 'FD_decay'
 
 print('save dir: ' + str(settings['save_dir']))
 
@@ -335,21 +382,31 @@ settings['save_state'] = False
 
 state = find_rate_equations_steady_state(settings)
 
+# post process the flux normalization
+flux_mean = state['flux_mean']
+# flux_mean *= state['n'][0] * state['v_th'][0] # cancel the dןvision by flux_single in the code
+print('flux_mean = ' + str(flux_mean))
+
 ni = state['n'][0]
 Ti_keV = state['Ti'][0] / 1e3
-_, flux_lawson = get_lawson_parameters(ni, Ti_keV, settings)
-flux_axial_over_flux_lawson = state['flux_mean'] * settings['cross_section_main_cell'] / flux_lawson
+# _, flux_lawson = get_lawson_parameters(ni, Ti_keV, settings)
+_, flux_lawson_piel, _, flux_lawson_ignition_piel = get_lawson_criterion_piel(ni, Ti_keV, settings)
+# print('flux_lawson_piel / flux_lawson_ignition_piel=', flux_lawson_piel / flux_lawson_ignition_piel)
+
+
+flux_axial_over_flux_lawson = flux_mean * settings['cross_section_main_cell'] / flux_lawson_ignition_piel
 print('flux_axial_over_flux_lawson = ' + str(flux_axial_over_flux_lawson))
 
 plt.figure(1)
-title = ''
-# title += '$\\bar{N}_{LC \\rightarrow T}=$' + str(settings['RF_rc'])
-# title += ', $\\bar{N}_{T \\rightarrow LC}=$' + str(settings['RF_cr']) + ', '
-title += '$\\bar{N}_{rc}=$' + str(settings['RF_rc'])
-title += ', $\\bar{N}_{lc}=$' + str(settings['RF_lc'])
-title += ', $\\bar{N}_{cr}=$' + str(settings['RF_cr'])
-title += ', $\\bar{N}_{cl}=$' + str(settings['RF_cl'])
-title += ', $\\bar{N}_{rl}=$' + str(settings['RF_rl'])
-title += ', $\\bar{N}_{lr}=$' + str(settings['RF_lr'])
-title += ', $\\phi_{ss}/\\phi_{Lawson}=$' + '{:.2f}'.format(flux_axial_over_flux_lawson)
-plt.title(title, fontsize=12)
+if settings['use_RF_terms'] == True:
+    title = ''
+    # title += '$\\bar{N}_{LC \\rightarrow T}=$' + str(settings['RF_rc'])
+    # title += ', $\\bar{N}_{T \\rightarrow LC}=$' + str(settings['RF_cr']) + ', '
+    title += '$\\bar{N}_{rc}=$' + str(settings['RF_rc'])
+    title += ', $\\bar{N}_{lc}=$' + str(settings['RF_lc'])
+    title += ', $\\bar{N}_{cr}=$' + str(settings['RF_cr'])
+    title += ', $\\bar{N}_{cl}=$' + str(settings['RF_cl'])
+    title += ', $\\bar{N}_{rl}=$' + str(settings['RF_rl'])
+    title += ', $\\bar{N}_{lr}=$' + str(settings['RF_lr'])
+    title += ', $\\phi_{ss}/\\phi_{Lawson}=$' + '{:.2f}'.format(flux_axial_over_flux_lawson)
+    plt.title(title, fontsize=12)

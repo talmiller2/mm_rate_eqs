@@ -258,8 +258,14 @@ def get_lawson_parameters(ni, Ti, settings, reaction='D_T_to_n_alpha'):
 
 def get_lawson_criterion_piel(ni, Ti, settings, eta=0.3, reaction='D_T_to_n_alpha'):
     """
-    Lawson minimal confinement time [s] based on derivation in Piel (2007) book, page 105.
-    T in [keV], ni in [m^-3].
+    Lawson minimal confinement time [s] based on derivation in Piel (2007) book, page 105,
+    which is made specifically for 50%-50% D-T mix, but we can generalize for other 50%-50% mixtures.
+    Paraphrasing, the energy balance is: P_br + P_H = eta * (P_br + P_H + P_fus), from which we can
+    extract the Lawson criterion for different heat-electricity efficiencies eta (0.3 as an example).
+    Ignition is when: P_br + P_H = P_ch.
+    Plugging ignition condition to the balance eq. gives eta = P_ch / (P_fus + P_ch),
+    which is 0.166 for DT, but Piel writes 0.154.
+    Input: T in [keV], ni in [m^-3].
     """
     sigma_v_fusion = get_sigma_v_fusion(Ti, reaction=reaction)
     MeV_to_J = define_electron_charge() * 1e6
@@ -267,11 +273,17 @@ def get_lawson_criterion_piel(ni, Ti, settings, eta=0.3, reaction='D_T_to_n_alph
     E_reaction = get_E_reaction(reaction=reaction) * MeV_to_J  # J
     kB_keV = define_electron_charge() * 1e3
     P_brem_vol = get_brem_radiation_loss(ni, ni, Ti, settings['Z_ion'])  # W/m^3
+
     tau_lawson_piel = 3 * kB_keV * Ti / ni / (
             eta / (1 - eta) * 0.25 * E_reaction * sigma_v_fusion - P_brem_vol / ni ** 2)
-    tau_lawson_ignition_piel = 3 * kB_keV * Ti / ni / (0.25 * E_charged * sigma_v_fusion - P_brem_vol / ni ** 2)
+    flux_lawson_piel = 0.5 * ni * settings['volume_main_cell'] / tau_lawson_piel
+
+    eta_ignition = E_charged / (E_charged + E_reaction)
+    tau_lawson_ignition_piel = 3 * kB_keV * Ti / ni / (
+            eta_ignition / (1 - eta_ignition) * 0.25 * E_reaction * sigma_v_fusion - P_brem_vol / ni ** 2)
     flux_lawson_ignition_piel = 0.5 * ni * settings['volume_main_cell'] / tau_lawson_ignition_piel
-    return tau_lawson_piel, tau_lawson_ignition_piel, flux_lawson_ignition_piel
+
+    return tau_lawson_piel, flux_lawson_piel, tau_lawson_ignition_piel, flux_lawson_ignition_piel
 
 
 def get_Zs_for_reaction(reaction='D_T_to_n_alpha'):
