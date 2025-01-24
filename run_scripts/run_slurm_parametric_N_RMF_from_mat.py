@@ -19,7 +19,9 @@ main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/'
 # main_folder += 'set48_MM_Rm_10_ni_1e21_Ti_10keV_withRMF_zeroRL_fluxeps1e-2'
 # main_folder += 'set49_MM_Rm_10_ni_1e21_Ti_10keV_withRMF_fluxeps1e-2'
 # main_folder += 'set50_MM_Rm_10_ni_1e20_Ti_10keV_withRMF_zeroRL_fluxeps1e-2'
-main_folder += 'set54_MM_Rm_10_ni_1e20_Ti_10keV_smooth_fluxeps1e-3'
+# main_folder += 'set54_MM_Rm_10_ni_1e20_Ti_10keV_smooth_fluxeps1e-3'
+main_folder += 'set55_MM_Rm_10_ni_1e20_Ti_10keV_smooth_fluxeps1e-3'
+# main_folder += 'set56_MM_Rm_10_ni_1e20_Ti_10keV_smooth_fluxeps1e-3'
 
 slurm_kwargs = {}
 slurm_kwargs['partition'] = 'core'
@@ -39,7 +41,9 @@ num_cells_list = [10, 30, 50]
 # single_particle_dir = '/Users/talmiller/Downloads/single_particle/'
 single_particle_dir = '/home/talm/code/single_particle/slurm_runs/'
 # single_particle_dir += '/set53_B0_1T_l_1m_Post_Rm_10_intervals_D_T/'
-single_particle_dir += '/set54_B0_1T_l_1m_Post_Rm_10_intervals_D_T/'
+# single_particle_dir += '/set54_B0_1T_l_1m_Post_Rm_10_intervals_D_T/'
+single_particle_dir += '/set55_B0_1T_l_1m_Post_Rm_10_intervals_D_T/'
+# single_particle_dir += '/set56_B0_1T_l_1m_Post_Rm_10_intervals_D_T/'
 
 # extract variables from saved single particle calcs
 settings_file = single_particle_dir + 'settings.pickle'
