@@ -95,7 +95,8 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         else:
             gas_name_short = 'DTmix'
 
-        set_name = 'compiled_'
+        # set_name = 'compiled_'
+        set_name = 'smooth_compiled_'
         set_name += theta_type + '_'
         if RF_type == 'electric_transverse':
             set_name += 'ERF_' + str(RF_amplitude)
@@ -116,46 +117,52 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         print(set_name)
         single_particle_file = single_particle_dir + '/' + set_name + '.mat'
 
-        RF_rates_mat_dict = loadmat(single_particle_file)
-        alpha_loop_list = RF_rates_mat_dict['alpha_loop_list'][0]
-        beta_loop_list = RF_rates_mat_dict['beta_loop_list'][0]
-        flux_mat = np.nan * RF_rates_mat_dict['N_rc_end']
+        try:
 
-        total_number_of_combinations = len(num_cells_list) * len(alpha_loop_list) * len(beta_loop_list)
-        print('total_number_of_combinations = ' + str(total_number_of_combinations))
-        cnt = 0
+            RF_rates_mat_dict = loadmat(single_particle_file)
+            alpha_loop_list = RF_rates_mat_dict['alpha_loop_list'][0]
+            beta_loop_list = RF_rates_mat_dict['beta_loop_list'][0]
+            flux_mat = np.nan * RF_rates_mat_dict['N_rc_end']
 
-        sub_folder = main_folder + '/' + set_name
+            total_number_of_combinations = len(num_cells_list) * len(alpha_loop_list) * len(beta_loop_list)
+            print('total_number_of_combinations = ' + str(total_number_of_combinations))
+            cnt = 0
 
-        for num_cells in num_cells_list:
-            for ind_beta, beta in enumerate(beta_loop_list):
-                for ind_alpha, alpha in enumerate(alpha_loop_list):
-                    cnt += 1
+            sub_folder = main_folder + '/' + set_name
 
-                    run_name = plasma_mode
-                    run_name += '_' + gas_name
-                    RF_label = 'alpha_' + str(alpha) + '_beta_' + str(beta)
-                    run_name += '_' + RF_label
-                    run_name += '_N_' + str(num_cells)
+            for num_cells in num_cells_list:
+                for ind_beta, beta in enumerate(beta_loop_list):
+                    for ind_alpha, alpha in enumerate(alpha_loop_list):
+                        cnt += 1
 
-                    state_file = sub_folder + '/' + run_name + '/state.pickle'
+                        run_name = plasma_mode
+                        run_name += '_' + gas_name
+                        RF_label = 'alpha_' + str(alpha) + '_beta_' + str(beta)
+                        run_name += '_' + RF_label
+                        run_name += '_N_' + str(num_cells)
 
-                    if os.path.exists(state_file):
-                        print('loading state of run # ' + str(cnt) + ' / ' + str(total_number_of_combinations))
-                        try:
-                            with open(state_file, 'rb') as fid:
-                                state = pickle.load(fid)
-                            flux_mat[ind_beta, ind_alpha] = state['flux_mean']
-                        except:
-                            print('FAILED TO LOAD.')
-                    else:
-                        print(state_file, 'doesnt exist.')
+                        state_file = sub_folder + '/' + run_name + '/state.pickle'
 
-            # save data
-            save_mat_dict = {}
-            save_mat_dict['alpha_loop_list'] = alpha_loop_list
-            save_mat_dict['beta_loop_list'] = beta_loop_list
-            save_mat_dict['flux_mat'] = flux_mat
-            compiled_save_file = main_folder + '/' + set_name + '_N_' + str(num_cells) + '.mat'
-            print('saving', compiled_save_file)
-            savemat(compiled_save_file, save_mat_dict)
+                        if os.path.exists(state_file):
+                            print('loading state of run # ' + str(cnt) + ' / ' + str(total_number_of_combinations))
+                            try:
+                                with open(state_file, 'rb') as fid:
+                                    state = pickle.load(fid)
+                                flux_mat[ind_beta, ind_alpha] = state['flux_mean']
+                            except:
+                                print('FAILED TO LOAD.')
+                        else:
+                            print(state_file, 'doesnt exist.')
+
+                # save data
+                save_mat_dict = {}
+                save_mat_dict['alpha_loop_list'] = alpha_loop_list
+                save_mat_dict['beta_loop_list'] = beta_loop_list
+                save_mat_dict['flux_mat'] = flux_mat
+                compiled_save_file = main_folder + '/' + set_name + '_N_' + str(num_cells) + '.mat'
+                print('saving', compiled_save_file)
+                savemat(compiled_save_file, save_mat_dict)
+
+        except:
+            print('failed to compile', set_name, '- skipping.')
+            pass
