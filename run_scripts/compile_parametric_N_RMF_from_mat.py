@@ -119,7 +119,7 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         RF_rates_mat_dict = loadmat(single_particle_file)
         alpha_loop_list = RF_rates_mat_dict['alpha_loop_list'][0]
         beta_loop_list = RF_rates_mat_dict['beta_loop_list'][0]
-        flux_mat = np.nan * RF_rates_mat_dict['N_rc']
+        flux_mat = np.nan * RF_rates_mat_dict['N_rc_end']
 
         total_number_of_combinations = len(num_cells_list) * len(alpha_loop_list) * len(beta_loop_list)
         print('total_number_of_combinations = ' + str(total_number_of_combinations))
