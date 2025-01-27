@@ -36,6 +36,7 @@ for num_cells in num_cells_list:
         for pop in population_keys:
             density_profiles[pop] = np.zeros([len(Rm_list), len(U_list), num_cells])
 
+        # compile (Rm, U) into matrix
         for ind_Rm, Rm in enumerate(Rm_list):
             for ind_U, U in enumerate(U_list):
 
@@ -59,17 +60,17 @@ for num_cells in num_cells_list:
                 else:
                     print(state_file, 'doesnt exist.')
 
-                # save data
-                save_mat_dict = {}
-                save_mat_dict['Rm_list'] = Rm_list
-                save_mat_dict['U_list'] = U_list
-                save_mat_dict['flux_mat'] = flux_mat
-                for pop in population_keys:
-                    save_mat_dict[pop] = density_profiles[pop]
+        # save data
+        save_mat_dict = {}
+        save_mat_dict['Rm_list'] = Rm_list
+        save_mat_dict['U_list'] = U_list
+        save_mat_dict['flux_mat'] = flux_mat
+        for pop in population_keys:
+            save_mat_dict[pop] = density_profiles[pop]
 
-                compiled_set_name = 'N_' + str(num_cells)
-                compiled_set_name += '_mfp_' + str(mfp)
-                compiled_set_name += '_' + gas_name
-                compiled_save_file = main_folder + '/' + compiled_set_name + '.mat'
-                print('saving', compiled_save_file)
-                savemat(compiled_save_file, save_mat_dict)
+        compiled_set_name = 'N_' + str(num_cells)
+        compiled_set_name += '_mfp_' + str(mfp)
+        compiled_set_name += '_' + gas_name
+        compiled_save_file = main_folder + '/' + compiled_set_name + '.mat'
+        print('saving', compiled_save_file)
+        savemat(compiled_save_file, save_mat_dict)
