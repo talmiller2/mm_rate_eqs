@@ -68,7 +68,8 @@ for num_cells in num_cells_list:
         for pop in population_keys:
             save_mat_dict[pop] = density_profiles[pop]
 
-        compiled_set_name = 'N_' + str(num_cells)
+        compiled_set_name = 'compiled_'
+        compiled_set_name += 'N_' + str(num_cells)
         compiled_set_name += '_mfp_' + str(mfp)
         compiled_set_name += '_' + gas_name
         compiled_save_file = main_folder + '/' + compiled_set_name + '.mat'
