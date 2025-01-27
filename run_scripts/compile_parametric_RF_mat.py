@@ -10,9 +10,12 @@ rate_eqs_script = get_script_rate_eqs_slave()
 main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/'
 # main_folder += 'set47_MM_Rm_10_ni_1e21_Ti_10keV_withRMF'
 # main_folder += 'set48_MM_Rm_10_ni_1e21_Ti_10keV_withRMF_zeroRL_fluxeps1e-2'
-main_folder += 'set54_MM_Rm_10_ni_1e20_Ti_10keV_smooth_fluxeps1e-3'
-# main_folder += 'set55_MM_Rm_10_ni_1e20_Ti_10keV_smooth_fluxeps1e-3'
-# main_folder += 'set56_MM_Rm_10_ni_1e20_Ti_10keV_smooth_fluxeps1e-3'
+# main_folder += 'set54_MM_Rm_10_ni_1e21_Ti_10keV_smooth_fluxeps1e-3'
+# main_folder += 'set55_MM_Rm_10_ni_1e21_Ti_10keV_smooth_fluxeps1e-3'
+main_folder += 'set56_MM_Rm_10_ni_1e21_Ti_10keV_smooth_fluxeps1e-3'
+# main_folder += 'set56_MM_Rm_10_ni_1e21_Ti_10keV_smooth_zeroRL_fluxeps1e-3'
+
+plasma_mode = 'isoT'
 
 num_cells_list = [10, 30, 50]
 # num_cells_list = [10, 30, 50, 80]
