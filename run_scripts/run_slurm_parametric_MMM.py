@@ -3,7 +3,7 @@ import numpy as np
 from scipy.io import loadmat
 import pickle
 
-# from slurmpy.slurmpy import Slurm
+from slurmpy.slurmpy import Slurm
 
 from mm_rate_eqs.default_settings import define_default_settings
 from mm_rate_eqs.slurm_functions import get_script_rate_eqs_slave
