@@ -19,9 +19,10 @@ main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/'
 # main_folder += 'set48_MM_Rm_10_ni_1e21_Ti_10keV_withRMF_zeroRL_fluxeps1e-2'
 # main_folder += 'set49_MM_Rm_10_ni_1e21_Ti_10keV_withRMF_fluxeps1e-2'
 # main_folder += 'set50_MM_Rm_10_ni_1e20_Ti_10keV_withRMF_zeroRL_fluxeps1e-2'
-# main_folder += 'set54_MM_Rm_10_ni_1e20_Ti_10keV_smooth_fluxeps1e-3'
-main_folder += 'set55_MM_Rm_10_ni_1e20_Ti_10keV_smooth_fluxeps1e-3'
-# main_folder += 'set56_MM_Rm_10_ni_1e20_Ti_10keV_smooth_fluxeps1e-3'
+# main_folder += 'set54_MM_Rm_10_ni_1e21_Ti_10keV_smooth_fluxeps1e-3'
+# main_folder += 'set55_MM_Rm_10_ni_1e21_Ti_10keV_smooth_fluxeps1e-3'
+main_folder += 'set56_MM_Rm_10_ni_1e21_Ti_10keV_smooth_fluxeps1e-3'
+# main_folder += 'set56_MM_Rm_10_ni_1e21_Ti_10keV_smooth_zeroRL_fluxeps1e-3'
 
 slurm_kwargs = {}
 slurm_kwargs['partition'] = 'core'
@@ -33,9 +34,11 @@ slurm_kwargs['cpus-per-task'] = 1
 
 plasma_mode = 'isoT'
 
-num_cells_list = [10, 30, 50]
+# num_cells_list = [10, 30, 50]
+# num_cells_list = [10, 30, 50, 80]
 # num_cells_list = [30]
 # num_cells_list = [50]
+num_cells_list = [80]
 
 # load single_particle compiled mat
 # single_particle_dir = '/Users/talmiller/Downloads/single_particle/'

@@ -33,9 +33,15 @@ plt.close('all')
 main_dir = '/Users/talmiller/Downloads/mm_rate_eqs//runs/slurm_runs/'
 # main_dir += 'set47_MM_Rm_10_ni_1e21_Ti_10keV_withRMF'
 # main_dir += 'set48_MM_Rm_10_ni_1e21_Ti_10keV_withRMF_zeroRL_fluxeps1e-2'
-main_dir += 'set49_MM_Rm_10_ni_1e21_Ti_10keV_withRMF_fluxeps1e-2'
+# main_dir += 'set49_MM_Rm_10_ni_1e21_Ti_10keV_withRMF_fluxeps1e-2'
 # main_dir += 'set50_MM_Rm_10_ni_1e20_Ti_10keV_withRMF_zeroRL_fluxeps1e-2'
+# main_dir += 'set54_MM_Rm_10_ni_1e21_Ti_10keV_smooth_fluxeps1e-3'
+# main_dir += 'set55_MM_Rm_10_ni_1e21_Ti_10keV_smooth_fluxeps1e-3'
+main_dir += 'set56_MM_Rm_10_ni_1e21_Ti_10keV_smooth_fluxeps1e-3'
+# main_dir += 'set56_MM_Rm_10_ni_1e21_Ti_10keV_smooth_zeroRL_fluxeps1e-3'
 
+# num_cells = 10
+# num_cells = 30
 num_cells = 50
 # num_cells = 80
 
@@ -107,16 +113,6 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
             RF_type_short = 'REF'
             RF_amplitude_suffix = str(int(RF_amplitude)) + '[kV/m]'
 
-        # title = '$\\phi_{ss} / \\phi_{Lawson}$'
-        # title = '$\ln \\left( \\phi_{ss} / \\phi_{Lawson} \\right )$'
-        title = '$\log_{10} \\left( \\phi_{ss} / \\phi_{0} \\right )$'
-        # title = gas_name_short
-        # title += ', ' + RF_type_short + ' ' + RF_amplitude_suffix
-        title += ', ' + RF_type_short + '=' + RF_amplitude_suffix
-        title += ', iff=' + str(induced_fields_factor)
-        title += ', krcor=' + str(with_kr_correction)
-        title += ', N=' + str(num_cells)
-
         time_step_tau_cyclotron_divisions = 50
         # time_step_tau_cyclotron_divisions = 100
         # sigma_r0 = 0
@@ -127,7 +123,8 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         # theta_type = 'sign_vz0'
         theta_type = 'sign_vz'
 
-        set_name = 'compiled_'
+        # set_name = 'compiled_'
+        set_name = 'smooth_compiled_'
         set_name += theta_type + '_'
         if RF_type == 'electric_transverse':
             set_name += 'ERF_' + str(RF_amplitude)
@@ -156,19 +153,24 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         beta_loop_list = mat_dict['beta_loop_list']
 
         # load on of the settings files
-        # mm_rate_eqs_sim_dir = main_dir + '/' + set_name + '/'
-        # import glob
-        state_file = main_dir + '/state.pickle'
-        settings_file = main_dir + '/settings.pickle'
+        # main_dir_dir_settings = '/Users/talmiller/Downloads/mm_rate_eqs//runs/slurm_runs/'
+        # main_dir_dir_settings += 'set50_MM_Rm_10_ni_1e20_Ti_10keV_withRMF_zeroRL_fluxeps1e-2'
+        main_dir_dir_settings = main_dir
+        state_file = main_dir_dir_settings + '/state.pickle'
+        settings_file = main_dir_dir_settings + '/settings.pickle'
         state, settings = load_simulation(state_file, settings_file)
 
         # post process the flux normalization
         ni = state['n'][0]
+        # ni = 1e21 # phi_lawson~n^2 while phi_rate~n, so higher n means it is easier to read lawson.
         Ti_keV = state['Ti'][0] / 1e3
+
+        _, flux_lawson_ignition_origial = get_lawson_parameters(ni, Ti_keV, settings)
         _, flux_lawson_piel, _, flux_lawson_ignition_piel = get_lawson_criterion_piel(ni, Ti_keV, settings)
         cross_section_main_cell = settings['cross_section_main_cell']
         v_th = state['v_th'][0]
         flux_single_naive = ni * v_th
+        # print('ni=', ni, 'Ti_keV=', Ti_keV, 'flux_single_naive=', '{:.2e}'.format(flux_single_naive), 'flux_lawson_ignition_piel=', '{:.2e}'.format(flux_lawson_ignition_piel))
 
         # define the y axis for the 2d plots
         y_array = alpha_loop_list * omega_cyclotron_DTmix / omega_cyclotron_T
@@ -181,11 +183,27 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         x_label = '$k/\\left( 2 \\pi m^{-1} \\right)$'
         y_label = '$\\omega / \\omega_{0,T}$'
 
-        # Z = np.log(flux_mat * cross_section_main_cell / flux_lawson_ignition_piel)
+        # flux plot title
+        # title = '$\\phi_{ss} / \\phi_{Lawson}$'
+        # title = '$\ln \\left( \\phi_{ss} / \\phi_{Lawson} \\right )$'
+        # title = '$\log_{10} \\left( \\phi_{ss} / \\phi_{Lawson} \\right )$'
+        title = '$\log_{10} \\left( \\phi_{ss} / \\phi_{0} \\right )$'
+        # title = gas_name_short
+        # title += ', ' + RF_type_short + ' ' + RF_amplitude_suffix
+        title += ', ' + RF_type_short + '=' + RF_amplitude_suffix
+        title += ', iff=' + str(induced_fields_factor)
+        title += ', krcor=' + str(with_kr_correction)
+        title += ', N=' + str(num_cells)
+
+        # Z = np.log(flux_mat * cross_section_main_cell / flux_lawson_ignition_origial)
+        # Z = np.log(flux_mat * cross_section_main_cell / flux_lawson_piel)
+        # Z = np.log10(flux_mat * cross_section_main_cell / flux_lawson_ignition_piel)
         Z = np.log10(flux_mat / flux_single_naive)
         Z = Z.T
 
         vmin, vmax = None, None
+        # vmin, vmax = 0.5, 2.2
+        # vmin, vmax = -3.3, -1.5 # for N=80
         c = ax.pcolormesh(X, Y, Z, vmin=vmin, vmax=vmax, cmap=cmap)
         ax.set_xlabel(x_label, fontsize=axes_label_size)
         ax.set_ylabel(y_label, fontsize=axes_label_size)
