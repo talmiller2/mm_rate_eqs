@@ -7,8 +7,6 @@ import pickle
 pwd = os.getcwd()
 rate_eqs_script = get_script_rate_eqs_slave()
 
-n0 = 1e21  # m^-3
-Ti = 10 * 1e3  # eV
 main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/'
 # main_folder += 'set47_MM_Rm_10_ni_1e21_Ti_10keV_withRMF'
 # main_folder += 'set48_MM_Rm_10_ni_1e21_Ti_10keV_withRMF_zeroRL_fluxeps1e-2'
@@ -16,9 +14,8 @@ main_folder += 'set54_MM_Rm_10_ni_1e20_Ti_10keV_smooth_fluxeps1e-3'
 # main_folder += 'set55_MM_Rm_10_ni_1e20_Ti_10keV_smooth_fluxeps1e-3'
 # main_folder += 'set56_MM_Rm_10_ni_1e20_Ti_10keV_smooth_fluxeps1e-3'
 
-plasma_mode = 'isoT'
-
 num_cells_list = [10, 30, 50]
+# num_cells_list = [10, 30, 50, 80]
 # num_cells_list = [30]
 # num_cells_list = [50]
 
@@ -122,7 +119,6 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
             RF_rates_mat_dict = loadmat(single_particle_file)
             alpha_loop_list = RF_rates_mat_dict['alpha_loop_list'][0]
             beta_loop_list = RF_rates_mat_dict['beta_loop_list'][0]
-            flux_mat = np.nan * RF_rates_mat_dict['N_rc_end']
 
             total_number_of_combinations = len(num_cells_list) * len(alpha_loop_list) * len(beta_loop_list)
             print('total_number_of_combinations = ' + str(total_number_of_combinations))
@@ -131,6 +127,15 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
             sub_folder = main_folder + '/' + set_name
 
             for num_cells in num_cells_list:
+
+                # initialize mats
+                flux_mat = np.nan * RF_rates_mat_dict['N_rc_end']
+
+                density_profiles = {}
+                population_keys = ['n', 'n_c', 'n_tL', 'n_tR']
+                for pop in population_keys:
+                    density_profiles[pop] = np.zeros([len(beta_loop_list), len(alpha_loop_list), num_cells])
+
                 for ind_beta, beta in enumerate(beta_loop_list):
                     for ind_alpha, alpha in enumerate(alpha_loop_list):
                         cnt += 1
@@ -149,6 +154,9 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
                                 with open(state_file, 'rb') as fid:
                                     state = pickle.load(fid)
                                 flux_mat[ind_beta, ind_alpha] = state['flux_mean']
+                                for pop in population_keys:
+                                    density_profiles[pop][ind_beta, ind_alpha, :] = state[pop]
+
                             except:
                                 print('FAILED TO LOAD.')
                         else:
@@ -159,6 +167,9 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
                 save_mat_dict['alpha_loop_list'] = alpha_loop_list
                 save_mat_dict['beta_loop_list'] = beta_loop_list
                 save_mat_dict['flux_mat'] = flux_mat
+                for pop in population_keys:
+                    save_mat_dict[pop] = density_profiles[pop]
+
                 compiled_save_file = main_folder + '/' + set_name + '_N_' + str(num_cells) + '.mat'
                 print('saving', compiled_save_file)
                 savemat(compiled_save_file, save_mat_dict)
