@@ -154,8 +154,10 @@ def define_default_settings(settings=None):
         # settings['ion_scattering_rate_factor'] = 100.0
     if 'electron_scattering_rate_factor' not in settings:
         settings['electron_scattering_rate_factor'] = 1.0
-    if 'right_scat_factor' not in settings:
-        settings['right_scat_factor'] = 1.0
+    if 'scat_factor_right' not in settings:
+        settings['scat_factor_right'] = 1.0
+    if 'scat_factor_left' not in settings:
+        settings['scat_factor_left'] = 1.0
 
     if 'use_RF_terms' not in settings:
         settings['use_RF_terms'] = False

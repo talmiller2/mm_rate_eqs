@@ -392,18 +392,19 @@ def get_density_time_derivatives(state, settings):
     alpha_tL = state['alpha_tL']
     alpha_tR = state['alpha_tR']
     alpha_c = state['alpha_c']
-    rsf = settings['right_scat_factor']
+    sf_R = settings['scat_factor_right']
+    sf_L = settings['scat_factor_left']
 
     # define density time derivative
-    f_scat_c = + nu_s * (alpha_c * (n_tL + n_tR * rsf)
+    f_scat_c = + nu_s * (alpha_c * (n_tL * sf_L + n_tR * sf_R)
                          - (alpha_tL + alpha_tR) * n_c)
 
-    f_scat_tL = + nu_s * (-(alpha_c + alpha_tR) * n_tL
-                          + alpha_tL * n_tR * rsf
+    f_scat_tL = + nu_s * (-(alpha_c + alpha_tR) * n_tL * sf_L
+                          + alpha_tL * n_tR * sf_R
                           + alpha_tL * n_c)
 
-    f_scat_tR = + nu_s * (-(alpha_c + alpha_tL) * n_tR * rsf
-                          + alpha_tR * n_tL
+    f_scat_tR = + nu_s * (-(alpha_c + alpha_tL) * n_tR * sf_R
+                          + alpha_tR * n_tL * sf_L
                           + alpha_tR * n_c)
 
     coeff_mat_L = - np.eye(settings['number_of_cells']) + np.eye(settings['number_of_cells'], k=1)
