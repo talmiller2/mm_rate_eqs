@@ -40,21 +40,17 @@ cmap = 'coolwarm'
 # gas_name = 'deuterium'
 gas_name = 'tritium'
 
-num_cells_list = [10, 30, 50, 80]
+# num_cells_list = [10, 30, 50, 80]
+num_cells_list = [50]
 
-scat_factor_list = [0.1, 1]
+# scat_factor_list = [0.1, 1]
 # # scat_factor_list = [0.1]
-# scat_factor_list = [1]
+scat_factor_list = [1]
 
 scat_asym_list = [0.5, 1, 2]
 # scat_asym_list = [0.5]
 # scat_asym_list = [1]
 # scat_asym_list = [2]
-
-# Rm_list = np.round(np.linspace(1.1, 10, 21), 2)
-# U_list = np.round(np.linspace(0, 1, 21), 2)
-# mfp = 1.0
-# num_cells = 50
 
 
 for num_cells in num_cells_list:
@@ -74,8 +70,8 @@ for num_cells in num_cells_list:
 
             mat_dict = loadmat(compiled_save_file)
             flux_mat = mat_dict['flux_mat']
-            Rm_list = mat_dict['Rm_list']
-            U_list = mat_dict['U_list']
+            Rm_list = mat_dict['Rm_list'][0]
+            U_list = mat_dict['U_list'][0]
 
             # load on of the settings files
             # main_dir_dir_settings = '/Users/talmiller/Downloads/mm_rate_eqs//runs/slurm_runs/'
@@ -97,6 +93,7 @@ for num_cells in num_cells_list:
             flux_single_naive = ni * v_th
             # print('ni=', ni, 'Ti_keV=', Ti_keV, 'flux_single_naive=', '{:.2e}'.format(flux_single_naive), 'flux_lawson_ignition_piel=', '{:.2e}'.format(flux_lawson_ignition_piel))
 
+            ## plot flux 2d map
             X, Y = np.meshgrid(Rm_list, U_list)
             x_label = '$R_m$'
             y_label = '$U/v_{th}$'
@@ -106,8 +103,8 @@ for num_cells in num_cells_list:
             # title = '$\ln \\left( \\phi_{ss} / \\phi_{Lawson} \\right )$'
             # title = '$\log_{10} \\left( \\phi_{ss} / \\phi_{Lawson} \\right )$'
             title = '$\log_{10} \\left( \\phi_{ss} / \\phi_{0} \\right )$'
-            title += ', scat_fac=' + str(scat_factor)
-            title += ', scat_asym=' + str(scat_asym_factor)
+            # title += ', scat_fac=' + str(scat_factor)
+            # title += ', scat_asym=' + str(scat_asym_factor)
             title += ', N=' + str(num_cells)
 
             # Z = np.log(flux_mat * cross_section_main_cell / flux_lawson_ignition_origial)
@@ -128,3 +125,17 @@ for num_cells in num_cells_list:
             fig.colorbar(c, ax=ax)
             fig.set_layout_engine(layout='tight')
             update_format_coord(X, Y, Z, ax=ax)
+
+            # ## plot density profiles
+            # fig2, ax2 = plt.subplots(1, 1, figsize=(7, 5))
+            # for ind_Rm, Rm in enumerate(Rm_list):
+            # # for ind_Rm, Rm in enumerate([Rm_list[5]]):
+            # #     for ind_U, U in enumerate(U_list):
+            #     for ind_U, U in enumerate([U_list[2]]):
+            #         # print('Rm=', Rm, 'U=', U)
+            #         n = mat_dict['n_tR'][ind_Rm, ind_U, :] + mat_dict['n_tL'][ind_Rm, ind_U, :] + mat_dict['n_c'][ind_Rm, ind_U, :]
+            #         ax2.plot(n, label='Rm='+ str(Rm) + ',U=' + str(U))
+            # ax2.set_xlabel('# cell', fontsize=axes_label_size)
+            # ax2.set_ylabel('n [$m^{-3}$]', fontsize=axes_label_size)
+            # fig2.suptitle(compiled_set_name)
+            # ax2.legend()
