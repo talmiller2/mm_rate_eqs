@@ -45,3 +45,6 @@ plt.title('Fusion reactivity')
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
+
+# # save fig at higher res
+# plt.savefig('/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/lawson_plots/fusion_reactivities.png', format='png', dpi=600)
