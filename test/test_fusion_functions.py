@@ -30,11 +30,11 @@ v_th = get_thermal_velocity(Ti_0, settings, species='ions')
 T_keV_array = np.linspace(0.2, 1000, 1000)
 
 reactions = []
-# reactions += ['D_T_to_n_alpha']
+reactions += ['D_T_to_n_alpha']
 reactions += ['D_D_to_p_T']
 reactions += ['D_D_to_n_He3']
 reactions += ['D_D_to_p_T_n_He3']
-# reactions += ['D_He3_to_p_alpha']
+reactions += ['D_He3_to_p_alpha']
 # reactions += ['T_T_to_alpha_2n']
 # reactions += ['p_B_to_3alpha']
 # reactions += ['p_D_to_He3_gamma']

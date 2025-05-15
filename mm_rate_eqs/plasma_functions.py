@@ -2,7 +2,7 @@ import numpy as np
 
 from mm_rate_eqs.constants_functions import define_electron_mass, define_proton_mass, define_factor_eV_to_K, \
     define_boltzmann_constant, define_factor_Pa_to_bar, define_vacuum_permeability, define_electron_charge, \
-    define_vacuum_permittivity
+    define_vacuum_permittivity, define_electron_mass_keV
 
 
 def define_plasma_parameters(gas_name='hydrogen', ionization_level=None):
@@ -50,17 +50,33 @@ def get_brem_radiation_loss(ni, ne, Te, Z_ion):
     input T in [keV], n in [m^-3] (mks)
     output in [W/m^3]
     """
-    # C_B = 4.8e-37 # source "Fusion Plasma Analysis", p. 228
+    # C_B = 4.8e-37 # source Stacey "Fusion Plasma Analysis", p. 228
     # C_B = 5.35e-37  # source Piel (2007) book, page 105.
-    C_B = 5.34e-37  # source Wurzel et al 2022
+    C_B = 5.34e-37  # source Wurzel,Hsu(2022)
     return C_B * Z_ion ** 2 * ni * ne * Te ** (0.5)
+
+
+def get_brem_radiation_loss_relativistic(ni_list, Zi_list, Te):
+    """
+    Bremsstrahlung radiation power, version from Wurzel,Hsu(2022) with relativistic correction
+    input T in [keV], n in [m^-3] (mks)
+    output in [W/m^3]
+    """
+    C_B = 5.34e-37  # source Wurzel,Hsu(2022)
+    ne = sum([nj * Zj for nj, Zj in zip(ni_list, Zi_list)])  # quasi-neutrality
+    ni_Z2 = sum([nj * Zj ** 2 for nj, Zj in zip(ni_list, Zi_list)])
+    Z_eff = ni_Z2 / ne
+    me_keV = define_electron_mass_keV()
+    t = Te / me_keV
+    gamma_eff = Z_eff * (1 + 1.78 * t ** 1.34) + 2.12 * t * (1 + 1.1 * t + t ** 2.0 - 1.25 * t ** 2.5)
+    return C_B * gamma_eff * Te ** (0.5) * ne * ni_Z2
 
 
 def get_cyclotron_radiation_loss(ne, Te, B):
     """
-    Cyclotron/synchrotron radiation (source "Fusion Plasma Analysis", p. 231)
+    Cyclotron/synchrotron radiation (source Stacey "Fusion Plasma Analysis", p. 231)
     Majority self-absorbs so only 1e-2 of it escapes (source Wesson "Tokamaks" p. 230)
-    input T in [keV], n in [m^-3] (mks)
+    input T in [keV], n in [m^-3] (mks), B in [T] (mks)
     output in [W/m^3]
     """
     cyclotron_power = 6.2e-17 * B ** 2 * ne * Te

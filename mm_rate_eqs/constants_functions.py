@@ -25,6 +25,14 @@ def define_electron_charge():
     return e
 
 
+def define_electron_mass_keV():
+    me = define_electron_mass()
+    c = define_speed_of_light()
+    e = define_electron_charge()
+    me_keV = me * c ** 2.0 / (e * 1e3)  # electron mass energy in keV [511keV]
+    return me_keV
+
+
 def define_boltzmann_constant():
     kB = 1.380649e-23  # [J/K]
     return kB
