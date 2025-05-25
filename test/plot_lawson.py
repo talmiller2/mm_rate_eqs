@@ -98,7 +98,7 @@ for ind_reaction, (reaction, color) in enumerate(zip(reaction_list, color_list))
     # label = reaction
     label = get_reaction_label(reaction=reaction)
     plt.plot(Ti_keV_list, sigma_v_fusion, label=label, linewidth=2, color=color)
-    plt.plot(Ti_keV_list[ind_marker], metric[ind_marker], 'k', marker='o')
+    # plt.plot(Ti_keV_list[ind_marker], metric[ind_marker], 'k', marker='o')
 
 plt.figure(1)
 plt.xscale('log')

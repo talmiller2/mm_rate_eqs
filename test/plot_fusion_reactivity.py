@@ -5,7 +5,7 @@ from scipy.interpolate import interp1d
 plt.rcParams['font.size'] = 12
 plt.close('all')
 
-from mm_rate_eqs.fusion_functions import get_sigma_v_fusion_sampled, get_reaction_label
+from mm_rate_eqs.fusion_functions import get_sigma_v_fusion_sampled, get_reaction_label, get_E_reaction
 
 Ti_keV = np.linspace(1, 1000, 1000)
 
@@ -46,5 +46,24 @@ plt.legend()
 plt.grid(True)
 plt.tight_layout()
 
-# # save fig at higher res
-# plt.savefig('/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/lawson_plots/fusion_reactivities.png', format='png', dpi=600)
+plt.figure(2, figsize=(7, 5))
+for reaction, reaction_label, color in zip(reactions, reaction_labels, colors):
+    E_fus = get_E_reaction(reaction)  # [MeV]
+    plt.plot(Ti_keV, E_fus * sigma_v_dict[reaction], color=color, label=reaction_label, linewidth=2)
+# for reaction, reaction_label, color in zip(reactions2, reactions_labels2, ['r', 'orange']):
+#     plt.plot(Ti_keV, sigma_v_dict[reaction], color=color, label=reaction_label, linewidth=2, linestyle='--')
+plt.xscale('log')
+plt.yscale('log')
+plt.xlabel('$T_i$ [keV]')
+plt.ylabel('$\\left< \\sigma \cdot v \\right>E_{fus}$ [m$^3$MeV/s]')
+plt.title('Fusion reactivity $\\times$ fusion energy per reaction')
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+
+# ## save figs at higher res
+# figs_folder = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/lawson_plots/'
+# plt.figure(1)
+# plt.savefig(figs_folder + 'fusion_reactivities.png', format='png', dpi=600)
+# plt.figure(2)
+# plt.savefig(figs_folder + 'fusion_reactivities_times_energy.png', format='png', dpi=600)

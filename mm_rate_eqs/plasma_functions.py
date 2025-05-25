@@ -56,21 +56,24 @@ def get_brem_radiation_loss(ni, ne, Te, Z_ion):
     return C_B * Z_ion ** 2 * ni * ne * Te ** (0.5)
 
 
-def get_brem_radiation_loss_relativistic(ni_list, Zi_list, Te):
+def get_brem_radiation_loss_relativistic(ni_list, Zi_list, Te, use_relativistic_correction=True):
     """
     Bremsstrahlung radiation power, version from Wurzel,Hsu(2022) with relativistic correction
     input T in [keV], n in [m^-3] (mks)
     output in [W/m^3]
     """
+    if use_relativistic_correction == True:
+        me_keV = define_electron_mass_keV()
+        t = Te / me_keV
+    else:
+        t = 0
+
     C_B = 5.34e-37  # source Wurzel,Hsu(2022)
     ne = sum([nj * Zj for nj, Zj in zip(ni_list, Zi_list)])  # quasi-neutrality
-    ni_Z2 = sum([nj * Zj ** 2 for nj, Zj in zip(ni_list, Zi_list)])
-    Z_eff = ni_Z2 / ne
-    me_keV = define_electron_mass_keV()
-    t = Te / me_keV
+    Z_eff = sum([nj * Zj ** 2 for nj, Zj in zip(ni_list, Zi_list)]) / ne
     gamma_eff = Z_eff * (1 + 1.78 * t ** 1.34) + 2.12 * t * (1 + 1.1 * t + t ** 2.0 - 1.25 * t ** 2.5)
-    return C_B * gamma_eff * Te ** (0.5) * ne * ni_Z2
-
+    P_brem = C_B * gamma_eff * Te ** (0.5) * ne ** 2
+    return P_brem
 
 def get_cyclotron_radiation_loss(ne, Te, B):
     """

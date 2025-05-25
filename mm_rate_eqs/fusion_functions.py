@@ -6,10 +6,6 @@ from mm_rate_eqs.constants_functions import define_electron_charge, define_proto
     define_fine_structure_constant, define_speed_of_light, define_factor_eV_to_K, define_barn
 from mm_rate_eqs.plasma_functions import get_brem_radiation_loss, get_cyclotron_radiation_loss
 
-
-# from mm_rate_eqs.data_fusion_reactivity import get_path
-
-
 def get_sigma_v_fusion(T, reaction='D_T_to_n_alpha', use_resonance=True):
     """
     Fit forms of <sigma*v> (Maxwell averaged reactivity).
@@ -95,14 +91,33 @@ def get_sigma_v_fusion_sampled(T, reaction='D_T_to_n_alpha'):
     Most from Atzeni2004 Book, except the separate D-D reactions from Wurzel2022.
     T in [keV], reactivity sigma*v in [m3/s].
     """
-    file_path = get_fusion_data_file_path(reaction=reaction)
-    data = np.loadtxt(file_path, delimiter=',')
-    log10_T_list = data[:, 0]
-    log10_sigma_v_list = data[:, 1]
-    interp_fun = interp1d(log10_T_list, log10_sigma_v_list, kind='cubic', bounds_error=False)
-    sigma_v_interped = 10.0 ** (interp_fun(np.log10(T)))
+
+    if reaction == 'p_B_to_3alpha':  # change default data set for pB
+        reaction += '_Sikora2016newdata'
+        file_path = get_fusion_data_file_path(reaction=reaction)
+        data = np.loadtxt(file_path, delimiter=',', skiprows=1)
+        T_data = data[:, 0]
+        sigma_v_data = data[:, 1] * 1e-6  # change units [cm^3/s] to [m^3/s]
+        interp_fun = interp1d(T_data, sigma_v_data, bounds_error=False)
+        sigma_v_interped = interp_fun(T)
+
+    else:
+        file_path = get_fusion_data_file_path(reaction=reaction)
+        data = np.loadtxt(file_path, delimiter=',')
+        log10_T_list = data[:, 0]
+        log10_sigma_v_list = data[:, 1]
+        interp_fun = interp1d(log10_T_list, log10_sigma_v_list, kind='cubic', bounds_error=False)
+        sigma_v_interped = 10.0 ** (interp_fun(np.log10(T)))
+
     return sigma_v_interped
 
+
+def load_sigma_v_fusion_files(Ti_keV):
+    sigma_v_dict = {}
+    reactions = ['D_T_to_n_alpha', 'D_He3_to_p_alpha', 'D_D_to_p_T', 'D_D_to_n_He3', 'p_B_to_3alpha']
+    for reaction in reactions:
+        sigma_v_dict[reaction] = get_sigma_v_fusion_sampled(Ti_keV, reaction=reaction)
+    return sigma_v_dict
 
 def get_reaction_label(reaction='D_T_to_n_alpha'):
     """
@@ -205,22 +220,29 @@ def get_E_charged(reaction='D_T_to_n_alpha'):
     return E_charged
 
 
-def get_fusion_sigma_v_E_reaction(T, reaction='D_T_to_n_alpha'):
+def get_fusion_sigma_v_E_reaction(T, reaction='D_T_to_n_alpha', energy_type='all'):
     """
     Multiply sigma*v by the reaction energy and return in [J].
     T in [keV].
     """
+    if energy_type == 'all':
+        E_fun = get_E_reaction
+    elif energy_type == 'charged':
+        E_fun = get_E_charged
+    else:
+        raise ValueError('invalid energy energy_type=', energy_type)
+
     if reaction == 'D_D_to_p_T_n_He3':
         reactions = ['D_D_to_p_T', 'D_D_to_n_He3']
         branching_ratios = [0.5, 0.5]
         return sum([branching_ratio * get_sigma_v_fusion(T, reaction=reaction_branch)
-                    * get_E_reaction(reaction=reaction_branch)
+                    * E_fun(reaction=reaction_branch)
                     for reaction_branch, branching_ratio in zip(reactions, branching_ratios)])
 
     else:
-        sigma_v_E = get_sigma_v_fusion(T, reaction=reaction) * get_E_reaction(reaction=reaction)
-    e = define_electron_charge()
-    return sigma_v_E * 1e6 * e  # MeV to J
+        sigma_v_E = get_sigma_v_fusion(T, reaction=reaction) * E_fun(reaction=reaction)
+    MeV_to_J = define_electron_charge() * 1e6
+    return sigma_v_E * MeV_to_J
 
 
 def get_fusion_power(ni, T, reaction='D_T_to_n_alpha'):
@@ -236,9 +258,122 @@ def get_fusion_charged_power(ni, T, reaction='D_T_to_n_alpha'):
     Fusion power (only from charged particles) in [W/m^3], assuming 50-50 split of reacting ions.
     T in [keV], ni in [m^-3].
     """
-    return (ni / 2.0) ** 2 * get_sigma_v_fusion(T, reaction=reaction) \
-           * get_E_charged(reaction=reaction) * 1e6 * define_electron_charge()  # MeV to J
+    return (ni / 2.0) ** 2 * get_fusion_sigma_v_E_reaction(T, reaction=reaction, energy_type='charged')
 
+
+def get_fusion_power_multiple_ions(ni_array, Ti_keV, ions_list, sigma_v_dict=None):
+    """
+    Fusion power (total and charged) in [W/m^3], for multiple ion species with difference densities.
+    Ti_keV in [keV], ni_array in [m^-3], each row is a different ion.
+    """
+    if sigma_v_dict == None:
+        sigma_v_dict = load_sigma_v_fusion_files(Ti_keV)
+
+    e = define_electron_charge()
+    MeV_to_J = e * 1e6
+    P_fus_tot = 0 * Ti_keV
+    P_fus_charged_tot = 0 * Ti_keV
+    for ind_r_1, reactant_1 in enumerate(ions_list):
+        for ind_r_2, reactant_2 in enumerate(ions_list):
+            if ind_r_2 >= ind_r_1:  # avoid double counting
+                # print('reactant_1:', reactant_1, ', reactant_2:', reactant_2)
+
+                # by default some processes are neglected (small or no available data)
+                if (reactant_1 == 'D' and reactant_2 == 'T') or (reactant_1 == 'T' and reactant_2 == 'D'):
+                    reactions = ['D_T_to_n_alpha']
+                elif reactant_1 == 'D' and reactant_2 == 'D':
+                    # no need to use branching ratios, the cross-sections per reaction already take care of that
+                    reactions = ['D_D_to_p_T', 'D_D_to_n_He3']
+                elif (reactant_1 == 'D' and reactant_2 == 'He3') or (reactant_1 == 'He3' and reactant_2 == 'D'):
+                    reactions = ['D_He3_to_p_alpha']
+                elif (reactant_1 == 'p' and reactant_2 == 'B11') or (reactant_1 == 'B11' and reactant_2 == 'p'):
+                    reactions = ['p_B_to_3alpha']
+                else:
+                    reactions = []
+
+                for reaction in reactions:
+                    sigma_v_curr = sigma_v_dict[reaction]
+                    ni_1_curr = ni_array[ind_r_1, :]
+                    ni_2_curr = ni_array[ind_r_2, :]
+                    P_fus_prefactor = ni_1_curr * ni_2_curr * sigma_v_curr
+                    E_f_curr = get_E_reaction(reaction=reaction)  # [MeV]
+                    E_ch_curr = get_E_charged(reaction=reaction)  # [MeV]
+                    P_fus_curr = P_fus_prefactor * E_f_curr * MeV_to_J
+                    P_fus_charged_curr = P_fus_prefactor * E_ch_curr * MeV_to_J
+                    P_fus_tot += P_fus_curr
+                    P_fus_charged_tot += P_fus_charged_curr
+
+    return P_fus_tot, P_fus_charged_tot
+
+
+def set_ion_densities_quasi_neutral(process, ne, Ti_keV, sigma_v_dict=None):
+    """
+    define the ion densities (multiple species) for different processes to satisfy quasi-neutrality with electron density,
+    Ti_keV in [keV], ne in [m^-3].
+    """
+    if sigma_v_dict == None:
+        sigma_v_dict = load_sigma_v_fusion_files(Ti_keV)
+
+    if process == 'D-T':
+        ions_list = ['D', 'T']
+        Zi_list = [1, 1]
+        # for const ne, optimal choice to maximize P_fus is (1/2Z), proof in Wurzel2022
+        ni_rel_list = [1 / (2 * Zj) + 0 * Ti_keV for Zj in Zi_list]
+
+    elif process == 'D-He3':
+        ions_list = ['D', 'He3']
+        Zi_list = [1, 2]
+        ni_rel_list = [1 / (2 * Zj) + 0 * Ti_keV for Zj in Zi_list]
+
+    elif process == 'p-B11':
+        ions_list = ['p', 'B11']
+        Zi_list = [1, 5]
+        ni_rel_list = [1 / (2 * Zj) + 0 * Ti_keV for Zj in Zi_list]
+
+    elif process == 'pure D-D':
+        ions_list = ['D']
+        Zi_list = [1]
+        ni_rel_list = [1 + 0 * Ti_keV]
+
+    elif process == 'fully-catalyzed D-D':
+        # from Wurzel2022: "Here, we only consider the steady-state reaction path where He3 and T react with D at the
+        # same rate as they are created in each branch of the D-D reaction. Furthermore, we assume an idealized scenario
+        # without synchrotron radiation and that the “ash” alpha particles and protons immediately exit after depositing
+        # their energy and comprise a negligible fraction of ions in the plasma. Finally, we assume that D is added at
+        # the same rate as it is consumed." See Eqs. (C13)-(C14).
+        ions_list = ['D', 'T', 'He3']
+        Zi_list = [1, 1, 2]
+        ni_rel_list = [1 + 0 * Ti_keV,
+                       0.5 * sigma_v_dict['D_D_to_p_T'] / sigma_v_dict['D_T_to_n_alpha'],
+                       0.5 * sigma_v_dict['D_D_to_n_He3'] / sigma_v_dict['D_He3_to_p_alpha']]
+
+
+    elif process == 'He3-catalyzed D-D':
+        ions_list = ['D', 'He3']
+        Zi_list = [1, 2]
+        # densities chosen at steady state for D,He3 (T assumed as extracted instantly)
+        ni_rel_list = [1 + 0 * Ti_keV,
+                       0.5 * sigma_v_dict['D_D_to_n_He3'] / sigma_v_dict['D_He3_to_p_alpha']]
+
+    elif process == 'T-catalyzed D-D':
+        ions_list = ['D', 'T']
+        Zi_list = [1, 1]
+        # densities chosen at steady state for D,T (He3 assumed as extracted instantly)
+        ni_rel_list = [1 + 0 * Ti_keV,
+                       0.5 * sigma_v_dict['D_D_to_p_T'] / sigma_v_dict['D_T_to_n_alpha']]
+
+    else:
+        raise ValueError('invalid process', process)
+
+    # normalize ion densities to satisfy quasi-neutrality with electrons
+    ni_rel_array = np.array(ni_rel_list)
+    neutrality_fac = sum([ni_rel * Zi for ni_rel, Zi in zip(ni_rel_array, Zi_list)])
+    ni_array = 0 * ni_rel_array
+    for ind_ion in range(ni_rel_array.shape[0]):
+        ni_array[ind_ion, :] = ni_rel_array[ind_ion, :] * ne / neutrality_fac
+    ni = np.sum(ni_array, axis=0)
+
+    return ions_list, Zi_list, ni_array, ni
 
 def get_lawson_parameters(ni, Ti, settings, reaction='D_T_to_n_alpha'):
     """
