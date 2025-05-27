@@ -5,11 +5,12 @@ plt.rcParams['font.size'] = 12
 plt.close('all')
 
 from mm_rate_eqs.fusion_functions import load_sigma_v_fusion_files, get_fusion_power_multiple_ions, \
-    set_ion_densities_quasi_neutral
-from mm_rate_eqs.plasma_functions import get_brem_radiation_loss_relativistic, get_cyclotron_radiation_loss, \
-    get_brem_radiation_loss
+    set_ion_densities_quasi_neutral, get_fuel_label
 
-Ti_keV = np.linspace(1, 1000, 1000)
+from mm_rate_eqs.plasma_functions import get_brem_radiation_loss_relativistic, get_cyclotron_radiation_loss
+
+# Ti_keV = np.linspace(1, 1000, 1000)
+Ti_keV = np.logspace(0, 3, 3000)
 
 sigma_v_dict = load_sigma_v_fusion_files(Ti_keV)
 
@@ -99,7 +100,7 @@ for ip, process in enumerate(process_list):
     # B_suffix_2 = ', $B=10$[T]'
     B = 20  # [T]
     B_suffix_2 = ', $B=20$[T]'
-    P_brem_2 = get_brem_radiation_loss_relativistic(ni_array, Zi_list, Te_keV, use_relativistic_correction=True)
+    P_brem_2 = get_brem_radiation_loss_relativistic(ni_array, Zi_list, Te_keV, use_relativistic_correction=False)
     P_cyc_2 = get_cyclotron_radiation_loss(ne, Te_keV, B)
 
     plt.plot(Ti_keV, P_brem, linestyle='-', color='b', label='brem' + Te_suffix_1)
@@ -107,13 +108,14 @@ for ip, process in enumerate(process_list):
     plt.plot(Ti_keV, P_cyc, linestyle='-', color='g', label='cyc' + Te_suffix_1 + B_suffix_1)
     plt.plot(Ti_keV, P_cyc_2, linestyle='--', color='g', label='cyc' + Te_suffix_2 + B_suffix_2)
 
-    plt.suptitle('fusion fuel: ' + process)
+    plt.suptitle('fusion fuel: ' + get_fuel_label(process))
     # plt.title(process)
     plt.title('Power density')
     plt.xscale('log')
     plt.yscale('log')
     plt.xlabel('$T_i$ [keV]')
     plt.ylabel('[W/m$^3$]')
+    plt.xlim([min(Ti_keV), max(Ti_keV)])
     plt.legend()
     plt.grid(True)
     plt.tight_layout()

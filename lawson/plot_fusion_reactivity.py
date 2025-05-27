@@ -7,7 +7,8 @@ plt.close('all')
 
 from mm_rate_eqs.fusion_functions import get_sigma_v_fusion_sampled, get_reaction_label, get_E_reaction
 
-Ti_keV = np.linspace(1, 1000, 1000)
+# Ti_keV = np.linspace(1, 1000, 1000)
+Ti_keV = np.logspace(0, 3, 3000)
 
 sigma_v_dict = {}
 reactions = ['D_T_to_n_alpha', 'D_He3_to_p_alpha', 'D_D_to_p_T', 'D_D_to_n_He3', 'p_B_to_3alpha']
@@ -41,6 +42,7 @@ plt.xscale('log')
 plt.yscale('log')
 plt.xlabel('$T_i$ [keV]')
 plt.ylabel('$\\left< \\sigma \cdot v \\right>$ [m$^3$/s]')
+plt.xlim([min(Ti_keV), max(Ti_keV)])
 plt.title('Fusion reactivity')
 plt.legend()
 plt.grid(True)
@@ -56,6 +58,7 @@ plt.xscale('log')
 plt.yscale('log')
 plt.xlabel('$T_i$ [keV]')
 plt.ylabel('$\\left< \\sigma \cdot v \\right>E_{fus}$ [m$^3$MeV/s]')
+plt.xlim([min(Ti_keV), max(Ti_keV)])
 plt.title('Fusion reactivity $\\times$ fusion energy per reaction')
 plt.legend()
 plt.grid(True)

@@ -153,6 +153,21 @@ def get_reaction_label(reaction='D_T_to_n_alpha'):
     return label
 
 
+def get_fuel_label(process='D-T'):
+    """
+    Return latex style fuel label for plots.
+    """
+    if process == 'D-He3':
+        label = 'D-$^3$He'
+    elif process == 'p-B11':
+        label = 'p-$^{11}$B'
+    elif process == 'He3-catalyzed D-D':
+        label = '$^3$He-catalyzed D-D'
+    else:
+        label = process
+    return label
+
+
 def get_E_reaction(reaction='D_T_to_n_alpha'):
     """
     Fusion reaction total output energy, in [MeV].
