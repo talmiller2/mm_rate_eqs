@@ -37,7 +37,6 @@ main_dir = '/Users/talmiller/Downloads/mm_rate_eqs//runs/slurm_runs/'
 main_dir += 'set56_MM_Rm_10_ni_1e21_Ti_10keV_smooth_fluxeps1e-3'
 # main_dir += 'set56_MM_Rm_10_ni_1e21_Ti_10keV_smooth_zeroRL_fluxeps1e-3'
 
-
 # load single_particle compiled mat
 single_particle_dir = '/Users/talmiller/Downloads/single_particle/'
 # single_particle_dir = '/home/talm/code/single_particle/slurm_runs/'
@@ -55,6 +54,34 @@ with open(field_dict_file, 'rb') as fid:
 Rm = field_dict_single_particle['Rm']
 
 
+def plot_line_on_heatmap(ax, x_heatmap, y_line, color='k'):
+    ax.plot(x_heatmap, y_line, color=color, linestyle='--')
+    return
+
+
+def plot_resonance_lines(ax, beta_loop_list, Rm, gas_name='D'):
+    # definitions for theoretic resonance lines
+    # vz_over_vth = 1.025  # mean of vz in loss cone
+    vz_over_vth = np.pi ** (-0.5) * (1 + np.sqrt(1 - 1 / Rm))  # mean of vz in loss cone
+    slope = 2 * np.pi * vz_over_vth * v_th / omega_cyclotron_DTmix
+    if gas_name == 'D':
+        offset = 3 / 2
+        alpha_const_omega_mass2_right = offset + slope * beta_loop_list
+        alpha_const_omega_mass2_left = offset - slope * beta_loop_list
+        plot_line_on_heatmap(ax, beta_loop_list, alpha_const_omega_mass2_right)
+        plot_line_on_heatmap(ax, beta_loop_list, alpha_const_omega_mass2_left)
+    else:
+        offset = 1
+        slope = 2 * np.pi * vz_over_vth * v_th / omega_cyclotron_DTmix
+        alpha_const_omega_mass3_right = offset + slope * beta_loop_list
+        alpha_const_omega_mass3_left = offset - slope * beta_loop_list
+        plot_line_on_heatmap(ax, beta_loop_list, alpha_const_omega_mass3_right)
+        plot_line_on_heatmap(ax, beta_loop_list, alpha_const_omega_mass3_left)
+    return
+
+
+
+
 # num_cells = 10
 # num_cells = 30
 num_cells = 50
@@ -70,6 +97,9 @@ title_fontsize = 12
 # cmap = 'plasma'
 # cmap = 'inferno'
 cmap = 'coolwarm'
+
+plot_power_estimate = False
+# plot_power_estimate = True
 
 gas_name_list = ['deuterium', 'tritium']
 # gas_name_list = ['tritium']
@@ -104,21 +134,27 @@ RF_amplitude_list += [0.04]  # T
 induced_fields_factor_list += [1]
 with_kr_correction_list += [True]
 
-# RF_type_list += ['magnetic_transverse']
-# RF_amplitude_list += [0.04]  # T
-# induced_fields_factor_list += [0]
-# with_kr_correction_list += [True]
+RF_type_list += ['magnetic_transverse']
+RF_amplitude_list += [0.04]  # T
+induced_fields_factor_list += [0]
+with_kr_correction_list += [True]
 
 for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         in zip(RF_type_list, RF_amplitude_list, induced_fields_factor_list, with_kr_correction_list):
 
-    # fig, axes = plt.subplots(1, 2, figsize=(12, 5))
-    fig, axes = plt.subplots(2, 2, figsize=(12, 6))
-    # fig2, axes2 = plt.subplots(1, 2, figsize=(12, 5))
+    if plot_power_estimate:
+        fig, axes = plt.subplots(2, 2, figsize=(12, 6))
+    else:
+        fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
     for ind_gas, gas_name in enumerate(gas_name_list):
         # for gas_name in gas_name_list:
-        # ax = axes[ind_gas]
-        ax = axes[0, ind_gas]
+
+        if plot_power_estimate:
+            ax = axes[0, ind_gas]
+        else:
+            ax = axes[ind_gas]
+
         if gas_name == 'deuterium':
             gas_name_short = 'D'
         else:
@@ -167,8 +203,8 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
 
         mat_dict = loadmat(compiled_save_file)
         flux_mat = mat_dict['flux_mat']
-        alpha_loop_list = mat_dict['alpha_loop_list']
-        beta_loop_list = mat_dict['beta_loop_list']
+        alpha_loop_list = mat_dict['alpha_loop_list'][0]
+        beta_loop_list = mat_dict['beta_loop_list'][0]
 
         # load on of the settings files
         # main_dir_dir_settings = '/Users/talmiller/Downloads/mm_rate_eqs//runs/slurm_runs/'
@@ -183,8 +219,8 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         # ni = 1e21 # phi_lawson~n^2 while phi_rate~n, so higher n means it is easier to read lawson.
         Ti_keV = state['Ti'][0] / 1e3
 
-        _, flux_lawson_ignition_origial = get_lawson_parameters(ni, Ti_keV, settings)
-        _, flux_lawson_piel, _, flux_lawson_ignition_piel = get_lawson_criterion_piel(ni, Ti_keV, settings)
+        # _, flux_lawson_ignition_origial = get_lawson_parameters(ni, Ti_keV, settings)
+        # _, flux_lawson_piel, _, flux_lawson_ignition_piel = get_lawson_criterion_piel(ni, Ti_keV, settings)
         cross_section_main_cell = settings['cross_section_main_cell']
         v_th = state['v_th'][0]
         flux_single_naive = ni * v_th
@@ -224,109 +260,123 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         Z = np.log10(flux_mat / flux_single_naive)
         Z = Z.T
 
-        vmin, vmax = None, None
+        # vmin, vmax = None, None
         # vmin, vmax = 0.5, 2.2
+        vmin, vmax = -2.7, -1.5  # for N=50
         # vmin, vmax = -3.3, -1.5 # for N=80
         c = ax.pcolormesh(X, Y, Z, vmin=vmin, vmax=vmax, cmap=cmap)
+        fig.colorbar(c, ax=ax)
+        plot_resonance_lines(ax, beta_loop_list, Rm, gas_name=gas_name_short)
         ax.set_xlabel(x_label, fontsize=axes_label_size)
         ax.set_ylabel(y_label, fontsize=axes_label_size)
         ax.set_title(title, fontsize=title_fontsize)
         # ax.set_title(gas_name_short, fontsize=title_fontsize)
         fig.suptitle(suptitle, fontsize=title_fontsize)
-        fig.colorbar(c, ax=ax)
         fig.set_layout_engine(layout='tight')
         update_format_coord(X, Y, Z, ax=ax)
 
-        ### take the density solution for each case, and calculate the power based on the E_ratio
-        time_step_tau_cyclotron_divisions = 50
-        sigma_r0 = 0.05
-        radial_distribution = 'uniform'
-        theta_type = 'sign_vz'
-        set_name = 'smooth_compiled_'
-        set_name += theta_type + '_'
-        if RF_type == 'electric_transverse':
-            set_name += 'ERF_' + str(RF_amplitude)
-        elif RF_type == 'magnetic_transverse':
-            set_name += 'BRF_' + str(RF_amplitude)
-        if induced_fields_factor < 1.0:
-            set_name += '_iff' + str(induced_fields_factor)
-        if with_kr_correction == True:
-            set_name += '_withkrcor'
-        set_name += '_tcycdivs' + str(time_step_tau_cyclotron_divisions)
-        if sigma_r0 > 0:
-            set_name += '_sigmar' + str(sigma_r0)
-            if radial_distribution == 'normal':
-                set_name += 'norm'
-            elif radial_distribution == 'uniform':
-                set_name += 'unif'
-        set_name += '_' + gas_name
-        # print(set_name)
-        single_particle_file = single_particle_dir + '/' + set_name + '.mat'
-        single_particle_mat_dict = loadmat(single_particle_file)
+        # ### saving figures
+        # fig_save_dir = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/paper_2025/pics/'
+        # file_name = 'compiled_flux'
+        # if RF_type == 'electric_transverse': file_name += '_REF'
+        # else: file_name += '_RMF'
+        # if induced_fields_factor < 1.0: file_name += '_iff' + str(induced_fields_factor)
+        # fig.savefig(fig_save_dir + file_name + '.pdf', format='pdf', dpi=600)
 
-        # estimate the RF power in the plug
-        E_ini_per_particle = settings_single_particle['kB_eV'] * settings_single_particle['T_keV'] * 1e3  # [Joule]
-        A = settings['cross_section_main_cell']
-        cell_volume = l * A
+        #############################
+        #############################
+        if plot_power_estimate:
+            ### take the density solution for each case, and calculate the power based on the E_ratio
+            time_step_tau_cyclotron_divisions = 50
+            sigma_r0 = 0.05
+            radial_distribution = 'uniform'
+            theta_type = 'sign_vz'
+            set_name = 'smooth_compiled_'
+            set_name += theta_type + '_'
+            if RF_type == 'electric_transverse':
+                set_name += 'ERF_' + str(RF_amplitude)
+            elif RF_type == 'magnetic_transverse':
+                set_name += 'BRF_' + str(RF_amplitude)
+            if induced_fields_factor < 1.0:
+                set_name += '_iff' + str(induced_fields_factor)
+            if with_kr_correction == True:
+                set_name += '_withkrcor'
+            set_name += '_tcycdivs' + str(time_step_tau_cyclotron_divisions)
+            if sigma_r0 > 0:
+                set_name += '_sigmar' + str(sigma_r0)
+                if radial_distribution == 'normal':
+                    set_name += 'norm'
+                elif radial_distribution == 'uniform':
+                    set_name += 'unif'
+            set_name += '_' + gas_name
+            # print(set_name)
+            single_particle_file = single_particle_dir + '/' + set_name + '.mat'
+            single_particle_mat_dict = loadmat(single_particle_file)
 
-        # # simplest model assuming const density and known volume 1m^3
-        # N_particles = state['n'][0] * 1 # density 1e21[m^-3] in volume 1[m^3]
-        # E_ini_total = E_ini_per_particle * N_particles  # [Joule]
-        # E_fin_total = E_ini_total * single_particle_mat_dict['E_ratio']
-        # power_total_W = (E_fin_total - E_ini_total) / settings_single_particle['t_max'] # [Watt=Joule/s]
+            # estimate the RF power in the plug
+            E_ini_per_particle = settings_single_particle['kB_eV'] * settings_single_particle['T_keV'] * 1e3  # [Joule]
+            A = settings['cross_section_main_cell']
+            cell_volume = l * A
 
-        # calc based on changing density in plug cells and different power per population
-        power_W_dict = {}
-        power_total_W = 0
-        for pop in ['c', 'tR', 'tL']:
-            # for pop in ['tR']:
-            # for pop in ['tL']:
-            # for pop in ['c']:
+            # # simplest model assuming const density and known volume 1m^3
+            # N_particles = state['n'][0] * 1 # density 1e21[m^-3] in volume 1[m^3]
+            # E_ini_total = E_ini_per_particle * N_particles  # [Joule]
+            # E_fin_total = E_ini_total * single_particle_mat_dict['E_ratio']
+            # power_total_W = (E_fin_total - E_ini_total) / settings_single_particle['t_max'] # [Watt=Joule/s]
 
-            if pop == 'tR':
-                pop_single_particle = 'R'
-            elif pop == 'tL':
-                # pop_single_particle = 'L'
-                pop_single_particle = 'C'  # because of mistake in mixing L-C in the single particle compilation
-            else:
-                # pop_single_particle = 'C'
-                pop_single_particle = 'L'  # because of mistake in mixing L-C in the single particle compilation
-            E_ratio = single_particle_mat_dict['E_ratio_' + pop_single_particle]
+            # calc based on changing density in plug cells and different power per population
+            power_W_dict = {}
+            power_total_W = 0
+            for pop in ['c', 'tR', 'tL']:
+                # for pop in ['tR']:
+                # for pop in ['tL']:
+                # for pop in ['c']:
 
-            power_W_dict[pop] = 0
+                if pop == 'tR':
+                    pop_single_particle = 'R'
+                elif pop == 'tL':
+                    # pop_single_particle = 'L'
+                    pop_single_particle = 'C'  # because of mistake in mixing L-C in the single particle compilation
+                else:
+                    # pop_single_particle = 'C'
+                    pop_single_particle = 'L'  # because of mistake in mixing L-C in the single particle compilation
+                E_ratio = single_particle_mat_dict['E_ratio_' + pop_single_particle]
 
-            # for ind_cell in range(len(state['n'])):
-            for ind_cell in range(mat_dict['n'].shape[2]):
-                # for ind_cell in [0]:
-                n_curr = mat_dict['n_' + pop][:, :, ind_cell]
-                power_per_particle = E_ini_per_particle * (E_ratio - 1) / settings_single_particle[
-                    't_max']  # [Watt=Joule/s]
-                power_W_dict[pop] += cell_volume * n_curr * power_per_particle
+                power_W_dict[pop] = 0
 
-            power_total_W += power_W_dict[pop]
+                # for ind_cell in range(len(state['n'])):
+                for ind_cell in range(mat_dict['n'].shape[2]):
+                    # for ind_cell in [0]:
+                    n_curr = mat_dict['n_' + pop][:, :, ind_cell]
+                    power_per_particle = E_ini_per_particle * (E_ratio - 1) / settings_single_particle[
+                        't_max']  # [Watt=Joule/s]
+                    power_W_dict[pop] += cell_volume * n_curr * power_per_particle
 
-        power_total_MW = power_total_W / 1e6
-        Z = power_total_MW
-        # title = 'Power [MW]'
-        # title += ', ' + RF_type_short + '=' + RF_amplitude_suffix
-        # title += ', iff=' + str(induced_fields_factor)
-        # title += ', krcor=' + str(with_kr_correction)
-        # title += ', N=' + str(num_cells)
-        # title_power = 'Power [MW]'
-        title_power = 'Power [MW] (' + gas_name_short + ')'
-        # ax = axes2[ind_gas]
-        ax = axes[1, ind_gas]
-        Z = power_total_MW
-        Z = Z.T
-        vmin, vmax = None, None
-        # vmin, vmax = 0, 1000 # for N=80
-        c = ax.pcolormesh(X, Y, Z, vmin=vmin, vmax=vmax, cmap=cmap)
-        ax.set_xlabel(x_label, fontsize=axes_label_size)
-        ax.set_ylabel(y_label, fontsize=axes_label_size)
-        # ax.set_title(title, fontsize=title_fontsize)
-        # ax.set_title(gas_name_short, fontsize=title_fontsize)
-        ax.set_title(title_power, fontsize=title_fontsize)
-        # fig.suptitle(title, fontsize=title_fontsize)
-        fig.colorbar(c, ax=ax)
-        fig.set_layout_engine(layout='tight')
-        update_format_coord(X, Y, Z, ax=ax)
+                power_total_W += power_W_dict[pop]
+
+            power_total_MW = power_total_W / 1e6
+            Z = power_total_MW
+            # title = 'Power [MW]'
+            # title += ', ' + RF_type_short + '=' + RF_amplitude_suffix
+            # title += ', iff=' + str(induced_fields_factor)
+            # title += ', krcor=' + str(with_kr_correction)
+            # title += ', N=' + str(num_cells)
+            # title_power = 'Power [MW]'
+            # title_power = 'Power [MW] (' + gas_name_short + ')'
+            title_power = '$\log_{10}$ (Power [MW]) (' + gas_name_short + ')'
+            ax = axes[1, ind_gas]
+            Z = power_total_MW
+            Z = np.log10(Z)
+            Z = Z.T
+            vmin, vmax = None, None
+            # vmin, vmax = 0, 1000 # for N=80
+            c = ax.pcolormesh(X, Y, Z, vmin=vmin, vmax=vmax, cmap=cmap)
+            ax.set_xlabel(x_label, fontsize=axes_label_size)
+            ax.set_ylabel(y_label, fontsize=axes_label_size)
+            # ax.set_title(title, fontsize=title_fontsize)
+            # ax.set_title(gas_name_short, fontsize=title_fontsize)
+            ax.set_title(title_power, fontsize=title_fontsize)
+            # fig.suptitle(title, fontsize=title_fontsize)
+            fig.colorbar(c, ax=ax)
+            fig.set_layout_engine(layout='tight')
+            update_format_coord(X, Y, Z, ax=ax)

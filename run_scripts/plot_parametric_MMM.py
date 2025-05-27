@@ -103,8 +103,9 @@ for num_cells in num_cells_list:
             # title = '$\ln \\left( \\phi_{ss} / \\phi_{Lawson} \\right )$'
             # title = '$\log_{10} \\left( \\phi_{ss} / \\phi_{Lawson} \\right )$'
             title = '$\log_{10} \\left( \\phi_{ss} / \\phi_{0} \\right )$'
-            # title += ', scat_fac=' + str(scat_factor)
-            # title += ', scat_asym=' + str(scat_asym_factor)
+            title += ', scat_fac=' + str(scat_factor)
+            title += ', scat_asym=' + str(scat_asym_factor)
+            title += ', ' + str(gas_name)
             title += ', N=' + str(num_cells)
 
             # Z = np.log(flux_mat * cross_section_main_cell / flux_lawson_ignition_origial)
@@ -139,3 +140,10 @@ for num_cells in num_cells_list:
             # ax2.set_ylabel('n [$m^{-3}$]', fontsize=axes_label_size)
             # fig2.suptitle(compiled_set_name)
             # ax2.legend()
+
+            # ### saving figures
+            # fig_save_dir = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/paper_2025/pics/'
+            # file_name = 'MMM_flux_' + gas_name
+            # file_name += '_scat_fac_' + str(scat_factor)
+            # file_name += '_scat_asym_' + str(scat_asym_factor)
+            # fig.savefig(fig_save_dir + file_name + '.pdf', format='pdf', dpi=600)
