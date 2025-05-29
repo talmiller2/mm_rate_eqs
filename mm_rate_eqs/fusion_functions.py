@@ -153,20 +153,13 @@ def get_reaction_label(reaction='D_T_to_n_alpha'):
     return label
 
 
-def get_fuel_label(process='D-T'):
+def update_ion_latex_name(name):
     """
-    Return latex style fuel label for plots.
+    Return ion names string in latex style.
     """
-    if process == 'D-He3':
-        label = 'D-$^3$He'
-    elif process == 'p-B11':
-        label = 'p-$^{11}$B'
-    elif process == 'He3-catalyzed D-D':
-        label = '$^3$He-catalyzed D-D'
-    else:
-        label = process
-    return label
-
+    name = name.replace('He3', '$^3$He')
+    name = name.replace('B11', '$^{11}$B')
+    return name
 
 def get_E_reaction(reaction='D_T_to_n_alpha'):
     """

@@ -64,9 +64,9 @@ plt.legend()
 plt.grid(True)
 plt.tight_layout()
 
-# ## save figs at higher res
-# figs_folder = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/lawson_plots/'
-# plt.figure(1)
-# plt.savefig(figs_folder + 'fusion_reactivities.png', format='png', dpi=600)
-# plt.figure(2)
-# plt.savefig(figs_folder + 'fusion_reactivities_times_energy.png', format='png', dpi=600)
+## save figs at higher res
+figs_folder = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/lawson_plots/'
+plt.figure(1)
+plt.savefig(figs_folder + 'fusion_reactivities.pdf', format='pdf')
+plt.figure(2)
+plt.savefig(figs_folder + 'fusion_reactivities_times_energy.pdf', format='pdf')

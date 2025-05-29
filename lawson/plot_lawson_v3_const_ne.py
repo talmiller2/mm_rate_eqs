@@ -5,7 +5,7 @@ plt.rcParams['font.size'] = 12
 plt.close('all')
 
 from mm_rate_eqs.fusion_functions import load_sigma_v_fusion_files, get_E_reaction, get_E_charged, \
-    get_fusion_power_multiple_ions, set_ion_densities_quasi_neutral, get_fuel_label
+    get_fusion_power_multiple_ions, set_ion_densities_quasi_neutral, update_ion_latex_name
 from mm_rate_eqs.plasma_functions import get_brem_radiation_loss_relativistic, get_cyclotron_radiation_loss, \
     define_electron_charge, get_brem_radiation_loss, define_boltzmann_constant
 from mm_rate_eqs.constants_functions import define_vacuum_permeability, define_factor_eV_to_K
@@ -57,7 +57,7 @@ for ip, process in enumerate(process_list):
         print('   @@@ Te_over_Ti =', Te_over_Ti)
         # label = process + ' $T_e/T_i=$' + str(Te_over_Ti)
         if ind_Te == 0:
-            label = get_fuel_label(process)
+            label = update_ion_latex_name(process)
         else:
             label = None
 
@@ -176,7 +176,7 @@ plt.grid(True)
 plt.tight_layout()
 
 plt.figure(3)
-plt.title('$n_e=10^{' + str(int(np.log10(ne))) + '}[m^{-3}], B=' + str(B) + '[T]$' + title_suffix)
+plt.title('$n_e=10^{' + str(int(np.log10(ne))) + '}[m^{-3}], B=' + str(B) + '[T]$')
 plt.xscale('log')
 plt.yscale('log')
 plt.xlabel('$T_i$ [keV]')
@@ -189,8 +189,8 @@ plt.tight_layout()
 # ## save figs at higher res
 # figs_folder = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/lawson_plots/'
 # plt.figure(1)
-# plt.savefig(figs_folder + 'Q_fuel_at_const_ne' + file_suffix + '.png', format='png', dpi=600)
+# plt.savefig(figs_folder + 'Q_fuel_at_const_ne' + file_suffix + '.pdf', format='pdf')
 # plt.figure(2)
-# plt.savefig(figs_folder + 'lawson_p_tau_at_const_ne' + file_suffix + '.png', format='png', dpi=600)
+# plt.savefig(figs_folder + 'lawson_p_tau_at_const_ne' + file_suffix + '.pdf', format='pdf')
 # plt.figure(3)
-# plt.savefig(figs_folder + 'beta_at_const_ne' + file_suffix + '.png', format='png', dpi=600)
+# plt.savefig(figs_folder + 'beta_at_const_ne' + '.pdf', format='pdf')

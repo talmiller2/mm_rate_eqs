@@ -5,7 +5,7 @@ plt.rcParams['font.size'] = 12
 plt.close('all')
 
 from mm_rate_eqs.fusion_functions import load_sigma_v_fusion_files, get_E_reaction, get_E_charged, \
-    get_fusion_power_multiple_ions, set_ion_densities_quasi_neutral, get_fuel_label
+    get_fusion_power_multiple_ions, set_ion_densities_quasi_neutral, update_ion_latex_name
 from mm_rate_eqs.plasma_functions import get_brem_radiation_loss_relativistic, get_cyclotron_radiation_loss, \
     define_electron_charge, get_brem_radiation_loss, define_boltzmann_constant
 from mm_rate_eqs.constants_functions import define_vacuum_permeability, define_factor_eV_to_K
@@ -49,7 +49,7 @@ for ip, process in enumerate(process_list):
         print('   @@@ Te_over_Ti =', Te_over_Ti)
         # label = process + ' $T_e/T_i=$' + str(Te_over_Ti)
         if ind_Te == 0:
-            label = get_fuel_label(process)
+            label = update_ion_latex_name(process)
         else:
             label = None
 
@@ -64,6 +64,7 @@ for ip, process in enumerate(process_list):
         plasma_beta_target = 0.05
         # plasma_beta_target = 0.1
         # plasma_beta_target = 0.5
+        # plasma_beta_target = 0.9
         # B = 0.0001  # [T]
         # B = 1  # [T]
         # B = 5  # [T]
@@ -208,7 +209,7 @@ plt.grid(True)
 plt.tight_layout()
 
 plt.figure(4)
-plt.title('$B=$' + str(B) + '[T], $\\beta=$' + str(plasma_beta_target) + title_suffix)
+plt.title('$B=$' + str(B) + '[T], $\\beta=$' + str(plasma_beta_target))
 plt.xscale('log')
 plt.yscale('log')
 plt.xlabel('$T_i$ [keV]')
@@ -221,10 +222,10 @@ plt.tight_layout()
 # ## save figs at higher res
 # figs_folder = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/lawson_plots/'
 # plt.figure(1)
-# plt.savefig(figs_folder + 'Q_fuel_at_const_beta' + file_suffix + '.png', format='png', dpi=600)
+# plt.savefig(figs_folder + 'Q_fuel_at_const_beta' + file_suffix + '.pdf', format='pdf')
 # plt.figure(2)
-# plt.savefig(figs_folder + 'lawson_p_tau_at_const_beta' + file_suffix + '.png', format='png', dpi=600)
+# plt.savefig(figs_folder + 'lawson_p_tau_at_const_beta' + file_suffix + '.pdf', format='pdf')
 # plt.figure(3)
-# plt.savefig(figs_folder + 'lawson_tau_at_const_beta' + file_suffix + '.png', format='png', dpi=600)
+# plt.savefig(figs_folder + 'lawson_tau_at_const_beta' + file_suffix + '.pdf', format='pdf')
 # plt.figure(4)
-# plt.savefig(figs_folder + 'ne_at_const_beta' + file_suffix + '.png', format='png', dpi=600)
+# plt.savefig(figs_folder + 'ne_at_const_beta' + '.pdf', format='pdf')

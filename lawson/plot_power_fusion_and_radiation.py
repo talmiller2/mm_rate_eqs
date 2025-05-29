@@ -5,7 +5,7 @@ plt.rcParams['font.size'] = 12
 plt.close('all')
 
 from mm_rate_eqs.fusion_functions import load_sigma_v_fusion_files, get_fusion_power_multiple_ions, \
-    set_ion_densities_quasi_neutral, get_fuel_label
+    set_ion_densities_quasi_neutral, update_ion_latex_name
 
 from mm_rate_eqs.plasma_functions import get_brem_radiation_loss_relativistic, get_cyclotron_radiation_loss
 
@@ -59,7 +59,7 @@ for ip, process in enumerate(process_list):
         plt.plot(Ti_keV, ne + 0 * Ti_keV, '--k', label='electrons')
         plt.plot(Ti_keV, ni, '-k', label='ions')
         for ni_curr, ion, color in zip(ni_array, ions_list, ['b', 'g', 'r']):
-            plt.plot(Ti_keV, ni_curr, label=ion, color=color)
+            plt.plot(Ti_keV, ni_curr, label=update_ion_latex_name(ion), color=color)
         # plt.title(process)
         plt.title('Particle density')
         plt.xscale('log')
@@ -108,7 +108,7 @@ for ip, process in enumerate(process_list):
     plt.plot(Ti_keV, P_cyc, linestyle='-', color='g', label='cyc' + Te_suffix_1 + B_suffix_1)
     plt.plot(Ti_keV, P_cyc_2, linestyle='--', color='g', label='cyc' + Te_suffix_2 + B_suffix_2)
 
-    plt.suptitle('fusion fuel: ' + get_fuel_label(process))
+    plt.suptitle('fusion fuel: ' + update_ion_latex_name(process))
     # plt.title(process)
     plt.title('Power density')
     plt.xscale('log')
@@ -123,7 +123,7 @@ for ip, process in enumerate(process_list):
     # ## save fig at higher res
     # figs_folder = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/lawson_plots/'
     # process_underscore = process.replace(' ', '_')
-    # plt.savefig(figs_folder + 'power_' + process_underscore + '.png', format='png', dpi=600)
+    # plt.savefig(figs_folder + 'power_' + process_underscore + '.pdf', format='pdf')
 
 # plt.figure()
 # T =  np.linspace(0, 1000, 1000)
