@@ -38,11 +38,14 @@ for ip, process in enumerate(process_list):
 
     print('*****', process, '*****')
 
+    # Te_over_Ti_list = [1]
+    # Te_over_Ti_list = [0.1]
+    Te_over_Ti_list = [0.01]
     # Te_over_Ti_list = [1, 0.1]
     # Te_over_Ti_list = [1, 0.01]
     # Te_over_Ti_list = [1, 0.1, 0.01]
     # Te_over_Ti_list = [1, 0.3, 0.1]
-    Te_over_Ti_list = [1, 0.4, 0.1]
+    # Te_over_Ti_list = [1, 0.4, 0.1]
     linestyle_list = ['-', '--', ':']
 
     for ind_Te, Te_over_Ti in enumerate(Te_over_Ti_list):
@@ -91,14 +94,16 @@ for ip, process in enumerate(process_list):
                  label=label)
 
         ## calculate fusion power
-        P_fus_tot, P_fus_charged_tot = get_fusion_power_multiple_ions(ni_array, Ti_keV, ions_list, sigma_v_dict)
+        P_fus_tot, P_fus_charged_tot, reaction_rate_tot = get_fusion_power_multiple_ions(ni_array, Ti_keV, ions_list,
+                                                                                         sigma_v_dict)
 
         ## calculate radiation losses
         P_brem = get_brem_radiation_loss_relativistic(ni_array, Zi_list, Te_keV, use_relativistic_correction=True)
-        P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B)
+        # P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Stacey')
+        P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Wiedemann', r=0)
 
-        # include_P_cyc = False
-        include_P_cyc = True
+        include_P_cyc = False
+        # include_P_cyc = True
 
         if include_P_cyc:
             P_rad = P_brem + P_cyc
@@ -151,6 +156,9 @@ for ip, process in enumerate(process_list):
             print('      ne @opt=', ne[ind_min_p_tau], '[m$^{-3}$]')
             print('      P_fus_tot @opt=', P_fus_tot[ind_min_p_tau] / 1e6, '[MW/m^3]')
             print('      tau @opt=', tau_for_const_Q_fuel[ind_min_p_tau], '[s]')
+            T = 0.1 * ni[ind_min_p_tau] / reaction_rate_tot[ind_min_p_tau]
+            print('      T(10% fuel depletion) @opt=', T, '[s]')
+            print('      T/tau=', T / tau_for_const_Q_fuel[ind_min_p_tau])
 
             plt.figure(2)
             plt.scatter(Ti_keV[ind_min_p_tau], p_tau_keV[ind_min_p_tau], color=color)

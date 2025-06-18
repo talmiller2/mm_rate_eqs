@@ -4,7 +4,7 @@ from scipy.interpolate import interp1d
 
 from mm_rate_eqs.constants_functions import define_electron_charge, define_proton_mass, \
     define_fine_structure_constant, define_speed_of_light, define_factor_eV_to_K, define_barn
-from mm_rate_eqs.plasma_functions import get_brem_radiation_loss, get_cyclotron_radiation_loss
+from mm_rate_eqs.plasma_functions import get_brem_radiation_loss
 
 def get_sigma_v_fusion(T, reaction='D_T_to_n_alpha', use_resonance=True):
     """
@@ -279,12 +279,18 @@ def get_fusion_power_multiple_ions(ni_array, Ti_keV, ions_list, sigma_v_dict=Non
 
     e = define_electron_charge()
     MeV_to_J = e * 1e6
+    reaction_rate_tot = 0 * Ti_keV
     P_fus_tot = 0 * Ti_keV
     P_fus_charged_tot = 0 * Ti_keV
     for ind_r_1, reactant_1 in enumerate(ions_list):
         for ind_r_2, reactant_2 in enumerate(ions_list):
             if ind_r_2 >= ind_r_1:  # avoid double counting
-                # print('reactant_1:', reactant_1, ', reactant_2:', reactant_2)
+
+                # number of pair combinations for same-ion reaction
+                if reactant_1 == reactant_2:
+                    combinatoric_factor = 0.5
+                else:
+                    combinatoric_factor = 1
 
                 # by default some processes are neglected (small or no available data)
                 if (reactant_1 == 'D' and reactant_2 == 'T') or (reactant_1 == 'T' and reactant_2 == 'D'):
@@ -299,19 +305,21 @@ def get_fusion_power_multiple_ions(ni_array, Ti_keV, ions_list, sigma_v_dict=Non
                 else:
                     reactions = []
 
+
                 for reaction in reactions:
                     sigma_v_curr = sigma_v_dict[reaction]
                     ni_1_curr = ni_array[ind_r_1, :]
                     ni_2_curr = ni_array[ind_r_2, :]
-                    P_fus_prefactor = ni_1_curr * ni_2_curr * sigma_v_curr
+                    reaction_rate_curr = combinatoric_factor * ni_1_curr * ni_2_curr * sigma_v_curr
                     E_f_curr = get_E_reaction(reaction=reaction)  # [MeV]
                     E_ch_curr = get_E_charged(reaction=reaction)  # [MeV]
-                    P_fus_curr = P_fus_prefactor * E_f_curr * MeV_to_J
-                    P_fus_charged_curr = P_fus_prefactor * E_ch_curr * MeV_to_J
+                    P_fus_curr = reaction_rate_curr * E_f_curr * MeV_to_J
+                    P_fus_charged_curr = reaction_rate_curr * E_ch_curr * MeV_to_J
+                    reaction_rate_tot += reaction_rate_curr
                     P_fus_tot += P_fus_curr
                     P_fus_charged_tot += P_fus_charged_curr
 
-    return P_fus_tot, P_fus_charged_tot
+    return P_fus_tot, P_fus_charged_tot, reaction_rate_tot
 
 
 def set_ion_densities_quasi_neutral(process, ne, Ti_keV, sigma_v_dict=None):

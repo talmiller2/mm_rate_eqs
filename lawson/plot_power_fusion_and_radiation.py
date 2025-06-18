@@ -7,7 +7,8 @@ plt.close('all')
 from mm_rate_eqs.fusion_functions import load_sigma_v_fusion_files, get_fusion_power_multiple_ions, \
     set_ion_densities_quasi_neutral, update_ion_latex_name
 
-from mm_rate_eqs.plasma_functions import get_brem_radiation_loss_relativistic, get_cyclotron_radiation_loss
+from mm_rate_eqs.plasma_functions import get_brem_radiation_loss_relativistic, get_cyclotron_radiation_loss, \
+    get_cyclotron_radiation_loss_envelope
 
 # Ti_keV = np.linspace(1, 1000, 1000)
 Ti_keV = np.logspace(0, 3, 3000)
@@ -84,6 +85,10 @@ for ip, process in enumerate(process_list):
     plt.plot(Ti_keV, P_fus_tot, '-k', linewidth=3, label='fusion total')
     plt.plot(Ti_keV, P_fus_charged_tot, '-r', linewidth=2, label='fusion charged')
 
+    a = 1
+    R = 2
+    r = 0
+
     Te_keV = 1.0 * Ti_keV
     Te_suffix_1 = ' $T_e=T_i$'
     B = 10  # [T]
@@ -91,7 +96,11 @@ for ip, process in enumerate(process_list):
     # B = 20  # [T]
     # B_suffix_1 = ', $B=20$[T]'
     P_brem = get_brem_radiation_loss_relativistic(ni_array, Zi_list, Te_keV, use_relativistic_correction=True)
-    P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B)
+    P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Stacey')
+    P_cyc_Kukushkin = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Kukushkin', a=a, R=R, r=r)
+    P_cyc_Trubnikov = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Trubnikov', a=a, R=R, r=r)
+    P_cyc_Wiedemann = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Wiedemann', a=a, R=R, r=r)
+    P_cyc_min, P_cyc_max = get_cyclotron_radiation_loss_envelope(ne, Te_keV, B, a=a, R=R, r=r)
     # Te_keV = 0.1 * Ti_keV
     # Te_suffix_2 = ' $T_e=T_i /10$'
     Te_keV = 0.4 * Ti_keV
@@ -102,11 +111,17 @@ for ip, process in enumerate(process_list):
     B_suffix_2 = ', $B=20$[T]'
     P_brem_2 = get_brem_radiation_loss_relativistic(ni_array, Zi_list, Te_keV, use_relativistic_correction=False)
     P_cyc_2 = get_cyclotron_radiation_loss(ne, Te_keV, B)
+    P_cyc_min_2, P_cyc_max_2 = get_cyclotron_radiation_loss_envelope(ne, Te_keV, B, a=a, R=R, r=r)
 
     plt.plot(Ti_keV, P_brem, linestyle='-', color='b', label='brem' + Te_suffix_1)
-    plt.plot(Ti_keV, P_brem_2, linestyle='--', color='b', label='brem' + Te_suffix_2)
-    plt.plot(Ti_keV, P_cyc, linestyle='-', color='g', label='cyc' + Te_suffix_1 + B_suffix_1)
-    plt.plot(Ti_keV, P_cyc_2, linestyle='--', color='g', label='cyc' + Te_suffix_2 + B_suffix_2)
+    # plt.plot(Ti_keV, P_brem_2, linestyle='--', color='b', label='brem' + Te_suffix_2)
+    plt.plot(Ti_keV, P_cyc, linestyle='-', color='g', label='cyc Stacey' + Te_suffix_1 + B_suffix_1)
+    # plt.plot(Ti_keV, P_cyc_2, linestyle='--', color='g', label='cyc Stacey' + Te_suffix_2 + B_suffix_2)
+    # plt.plot(Ti_keV, P_cyc_Kukushkin, linestyle='-', color='teal', label='cyc Kukushkin' + Te_suffix_1 + B_suffix_1)
+    # plt.plot(Ti_keV, P_cyc_Trubnikov, linestyle='-', color='magenta', label='cyc Trubnikov' + Te_suffix_1 + B_suffix_1)
+    # plt.plot(Ti_keV, P_cyc_Wiedemann, linestyle='-', color='pink', label='cyc Wiedemann' + Te_suffix_1 + B_suffix_1)
+    plt.fill_between(Ti_keV, P_cyc_min, P_cyc_max, color='g', alpha=0.3, label='cyc' + Te_suffix_1 + B_suffix_1)
+    # plt.fill_between(Ti_keV, P_cyc_min_2, P_cyc_max_2, color='orange', alpha=0.3, label='cyc' + Te_suffix_2 + B_suffix_2)
 
     plt.suptitle('fusion fuel: ' + update_ion_latex_name(process))
     # plt.title(process)
@@ -130,6 +145,12 @@ for ip, process in enumerate(process_list):
 # t = T / 511
 # y1 = (1 + 1.78 * t ** 1.34)
 # y2 = 2.12 * t * (1 + 1.1 * t + t ** 2.0 - 1.25 * t ** 2.5)
-# plt.plot(T, y1, label='$P_{brem}$ relativistic factor')
-# plt.plot(T, y2, label='$P_{brem}$ relativistic addition')
+# # plt.plot(T, y1, label='$P_{brem}$ relativistic factor')
+# # plt.plot(T, y2, label='$P_{brem}$ relativistic addition')
+# for Z_eff in [1, 2, 3]:
+#     y = Z_eff * y1 + y2
+#     plt.plot(T, y / Z_eff, label='$Z_{eff}$=' + str(Z_eff))
+# plt.title('brem relativistic correction $P_{rel}/P_{norel}$')
+# plt.xlabel('$T_e$ [keV]')
 # plt.legend()
+# plt.grid(True)

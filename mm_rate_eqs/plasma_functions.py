@@ -75,16 +75,74 @@ def get_brem_radiation_loss_relativistic(ni_list, Zi_list, Te, use_relativistic_
     P_brem = C_B * gamma_eff * Te ** (0.5) * ne ** 2
     return P_brem
 
-def get_cyclotron_radiation_loss(ne, Te, B):
+
+def get_cyclotron_radiation_loss(ne, Te, B, version='Stacey', a=1, R=2, kappa=1, r=0):
     """
     Cyclotron/synchrotron radiation (source Stacey "Fusion Plasma Analysis", p. 231)
     Majority self-absorbs so only 1e-2 of it escapes (source Wesson "Tokamaks" p. 230)
     input T in [keV], n in [m^-3] (mks), B in [T] (mks)
     output in [W/m^3]
+    additional arguments:
+    a, R are the Tokamak minor and major radii [m]
+    kappa is the plasma elliptical elongation parameter (1 for circular cross section).
+    r is the wall reflection factor (between 0 and 1).
     """
-    cyclotron_power = 6.2e-17 * B ** 2 * ne * Te
-    radiated_fraction = 1e-2
-    return radiated_fraction * cyclotron_power
+    if version == 'Stacey':
+        # source: Stacey "Fusion Plasma Analysis", p. 231
+        # Majority self-absorbs so only 1e-2 of it escapes (source: Wesson "Tokamaks" p. 230)
+        cyclotron_power = 6.2e-17 * B ** 2 * ne * Te * (1 + Te / 204)
+        radiated_fraction = 1e-2
+        return radiated_fraction * cyclotron_power
+    elif version == 'Kukushkin':
+        # source: 2009 - Kukushkin, Minashin - Generalization Of Trubnikov Formula For Electron Cyclotron Total Power Loss In Tokamak-reactors
+        cyclotron_power = 1e6 * 4.14e-7 * np.sqrt(ne / 1e20) * Te ** 2.5 * B ** 2.5 * (1 + 2.5 * Te / 511)
+        geom_factor = (1 - r) ** 0.5 * (a * kappa ** 0.5) ** (
+            -0.5)  # sqrt((1-R)/a) where a,R are Tokamaks radii, not exactly sure.
+        toroid_volume = 2 * np.pi ** 2 * a ** 2 * R  # [m^3]
+        return cyclotron_power * geom_factor / toroid_volume
+    elif version == 'Trubnikov':
+        # source: 2015 - Wiedemann - Particle Accelerator Physics - Chapter 3 - Theory of Synchrotron Radiation - Eq. 3.23
+        cyclotron_power = 1e6 * 8.2e-10 * (ne / 1e20) ** 0.5 * B ** 2.5 * Te ** 2.5
+        cyclotron_power *= (
+                               1e6) ** 0.5  # assuming the original formula expected ne in units [cm^-3], and makes it close to Wiedemann in the 10-100 keV range
+        geom_factor = (1 - r) ** 0.5 * R * a ** 1.5 * (1 + 18 * a / R / Te ** 0.5) ** 0.5
+        toroid_volume = 2 * np.pi ** 2 * a ** 2 * R  # [m^3]
+        return cyclotron_power * geom_factor / toroid_volume
+    elif version == 'Wiedemann':
+        # source: 2015 - Wiedemann - Particle Accelerator Physics - Chapter 3 - Theory of Synchrotron Radiation - Eq. 3.67
+        pa0 = 6.04e3 * a * (ne / 1e20) / B
+        cyclotron_power = 1e6 * (3.84e-8 * (ne / 1e20) ** 0.38 * B ** 2.62
+                                 * Te * (16 + Te) ** 2.61 * (1 + 0.12 * Te / pa0 ** 0.41) ** (-1.51))
+        alpha_n, alpha_T, beta_T = 1, 1, 1  # plasma peaking parameters
+        K = ((alpha_n + 3.87 * alpha_T + 1.46) ** (-0.79)
+             * (1.98 + alpha_T) ** 1.36 * beta_T ** 2.14
+             * (beta_T ** 1.53 + 1.87 * alpha_T - 0.16) ** (-1.33))
+        A = R / a
+        G = 0.93 * (1 + 0.85 * np.exp(-0.82 * A))
+        geom_factor = (1 - r) ** 0.5 * R * a ** 1.38 * kappa ** 0.79 * G * K
+        toroid_volume = 2 * np.pi ** 2 * a ** 2 * R  # [m^3]
+        return cyclotron_power * geom_factor / toroid_volume
+    else:
+        raise ValueError('invalid version:', version)
+
+
+def get_cyclotron_radiation_loss_envelope(ne, Te, B, **kwargs):
+    """
+    return the min/max values of the cyclotron radiation for different versions
+    """
+    # versions = ['Stacey', 'Kukushkin', 'Trubnikov', 'Wiedemann']
+    versions = ['Kukushkin', 'Trubnikov', 'Wiedemann']
+    # versions = ['Trubnikov', 'Wiedemann']
+
+    P_list = []
+    for version in versions:
+        P_curr = get_cyclotron_radiation_loss(ne, Te, B, version=version, **kwargs)
+        P_list += [P_curr]
+
+    P_mat = np.array(P_list)
+    P_min = np.nanmin(P_mat, axis=0)
+    P_max = np.nanmax(P_mat, axis=0)
+    return P_min, P_max
 
 
 def get_debye_length(n, Te):

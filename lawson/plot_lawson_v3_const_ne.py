@@ -43,14 +43,17 @@ for ip, process in enumerate(process_list):
     ions_list, Zi_list, ni_array, ni = set_ion_densities_quasi_neutral(process, ne, Ti_keV, sigma_v_dict)
 
     ## calculate fusion power
-    P_fus_tot, P_fus_charged_tot = get_fusion_power_multiple_ions(ni_array, Ti_keV, ions_list, sigma_v_dict)
+    P_fus_tot, P_fus_charged_tot, reaction_rate_tot = get_fusion_power_multiple_ions(ni_array, Ti_keV, ions_list,
+                                                                                     sigma_v_dict)
 
+    Te_over_Ti_list = [1]
+    # Te_over_Ti_list = [0.1]
     # Te_over_Ti_list = [1, 0.1]
     # Te_over_Ti_list = [1, 0.01]
     # Te_over_Ti_list = [1, 0.1, 0.01]
     # Te_over_Ti_list = [1, 0.3, 0.1]
     # Te_over_Ti_list = [1, 0.5, 0.3]
-    Te_over_Ti_list = [1, 0.4, 0.1]
+    # Te_over_Ti_list = [1, 0.4, 0.1]
     linestyle_list = ['-', '--', ':']
 
     for ind_Te, Te_over_Ti in enumerate(Te_over_Ti_list):
@@ -72,7 +75,8 @@ for ip, process in enumerate(process_list):
 
         Te_keV = Te_over_Ti * Ti_keV
         P_brem = get_brem_radiation_loss_relativistic(ni_array, Zi_list, Te_keV, use_relativistic_correction=False)
-        P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B)
+        # P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Stacey')
+        P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Wiedemann')
 
         # include_P_cyc = False
         include_P_cyc = True
@@ -107,10 +111,52 @@ for ip, process in enumerate(process_list):
         const_Q_fuel = np.inf
         # const_Q_fuel = 100
         # const_Q_fuel = 1
+
         tau_for_const_Q_fuel = E0 / (P_fus_tot / const_Q_fuel + P_fus_charged_tot - P_rad)
+        # # TODO: mod version without energy double counting
+        # f_self = 0.9
+        # tau_for_const_Q_fuel = E0 / ((P_fus_tot - f_self * P_fus_charged_tot) / const_Q_fuel + f_self * P_fus_charged_tot - P_rad)
+
+        # TODO: testing iterative solution
+        # The solution of dn/dt=-n^2*R and the solution is n(t)=n0/(1+R*n0*t), fuel depletion as reaction progresses.
+        # The time integral of P_fus~n^2 is integral(P_fus)=n0^2*t/(1+R*n0*t).
+        # In the original version where we assumme P_fus is constantin time E_fus=P_fus*t,
+        # so the normalization for the non-constant case should be 1/(1+R*n0*t).
+        # Note that in ihe current implementation R=reaction_rate_tot/ni^2.
+        num_iters_tau = 50
+        # print('tau ini =', tau_for_const_Q_fuel[1200])
+        tau_for_const_Q_fuel_mod = tau_for_const_Q_fuel
+        for i in range(num_iters_tau):
+            # print(i)
+            norm_factor_n2 = 1 / (1 + reaction_rate_tot / ni * tau_for_const_Q_fuel_mod)
+            P_fus_tot_mod = P_fus_tot * norm_factor_n2
+            P_fus_charged_tot_mod = P_fus_charged_tot * norm_factor_n2
+            P_brem_mod = P_brem * norm_factor_n2
+            if include_P_cyc:
+                norm_factor_n05 = 2 / (reaction_rate_tot / ni * tau_for_const_Q_fuel_mod) * (
+                            (1 + reaction_rate_tot / ni * tau_for_const_Q_fuel_mod) ** 0.5 - 1)
+                # norm_factor_n1 = 1 / (reaction_rate_tot / ni * tau_for_const_Q_fuel_mod) * np.log(1 + reaction_rate_tot / ni * tau_for_const_Q_fuel_mod)
+                # P_cyc_mod = P_cyc
+                P_cyc_mod = P_cyc * norm_factor_n05
+                # P_cyc_mod = P_cyc * norm_factor_n1
+                # P_cyc_mod = P_cyc * norm_factor_n2
+                P_rad_mod = P_brem_mod + P_cyc_mod
+            else:
+                P_rad_mod = P_brem_mod
+            tau_for_const_Q_fuel_mod = E0 / (P_fus_tot_mod / const_Q_fuel + P_fus_charged_tot_mod - P_rad_mod)
+            # # TODO: mod version without energy double counting
+            # tau_for_const_Q_fuel_mod = E0 / ((P_fus_tot_mod - f_self * P_fus_charged_tot_mod)/ const_Q_fuel + f_self * P_fus_charged_tot_mod - P_rad_mod)
+
+        # TODO: clean the side lobes of solutions for tau_mod
+
         p_tau = p * tau_for_const_Q_fuel
         p_tau[p_tau < 0] = np.nan
         p_tau_keV = p_tau / (1e3 * e)
+
+        # TODO: testing
+        p_tau_mod = p * tau_for_const_Q_fuel_mod
+        p_tau_mod[p_tau_mod < 0] = np.nan
+        p_tau_mod_keV = p_tau_mod / (1e3 * e)
 
         ### calculate and plot plasma beta
         mu0 = define_vacuum_permeability()
@@ -124,10 +170,15 @@ for ip, process in enumerate(process_list):
             ind_min_p_tau = np.nanargmin(p_tau_keV)
             T_min_p_tau = Ti_keV[ind_min_p_tau]
             print('      T_min_p_tau=', T_min_p_tau, '[keV]')
-            print('      p_tau_keV=', p_tau_keV[ind_min_p_tau], '[m^-3 keV s]')
+            # print('      p_tau_keV=', p_tau_keV[ind_min_p_tau], '[m^-3 keV s]')
             print('      plasma_beta @opt=', plasma_beta[ind_min_p_tau])
             print('      P_fus_tot @opt=', P_fus_tot[ind_min_p_tau] / 1e6, '[MW/m^3]')
-            print('      tau @opt=', tau_for_const_Q_fuel[ind_min_p_tau], '[s]')
+            print('      tau confinement @opt=', tau_for_const_Q_fuel[ind_min_p_tau], '[s]')
+            print('      tau confinement mod @opt=', tau_for_const_Q_fuel_mod[ind_min_p_tau], '[s]')
+            T = 0.1 * ni[ind_min_p_tau] / reaction_rate_tot[ind_min_p_tau]
+            print('      T(10% fuel depletion) @opt=', T, '[s]')
+            print('      T/tau=', T / tau_for_const_Q_fuel[ind_min_p_tau])
+            print('      T/tau_mod=', T / tau_for_const_Q_fuel_mod[ind_min_p_tau])
 
             plt.figure(2)
             plt.scatter(Ti_keV[ind_min_p_tau], p_tau_keV[ind_min_p_tau], color=color)
@@ -137,6 +188,14 @@ for ip, process in enumerate(process_list):
                  color=color,
                  linestyle=linestyle_list[ind_Te],
                  label=label)
+
+        # TODO: testing
+        plt.plot(Ti_keV, p_tau_mod_keV,
+                 color=color,
+                 linestyle=linestyle_list[ind_Te],
+                 # linestyle='--',
+                 alpha=0.5,
+                 )
 
         plt.figure(3)
         plt.plot(Ti_keV, plasma_beta,
