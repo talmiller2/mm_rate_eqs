@@ -8,7 +8,8 @@ pwd = os.getcwd()
 rate_eqs_script = get_script_rate_eqs_slave()
 
 main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/'
-main_folder += 'set57_MMM_ni_1e21_Ti_10keV_constmfp'
+# main_folder += 'set57_MMM_ni_1e21_Ti_10keV_constmfp'
+main_folder += 'set58_MMM_ni_1e21_Ti_10keV_constmfp_trfix'
 
 # gas_name = 'deuterium'
 gas_name = 'tritium'

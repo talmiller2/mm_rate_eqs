@@ -260,9 +260,9 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         Z = np.log10(flux_mat / flux_single_naive)
         Z = Z.T
 
-        # vmin, vmax = None, None
+        vmin, vmax = None, None
         # vmin, vmax = 0.5, 2.2
-        vmin, vmax = -2.7, -1.5  # for N=50
+        # vmin, vmax = -2.7, -1.5  # for N=50
         # vmin, vmax = -3.3, -1.5 # for N=80
         c = ax.pcolormesh(X, Y, Z, vmin=vmin, vmax=vmax, cmap=cmap)
         fig.colorbar(c, ax=ax)
@@ -281,6 +281,7 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         # if RF_type == 'electric_transverse': file_name += '_REF'
         # else: file_name += '_RMF'
         # if induced_fields_factor < 1.0: file_name += '_iff' + str(induced_fields_factor)
+        # # file_name += '_free-color-range'
         # fig.savefig(fig_save_dir + file_name + '.pdf', format='pdf', dpi=600)
 
         #############################

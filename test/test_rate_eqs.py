@@ -28,7 +28,7 @@ settings['assume_constant_temperature'] = True
 
 # settings['ion_scattering_rate_factor'] = 1e2
 # settings['ion_scattering_rate_factor'] = 2e3
-# settings['ion_scattering_rate_factor'] = 1800
+settings['ion_scattering_rate_factor'] = 1800
 
 settings['cell_size'] = 1
 # settings['cell_size'] = 3
@@ -74,14 +74,14 @@ settings['Te_0'] = 10 * 1e3  # eV
 settings['transmission_factor'] = 2
 # settings['transmission_factor'] = 1
 
-settings['U0'] = 0
+# settings['U0'] = 0
 # settings['U0'] = 0.01
 # settings['U0'] = 0.02
 # settings['U0'] = 0.05
 # settings['U0'] = 0.1
 # settings['U0'] = 0.2
 # settings['U0'] = 0.3
-# settings['U0'] = 0.5
+settings['U0'] = 0.5
 # settings['U0'] = 0.6
 # settings['U0'] = 0.8
 # settings['U0'] = 1.0
@@ -133,10 +133,10 @@ settings['right_boundary_condition'] = 'none'
 settings['transition_type'] = 'none'
 # settings['transition_type'] = 'smooth_transition_to_free_flow'
 
-# settings['energy_conservation_scheme'] = 'none'
-# settings['energy_conservation_scheme'] = 'none'
+settings['energy_conservation_scheme'] = 'none'
 # settings['energy_conservation_scheme'] = 'simple'
 # settings['energy_conservation_scheme'] = 'detailed'
+# settings['energy_conservation_scheme'] = 'MMM'
 
 # settings['dt_status'] = 1e-5
 # settings['dt_status'] = 1e-4

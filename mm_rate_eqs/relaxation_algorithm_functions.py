@@ -43,10 +43,10 @@ def find_rate_equations_steady_state(settings):
         state['mean_free_path'] = calculate_mean_free_path(state['n'], state['Ti'], state['Te'], settings, state=state,
                                                            species='ions')
         state['mirror_cell_sizes'] = get_mirror_cell_sizes(state['n'], state['Ti'], state['Te'], settings, state=state)
+        state['U'] = get_mmm_velocity(state, settings)
         state['v_col'], state['flux_E'] = get_collective_velocity(state, settings)
         state['f_above'], state['f_below'] = get_transition_filters(state['n'], settings)  # transition filters
         state['v_R'], state['v_L'] = get_transmission_velocities(state, settings)
-        state['U'] = get_mmm_velocity(state, settings)
         state['alpha_tR'], state['alpha_tL'], state['alpha_c'] = define_loss_cone_fractions(state, settings)
         state['dn_c_dt'], state['dn_tL_dt'], state['dn_tR_dt'] = get_density_time_derivatives(state, settings)
 

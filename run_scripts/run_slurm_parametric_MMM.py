@@ -16,7 +16,8 @@ n0 = 1e21  # m^-3
 Ti = 10 * 1e3  # eV
 
 main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/'
-main_folder += 'set57_MMM_ni_1e21_Ti_10keV_constmfp'
+# main_folder += 'set57_MMM_ni_1e21_Ti_10keV_constmfp'
+main_folder += 'set58_MMM_ni_1e21_Ti_10keV_constmfp_trfix'
 
 slurm_kwargs = {}
 slurm_kwargs['partition'] = 'core'
@@ -79,6 +80,7 @@ for num_cells in num_cells_list:
                     settings['ion_scattering_rate_factor'] = 1800 * scat_factor
                     settings['scat_factor_right'] = scat_asym_factor
                     settings['scat_factor_left'] = 1 / scat_asym_factor
+                    settings['energy_conservation_scheme'] = 'MMM'
 
                     # settings['flux_normalized_termination_cutoff'] = 0.05
                     # settings['flux_normalized_termination_cutoff'] = 1e-2

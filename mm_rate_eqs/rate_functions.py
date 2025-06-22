@@ -127,6 +127,12 @@ def get_collective_velocity(state, settings):
                     v_col[k] = np.real(real_root)
                     p = [coef_p_3, coef_p_2, coef_p_1, coef_p_0]
                     flux_E[k] = np.polyval(p, v_col[k])
+
+    elif settings['energy_conservation_scheme'] == 'MMM':
+        # collective velocity is the MMM velocity
+        v_col = -state['U']  # U define positive to the left, and v_col to the right
+        flux_E = v_th * (n_tR - n_tL) * kB_eV * Ti  # copied from "simple"
+
     else:
         raise TypeError('invalid energy_conservation_scheme = ' + settings['energy_conservation_scheme'])
 

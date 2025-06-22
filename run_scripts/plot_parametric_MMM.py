@@ -6,8 +6,9 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 
 # plt.rcParams.update({'font.size': 16})
-# plt.rcParams.update({'font.size': 14})
-plt.rcParams.update({'font.size': 10})
+plt.rcParams.update({'font.size': 14})
+# plt.rcParams.update({'font.size': 10})
+# plt.rcParams.update({'font.size': 18})
 # plt.rcParams.update({'font.size': 12})
 
 import numpy as np
@@ -29,7 +30,8 @@ num_cells = 50
 # linewidth = 1
 linewidth = 2
 
-axes_label_size = 12
+# axes_label_size = 12
+axes_label_size = 18
 title_fontsize = 12
 
 # cmap = 'viridis'
