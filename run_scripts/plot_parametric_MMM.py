@@ -17,14 +17,15 @@ from mm_rate_eqs.relaxation_algorithm_functions import load_simulation
 from mm_rate_eqs.fusion_functions import get_lawson_parameters, get_lawson_criterion_piel
 from mm_rate_eqs.plot_functions import update_format_coord
 
-plt.close('all')
+# plt.close('all')
 
 main_dir = '/Users/talmiller/Downloads/mm_rate_eqs//runs/slurm_runs/'
-main_dir += 'set57_MMM_ni_1e21_Ti_10keV_constmfp'
+# main_dir += 'set57_MMM_ni_1e21_Ti_10keV_constmfp'
+main_dir += 'set58_MMM_ni_1e21_Ti_10keV_constmfp_trfix'
 
-# num_cells = 10
+num_cells = 10
 # num_cells = 30
-num_cells = 50
+# num_cells = 50
 # num_cells = 80
 
 # linewidth = 1
@@ -43,15 +44,16 @@ cmap = 'coolwarm'
 gas_name = 'tritium'
 
 # num_cells_list = [10, 30, 50, 80]
-num_cells_list = [50]
+num_cells_list = [10]
+# num_cells_list = [50]
 
 # scat_factor_list = [0.1, 1]
-# # scat_factor_list = [0.1]
+# scat_factor_list = [0.1]
 scat_factor_list = [1]
 
-scat_asym_list = [0.5, 1, 2]
+# scat_asym_list = [0.5, 1, 2]
 # scat_asym_list = [0.5]
-# scat_asym_list = [1]
+scat_asym_list = [1]
 # scat_asym_list = [2]
 
 

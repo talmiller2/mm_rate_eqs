@@ -78,8 +78,8 @@ for ip, process in enumerate(process_list):
         # P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Stacey')
         P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Wiedemann')
 
-        # include_P_cyc = False
-        include_P_cyc = True
+        include_P_cyc = False
+        # include_P_cyc = True
 
         if include_P_cyc:
             P_rad = P_brem + P_cyc
