@@ -84,8 +84,8 @@ def plot_resonance_lines(ax, beta_loop_list, Rm, gas_name='D'):
 
 # num_cells = 10
 # num_cells = 30
-num_cells = 50
-# num_cells = 80
+# num_cells = 50
+num_cells = 80
 
 # linewidth = 1
 linewidth = 2
@@ -98,8 +98,11 @@ title_fontsize = 12
 # cmap = 'inferno'
 cmap = 'coolwarm'
 
-plot_power_estimate = False
-# plot_power_estimate = True
+# plot_power_estimate = False
+plot_power_estimate = True
+
+save_figures = False
+# save_figures = True
 
 gas_name_list = ['deuterium', 'tritium']
 # gas_name_list = ['tritium']
@@ -114,10 +117,10 @@ with_kr_correction_list = []
 # induced_fields_factor_list += [1]
 # with_kr_correction_list += [True]
 
-RF_type_list += ['electric_transverse']
-RF_amplitude_list += [50]  # kV/m
-induced_fields_factor_list += [1]
-with_kr_correction_list += [True]
+# RF_type_list += ['electric_transverse']
+# RF_amplitude_list += [50]  # kV/m
+# induced_fields_factor_list += [1]
+# with_kr_correction_list += [True]
 
 # RF_type_list += ['magnetic_transverse']
 # RF_amplitude_list += [0.02]  # T
@@ -134,26 +137,28 @@ RF_amplitude_list += [0.04]  # T
 induced_fields_factor_list += [1]
 with_kr_correction_list += [True]
 
-RF_type_list += ['magnetic_transverse']
-RF_amplitude_list += [0.04]  # T
-induced_fields_factor_list += [0]
-with_kr_correction_list += [True]
+# RF_type_list += ['magnetic_transverse']
+# RF_amplitude_list += [0.04]  # T
+# induced_fields_factor_list += [0]
+# with_kr_correction_list += [True]
 
 for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         in zip(RF_type_list, RF_amplitude_list, induced_fields_factor_list, with_kr_correction_list):
 
+    # if plot_power_estimate:
+    #     fig, axes = plt.subplots(2, 2, figsize=(12, 6))
+    # else:
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5))
     if plot_power_estimate:
-        fig, axes = plt.subplots(2, 2, figsize=(12, 6))
-    else:
-        fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+        fig2, axes2 = plt.subplots(1, 2, figsize=(12, 5))
 
     for ind_gas, gas_name in enumerate(gas_name_list):
         # for gas_name in gas_name_list:
 
-        if plot_power_estimate:
-            ax = axes[0, ind_gas]
-        else:
-            ax = axes[ind_gas]
+        # if plot_power_estimate:
+        #     ax = axes[0, ind_gas]
+        # else:
+        ax = axes[ind_gas]
 
         if gas_name == 'deuterium':
             gas_name_short = 'D'
@@ -275,15 +280,6 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         fig.set_layout_engine(layout='tight')
         update_format_coord(X, Y, Z, ax=ax)
 
-        # ### saving figures
-        # fig_save_dir = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/paper_2025/pics/'
-        # file_name = 'compiled_flux'
-        # if RF_type == 'electric_transverse': file_name += '_REF'
-        # else: file_name += '_RMF'
-        # if induced_fields_factor < 1.0: file_name += '_iff' + str(induced_fields_factor)
-        # # file_name += '_free-color-range'
-        # fig.savefig(fig_save_dir + file_name + '.pdf', format='pdf', dpi=600)
-
         #############################
         #############################
         if plot_power_estimate:
@@ -342,6 +338,8 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
                     # pop_single_particle = 'C'
                     pop_single_particle = 'L'  # because of mistake in mixing L-C in the single particle compilation
                 E_ratio = single_particle_mat_dict['E_ratio_' + pop_single_particle]
+                # if np.any(np.isnan(E_ratio)):
+                #     1 / 0
 
                 power_W_dict[pop] = 0
 
@@ -349,14 +347,18 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
                 for ind_cell in range(mat_dict['n'].shape[2]):
                     # for ind_cell in [0]:
                     n_curr = mat_dict['n_' + pop][:, :, ind_cell]
+                    # if np.any(n_curr < 0): 1/0
                     power_per_particle = E_ini_per_particle * (E_ratio - 1) / settings_single_particle[
                         't_max']  # [Watt=Joule/s]
+                    # power_per_particle[power_per_particle < 0] = 0 # negative values must be numeric error
+                    # if np.any(power_per_particle < 0): 1/0
                     power_W_dict[pop] += cell_volume * n_curr * power_per_particle
+                    # if np.any(np.isnan(cell_volume * n_curr * power_per_particle)): 1/0
+                    # if np.any(cell_volume * n_curr * power_per_particle < 0): 1/0
 
                 power_total_W += power_W_dict[pop]
 
             power_total_MW = power_total_W / 1e6
-            Z = power_total_MW
             # title = 'Power [MW]'
             # title += ', ' + RF_type_short + '=' + RF_amplitude_suffix
             # title += ', iff=' + str(induced_fields_factor)
@@ -365,19 +367,42 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
             # title_power = 'Power [MW]'
             # title_power = 'Power [MW] (' + gas_name_short + ')'
             title_power = '$\log_{10}$ (Power [MW]) (' + gas_name_short + ')'
-            ax = axes[1, ind_gas]
+            # title_power = 'Power [$\log_{10}$ MW] (' + gas_name_short + ')'
+            # title_power = '$E_f / E_i$ (' + gas_name_short + ')'
+            # ax = axes[1, ind_gas]
+            ax = axes2[ind_gas]
             Z = power_total_MW
+            # Z = single_particle_mat_dict['E_ratio']
+            # Z = single_particle_mat_dict['E_ratio_C']
             Z = np.log10(Z)
             Z = Z.T
             vmin, vmax = None, None
             # vmin, vmax = 0, 1000 # for N=80
             c = ax.pcolormesh(X, Y, Z, vmin=vmin, vmax=vmax, cmap=cmap)
+            plot_resonance_lines(ax, beta_loop_list, Rm, gas_name=gas_name_short)
             ax.set_xlabel(x_label, fontsize=axes_label_size)
             ax.set_ylabel(y_label, fontsize=axes_label_size)
             # ax.set_title(title, fontsize=title_fontsize)
             # ax.set_title(gas_name_short, fontsize=title_fontsize)
             ax.set_title(title_power, fontsize=title_fontsize)
-            # fig.suptitle(title, fontsize=title_fontsize)
-            fig.colorbar(c, ax=ax)
-            fig.set_layout_engine(layout='tight')
+            fig2.suptitle(suptitle, fontsize=title_fontsize)
+            fig2.colorbar(c, ax=ax)
+            fig2.set_layout_engine(layout='tight')
             update_format_coord(X, Y, Z, ax=ax)
+
+        ### saving figures
+        if save_figures:
+            fig_save_dir = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/paper_2025/pics/'
+            file_name = 'compiled_flux'
+            file_suffix = ''
+            if RF_type == 'electric_transverse':
+                file_suffix += '_REF'
+            else:
+                file_suffix += '_RMF'
+            if induced_fields_factor < 1.0: file_suffix += '_iff' + str(induced_fields_factor)
+            file_suffix += '_N' + str(num_cells)
+            fig.savefig(fig_save_dir + file_name + file_suffix + '.pdf', format='pdf', dpi=600)
+
+            if plot_power_estimate:
+                file_name = 'compiled_power'
+                fig2.savefig(fig_save_dir + file_name + file_suffix + '.pdf', format='pdf', dpi=600)
