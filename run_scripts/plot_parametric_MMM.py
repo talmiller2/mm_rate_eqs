@@ -5,34 +5,23 @@ from scipy.io import savemat, loadmat
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
-# plt.rcParams.update({'font.size': 16})
-plt.rcParams.update({'font.size': 14})
-# plt.rcParams.update({'font.size': 10})
-# plt.rcParams.update({'font.size': 18})
-# plt.rcParams.update({'font.size': 12})
-
 import numpy as np
 
 from mm_rate_eqs.relaxation_algorithm_functions import load_simulation
 from mm_rate_eqs.fusion_functions import get_lawson_parameters, get_lawson_criterion_piel
 from mm_rate_eqs.plot_functions import update_format_coord
 
-# plt.close('all')
+plt.close('all')
 
 main_dir = '/Users/talmiller/Downloads/mm_rate_eqs//runs/slurm_runs/'
-# main_dir += 'set57_MMM_ni_1e21_Ti_10keV_constmfp'
-main_dir += 'set58_MMM_ni_1e21_Ti_10keV_constmfp_trfix'
-
-num_cells = 10
-# num_cells = 30
-# num_cells = 50
-# num_cells = 80
+main_dir += 'set57_MMM_ni_1e21_Ti_10keV_constmfp'
+# main_dir += 'set58_MMM_ni_1e21_Ti_10keV_constmfp_trfix'
 
 # linewidth = 1
 linewidth = 2
 
-# axes_label_size = 12
-axes_label_size = 18
+axes_label_size = 12
+# axes_label_size = 18
 title_fontsize = 12
 
 # cmap = 'viridis'
@@ -44,16 +33,18 @@ cmap = 'coolwarm'
 gas_name = 'tritium'
 
 # num_cells_list = [10, 30, 50, 80]
-num_cells_list = [10]
-# num_cells_list = [50]
+# num_cells_list = [10]
+# num_cells_list = [30]
+num_cells_list = [50]
 
 # scat_factor_list = [0.1, 1]
 # scat_factor_list = [0.1]
 scat_factor_list = [1]
 
 # scat_asym_list = [0.5, 1, 2]
+scat_asym_list = [0.5, 1]
 # scat_asym_list = [0.5]
-scat_asym_list = [1]
+# scat_asym_list = [1]
 # scat_asym_list = [2]
 
 
@@ -146,8 +137,10 @@ for num_cells in num_cells_list:
             # ax2.legend()
 
             # ### saving figures
-            # fig_save_dir = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/paper_2025/pics/'
+            # fig_save_dir = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/paper_2026/pics/'
             # file_name = 'MMM_flux_' + gas_name
             # file_name += '_scat_fac_' + str(scat_factor)
             # file_name += '_scat_asym_' + str(scat_asym_factor)
+            # file_name += '_N_' + str(num_cells)
+            # # file_name += '_novcol'
             # fig.savefig(fig_save_dir + file_name + '.pdf', format='pdf', dpi=600)
