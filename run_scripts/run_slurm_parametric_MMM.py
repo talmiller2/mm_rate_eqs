@@ -30,9 +30,12 @@ slurm_kwargs['cpus-per-task'] = 1
 # gas_name = 'deuterium'
 gas_name = 'tritium'
 
-num_cells_list = [10, 30, 50, 80]
-scat_factor_list = [0.1, 1]
-scat_asym_list = [0.5, 1, 2]
+# num_cells_list = [10, 30, 50, 80]
+num_cells_list = [20, 40, 60, 70]
+# scat_factor_list = [0.1, 1]
+# scat_asym_list = [0.5, 1, 2]
+scat_factor_list = [1]
+scat_asym_list = [1]
 Rm_list = np.round(np.linspace(1.1, 10, 21), 2)
 U_list = np.round(np.linspace(0, 1, 21), 2)
 

@@ -32,19 +32,19 @@ cmap = 'coolwarm'
 # gas_name = 'deuterium'
 gas_name = 'tritium'
 
-# num_cells_list = [10, 30, 50, 80]
+num_cells_list = [10, 30, 50, 80]
 # num_cells_list = [10]
 # num_cells_list = [30]
-num_cells_list = [50]
+# num_cells_list = [50]
 
 # scat_factor_list = [0.1, 1]
 # scat_factor_list = [0.1]
 scat_factor_list = [1]
 
 # scat_asym_list = [0.5, 1, 2]
-scat_asym_list = [0.5, 1]
+# scat_asym_list = [0.5, 1]
 # scat_asym_list = [0.5]
-# scat_asym_list = [1]
+scat_asym_list = [1]
 # scat_asym_list = [2]
 
 
@@ -142,5 +142,5 @@ for num_cells in num_cells_list:
             # file_name += '_scat_fac_' + str(scat_factor)
             # file_name += '_scat_asym_' + str(scat_asym_factor)
             # file_name += '_N_' + str(num_cells)
-            # # file_name += '_novcol'
+            # file_name += '_novcol'
             # fig.savefig(fig_save_dir + file_name + '.pdf', format='pdf', dpi=600)
