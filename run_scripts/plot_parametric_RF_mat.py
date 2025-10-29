@@ -34,13 +34,15 @@ main_dir = '/Users/talmiller/Downloads/mm_rate_eqs//runs/slurm_runs/'
 # main_dir += 'set50_MM_Rm_10_ni_1e20_Ti_10keV_withRMF_zeroRL_fluxeps1e-2'
 # main_dir += 'set54_MM_Rm_10_ni_1e21_Ti_10keV_smooth_fluxeps1e-3'
 # main_dir += 'set55_MM_Rm_10_ni_1e21_Ti_10keV_smooth_fluxeps1e-3'
-main_dir += 'set56_MM_Rm_10_ni_1e21_Ti_10keV_smooth_fluxeps1e-3'
+# main_dir += 'set56_MM_Rm_10_ni_1e21_Ti_10keV_smooth_fluxeps1e-3'
 # main_dir += 'set56_MM_Rm_10_ni_1e21_Ti_10keV_smooth_zeroRL_fluxeps1e-3'
+main_dir += '/set59_MMwithRF_Rm_5_ni_1e21_Ti_10keV_smooth/'
 
 # load single_particle compiled mat
 single_particle_dir = '/Users/talmiller/Downloads/single_particle/'
 # single_particle_dir = '/home/talm/code/single_particle/slurm_runs/'
-single_particle_dir += '/set56_B0_1T_l_1m_Post_Rm_10_intervals_D_T/'
+# single_particle_dir += '/set56_B0_1T_l_1m_Post_Rm_10_intervals_D_T/'
+single_particle_dir += '/set59_B0_1T_l_1m_Post_Rm_5_r0max_30cm/'
 
 # extract variables from saved single particle calcs
 settings_file = single_particle_dir + 'settings.pickle'
@@ -55,7 +57,7 @@ Rm = field_dict_single_particle['Rm']
 
 
 def plot_line_on_heatmap(ax, x_heatmap, y_line, color='k'):
-    ax.plot(x_heatmap, y_line, color=color, linestyle='--')
+    ax.plot(x_heatmap, y_line, color=color, linestyle='--', linewidth=2)
     return
 
 
@@ -84,8 +86,8 @@ def plot_resonance_lines(ax, beta_loop_list, Rm, gas_name='D'):
 
 # num_cells = 10
 # num_cells = 30
-# num_cells = 50
-num_cells = 80
+num_cells = 50
+# num_cells = 80
 
 # linewidth = 1
 linewidth = 2
@@ -117,10 +119,10 @@ with_kr_correction_list = []
 # induced_fields_factor_list += [1]
 # with_kr_correction_list += [True]
 
-# RF_type_list += ['electric_transverse']
-# RF_amplitude_list += [50]  # kV/m
-# induced_fields_factor_list += [1]
-# with_kr_correction_list += [True]
+RF_type_list += ['electric_transverse']
+RF_amplitude_list += [50]  # kV/m
+induced_fields_factor_list += [1]
+with_kr_correction_list += [True]
 
 # RF_type_list += ['magnetic_transverse']
 # RF_amplitude_list += [0.02]  # T
@@ -175,8 +177,9 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         time_step_tau_cyclotron_divisions = 50
         # time_step_tau_cyclotron_divisions = 100
         # sigma_r0 = 0
-        sigma_r0 = 0.05
+        # sigma_r0 = 0.05
         # sigma_r0 = 0.1
+        sigma_r0 = 0.3
         radial_distribution = 'uniform'
 
         # theta_type = 'sign_vz0'
@@ -265,9 +268,9 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         Z = np.log10(flux_mat / flux_single_naive)
         Z = Z.T
 
-        vmin, vmax = None, None
+        # vmin, vmax = None, None
         # vmin, vmax = 0.5, 2.2
-        # vmin, vmax = -2.7, -1.5  # for N=50
+        vmin, vmax = -3, -1  # for N=50
         # vmin, vmax = -3.3, -1.5 # for N=80
         c = ax.pcolormesh(X, Y, Z, vmin=vmin, vmax=vmax, cmap=cmap)
         fig.colorbar(c, ax=ax)
@@ -285,7 +288,8 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         if plot_power_estimate:
             ### take the density solution for each case, and calculate the power based on the E_ratio
             time_step_tau_cyclotron_divisions = 50
-            sigma_r0 = 0.05
+            # sigma_r0 = 0.05
+            # sigma_r0 = 0.3
             radial_distribution = 'uniform'
             theta_type = 'sign_vz'
             set_name = 'smooth_compiled_'
@@ -377,6 +381,7 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
             Z = np.log10(Z)
             Z = Z.T
             vmin, vmax = None, None
+            vmin, vmax = 5, 7  # for N=50
             # vmin, vmax = 0, 1000 # for N=80
             c = ax.pcolormesh(X, Y, Z, vmin=vmin, vmax=vmax, cmap=cmap)
             plot_resonance_lines(ax, beta_loop_list, Rm, gas_name=gas_name_short)
