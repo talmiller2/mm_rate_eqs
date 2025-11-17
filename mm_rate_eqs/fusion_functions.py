@@ -159,6 +159,7 @@ def update_ion_latex_name(name):
     """
     name = name.replace('He3', '$^3$He')
     name = name.replace('B11', '$^{11}$B')
+    name = name.replace('fully-catalyzed', 'cat')
     return name
 
 def get_E_reaction(reaction='D_T_to_n_alpha'):

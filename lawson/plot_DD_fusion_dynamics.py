@@ -14,6 +14,7 @@ e = define_electron_charge()
 MeV_to_J = e * 1e6
 
 Ti_keV = 50
+# Ti_keV = 15
 ni_0 = 1e21  # [m^-3]
 
 sigma_v_dict = load_sigma_v_fusion_files(Ti_keV)
@@ -46,8 +47,8 @@ E_fus_ch_pure = [0]
 # dt = 1e-3
 # tmax = 1
 dt = 0.01
-tmax = 10
-# tmax = 100
+# tmax = 10
+tmax = 100
 t = np.arange(0, tmax, dt)  # [s]
 
 for ind_t in range(1, len(t)):
@@ -111,6 +112,8 @@ plt.plot(t, n['He3'], label='He3', color='g')
 plt.xlabel('t [s]')
 plt.ylabel('n [$m^{-3}$]')
 plt.xlim([0, tmax])
+plt.ylim([ni_0 / 1e3, ni_0])
+plt.yscale('log')
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
@@ -137,7 +140,9 @@ plt.axhline(P_fus_ideal[0], label='catalyzed-DD ideal', color='k')
 plt.xlabel('t [s]')
 plt.ylabel('fusion power [$W/m^3$]')
 plt.suptitle('D-D pulse dynamics @ $T_i=$' + str(Ti_keV) + 'keV')
+# plt.suptitle('D-T pulse dynamics @ $T_i=$' + str(Ti_keV) + 'keV')
 plt.xlim([0, tmax])
+plt.yscale('log')
 plt.legend()
 plt.grid(True)
 plt.tight_layout()

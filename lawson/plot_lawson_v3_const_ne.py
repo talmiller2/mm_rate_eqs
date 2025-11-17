@@ -46,11 +46,11 @@ for ip, process in enumerate(process_list):
     P_fus_tot, P_fus_charged_tot, reaction_rate_tot = get_fusion_power_multiple_ions(ni_array, Ti_keV, ions_list,
                                                                                      sigma_v_dict)
 
-    Te_over_Ti_list = [1]
+    # Te_over_Ti_list = [1]
     # Te_over_Ti_list = [0.1]
     # Te_over_Ti_list = [1, 0.1]
     # Te_over_Ti_list = [1, 0.01]
-    # Te_over_Ti_list = [1, 0.1, 0.01]
+    Te_over_Ti_list = [1, 0.1, 0.01]
     # Te_over_Ti_list = [1, 0.3, 0.1]
     # Te_over_Ti_list = [1, 0.5, 0.3]
     # Te_over_Ti_list = [1, 0.4, 0.1]
@@ -78,8 +78,8 @@ for ip, process in enumerate(process_list):
         # P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Stacey')
         P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Wiedemann')
 
-        include_P_cyc = False
-        # include_P_cyc = True
+        # include_P_cyc = False
+        include_P_cyc = True
 
         if include_P_cyc:
             P_rad = P_brem + P_cyc
@@ -108,8 +108,8 @@ for ip, process in enumerate(process_list):
                  label=label)
 
         ### calculate and plot p*tau
-        const_Q_fuel = np.inf
-        # const_Q_fuel = 100
+        # const_Q_fuel = np.inf
+        const_Q_fuel = 100
         # const_Q_fuel = 1
 
         tau_for_const_Q_fuel = E0 / (P_fus_tot / const_Q_fuel + P_fus_charged_tot - P_rad)
@@ -120,7 +120,7 @@ for ip, process in enumerate(process_list):
         # TODO: testing iterative solution
         # The solution of dn/dt=-n^2*R and the solution is n(t)=n0/(1+R*n0*t), fuel depletion as reaction progresses.
         # The time integral of P_fus~n^2 is integral(P_fus)=n0^2*t/(1+R*n0*t).
-        # In the original version where we assumme P_fus is constantin time E_fus=P_fus*t,
+        # In the original version where we assume P_fus is constant in time E_fus=P_fus*t,
         # so the normalization for the non-constant case should be 1/(1+R*n0*t).
         # Note that in ihe current implementation R=reaction_rate_tot/ni^2.
         num_iters_tau = 50
@@ -148,7 +148,6 @@ for ip, process in enumerate(process_list):
             # tau_for_const_Q_fuel_mod = E0 / ((P_fus_tot_mod - f_self * P_fus_charged_tot_mod)/ const_Q_fuel + f_self * P_fus_charged_tot_mod - P_rad_mod)
 
         # TODO: clean the side lobes of solutions for tau_mod
-
         p_tau = p * tau_for_const_Q_fuel
         p_tau[p_tau < 0] = np.nan
         p_tau_keV = p_tau / (1e3 * e)
@@ -189,13 +188,13 @@ for ip, process in enumerate(process_list):
                  linestyle=linestyle_list[ind_Te],
                  label=label)
 
-        # TODO: testing
-        plt.plot(Ti_keV, p_tau_mod_keV,
-                 color=color,
-                 linestyle=linestyle_list[ind_Te],
-                 # linestyle='--',
-                 alpha=0.5,
-                 )
+        # # TODO: testing
+        # plt.plot(Ti_keV, p_tau_mod_keV,
+        #          color=color,
+        #          # linestyle=linestyle_list[ind_Te],
+        #          linestyle='--',
+        #          alpha=0.5,
+        #          )
 
         plt.figure(3)
         plt.plot(Ti_keV, plasma_beta,

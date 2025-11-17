@@ -31,17 +31,20 @@ color_list = ['b', 'g', 'r', 'orange', 'k', 'k', 'k']
 
 # split_to_subplots = False
 split_to_subplots = True
+# inds_process_to_subplot = [1, 2, 3, 4, 4]
+inds_process_to_subplot = [1, 2, 3, 3, 4]
 
 if split_to_subplots:
     # figsize = (12, 7)
-    figsize = (14, 8)
+    figsize = (14, 9)
     plt.figure(1, figsize=figsize)
     plt.figure(2, figsize=figsize)
     plt.figure(3, figsize=figsize)
     plt.figure(4, figsize=figsize)
     inds_subplots = [1, 2, 3, 4]
 else:
-    figsize = (8, 6)
+    # figsize = (8, 6)
+    figsize = (12, 8)
     plt.figure(1, figsize=figsize)
     plt.figure(2, figsize=figsize)
     plt.figure(3, figsize=figsize)
@@ -58,18 +61,21 @@ for ip, process in enumerate(process_list):
     # Te_over_Ti_list = [0.01]
     # Te_over_Ti_list = [1, 0.1]
     # Te_over_Ti_list = [1, 0.01]
-    Te_over_Ti_list = [1, 0.1, 0.01]
+    # Te_over_Ti_list = [1, 0.1, 0.01]
     # Te_over_Ti_list = [1, 0.3, 0.1]
-    # Te_over_Ti_list = [1, 0.4, 0.1]
+    Te_over_Ti_list = [1, 0.4, 0.1]
     linestyle_list = ['-', '--', ':']
+    hatch_list = ['////', '***', '...']
 
     for ind_Te, Te_over_Ti in enumerate(Te_over_Ti_list):
         print('   @@@ Te_over_Ti =', Te_over_Ti)
         # label = process + ' $T_e/T_i=$' + str(Te_over_Ti)
-        if ind_Te == 0:
-            label = update_ion_latex_name(process)
-        else:
-            label = None
+
+        # if ind_Te == 0:
+        #     label = update_ion_latex_name(process)
+        # else:
+        #     label = None
+        label = update_ion_latex_name(process) + ', $T_e/T_i=' + str(Te_over_Ti) + '$'
 
         Te_keV = Te_over_Ti * Ti_keV
 
@@ -80,8 +86,8 @@ for ip, process in enumerate(process_list):
         ## rescale densities to get constant plasma_beta
         # plasma_beta_target = 0.01
         # plasma_beta_target = 0.05
-        plasma_beta_target = 0.1
-        # plasma_beta_target = 0.5
+        # plasma_beta_target = 0.1
+        plasma_beta_target = 0.5
         # plasma_beta_target = 0.9
         # B = 0.0001  # [T]
         # B = 1  # [T]
@@ -104,7 +110,7 @@ for ip, process in enumerate(process_list):
         ## plot the density constrained by plasma beta
         plt.figure(4)
         if split_to_subplots:
-            plt.subplot(2, 2, min(ip + 1, 4))
+            plt.subplot(2, 2, inds_process_to_subplot[ip])
         plt.plot(Ti_keV, ne,
                  color=color,
                  linestyle=linestyle_list[ind_Te],
@@ -118,24 +124,14 @@ for ip, process in enumerate(process_list):
         P_brem = get_brem_radiation_loss_relativistic(ni_array, Zi_list, Te_keV, use_relativistic_correction=True)
         # P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Stacey')
         P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Wiedemann', r=0)
+        # P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Kukushkin', r=0)
 
-        # include_P_cyc = False
-        include_P_cyc = True
+        title_suffix = ''
 
-        if include_P_cyc:
-            P_rad = P_brem + P_cyc
-            title_suffix = ' (including $P_{cyc}$)'
-            # title_suffix = ''
-            file_suffix = '_wPcyc'
-        else:
-            P_rad = P_brem  # literature version without P_cyc
-            title_suffix = ' (neglecting $P_{cyc}$)'
-            file_suffix = '_woPcyc'
+        P_rad = P_brem  # literature version without P_cyc
+        P_rad_wcyc = P_brem + P_cyc
 
         ### calculate and plot Q_fuel
-        plt.figure(1)
-        if split_to_subplots:
-            plt.subplot(2, 2, min(ip + 1, 4))
 
         # ideal gas
         Ti_J = 1e3 * e * Ti_keV
@@ -148,10 +144,25 @@ for ip, process in enumerate(process_list):
         Q_fuel = P_fus_tot / (P_rad - P_fus_charged_tot + E0 / tau)
         Q_fuel[Q_fuel < 0] = np.nan
 
-        plt.plot(Ti_keV, Q_fuel,
-                 color=color,
-                 linestyle=linestyle_list[ind_Te],
-                 label=label)
+        Q_fuel_wcyc = P_fus_tot / (P_rad_wcyc - P_fus_charged_tot + E0 / tau)
+        Q_fuel_wcyc[Q_fuel_wcyc < 0] = np.nan
+
+        plt.figure(1)
+        if split_to_subplots:
+            plt.subplot(2, 2, inds_process_to_subplot[ip])
+        if not np.all(np.isnan(Q_fuel)):
+            plt.plot(Ti_keV, Q_fuel,
+                     color=color,
+                     linestyle=linestyle_list[ind_Te],
+                     label=label)
+            # plt.plot(Ti_keV, Q_fuel_wcyc,
+            #          color=color,
+            #          linestyle=linestyle_list[ind_Te],
+            #          )
+            plt.fill_between(Ti_keV, Q_fuel, Q_fuel_wcyc,
+                             color=color,
+                             hatch=hatch_list[ind_Te],
+                             alpha=0.3)
 
         ### calculate and plot p*tau
         const_Q_fuel = np.inf
@@ -162,10 +173,13 @@ for ip, process in enumerate(process_list):
         p_tau = p * tau_for_const_Q_fuel
         p_tau_keV = p_tau / (1e3 * e)
 
-        if np.all(np.isnan(p_tau_keV)):
-            # label = None
-            pass
-        else:
+        tau_for_const_Q_fuel_wcyc = E0 / (P_fus_tot / const_Q_fuel + P_fus_charged_tot - P_rad_wcyc)
+        tau_for_const_Q_fuel_wcyc[tau_for_const_Q_fuel_wcyc < 0] = np.nan
+        p_tau_wcyc = p * tau_for_const_Q_fuel_wcyc
+        p_tau_keV_wcyc = p_tau_wcyc / (1e3 * e)
+
+        # optimal point without cyc
+        if not np.all(np.isnan(p_tau_keV)):
             ind_min_p_tau = np.nanargmin(p_tau_keV)
             T_min_p_tau = Ti_keV[ind_min_p_tau]
 
@@ -173,6 +187,8 @@ for ip, process in enumerate(process_list):
             print('      p_tau_keV=', p_tau_keV[ind_min_p_tau], '[m^-3 keV s]')
             print('      ne @opt=', ne[ind_min_p_tau], '[m$^{-3}$]')
             print('      P_fus_tot @opt=', P_fus_tot[ind_min_p_tau] / 1e6, '[MW/m^3]')
+            # label += ', $P_{fus}$=' + '{:.1f}'.format(P_fus_tot[ind_min_p_tau] / 1e6) + '$[MW/m^3]$'
+            label += ', $P_{fus}$=' + '{:.1f}'.format(P_fus_tot[ind_min_p_tau] / 1e6)
             print('      tau @opt=', tau_for_const_Q_fuel[ind_min_p_tau], '[s]')
             T = 0.1 * ni[ind_min_p_tau] / reaction_rate_tot[ind_min_p_tau]
             print('      T(10% fuel depletion) @opt=', T, '[s]')
@@ -180,46 +196,86 @@ for ip, process in enumerate(process_list):
 
             plt.figure(2)
             if split_to_subplots:
-                plt.subplot(2, 2, min(ip + 1, 4))
+                plt.subplot(2, 2, inds_process_to_subplot[ip])
             plt.scatter(Ti_keV[ind_min_p_tau], p_tau_keV[ind_min_p_tau], color=color)
 
             plt.figure(3)
             if split_to_subplots:
-                plt.subplot(2, 2, min(ip + 1, 4))
+                plt.subplot(2, 2, inds_process_to_subplot[ip])
             plt.scatter(Ti_keV[ind_min_p_tau], tau_for_const_Q_fuel[ind_min_p_tau], color=color)
+
+        # optimal point with cyc
+        if not np.all(np.isnan(p_tau_keV_wcyc)):
+            ind_min_p_tau_wcyc = np.nanargmin(p_tau_keV_wcyc)
+            T_min_p_tau_wcyc = Ti_keV[ind_min_p_tau_wcyc]
+            # label += '/' + '{:.0f}'.format(P_fus_tot[ind_min_p_tau_wcyc] / 1e6) # the fusion power without/with cyc in [MW/m^3]
+
+            plt.figure(2)
+            if split_to_subplots:
+                plt.subplot(2, 2, inds_process_to_subplot[ip])
+            plt.scatter(Ti_keV[ind_min_p_tau_wcyc], p_tau_keV_wcyc[ind_min_p_tau_wcyc], color=color,
+                        facecolor='none')
+
+            plt.figure(3)
+            if split_to_subplots:
+                plt.subplot(2, 2, inds_process_to_subplot[ip])
+            plt.scatter(Ti_keV[ind_min_p_tau_wcyc], tau_for_const_Q_fuel_wcyc[ind_min_p_tau_wcyc], color=color,
+                        facecolor='none')
+
+        else:
+            label += '/NaN'  # no valid solution with cyc so indicate no power
 
         plt.figure(2)
         if split_to_subplots:
-            plt.subplot(2, 2, min(ip + 1, 4))
-        plt.plot(Ti_keV, p_tau_keV,
-                 color=color,
-                 linestyle=linestyle_list[ind_Te],
-                 label=label)
+            plt.subplot(2, 2, inds_process_to_subplot[ip])
+        if not np.all(np.isnan(p_tau_keV)):
+            plt.plot(Ti_keV, p_tau_keV,
+                     color=color,
+                     linestyle=linestyle_list[ind_Te],
+                     label=label)
+            # plt.plot(Ti_keV, p_tau_keV_wcyc,
+            #          color=color,
+            #          linestyle=linestyle_list[ind_Te])
+            plt.fill_between(Ti_keV, p_tau_keV, p_tau_keV_wcyc,
+                             color=color,
+                             hatch=hatch_list[ind_Te],
+                             alpha=0.3)
 
         plt.figure(3)
         if split_to_subplots:
-            plt.subplot(2, 2, min(ip + 1, 4))
-        plt.plot(Ti_keV, tau_for_const_Q_fuel,
-                 color=color,
-                 linestyle=linestyle_list[ind_Te],
-                 label=label)
+            plt.subplot(2, 2, inds_process_to_subplot[ip])
+        if not np.all(np.isnan(tau_for_const_Q_fuel)):
+            plt.plot(Ti_keV, tau_for_const_Q_fuel,
+                     color=color,
+                     linestyle=linestyle_list[ind_Te],
+                     label=label)
+            # plt.plot(Ti_keV, tau_for_const_Q_fuel_wcyc,
+            #          color=color,
+            #          linestyle=linestyle_list[ind_Te])
+            plt.fill_between(Ti_keV, tau_for_const_Q_fuel, tau_for_const_Q_fuel_wcyc,
+                             color=color,
+                             hatch=hatch_list[ind_Te],
+                             alpha=0.3,
+                             )
 
     # compare to 10% depletion time
     plt.figure(3)
     if split_to_subplots:
-        plt.subplot(2, 2, min(ip + 1, 4))
+        plt.subplot(2, 2, inds_process_to_subplot[ip])
     T_depletion10 = 0.1 * ni / reaction_rate_tot
     plt.plot(Ti_keV, T_depletion10,
              color=color,
-             # linestyle=':',
+             # linestyle='--',
              # label=label + ' $T_{10\%}$',
-             linewidth=5, alpha=0.5,
+             label=update_ion_latex_name(process) + ' 10%-depletion',
+             linewidth=3,
+             # alpha=0.5,
              )
 
 ## plot aesthetics
 plt.figure(1)
-title = '$B=$' + str(B) + '[T], $\\beta=$' + str(plasma_beta_target) + ', $\\tau=10^{' + str(
-    int(np.log10(tau))) + '}[s]$' + title_suffix
+title = 'Lawson Criterion:  $B=$' + str(B) + '[T], $\\beta=$' + str(plasma_beta_target)
+title += ', $\\tau=10^{' + str(int(np.log10(tau))) + '}[s]$' + title_suffix
 if split_to_subplots:
     plt.suptitle(title)
 else:
@@ -237,8 +293,9 @@ for i in inds_subplots:
 plt.tight_layout()
 
 plt.figure(2)
-title = '$B=$' + str(B) + '[T], $\\beta=$' + str(plasma_beta_target) + ', $Q_{fuel}=$' + str(
+title = 'Lawson Criterion:  $B=$' + str(B) + '[T], $\\beta=$' + str(plasma_beta_target) + ', $Q_{fuel}=$' + str(
     const_Q_fuel) + title_suffix
+title += ', $P_{fus}$ units $[MW/m^3]$'
 if split_to_subplots:
     plt.suptitle(title)
 else:
@@ -275,7 +332,7 @@ for i in inds_subplots:
 plt.tight_layout()
 
 plt.figure(4)
-title = '$B=$' + str(B) + '[T], $\\beta=$' + str(plasma_beta_target)
+title = 'Lawson Criterion: $B=$' + str(B) + '[T], $\\beta=$' + str(plasma_beta_target)
 if split_to_subplots:
     plt.suptitle(title)
 else:
@@ -293,12 +350,13 @@ for i in inds_subplots:
 plt.tight_layout()
 
 # ## save figs at higher res
-# figs_folder = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/lawson_plots/'
+figs_folder = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/lawson_plots/'
 # plt.figure(1)
 # plt.savefig(figs_folder + 'Q_fuel_at_const_beta' + file_suffix + '.pdf', format='pdf')
 # plt.figure(2)
 # plt.savefig(figs_folder + 'lawson_p_tau_at_const_beta' + file_suffix + '.pdf', format='pdf')
-# plt.figure(3)
+plt.figure(3)
+file_suffix = f'_B_{B}T_beta_{plasma_beta_target}'
 # plt.savefig(figs_folder + 'lawson_tau_at_const_beta' + file_suffix + '.pdf', format='pdf')
 # plt.figure(4)
 # plt.savefig(figs_folder + 'ne_at_const_beta' + '.pdf', format='pdf')
