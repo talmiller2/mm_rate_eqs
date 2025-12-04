@@ -2,7 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from scipy.interpolate import interp1d
 
-plt.rcParams['font.size'] = 12
+plt.rcParams['font.size'] = 14
 plt.close('all')
 
 from mm_rate_eqs.fusion_functions import get_sigma_v_fusion_sampled, get_reaction_label, get_E_reaction
@@ -32,7 +32,7 @@ for reaction in reactions:
 #     sigma_v_interped = interp_fun(Ti_keV)
 #     sigma_v_dict[reaction] = sigma_v_interped
 
-plt.figure(1, figsize=(7, 5))
+plt.figure(1, figsize=(8, 6))
 colors = ['b', 'g', 'k', 'grey', 'r']
 for reaction, reaction_label, color in zip(reactions, reaction_labels, colors):
     plt.plot(Ti_keV, sigma_v_dict[reaction], color=color, label=reaction_label, linewidth=2)
@@ -48,7 +48,7 @@ plt.legend()
 plt.grid(True)
 plt.tight_layout()
 
-plt.figure(2, figsize=(7, 5))
+plt.figure(2, figsize=(8, 6))
 for reaction, reaction_label, color in zip(reactions, reaction_labels, colors):
     E_fus = get_E_reaction(reaction)  # [MeV]
     plt.plot(Ti_keV, E_fus * sigma_v_dict[reaction], color=color, label=reaction_label, linewidth=2)
@@ -64,9 +64,9 @@ plt.legend()
 plt.grid(True)
 plt.tight_layout()
 
-## save figs at higher res
-figs_folder = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/lawson_plots/'
-plt.figure(1)
-plt.savefig(figs_folder + 'fusion_reactivities.pdf', format='pdf')
-plt.figure(2)
-plt.savefig(figs_folder + 'fusion_reactivities_times_energy.pdf', format='pdf')
+# ## save figs at higher res
+# figs_folder = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/lawson_plots/'
+# plt.figure(1)
+# plt.savefig(figs_folder + 'fusion_reactivities.pdf', format='pdf')
+# plt.figure(2)
+# plt.savefig(figs_folder + 'fusion_reactivities_times_energy.pdf', format='pdf')

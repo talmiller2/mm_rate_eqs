@@ -1,7 +1,8 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-plt.rcParams['font.size'] = 12
+# plt.rcParams['font.size'] = 12
+plt.rcParams['font.size'] = 14
 plt.close('all')
 
 from mm_rate_eqs.fusion_functions import load_sigma_v_fusion_files, get_E_reaction, get_E_charged, \
@@ -47,8 +48,8 @@ E_fus_ch_pure = [0]
 # dt = 1e-3
 # tmax = 1
 dt = 0.01
-# tmax = 10
-tmax = 100
+tmax = 10
+# tmax = 100
 t = np.arange(0, tmax, dt)  # [s]
 
 for ind_t in range(1, len(t)):
@@ -97,22 +98,29 @@ for ind_t in range(1, len(t)):
 
 for ion in ions:
     n[ion] = np.array(n[ion])
-
+    n[ion] /= ni_0
 # print('E_fus_tot =', E_fus_tot)
 # print('E_fus_charged_tot =', E_fus_charged_tot)
-
+ni_array_ideal /= ni_0
 
 # plt.figure(figsize=(8, 6))
-plt.figure(figsize=(12, 6))
+plt.figure(1, figsize=(12, 6))
 plt.subplot(1, 2, 1)
-plt.plot(t, n['D_pure'], label='D pure', color='b', linestyle='--')
+# plt.plot(t, n['D_pure'], label='D pure', color='b', linestyle='--')
 plt.plot(t, n['D'], label='D', color='b')
 plt.plot(t, n['T'], label='T', color='r')
 plt.plot(t, n['He3'], label='He3', color='g')
+
+plt.plot(t, ni_array_ideal[0] + 0 * t, label='D (ideal)', color='b', linestyle='--')
+plt.plot(t, ni_array_ideal[1] + 0 * t, label='T (ideal)', color='r', linestyle='--')
+plt.plot(t, ni_array_ideal[2] + 0 * t, label='He3 (ideal)', color='g', linestyle='--')
+
 plt.xlabel('t [s]')
-plt.ylabel('n [$m^{-3}$]')
+# plt.ylabel('n [$m^{-3}$]')
+plt.ylabel('$n / n_{i,0}$')
 plt.xlim([0, tmax])
-plt.ylim([ni_0 / 1e3, ni_0])
+# plt.ylim([ni_0 / 1e3, ni_0])
+plt.ylim([1e-3, 1])
 plt.yscale('log')
 plt.legend()
 plt.grid(True)
@@ -131,15 +139,16 @@ plt.tight_layout()
 # plt.figure(figsize=(8, 6))
 plt.subplot(1, 2, 2)
 plt.plot(t, P_fus_pure, label='pure-DD', color='b', linestyle='--')
-plt.plot(t, P_fus, label='catalyzed-DD', color='b')
+plt.plot(t, P_fus, label='cat-DD', color='b')
 # plt.plot(t, 0 * t + P_fus_ideal[0], label='ideal', color='b', linestyle=':')
-plt.axhline(P_fus_ideal[0], label='catalyzed-DD ideal', color='k')
+plt.axhline(P_fus_ideal[0], label='cat-DD (ideal)', color='k')
 # plt.plot(t, P_fus_ch, color='r')
 # plt.plot(t, P_fus_ch_pure, color='r', linestyle='--')
 # plt.plot(t, 0 * t + P_fus_ch_ideal[0], color='r', linestyle=':')
 plt.xlabel('t [s]')
 plt.ylabel('fusion power [$W/m^3$]')
-plt.suptitle('D-D pulse dynamics @ $T_i=$' + str(Ti_keV) + 'keV')
+# plt.suptitle('D-D pulse dynamics @ $T_i=$' + str(Ti_keV) + 'keV' + ', $n_{i,0}=$' + str(ni_0) + '$m^{-3}$')
+plt.suptitle('D-D pulse dynamics @ $T_i=$' + str(Ti_keV) + 'keV' + ', $n_{i,0}=10^{21}m^{-3}$')
 # plt.suptitle('D-T pulse dynamics @ $T_i=$' + str(Ti_keV) + 'keV')
 plt.xlim([0, tmax])
 plt.yscale('log')
@@ -147,11 +156,16 @@ plt.legend()
 plt.grid(True)
 plt.tight_layout()
 
-# plt.figure(figsize=(8, 6))
-# plt.plot(t, E_fus, label='catalyzed-DD', color='b')
+# plt.figure(2, figsize=(8, 6))
+# plt.plot(t, E_fus, label='cat-DD', color='b')
 # plt.plot(t, E_fus_pure, label='pure-DD', color='b', linestyle='--')
 # plt.xlabel('t [s]')
 # plt.ylabel('E [$J/m^3$]')
 # plt.legend()
 # plt.grid(True)
 # plt.tight_layout()
+
+# ## save figs at higher res
+figs_folder = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/lawson_plots/'
+plt.figure(1)
+# plt.savefig(figs_folder + '/DD_pulse_dynamics.pdf', format='pdf')

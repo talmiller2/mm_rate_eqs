@@ -78,8 +78,7 @@ def get_brem_radiation_loss_relativistic(ni_list, Zi_list, Te, use_relativistic_
 
 def get_cyclotron_radiation_loss(ne, Te, B, version='Stacey', a=1, R=2, kappa=1, r=0):
     """
-    Cyclotron/synchrotron radiation (source Stacey "Fusion Plasma Analysis", p. 231)
-    Majority self-absorbs so only 1e-2 of it escapes (source Wesson "Tokamaks" p. 230)
+    Cyclotron/synchrotron radiation power from different sources.
     input T in [keV], n in [m^-3] (mks), B in [T] (mks)
     output in [W/m^3]
     additional arguments:

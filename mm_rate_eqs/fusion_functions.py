@@ -306,7 +306,6 @@ def get_fusion_power_multiple_ions(ni_array, Ti_keV, ions_list, sigma_v_dict=Non
                 else:
                     reactions = []
 
-
                 for reaction in reactions:
                     sigma_v_curr = sigma_v_dict[reaction]
                     ni_1_curr = ni_array[ind_r_1, :]

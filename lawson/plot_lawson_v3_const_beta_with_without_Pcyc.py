@@ -10,6 +10,15 @@ from mm_rate_eqs.plasma_functions import get_brem_radiation_loss_relativistic, g
     define_electron_charge, get_brem_radiation_loss, define_boltzmann_constant
 from mm_rate_eqs.constants_functions import define_vacuum_permeability, define_factor_eV_to_K
 
+
+def power_to_string_MW(power_value_W):
+    power_value_MW = power_value_W / 1e6
+    if power_value_MW < 2:
+        # return '{:.1f}'.format(power_value_MW)
+        return f"{power_value_MW:.{1}g}"
+    else:
+        return str(int(power_value_MW))
+
 e = define_electron_charge()
 
 # Ti_keV = np.linspace(1, 1000, 1000)
@@ -85,15 +94,16 @@ for ip, process in enumerate(process_list):
 
         ## rescale densities to get constant plasma_beta
         # plasma_beta_target = 0.01
-        # plasma_beta_target = 0.05
+        plasma_beta_target = 0.05
         # plasma_beta_target = 0.1
-        plasma_beta_target = 0.5
+        # plasma_beta_target = 0.2
+        # plasma_beta_target = 0.5
         # plasma_beta_target = 0.9
         # B = 0.0001  # [T]
         # B = 1  # [T]
         # B = 5  # [T]
-        # B = 10  # [T]
-        B = 20  # [T]
+        B = 10  # [T]
+        # B = 20  # [T]
 
         # ideal gas
         Ti_J = 1e3 * e * Ti_keV
@@ -122,9 +132,12 @@ for ip, process in enumerate(process_list):
 
         ## calculate radiation losses
         P_brem = get_brem_radiation_loss_relativistic(ni_array, Zi_list, Te_keV, use_relativistic_correction=True)
-        # P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Stacey')
-        P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Wiedemann', r=0)
-        # P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Kukushkin', r=0)
+        # r = 0
+        r = 0.3
+        # P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Stacey', r=r)
+        P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Wiedemann', r=r)
+        # P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Trubnikov', r=r)
+        # P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Kukushkin', r=r)
 
         title_suffix = ''
 
@@ -166,9 +179,21 @@ for ip, process in enumerate(process_list):
 
         ### calculate and plot p*tau
         const_Q_fuel = np.inf
+        # const_Q_fuel = 1000
         # const_Q_fuel = 100
         # const_Q_fuel = 1
-        tau_for_const_Q_fuel = E0 / (P_fus_tot / const_Q_fuel + P_fus_charged_tot - P_rad)
+        # tau_for_const_Q_fuel = E0 / (P_fus_tot / const_Q_fuel + P_fus_charged_tot - P_rad)
+
+        # f_self = 1
+        # f_self = 0.9
+        # f_self = 0.8
+        if process == 'p-B11':
+            f_self = 0.9
+        else:
+            f_self = 1
+
+        tau_for_const_Q_fuel = E0 / (
+                    (P_fus_tot - f_self * P_fus_charged_tot) / const_Q_fuel - P_rad + f_self * P_fus_charged_tot)
         tau_for_const_Q_fuel[tau_for_const_Q_fuel < 0] = np.nan
         p_tau = p * tau_for_const_Q_fuel
         p_tau_keV = p_tau / (1e3 * e)
@@ -183,16 +208,24 @@ for ip, process in enumerate(process_list):
             ind_min_p_tau = np.nanargmin(p_tau_keV)
             T_min_p_tau = Ti_keV[ind_min_p_tau]
 
+            print('      f_self=', f_self)
             print('      T_min_p_tau=', T_min_p_tau, '[keV]')
             print('      p_tau_keV=', p_tau_keV[ind_min_p_tau], '[m^-3 keV s]')
             print('      ne @opt=', ne[ind_min_p_tau], '[m$^{-3}$]')
             print('      P_fus_tot @opt=', P_fus_tot[ind_min_p_tau] / 1e6, '[MW/m^3]')
             # label += ', $P_{fus}$=' + '{:.1f}'.format(P_fus_tot[ind_min_p_tau] / 1e6) + '$[MW/m^3]$'
-            label += ', $P_{fus}$=' + '{:.1f}'.format(P_fus_tot[ind_min_p_tau] / 1e6)
+            # label += ', $P_{fus}$=' + '{:.1f}'.format(P_fus_tot[ind_min_p_tau] / 1e6)
+            label += ', $P_{fus}$=' + power_to_string_MW(P_fus_tot[ind_min_p_tau])
+
             print('      tau @opt=', tau_for_const_Q_fuel[ind_min_p_tau], '[s]')
             T = 0.1 * ni[ind_min_p_tau] / reaction_rate_tot[ind_min_p_tau]
             print('      T(10% fuel depletion) @opt=', T, '[s]')
             print('      T/tau=', T / tau_for_const_Q_fuel[ind_min_p_tau])
+
+            P_net = P_fus_tot[ind_min_p_tau] - P_rad[ind_min_p_tau] - E0[ind_min_p_tau] / tau_for_const_Q_fuel[
+                ind_min_p_tau]
+            # label += ', $P_{net}$=' + '{:.1f}'.format(P_net / 1e6)
+            label += ', $P_{net}$=' + power_to_string_MW(P_net)
 
             plt.figure(2)
             if split_to_subplots:
@@ -209,6 +242,11 @@ for ip, process in enumerate(process_list):
             ind_min_p_tau_wcyc = np.nanargmin(p_tau_keV_wcyc)
             T_min_p_tau_wcyc = Ti_keV[ind_min_p_tau_wcyc]
             # label += '/' + '{:.0f}'.format(P_fus_tot[ind_min_p_tau_wcyc] / 1e6) # the fusion power without/with cyc in [MW/m^3]
+            P_net_wcyc = P_fus_tot[ind_min_p_tau_wcyc] - P_rad_wcyc[ind_min_p_tau_wcyc] - E0[ind_min_p_tau_wcyc] / \
+                         tau_for_const_Q_fuel_wcyc[ind_min_p_tau_wcyc]
+            # label += ', $P_{net}$=' + '{:.1f}'.format(P_net_wcyc / 1e6)
+            # label += '/' + '{:.1f}'.format(P_net_wcyc / 1e6)
+            # label += '/' + power_to_string_MW(P_net_wcyc)
 
             plt.figure(2)
             if split_to_subplots:
@@ -223,7 +261,8 @@ for ip, process in enumerate(process_list):
                         facecolor='none')
 
         else:
-            label += '/NaN'  # no valid solution with cyc so indicate no power
+            # label += '/NaN'  # no valid solution with cyc so indicate no power
+            label += ' [no sol with cyc]'  # no valid solution with cyc so indicate no power
 
         plt.figure(2)
         if split_to_subplots:
@@ -258,17 +297,22 @@ for ip, process in enumerate(process_list):
                              alpha=0.3,
                              )
 
+        if ind_Te == 0:
+            T_depletion10 = 0.1 * ni / reaction_rate_tot
+
     # compare to 10% depletion time
     plt.figure(3)
     if split_to_subplots:
         plt.subplot(2, 2, inds_process_to_subplot[ip])
-    T_depletion10 = 0.1 * ni / reaction_rate_tot
     plt.plot(Ti_keV, T_depletion10,
+             # color='m',
              color=color,
              # linestyle='--',
+             linestyle=':',
              # label=label + ' $T_{10\%}$',
-             label=update_ion_latex_name(process) + ' 10%-depletion',
-             linewidth=3,
+             label=update_ion_latex_name(process) + ' 10%-depletion time',
+             # linewidth=3,
+             linewidth=5,
              # alpha=0.5,
              )
 
@@ -295,7 +339,11 @@ plt.tight_layout()
 plt.figure(2)
 title = 'Lawson Criterion:  $B=$' + str(B) + '[T], $\\beta=$' + str(plasma_beta_target) + ', $Q_{fuel}=$' + str(
     const_Q_fuel) + title_suffix
-title += ', $P_{fus}$ units $[MW/m^3]$'
+# title += ', $f_{self}=$' + str(f_self)
+# title += ', $P_{fus}$ units $[MW/m^3]$'
+# title += ', $P_{net}$ units $[MW/m^3]$'
+# title += ', $P_{net}$ wo/w cyc units $[MW/m^3]$'
+title += ', power units $[MW/m^3]$'
 if split_to_subplots:
     plt.suptitle(title)
 else:
@@ -357,6 +405,7 @@ figs_folder = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/la
 # plt.savefig(figs_folder + 'lawson_p_tau_at_const_beta' + file_suffix + '.pdf', format='pdf')
 plt.figure(3)
 file_suffix = f'_B_{B}T_beta_{plasma_beta_target}'
+# file_suffix += '_partial'
 # plt.savefig(figs_folder + 'lawson_tau_at_const_beta' + file_suffix + '.pdf', format='pdf')
 # plt.figure(4)
 # plt.savefig(figs_folder + 'ne_at_const_beta' + '.pdf', format='pdf')
