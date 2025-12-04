@@ -24,7 +24,8 @@ main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/'
 # main_folder += 'set56_MM_Rm_10_ni_1e21_Ti_10keV_smooth_fluxeps1e-3'
 # main_folder += 'set56_MM_Rm_10_ni_1e21_Ti_10keV_smooth_zeroRL_fluxeps1e-3'
 # main_folder += 'set56_MM_Rm_10_ni_1e21_Ti_10keV_smooth_zeroRL_fluxeps1e-3'
-main_folder += '/set59_MMwithRF_Rm_5_ni_1e21_Ti_10keV_smooth/'
+# main_folder += '/set59_MMwithRF_Rm_5_ni_1e21_Ti_10keV_smooth/'
+main_folder += '/set61_MMwithRF_Rm_5_ni_1e21_Ti_10keV_smooth/'
 
 slurm_kwargs = {}
 slurm_kwargs['partition'] = 'core'
@@ -41,8 +42,9 @@ plasma_mode = 'isoT'
 # num_cells_list = [30]
 # num_cells_list = [50]
 # num_cells_list = [80]
-num_cells_list = [10, 20, 30, 40, 50]
+# num_cells_list = [10, 20, 30, 40, 50]
 # num_cells_list = [60, 70, 80]
+num_cells_list = [10, 20, 30, 40, 50, 60, 70, 80]
 
 # load single_particle compiled mat
 # single_particle_dir = '/Users/talmiller/Downloads/single_particle/'
@@ -51,7 +53,8 @@ single_particle_dir = '/home/talm/code/single_particle/slurm_runs/'
 # single_particle_dir += '/set54_B0_1T_l_1m_Post_Rm_10_intervals_D_T/'
 # single_particle_dir += '/set55_B0_1T_l_1m_Post_Rm_10_intervals_D_T/'
 # single_particle_dir += '/set56_B0_1T_l_1m_Post_Rm_10_intervals_D_T/'
-single_particle_dir += '/set59_B0_1T_l_1m_Post_Rm_5_r0max_30cm/'
+# single_particle_dir += '/set59_B0_1T_l_1m_Post_Rm_5_r0max_30cm/'
+single_particle_dir += '/set61_B0_1T_l_1m_Post_Rm_5_r0max_10cm/'
 
 # extract variables from saved single particle calcs
 settings_file = single_particle_dir + 'settings.pickle'
@@ -71,10 +74,10 @@ RF_amplitude_list = []
 induced_fields_factor_list = []
 with_kr_correction_list = []
 
-# RF_type_list += ['electric_transverse']
-# RF_amplitude_list += [25]  # kV/m
-# induced_fields_factor_list += [1]
-# with_kr_correction_list += [True]
+RF_type_list += ['electric_transverse']
+RF_amplitude_list += [25]  # kV/m
+induced_fields_factor_list += [1]
+with_kr_correction_list += [True]
 
 RF_type_list += ['electric_transverse']
 RF_amplitude_list += [50]  # kV/m
@@ -91,13 +94,33 @@ with_kr_correction_list += [True]
 # induced_fields_factor_list += [0]
 # with_kr_correction_list += [True]
 
+# RF_type_list += ['magnetic_transverse']
+# RF_amplitude_list += [0.04]  # T
+# induced_fields_factor_list += [1]
+# with_kr_correction_list += [True]
+#
+# RF_type_list += ['magnetic_transverse']
+# RF_amplitude_list += [0.04]  # T
+# induced_fields_factor_list += [0]
+# with_kr_correction_list += [True]
+
 RF_type_list += ['magnetic_transverse']
-RF_amplitude_list += [0.04]  # T
+RF_amplitude_list += [0.025]  # T
 induced_fields_factor_list += [1]
 with_kr_correction_list += [True]
 
 RF_type_list += ['magnetic_transverse']
-RF_amplitude_list += [0.04]  # T
+RF_amplitude_list += [0.025]  # T
+induced_fields_factor_list += [0]
+with_kr_correction_list += [True]
+
+RF_type_list += ['magnetic_transverse']
+RF_amplitude_list += [0.05]  # T
+induced_fields_factor_list += [1]
+with_kr_correction_list += [True]
+
+RF_type_list += ['magnetic_transverse']
+RF_amplitude_list += [0.05]  # T
 induced_fields_factor_list += [0]
 with_kr_correction_list += [True]
 
@@ -116,8 +139,8 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         # time_step_tau_cyclotron_divisions = 100
         # sigma_r0 = 0
         # sigma_r0 = 0.05
-        # sigma_r0 = 0.1
-        sigma_r0 = 0.3
+        sigma_r0 = 0.1
+        # sigma_r0 = 0.3
         radial_distribution = 'uniform'
 
         # theta_type = 'sign_vz0'
