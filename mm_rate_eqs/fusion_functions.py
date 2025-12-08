@@ -1,10 +1,12 @@
 import numpy as np
 import os
 from scipy.interpolate import interp1d
+from scipy.integrate import quad
 
 from mm_rate_eqs.constants_functions import define_electron_charge, define_proton_mass, \
     define_fine_structure_constant, define_speed_of_light, define_factor_eV_to_K, define_barn
 from mm_rate_eqs.plasma_functions import get_brem_radiation_loss
+
 
 def get_sigma_v_fusion(T, reaction='D_T_to_n_alpha', use_resonance=True):
     """
@@ -479,6 +481,8 @@ def get_As_for_reaction(reaction='D_T_to_n_alpha'):
         A_1, A_2 = A_D, A_D
     elif reaction == 'D_D_to_n_He3':
         A_1, A_2 = A_D, A_D
+    elif reaction == 'D_D_to_p_T_n_He3':
+        A_1, A_2 = A_D, A_D
     elif reaction == 'T_T_to_alpha_2n':
         A_1, A_2 = A_T, A_T
     # advanced controlled fusion fuels
@@ -636,3 +640,31 @@ def get_sigma_v_fusion_approx(T, reaction='D_T_to_n_alpha', n=None):
         sigma_v_cm3_over_s = np.sqrt(2 / (m_r_keV_cm * T)) * delta_E0 / T * f0 * S_eff_cm2 * np.exp(-3 * E0 / T)
         sigma_v_m3_over_s = 1e-6 * sigma_v_cm3_over_s
         return sigma_v_m3_over_s
+
+
+def get_sigma_v_fusion_numeric_integration(T_keV_array, reaction='D_T_to_n_alpha'):
+    """
+    Approximation of <sigma*v> (Maxwell averaged reactivity), numerically integrating sigma(E).
+    T in [keV], reactivity sigma*v in [m^3/s].
+    """
+
+    E_array = T_keV_array
+    sigma_array = get_sigma_fusion(T_keV_array, reaction=reaction)
+    sigma_interp = interp1d(E_array, sigma_array, kind='cubic', fill_value=0, bounds_error=False)
+
+    A_1, A_2 = get_As_for_reaction(reaction=reaction)
+    A_r = A_1 * A_2 / (A_1 + A_2)  # reduced mass
+
+    def prefactor(mu, kT):
+        return 1e-6 * (3.72e-16 / np.sqrt(mu)) * (kT ** -1.5)  # m^3/s units
+
+    def integrand(E, kT):
+        return E * sigma_interp(E) * np.exp(-E / kT)  # sigma must be in barns here
+
+    def compute_sigmav(kT, mu):
+        integral, _ = quad(integrand, 0, 20 * kT, args=(kT,))
+        return prefactor(mu, kT) * integral
+
+    sigma_v_m3_over_s = np.array([compute_sigmav(t, mu=A_r) for t in T_keV_array])
+
+    return sigma_v_m3_over_s

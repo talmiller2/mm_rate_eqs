@@ -102,8 +102,8 @@ settings['diameter_main_cell'] = 1  # m
 # # n_list = [2e21]
 # B = 4  # T
 
-settings['length_main_cell'] = 3  # m
-settings['diameter_main_cell'] = 0.3  # m
+# settings['length_main_cell'] = 3  # m
+# settings['diameter_main_cell'] = 0.3  # m
 
 
 settings = define_default_settings(settings=settings)
@@ -259,7 +259,7 @@ for n in n_list:
 
     # using classical diffusion
     print('classical diffusion')
-    gyro_radius = get_larmor_radius(Ti, B)
+    gyro_radius = get_larmor_radius(Ti, B, gas_name=settings['gas_name'])
     print('gyro_radius: ', '{:.3e}'.format(gyro_radius), 'm')
     D_classical = gyro_radius ** 2 * scat_rate
     radial_flux_density = D_classical * dndx

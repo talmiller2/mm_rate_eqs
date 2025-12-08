@@ -5,17 +5,28 @@ from scipy.interpolate import interp1d
 plt.rcParams['font.size'] = 14
 plt.close('all')
 
-from mm_rate_eqs.fusion_functions import get_sigma_v_fusion_sampled, get_reaction_label, get_E_reaction
+from mm_rate_eqs.fusion_functions import get_sigma_v_fusion_sampled, get_reaction_label, get_E_reaction, \
+    get_sigma_v_fusion_numeric_integration
 
 # Ti_keV = np.linspace(1, 1000, 1000)
 Ti_keV = np.logspace(0, 3, 3000)
+# Ti_keV = np.logspace(0, 3, 100)
 
 sigma_v_dict = {}
 reactions = ['D_T_to_n_alpha', 'D_He3_to_p_alpha', 'D_D_to_p_T', 'D_D_to_n_He3', 'p_B_to_3alpha']
 reaction_labels = [get_reaction_label(reaction) for reaction in reactions]
-
 for reaction in reactions:
     sigma_v_dict[reaction] = get_sigma_v_fusion_sampled(Ti_keV, reaction=reaction)
+colors = ['b', 'g', 'k', 'grey', 'r']
+linestyles = ['-' for _ in range(len(reactions))]
+
+reactions_additional = ['p_p_to_D_e_nu', 'p_D_to_He3_gamma']
+reactions += reactions_additional
+reaction_labels += [get_reaction_label(reaction) for reaction in reactions_additional]
+for reaction in reactions_additional:
+    sigma_v_dict[reaction] = get_sigma_v_fusion_numeric_integration(Ti_keV, reaction=reaction)
+colors += ['orange', 'm']
+linestyles += ['--' for _ in range(len(reactions_additional))]
 
 # # load the data from Sikora-Weller-2016
 # data_dir = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Books/Fusion cross sections/2016-Sikora-Weller-cross-section/'
@@ -33,9 +44,8 @@ for reaction in reactions:
 #     sigma_v_dict[reaction] = sigma_v_interped
 
 plt.figure(1, figsize=(8, 6))
-colors = ['b', 'g', 'k', 'grey', 'r']
-for reaction, reaction_label, color in zip(reactions, reaction_labels, colors):
-    plt.plot(Ti_keV, sigma_v_dict[reaction], color=color, label=reaction_label, linewidth=2)
+for reaction, reaction_label, color, linestyle in zip(reactions, reaction_labels, colors, linestyles):
+    plt.plot(Ti_keV, sigma_v_dict[reaction], color=color, label=reaction_label, linewidth=2, linestyle=linestyle)
 # for reaction, reaction_label, color in zip(reactions2, reactions_labels2, ['r', 'orange']):
 #     plt.plot(Ti_keV, sigma_v_dict[reaction], color=color, label=reaction_label, linewidth=2, linestyle='--')
 plt.xscale('log')
@@ -49,9 +59,10 @@ plt.grid(True)
 plt.tight_layout()
 
 plt.figure(2, figsize=(8, 6))
-for reaction, reaction_label, color in zip(reactions, reaction_labels, colors):
+for reaction, reaction_label, color, linestyle in zip(reactions, reaction_labels, colors, linestyles):
     E_fus = get_E_reaction(reaction)  # [MeV]
-    plt.plot(Ti_keV, E_fus * sigma_v_dict[reaction], color=color, label=reaction_label, linewidth=2)
+    plt.plot(Ti_keV, E_fus * sigma_v_dict[reaction], color=color, label=reaction_label, linewidth=2,
+             linestyle=linestyle)
 # for reaction, reaction_label, color in zip(reactions2, reactions_labels2, ['r', 'orange']):
 #     plt.plot(Ti_keV, sigma_v_dict[reaction], color=color, label=reaction_label, linewidth=2, linestyle='--')
 plt.xscale('log')
@@ -66,7 +77,9 @@ plt.tight_layout()
 
 # ## save figs at higher res
 # figs_folder = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/lawson_plots/'
+# # suffix = ''
+# suffix = '_with_pp'
 # plt.figure(1)
-# plt.savefig(figs_folder + 'fusion_reactivities.pdf', format='pdf')
+# plt.savefig(figs_folder + 'fusion_reactivities' + suffix +'.pdf', format='pdf')
 # plt.figure(2)
-# plt.savefig(figs_folder + 'fusion_reactivities_times_energy.pdf', format='pdf')
+# plt.savefig(figs_folder + 'fusion_reactivities_times_energy' + suffix +'.pdf', format='pdf')
