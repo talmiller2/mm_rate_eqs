@@ -36,13 +36,16 @@ main_dir = '/Users/talmiller/Downloads/mm_rate_eqs//runs/slurm_runs/'
 # main_dir += 'set55_MM_Rm_10_ni_1e21_Ti_10keV_smooth_fluxeps1e-3'
 # main_dir += 'set56_MM_Rm_10_ni_1e21_Ti_10keV_smooth_fluxeps1e-3'
 # main_dir += 'set56_MM_Rm_10_ni_1e21_Ti_10keV_smooth_zeroRL_fluxeps1e-3'
-main_dir += '/set59_MMwithRF_Rm_5_ni_1e21_Ti_10keV_smooth/'
+# main_dir += '/set59_MMwithRF_Rm_5_ni_1e21_Ti_10keV_smooth/'
+main_dir += '/set61_MMwithRF_Rm_5_ni_1e21_Ti_10keV_smooth/'
 
 # load single_particle compiled mat
 single_particle_dir = '/Users/talmiller/Downloads/single_particle/'
 # single_particle_dir = '/home/talm/code/single_particle/slurm_runs/'
 # single_particle_dir += '/set56_B0_1T_l_1m_Post_Rm_10_intervals_D_T/'
-single_particle_dir += '/set59_B0_1T_l_1m_Post_Rm_5_r0max_30cm/'
+# single_particle_dir += '/set59_B0_1T_l_1m_Post_Rm_5_r0max_30cm/'
+# single_particle_dir += '/set59_B0_1T_l_1m_Post_Rm_5_r0max_30cm/'
+single_particle_dir += '/set61_B0_1T_l_1m_Post_Rm_5_r0max_10cm/'
 
 # extract variables from saved single particle calcs
 settings_file = single_particle_dir + 'settings.pickle'
@@ -107,6 +110,7 @@ save_figures = False
 # save_figures = True
 
 gas_name_list = ['deuterium', 'tritium']
+# gas_name_list = ['deuterium']
 # gas_name_list = ['tritium']
 
 RF_type_list = []
@@ -134,15 +138,25 @@ with_kr_correction_list += [True]
 # induced_fields_factor_list += [0]
 # with_kr_correction_list += [True]
 
-RF_type_list += ['magnetic_transverse']
-RF_amplitude_list += [0.04]  # T
-induced_fields_factor_list += [1]
-with_kr_correction_list += [True]
+# RF_type_list += ['magnetic_transverse']
+# RF_amplitude_list += [0.04]  # T
+# induced_fields_factor_list += [1]
+# with_kr_correction_list += [True]
 
 # RF_type_list += ['magnetic_transverse']
 # RF_amplitude_list += [0.04]  # T
 # induced_fields_factor_list += [0]
 # with_kr_correction_list += [True]
+
+RF_type_list += ['magnetic_transverse']
+RF_amplitude_list += [0.05]  # T
+induced_fields_factor_list += [1]
+with_kr_correction_list += [True]
+
+RF_type_list += ['magnetic_transverse']
+RF_amplitude_list += [0.05]  # T
+induced_fields_factor_list += [0]
+with_kr_correction_list += [True]
 
 for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         in zip(RF_type_list, RF_amplitude_list, induced_fields_factor_list, with_kr_correction_list):
@@ -178,8 +192,8 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         # time_step_tau_cyclotron_divisions = 100
         # sigma_r0 = 0
         # sigma_r0 = 0.05
-        # sigma_r0 = 0.1
-        sigma_r0 = 0.3
+        sigma_r0 = 0.1
+        # sigma_r0 = 0.3
         radial_distribution = 'uniform'
 
         # theta_type = 'sign_vz0'
@@ -270,7 +284,8 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
 
         # vmin, vmax = None, None
         # vmin, vmax = 0.5, 2.2
-        vmin, vmax = -3, -1  # for N=50
+        # vmin, vmax = -3, -1  # for N=50
+        vmin, vmax = -2.5, -1  # for N=50
         # vmin, vmax = -3.3, -1.5 # for N=80
         c = ax.pcolormesh(X, Y, Z, vmin=vmin, vmax=vmax, cmap=cmap)
         fig.colorbar(c, ax=ax)
@@ -354,6 +369,7 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
                     # if np.any(n_curr < 0): 1/0
                     power_per_particle = E_ini_per_particle * (E_ratio - 1) / settings_single_particle[
                         't_max']  # [Watt=Joule/s]
+                    power_per_particle = np.abs(power_per_particle)  # TODO: hack to prevent negatives
                     # power_per_particle[power_per_particle < 0] = 0 # negative values must be numeric error
                     # if np.any(power_per_particle < 0): 1/0
                     power_W_dict[pop] += cell_volume * n_curr * power_per_particle
@@ -363,6 +379,11 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
                 power_total_W += power_W_dict[pop]
 
             power_total_MW = power_total_W / 1e6
+
+            if np.any(np.isnan(power_total_MW)):
+                1 / 0
+                print('here')
+
             # title = 'Power [MW]'
             # title += ', ' + RF_type_short + '=' + RF_amplitude_suffix
             # title += ', iff=' + str(induced_fields_factor)

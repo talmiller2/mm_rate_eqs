@@ -40,13 +40,15 @@ main_dir = '/Users/talmiller/Downloads/mm_rate_eqs//runs/slurm_runs/'
 # main_dir += 'set55_MM_Rm_10_ni_1e21_Ti_10keV_smooth_fluxeps1e-3'
 # main_dir += 'set56_MM_Rm_10_ni_1e21_Ti_10keV_smooth_fluxeps1e-3'
 # main_dir += 'set56_MM_Rm_10_ni_1e21_Ti_10keV_smooth_zeroRL_fluxeps1e-3'
-main_dir += '/set59_MMwithRF_Rm_5_ni_1e21_Ti_10keV_smooth/'
+# main_dir += '/set59_MMwithRF_Rm_5_ni_1e21_Ti_10keV_smooth/'
+main_dir += '/set61_MMwithRF_Rm_5_ni_1e21_Ti_10keV_smooth/'
 
 # load single_particle compiled mat
 single_particle_dir = '/Users/talmiller/Downloads/single_particle/'
 # single_particle_dir = '/home/talm/code/single_particle/slurm_runs/'
 # single_particle_dir += '/set56_B0_1T_l_1m_Post_Rm_10_intervals_D_T/'
-single_particle_dir += '/set59_B0_1T_l_1m_Post_Rm_5_r0max_30cm/'
+# single_particle_dir += '/set59_B0_1T_l_1m_Post_Rm_5_r0max_30cm/'
+single_particle_dir += '/set61_B0_1T_l_1m_Post_Rm_5_r0max_10cm/'
 
 # extract variables from saved single particle calcs
 settings_file = single_particle_dir + 'settings.pickle'
@@ -123,22 +125,42 @@ with_kr_correction_list += [True]
 # induced_fields_factor_list += [0]
 # with_kr_correction_list += [True]
 
+# RF_type_list += ['magnetic_transverse']
+# RF_amplitude_list += [0.04]  # T
+# induced_fields_factor_list += [1]
+# with_kr_correction_list += [True]
+#
+# RF_type_list += ['magnetic_transverse']
+# RF_amplitude_list += [0.04]  # T
+# induced_fields_factor_list += [0]
+# with_kr_correction_list += [True]
+
 RF_type_list += ['magnetic_transverse']
-RF_amplitude_list += [0.04]  # T
+RF_amplitude_list += [0.05]  # T
 induced_fields_factor_list += [1]
 with_kr_correction_list += [True]
 
 RF_type_list += ['magnetic_transverse']
-RF_amplitude_list += [0.04]  # T
+RF_amplitude_list += [0.05]  # T
 induced_fields_factor_list += [0]
 with_kr_correction_list += [True]
 
+# RF_type_list += ['magnetic_transverse']
+# RF_amplitude_list += [0.025]  # T
+# induced_fields_factor_list += [1]
+# with_kr_correction_list += [True]
+#
+# RF_type_list += ['magnetic_transverse']
+# RF_amplitude_list += [0.025]  # T
+# induced_fields_factor_list += [0]
+# with_kr_correction_list += [True]
+
 # ind_alpha_list = [2, 10, 2]
 # ind_beta_list = [2, 10, 15]
-ind_alpha_list = [0, 10, 19]
-ind_beta_list = [0, 10, 19]
+ind_alpha_list = [0, 10, 20]
+ind_beta_list = [0, 10, 20]
 color_list = ['b', 'g', 'r', 'orange']
-linestyle_list = ['-', '--', ':', '.-']
+linestyle_list = ['-', '--', ':', '-.']
 
 for ind_gas, gas_name in enumerate(gas_name_list):
     fig, ax = plt.subplots(1, 1, figsize=(7, 5))
@@ -163,8 +185,8 @@ for ind_gas, gas_name in enumerate(gas_name_list):
         # time_step_tau_cyclotron_divisions = 100
         # sigma_r0 = 0
         # sigma_r0 = 0.05
-        # sigma_r0 = 0.1
-        sigma_r0 = 0.3
+        sigma_r0 = 0.1
+        # sigma_r0 = 0.3
         radial_distribution = 'uniform'
 
         # theta_type = 'sign_vz0'
@@ -208,8 +230,8 @@ for ind_gas, gas_name in enumerate(gas_name_list):
 
             alpha_curr = alpha_loop_list[ind_alpha]
             beta_curr = beta_loop_list[ind_beta]
-            label = '$\\omega / \\omega_{0,T}$=' + str(alpha_curr) + ', $k/\\left( 2 \\pi m^{-1} \\right)$=' + str(
-                beta_curr)
+            # label = '$\\omega / \\omega_{0,T}$=' + str(alpha_curr) + ', $k/\\left( 2 \\pi m^{-1} \\right)$=' + str(beta_curr)
+            label = f"$\\omega / \\omega_{{0,T}}$={alpha_curr:g}, $k/\\left( 2 \\pi m^{{-1}} \\right)$={beta_curr:g}"
             if linestyle != '-': label = None
             ax.plot(num_cells_list, phi_list,
                     marker='o',
