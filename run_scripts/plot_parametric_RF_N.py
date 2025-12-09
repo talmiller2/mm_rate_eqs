@@ -8,9 +8,11 @@ from matplotlib import cm
 # plt.rcParams.update({'font.size': 10})
 # plt.rcParams.update({'font.size': 12})
 
-axes_label_size = 12
+# axes_label_size = 12
+axes_label_size = 14
 # axes_label_size = 18
-title_fontsize = 12
+# title_fontsize = 12
+title_fontsize = 14
 
 import numpy as np
 
@@ -157,9 +159,13 @@ with_kr_correction_list += [True]
 
 # ind_alpha_list = [2, 10, 2]
 # ind_beta_list = [2, 10, 15]
-ind_alpha_list = [0, 10, 20]
-ind_beta_list = [0, 10, 20]
-color_list = ['b', 'g', 'r', 'orange']
+# ind_alpha_list = [0, 10, 20]
+# ind_beta_list = [0, 10, 20]
+# ind_alpha_list = [0, 10,  10, 20,  20]
+# ind_beta_list =  [0, 10, -10, 20, -20]
+ind_alpha_list = [10, 13, 13]
+ind_beta_list = [10, 0, 20]
+color_list = ['b', 'g', 'r', 'orange', 'k']
 linestyle_list = ['-', '--', ':', '-.']
 
 for ind_gas, gas_name in enumerate(gas_name_list):
@@ -231,7 +237,7 @@ for ind_gas, gas_name in enumerate(gas_name_list):
             alpha_curr = alpha_loop_list[ind_alpha]
             beta_curr = beta_loop_list[ind_beta]
             # label = '$\\omega / \\omega_{0,T}$=' + str(alpha_curr) + ', $k/\\left( 2 \\pi m^{-1} \\right)$=' + str(beta_curr)
-            label = f"$\\omega / \\omega_{{0,T}}$={alpha_curr:g}, $k/\\left( 2 \\pi m^{{-1}} \\right)$={beta_curr:g}"
+            label = f"$\\omega / \\omega_{{0,T}}$={alpha_curr:.2g}, $k/\\left( 2 \\pi m^{{-1}} \\right)$={beta_curr:g}"
             if linestyle != '-': label = None
             ax.plot(num_cells_list, phi_list,
                     marker='o',
@@ -240,25 +246,44 @@ for ind_gas, gas_name in enumerate(gas_name_list):
                     linestyle=linestyle,
                     )
 
-        x_label = 'number of cells'
-        y_label = '$\\phi_{ss} / \\phi_{0}$'
-        title = 'steady state flux: ' + gas_name
-        plt.xlabel(x_label, fontsize=axes_label_size)
-        plt.ylabel(y_label, fontsize=axes_label_size)
-        plt.title(title, fontsize=title_fontsize)
-        plt.yscale('log')
-        plt.legend(fontsize=axes_label_size)
-        plt.grid(True)
-        plt.tight_layout()
+    x_label = 'number of cells'
+    y_label = '$\\phi_{ss} / \\phi_{0}$'
+    title = 'steady state flux: ' + gas_name
+    plt.xlabel(x_label, fontsize=axes_label_size)
+    plt.ylabel(y_label, fontsize=axes_label_size)
+    plt.title(title, fontsize=title_fontsize)
+    plt.yscale('log')
+    legend_data = plt.legend(fontsize=axes_label_size)
+    plt.grid(True)
+    plt.tight_layout()
 
-    ### saving figures
-    fig_save_dir = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/paper_2025/pics/'
-    file_name = 'compiled_flux_of_N'
-    file_suffix = ''
-    # if RF_type == 'electric_transverse':
-    #     file_suffix += '_REF'
-    # else:
-    #     file_suffix += '_RMF'
-    # if induced_fields_factor < 1.0: file_suffix += '_iff' + str(induced_fields_factor)
-    file_suffix += '_' + gas_name_short
-    fig.savefig(fig_save_dir + file_name + file_suffix + '.pdf', format='pdf', dpi=600)
+    # adding "fake legend" to explain the linestyles
+    from matplotlib.lines import Line2D
+
+    linestyle_key = [
+        Line2D([0], [0], color='black', linestyle='-', linewidth=2),
+        Line2D([0], [0], color='black', linestyle='--', linewidth=2),
+        Line2D([0], [0], color='black', linestyle=':', linewidth=2),
+    ]
+
+    legend_style = plt.legend(handles=linestyle_key,
+                              labels=['TREF', 'TRMF', 'TRMF w/o E'],
+                              # loc='lower left',  # choose a spot that doesn’t overlap
+                              loc='upper right',  # choose a spot that doesn’t overlap
+                              # title='Linestyle meaning'
+                              )
+
+    # add the first legend back (this is the crucial line!)
+    plt.gca().add_artist(legend_data)
+
+    # ### saving figures
+    # fig_save_dir = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/paper_2025/pics/'
+    # file_name = 'compiled_flux_of_N'
+    # file_suffix = ''
+    # # if RF_type == 'electric_transverse':
+    # #     file_suffix += '_REF'
+    # # else:
+    # #     file_suffix += '_RMF'
+    # # if induced_fields_factor < 1.0: file_suffix += '_iff' + str(induced_fields_factor)
+    # file_suffix += '_' + gas_name_short
+    # fig.savefig(fig_save_dir + file_name + file_suffix + '.pdf', format='pdf', dpi=600)
