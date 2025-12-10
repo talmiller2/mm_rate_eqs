@@ -55,7 +55,7 @@ def define_factor_Pa_to_bar():
 
 
 def define_vacuum_permittivity():
-    eps0 = 8.85418781e-12  # [Farad/m^2]
+    eps0 = 8.85418781e-12  # [Farad/m]
     return eps0
 
 

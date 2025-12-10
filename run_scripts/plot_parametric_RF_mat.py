@@ -190,9 +190,9 @@ for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
 
         time_step_tau_cyclotron_divisions = 50
         # time_step_tau_cyclotron_divisions = 100
-        # sigma_r0 = 0
+        sigma_r0 = 0
         # sigma_r0 = 0.05
-        sigma_r0 = 0.1
+        # sigma_r0 = 0.1
         # sigma_r0 = 0.3
         radial_distribution = 'uniform'
 
