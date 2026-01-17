@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 
 from mm_rate_eqs.default_settings import define_default_settings
 from mm_rate_eqs.fusion_functions import get_lawson_parameters, get_fusion_power, get_fusion_charged_power, \
-    get_sigma_v_fusion
+    get_sigma_v_fusion_fit
 from mm_rate_eqs.plasma_functions import get_brem_radiation_loss, get_cyclotron_radiation_loss, get_magnetic_pressure, \
     get_ideal_gas_pressure, get_ideal_gas_energy_per_volume, get_magnetic_field_for_given_pressure, \
     get_bohm_diffusion_constant, get_larmor_radius, get_alfven_wave_group_velocity, get_larmor_frequency, \
@@ -189,7 +189,7 @@ for n in n_list:
     # Fusion power in nominal parameters
     # print('Main cell volume: ', '{:.3e}'.format(settings['volume_main_cell']), 'm^3')
     print('Main cell volume = ' + str(settings['volume_main_cell']) + ' m^3')
-    sigma_v_fusion = get_sigma_v_fusion(Ti_keV)  # units m^3/s
+    sigma_v_fusion = get_sigma_v_fusion_fit(Ti_keV)  # units m^3/s
     fusion_rate = 0.25 * ni * sigma_v_fusion  # scattering rate before multiplication by ni (so the units are 1/s)
     print('fusion_rate = ' + str(fusion_rate) + ' [1/s]')
     print('scat_rate / fusion_rate = ' + str(scat_rate / fusion_rate))

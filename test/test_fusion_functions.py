@@ -3,8 +3,8 @@ import numpy as np
 from matplotlib import cm
 
 from mm_rate_eqs.default_settings import define_default_settings
-from mm_rate_eqs.fusion_functions import get_sigma_v_fusion, get_fusion_power, get_lawson_parameters, \
-    get_reaction_label, get_sigma_fusion, get_sigma_v_fusion_approx, get_sigma_v_fusion_sampled
+from mm_rate_eqs.fusion_functions import get_sigma_v_fusion_fit, get_fusion_power, get_lawson_parameters, \
+    get_reaction_label, get_sigma_fusion_approx, get_sigma_v_fusion_approx, get_sigma_v_fusion_sampled
 from mm_rate_eqs.plasma_functions import get_brem_radiation_loss, get_cyclotron_radiation_loss
 from mm_rate_eqs.rate_functions import get_thermal_velocity
 
@@ -60,7 +60,7 @@ for ind_r, reaction in enumerate(reactions):
 
     plt.figure(1)
     try:
-        sigma_v_array = get_sigma_v_fusion(T_keV_array, reaction=reaction)
+        sigma_v_array = get_sigma_v_fusion_fit(T_keV_array, reaction=reaction)
         plt.plot(T_keV_array, sigma_v_array, label=label_sigmav, linewidth=3, color=color)
         # if reaction == 'p_B_to_3alpha':
         #     sigma_v_array = get_sigma_v_fusion(T_keV_array, reaction=reaction, use_resonance=False)
@@ -92,7 +92,7 @@ for ind_r, reaction in enumerate(reactions):
 
     plt.figure(2)
     E_array = T_keV_array
-    sigma_array = get_sigma_fusion(T_keV_array, reaction=reaction)
+    sigma_array = get_sigma_fusion_approx(T_keV_array, reaction=reaction)
     label_crs = get_reaction_label(reaction=reaction)
     plt.plot(E_array, sigma_array, label=label_crs, linewidth=3, color=color)
     plt.legend()
@@ -105,7 +105,7 @@ for ind_r, reaction in enumerate(reactions):
     plt.grid(True)
 
     plt.figure(3)
-    sigma_v_array = get_sigma_v_fusion(T_keV_array, reaction=reaction)
+    sigma_v_array = get_sigma_v_fusion_fit(T_keV_array, reaction=reaction)
     fusion_scaling_power = np.diff(np.log(sigma_v_array)) / np.diff(np.log(T_keV_array))
     plt.plot(T_keV_array[1:], fusion_scaling_power, label=label, linewidth=3, color=color)
     plt.legend()
@@ -119,8 +119,8 @@ for ind_r, reaction in enumerate(reactions):
 
     plt.figure(4)
     if ind_r == 0:
-        sigma_v_array_ref = get_sigma_v_fusion(T_keV_array, reaction=reaction)
-    sigma_v_array = get_sigma_v_fusion(T_keV_array, reaction=reaction)
+        sigma_v_array_ref = get_sigma_v_fusion_fit(T_keV_array, reaction=reaction)
+    sigma_v_array = get_sigma_v_fusion_fit(T_keV_array, reaction=reaction)
     plt.plot(T_keV_array, sigma_v_array / sigma_v_array_ref, label=label, linewidth=3, color=color)
     plt.legend()
     plt.title(sigma_v_str + ' relative to ' + get_reaction_label(reaction=reactions[0]))

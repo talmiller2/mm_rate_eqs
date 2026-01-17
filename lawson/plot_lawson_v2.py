@@ -6,7 +6,7 @@ plt.close('all')
 
 from mm_rate_eqs.constants_functions import define_proton_mass, define_electron_mass, define_speed_of_light, \
     define_electron_charge
-from mm_rate_eqs.fusion_functions import get_E_reaction, get_E_charged, get_reaction_label, get_sigma_v_fusion, \
+from mm_rate_eqs.fusion_functions import get_E_reaction, get_E_charged, get_reaction_label, get_sigma_v_fusion_fit, \
     get_sigma_v_fusion_sampled
 
 me = define_electron_mass()

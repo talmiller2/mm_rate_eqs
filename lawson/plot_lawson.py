@@ -6,7 +6,7 @@ plt.close('all')
 
 from mm_rate_eqs.default_settings import define_default_settings
 from mm_rate_eqs.fusion_functions import get_lawson_parameters, get_fusion_power, get_fusion_charged_power, \
-    get_sigma_v_fusion, get_reaction_label, get_lawson_criterion_piel
+    get_sigma_v_fusion_fit, get_reaction_label, get_lawson_criterion_piel
 from mm_rate_eqs.plasma_functions import get_brem_radiation_loss, get_cyclotron_radiation_loss, get_magnetic_pressure, \
     get_ideal_gas_pressure, get_ideal_gas_energy_per_volume, get_magnetic_field_for_given_pressure, \
     get_bohm_diffusion_constant, get_larmor_radius, get_alfven_wave_group_velocity, get_larmor_frequency
@@ -89,7 +89,7 @@ for ind_reaction, (reaction, color) in enumerate(zip(reaction_list, color_list))
 
     #############
 
-    sigma_v_fusion = get_sigma_v_fusion(Ti_keV_list, reaction=reaction)
+    sigma_v_fusion = get_sigma_v_fusion_fit(Ti_keV_list, reaction=reaction)
     ind_marker = np.where(Ti_keV_list >= Ti_keV_list_for_reactivity[ind_reaction])[0][0]
     T_marker = Ti_keV_list[ind_marker]
     print(

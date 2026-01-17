@@ -6,7 +6,7 @@ plt.rcParams['font.size'] = 14
 plt.close('all')
 
 from mm_rate_eqs.fusion_functions import get_sigma_v_fusion_sampled, get_reaction_label, get_E_reaction, \
-    get_sigma_v_fusion_numeric_integration
+    get_sigma_v_fusion_approx_numeric_integration
 
 # Ti_keV = np.linspace(1, 1000, 1000)
 Ti_keV = np.logspace(0, 3, 3000)
@@ -24,7 +24,7 @@ reactions_additional = ['p_p_to_D_e_nu', 'p_D_to_He3_gamma']
 reactions += reactions_additional
 reaction_labels += [get_reaction_label(reaction) for reaction in reactions_additional]
 for reaction in reactions_additional:
-    sigma_v_dict[reaction] = get_sigma_v_fusion_numeric_integration(Ti_keV, reaction=reaction)
+    sigma_v_dict[reaction] = get_sigma_v_fusion_approx_numeric_integration(Ti_keV, reaction=reaction)
 colors += ['orange', 'm']
 linestyles += ['--' for _ in range(len(reactions_additional))]
 

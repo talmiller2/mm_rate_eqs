@@ -267,10 +267,11 @@ for ind_gas, gas_name in enumerate(gas_name_list):
     ]
 
     legend_style = plt.legend(handles=linestyle_key,
-                              labels=['TREF', 'TRMF', 'TRMF w/o E'],
+                              labels=['TREF', 'TRMF', 'TRMF-noE'],
                               # loc='lower left',  # choose a spot that doesn’t overlap
                               loc='upper right',  # choose a spot that doesn’t overlap
                               # title='Linestyle meaning'
+                              fontsize=axes_label_size,
                               )
 
     # add the first legend back (this is the crucial line!)

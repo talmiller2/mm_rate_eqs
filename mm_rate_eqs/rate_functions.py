@@ -3,9 +3,10 @@ import logging
 import numpy as np
 
 from mm_rate_eqs.aux_functions import theta_fun_generic
+from mm_rate_eqs.constants_functions import define_electron_charge, define_vacuum_permittivity, define_barn
 from mm_rate_eqs.loss_cone_functions import get_solid_angles
 from mm_rate_eqs.plasma_functions import define_boltzmann_constant, define_factor_eV_to_K
-from mm_rate_eqs.constants_functions import define_electron_charge, define_vacuum_permittivity
+
 
 def get_gamma_dimension(d=1):
     """
@@ -46,7 +47,7 @@ def get_isentrope_temperature(n, settings, species='ions'):
             T_trans = T0 * (n_trans / n0) ** (gamma_start - 1)
             f_above, f_below = get_transition_filters(n, settings)
             return T0 * (n / n0) ** (gamma_start - 1) / f_above \
-                   + T_trans * (n / n_trans) ** (gamma_fin - 1) / f_below
+                + T_trans * (n / n_trans) ** (gamma_fin - 1) / f_below
         else:
             return T0 * (n / n0) ** (get_gamma_dimension(settings['plasma_dimension']) - 1)
 
@@ -496,3 +497,19 @@ def get_fluxes(state, settings):
                  + ', flux_normalized_std = ' + '{:.2e}'.format(state['flux_normalized_std']))
 
     return state
+
+
+def get_coulomb_scattering_cross_section(E_COM_keV, Z_1=1, Z_2=1, coulomb_log=10):
+    """
+    Coulomb scattering cross section for large angles
+    Eq. 1.20 in "2004 - Bellan - Fundamentals of Plasma Physics".
+    In the textbook mu is the reduced mass and v0 the relative energy E_COM = 0.5 * mu * v0^2.
+    input E_COM_keV in [keV], output cross section in [barn]
+    """
+    eps0 = define_vacuum_permittivity()
+    e = define_electron_charge()
+    E_COM_mks = E_COM_keV * 1e3 * e  # [Joule]
+    crs = 1 / (2 * np.pi) * (Z_1 * Z_2 * e ** 2 / (eps0 * 2 * E_COM_mks)) ** 2 * coulomb_log  # [m^2]
+    barn = define_barn()  # [m^2]
+    crs_barn = crs / barn
+    return crs_barn

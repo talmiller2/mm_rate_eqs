@@ -148,15 +148,15 @@ with_kr_correction_list += [True]
 # induced_fields_factor_list += [0]
 # with_kr_correction_list += [True]
 
-RF_type_list += ['magnetic_transverse']
-RF_amplitude_list += [0.05]  # T
-induced_fields_factor_list += [1]
-with_kr_correction_list += [True]
-
-RF_type_list += ['magnetic_transverse']
-RF_amplitude_list += [0.05]  # T
-induced_fields_factor_list += [0]
-with_kr_correction_list += [True]
+# RF_type_list += ['magnetic_transverse']
+# RF_amplitude_list += [0.05]  # T
+# induced_fields_factor_list += [1]
+# with_kr_correction_list += [True]
+#
+# RF_type_list += ['magnetic_transverse']
+# RF_amplitude_list += [0.05]  # T
+# induced_fields_factor_list += [0]
+# with_kr_correction_list += [True]
 
 for RF_type, RF_amplitude, induced_fields_factor, with_kr_correction \
         in zip(RF_type_list, RF_amplitude_list, induced_fields_factor_list, with_kr_correction_list):
