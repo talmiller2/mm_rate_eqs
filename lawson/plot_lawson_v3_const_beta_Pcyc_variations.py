@@ -43,6 +43,9 @@ split_to_subplots = True
 # inds_process_to_subplot = [1, 2, 3, 4, 4]
 inds_process_to_subplot = [1, 2, 3, 3, 4]
 
+include_E0_fuel = False
+# include_E0_fuel = True
+
 if split_to_subplots:
     # figsize = (12, 7)
     figsize = (14, 9)
@@ -151,6 +154,20 @@ for ip, process in enumerate(process_list):
         Te_J = 1e3 * e * Te_keV
         p = ne * Ti_J + ni * Te_J  # [Pa]=[J/m^3]
         E0 = 3 / 2 * p  # volumetric energy [J/m^3]
+
+        if include_E0_fuel:
+            ## Take into account the energy cost to produce the fuel itself
+            E0_fuel = 0
+            for ion_curr, ni_curr in zip(ions_list, ni_array):
+                if ion_curr == 'D':
+                    E0_per_atom = 5 * 1e3 * e  # [J]
+                elif ion_curr == 'T':
+                    # E0_per_atom = 15 * 1e3 * e # [J]
+                    E0_per_atom = 20 * 1e3 * e  # [J] (assuming need to create more than 1 atom of Li6 per T)
+                else:
+                    E0_per_atom = 0
+                E0_fuel += ni_curr * E0_per_atom
+            E0 += E0_fuel
 
         tau = 0.1  # [s]
         # Q_fuel_old = P_fus_tot / (P_rad + E0 / tau)
