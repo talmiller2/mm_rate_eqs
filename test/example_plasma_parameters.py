@@ -140,11 +140,18 @@ for n in n_list:
     print('l = ' + str(settings['cell_size']) + ' m')
     print('mfp / l = ' + str(mfp / settings['cell_size']))
 
+    tau_th = settings['cell_size'] / v_th
+    print('tau_th = ' + str(tau_th) + ' [s]')
+    print('tau_th * scat_rate = ' + str(scat_rate * tau_th))
+
     # comparing scattering rate to referee #2 new model suggestion
-    settings['Rm'] = 10.0
+    # settings['Rm'] = 10.0
+    settings['Rm'] = 5.0
+    theta_LC = np.arcsin(settings['Rm'] ** (-0.5)) * 360 / (2 * np.pi)
     alpha_approx = 1 / (4 * settings['Rm'])
-    # from mm_rate_eqs.loss_cone_functions import get_solid_angles
-    # alpha_tR, alpha_tL, alpha_c = get_solid_angles(0, v_th, 1 / settings['Rm'])
+    from mm_rate_eqs.loss_cone_functions import get_solid_angles
+
+    alpha_tR, alpha_tL, alpha_c = get_solid_angles(0, v_th, 1 / settings['Rm'])
     # scat_rate_term_original = alpha_approx * scat_rate
     # scat_rate_term_referee2 = np.sqrt(scat_rate * v_th / settings['cell_size'])
     # print('scat_rate_term_original = ' + str(scat_rate_term_original) + ' [1/s]')

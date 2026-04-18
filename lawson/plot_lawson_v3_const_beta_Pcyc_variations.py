@@ -28,20 +28,22 @@ sigma_v_dict = load_sigma_v_fusion_files(Ti_keV)
 
 process_list = []
 process_list += ['D-T']
+process_list += ['fully-catalyzed D-D']
 process_list += ['D-He3']
 process_list += ['p-B11']
 process_list += ['pure D-D']
 # process_list += ['He3-catalyzed D-D']
 # process_list += ['T-catalyzed D-D']
-process_list += ['fully-catalyzed D-D']
+# process_list += ['fully-catalyzed D-D']
 
 # color_list = ['b', 'g', 'r', 'grey', 'k', 'k', 'k']
-color_list = ['b', 'g', 'r', 'orange', 'k', 'k', 'k']
+color_list = ['b', 'k', 'g', 'r', 'orange']
 
 # split_to_subplots = False
 split_to_subplots = True
 # inds_process_to_subplot = [1, 2, 3, 4, 4]
-inds_process_to_subplot = [1, 2, 3, 3, 4]
+# inds_process_to_subplot = [1, 2, 3, 3, 4]
+inds_process_to_subplot = [1, 2, 3, 4, 4]
 
 include_E0_fuel = False
 # include_E0_fuel = True
@@ -97,16 +99,16 @@ for ip, process in enumerate(process_list):
 
         ## rescale densities to get constant plasma_beta
         # plasma_beta_target = 0.01
-        plasma_beta_target = 0.05
+        # plasma_beta_target = 0.05
         # plasma_beta_target = 0.1
         # plasma_beta_target = 0.2
-        # plasma_beta_target = 0.5
+        plasma_beta_target = 0.5
         # plasma_beta_target = 0.9
         # B = 0.0001  # [T]
         # B = 1  # [T]
         # B = 5  # [T]
-        B = 10  # [T]
-        # B = 20  # [T]
+        # B = 10  # [T]
+        B = 20  # [T]
 
         # ideal gas
         Ti_J = 1e3 * e * Ti_keV
@@ -136,7 +138,8 @@ for ip, process in enumerate(process_list):
         ## calculate radiation losses
         P_brem = get_brem_radiation_loss_relativistic(ni_array, Zi_list, Te_keV, use_relativistic_correction=True)
         # r = 0
-        r = 0.3
+        # r = 0.3
+        r = 0.9
         # P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Stacey', r=r)
         P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Wiedemann', r=r)
         # P_cyc = get_cyclotron_radiation_loss(ne, Te_keV, B, version='Trubnikov', r=r)
@@ -164,6 +167,8 @@ for ip, process in enumerate(process_list):
                 elif ion_curr == 'T':
                     # E0_per_atom = 15 * 1e3 * e # [J]
                     E0_per_atom = 20 * 1e3 * e  # [J] (assuming need to create more than 1 atom of Li6 per T)
+                elif ion_curr == 'He3':
+                    E0_per_atom = 200 * 1e3 * e  # [J]
                 else:
                     E0_per_atom = 0
                 E0_fuel += ni_curr * E0_per_atom
@@ -195,9 +200,10 @@ for ip, process in enumerate(process_list):
                              alpha=0.3)
 
         ### calculate and plot p*tau
-        const_Q_fuel = np.inf
+        # const_Q_fuel = np.inf
         # const_Q_fuel = 1000
         # const_Q_fuel = 100
+        const_Q_fuel = 10
         # const_Q_fuel = 1
         # tau_for_const_Q_fuel = E0 / (P_fus_tot / const_Q_fuel + P_fus_charged_tot - P_rad)
 
@@ -230,6 +236,7 @@ for ip, process in enumerate(process_list):
             print('      p_tau_keV=', p_tau_keV[ind_min_p_tau], '[m^-3 keV s]')
             print('      ne @opt=', ne[ind_min_p_tau], '[m$^{-3}$]')
             print('      P_fus_tot @opt=', P_fus_tot[ind_min_p_tau] / 1e6, '[MW/m^3]')
+            label += ', $\\tau$=' + power_to_string_MW(1e6 * tau_for_const_Q_fuel[ind_min_p_tau]) + 's'
             # label += ', $P_{fus}$=' + '{:.1f}'.format(P_fus_tot[ind_min_p_tau] / 1e6) + '$[MW/m^3]$'
             # label += ', $P_{fus}$=' + '{:.1f}'.format(P_fus_tot[ind_min_p_tau] / 1e6)
             label += ', $P_{fus}$=' + power_to_string_MW(P_fus_tot[ind_min_p_tau])
@@ -279,7 +286,7 @@ for ip, process in enumerate(process_list):
 
         else:
             # label += '/NaN'  # no valid solution with cyc so indicate no power
-            label += ' [no sol with cyc]'  # no valid solution with cyc so indicate no power
+            label += ' [no-cyc-sol]'  # no valid solution with cyc so indicate no power
 
         plt.figure(2)
         if split_to_subplots:
@@ -423,6 +430,6 @@ figs_folder = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/la
 plt.figure(3)
 file_suffix = f'_B_{B}T_beta_{plasma_beta_target}'
 # file_suffix += '_partial'
-# plt.savefig(figs_folder + 'lawson_tau_at_const_beta' + file_suffix + '.pdf', format='pdf')
+plt.savefig(figs_folder + 'lawson_tau_at_const_beta' + file_suffix + '.pdf', format='pdf')
 # plt.figure(4)
 # plt.savefig(figs_folder + 'ne_at_const_beta' + '.pdf', format='pdf')

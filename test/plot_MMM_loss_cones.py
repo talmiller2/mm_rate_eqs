@@ -3,27 +3,33 @@ import copy
 import matplotlib.pyplot as plt
 import numpy as np
 
-from mm_rate_eqs.loss_cone_functions import get_solid_angles
+from mm_rate_eqs.loss_cone_functions import get_solid_angles, get_transverse_velocity_loss_cone_solutions
 
 plt.close('all')
 
-axes_label_size = 12
-# axes_label_size = 14
-# axes_label_size = 18
-title_fontsize = 14
-legend_fontsize = 12
+plt.rcParams['font.size'] = 16
+plt.rcParams['lines.linewidth'] = 3
+
+# # axes_label_size = 12
+# # axes_label_size = 14
+# axes_label_size = 16
+# title_fontsize = 14
+# # legend_fontsize = 12
+# # legend_fontsize = 14
+# legend_fontsize = 16
 
 Rm_list = np.array([2, 3, 10])
 # Rm_list = np.array([1.2, 2, 3, 10])
 colors = ['b', 'g', 'r', 'orange']
 
-fig, ax = plt.subplots(1, 1, figsize=(7, 5))
+vth = 1
+U_list = np.linspace(0, 2.0 * vth, 1000)
 
+##### solid angle plots #####
+
+fig, ax = plt.subplots(1, 1, figsize=(8, 6), num=1)
 for ind_Rm, Rm in enumerate(Rm_list):
     alpha = 1 / Rm
-    vth = 1
-    U_list = np.linspace(0, 2.0 * vth, 1000)
-    # U_list = np.linspace(0, 1.0 * vth, 1000)
     omega_tR, omega_tL, omega_c = np.zeros(len(U_list)), np.zeros(len(U_list)), np.zeros(len(U_list))
     for ind_U, U in enumerate(U_list):
         # calculate the solid angles for right/left loss cones
@@ -31,7 +37,7 @@ for ind_Rm, Rm in enumerate(Rm_list):
 
     ax.plot(U_list / vth, omega_tR,
             # label='$\\Omega_{tR}$ Rm=' + str(Rm),
-            label='$\\alpha_r$ $R_m$=' + str(Rm),
+            label='$\\alpha_r$ ($R_m$=' + str(Rm) + ')',
             color=colors[ind_Rm])
     ax.plot(U_list / vth, omega_tL, '--',
             # label='$\\Omega_{tL}$ Rm=' + str(Rm),
@@ -41,11 +47,11 @@ for ind_Rm, Rm in enumerate(Rm_list):
              label='$\\alpha_c$',
              color=colors[ind_Rm])
 
-ax.set_xlabel('$U/v_{th}$', fontsize=axes_label_size)
-# ax.set_ylabel('$\\Omega$ /4$\\pi$', fontsize=axes_label_size)
-ax.set_ylabel('$\\alpha=\\Omega$ /4$\\pi$', fontsize=axes_label_size)
-ax.set_title('MMM modified loss cone solid angles', fontsize=title_fontsize)
-ax.legend(fontsize=legend_fontsize)
+ax.set_xlim([0, max(U_list) / vth])
+ax.set_xlabel('$U/v_{th}$')
+ax.set_ylabel('$\\alpha=\\Omega$ /4$\\pi$ normalized solid angles')
+# ax.set_title('MMM modified loss cone solid angles')
+ax.legend(loc='right')
 ax.grid()
 fig.tight_layout()
 
