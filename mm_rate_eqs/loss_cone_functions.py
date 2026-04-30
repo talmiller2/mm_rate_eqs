@@ -1,110 +1,52 @@
 import numpy as np
 
 
-def get_solid_angles(U, vth, alpha):
-    # solve analytical values of critical v_perp
-    a = 1.0
-    b = 2 * alpha * ((U / vth) ** 2 * (2 * alpha - 1) - 1)
-    c = alpha ** 2 * (1 - (U / vth) ** 2) ** 2
-    det = b ** 2 - 4 * a * c
+def calc_axial_velocity_loss_cone_solutions(U, v, Rm):
+    # solve analytical values of critical v_z
+    vz_sol1 = -1 / Rm * U / v + 1 / Rm * np.sqrt((Rm - 1) * (Rm * v ** 2 - (U / v) ** 2))
+    vz_sol2 = -1 / Rm * U / v - 1 / Rm * np.sqrt((Rm - 1) * (Rm * v ** 2 - (U / v) ** 2))
+    return vz_sol1, vz_sol2
 
-    v_perp_squared_norm_sol_high = np.nan
-    v_perp_squared_norm_sol_low = np.nan
-    if det >= 0:
-        v_perp_squared_norm_sol_high = (-b + np.sqrt(det)) / (2 * a)
-        v_perp_squared_norm_sol_low = (-b - np.sqrt(det)) / (2 * a)
 
-    if v_perp_squared_norm_sol_high > 1: v_perp_squared_norm_sol_high = 1.0
-    if v_perp_squared_norm_sol_low < 0: v_perp_squared_norm_sol_low = 0
-    v_perp_high = np.sqrt(v_perp_squared_norm_sol_high) * vth
-    v_perp_low = np.sqrt(v_perp_squared_norm_sol_low) * vth
+def calc_special_U_values(v, Rm):
+    U_transition = np.sqrt((Rm - 1) * v ** 2)
+    U_last_sol = np.sqrt(Rm * v ** 2)
+    return U_transition, U_last_sol
 
-    # translate to angles
-    theta_low = np.arcsin(v_perp_low / vth)
-    theta_high = np.arcsin(v_perp_high / vth)
 
-    # critical U values for loss-cones
-    U_transition = np.sqrt((1 - alpha) / alpha * vth ** 2)
-    U_last_sol = np.sqrt(vth ** 2 / alpha)
+def calc_modified_loss_cone_angle(vz, v, U):
+    vr = np.sqrt(v ** 2 - vz ** 2)
+    modified_theta = np.arcsin(vr / v)
+    return modified_theta
 
-    # v, theta at the critical value
-    v_perp_last_sol = np.sqrt((1 - alpha) * vth ** 2)
-    theta_last_sol = np.arcsin(v_perp_last_sol / vth)
+
+def get_solid_angles(U, v, alpha):
+    Rm = 1 / alpha  # keep alpha to satisfy previous argument structure
+    vz_sol1, vz_sol2 = calc_axial_velocity_loss_cone_solutions(U, v, Rm)
+    U_transition, U_last_sol = calc_special_U_values(v, Rm)
+    theta_high = calc_modified_loss_cone_angle(vz_sol1, v, U)
+    theta_low = calc_modified_loss_cone_angle(vz_sol2, v, U)
 
     ## solid angles of different species ###
 
-    # omega_tL is defined only by its original LC that shrinks with U till v_th where it vanishes
-    if U <= vth:
+    # omega_tL is defined only by its original LC that shrinks with U till U=v where it vanishes.
+    if U <= v:
         omega_tL = np.sin(theta_low / 2) ** 2
     else:
         omega_tL = 0
 
-    # omega_tR has 3 contributions:
-    # 1) the original right LC that grows with U till U_transition where it is saturated
-    # 2) the original left LC that starts contributing above v_th till U_last_sol where it saturates
-    # 3) the phase space that was originally outside of the left LC and enters the right LC,
-    #    contributes between U_transition and U_last_sol
-
-    # contribution 1
-    if U <= U_transition:
-        omega_tR_1 = np.sin(theta_high / 2) ** 2
-    else:
-        omega_tR_1 = 0.5
-
-    # contribution 2
-    if U <= vth:
-        omega_tR_2 = 0
-    elif U > vth and U <= U_last_sol:
-        omega_tR_2 = np.sin(theta_low / 2) ** 2
-    else:
-        omega_tR_2 = np.sin(theta_last_sol / 2) ** 2
-
-    # contribution 3
-    if U <= U_transition:
-        omega_tR_3 = 0
+    # omega_tR has the original right cone below U=v, and above also the original left cone.
+    # above U_transition the right-cone becomes inverted, and above U_last_sol it consumes all angles.
+    if U <= v:
+        omega_tR = np.sin(theta_high / 2) ** 2
+    elif U > v and U <= U_transition:
+        omega_tR = np.sin(theta_high / 2) ** 2 + np.sin(theta_low / 2) ** 2
     elif U > U_transition and U <= U_last_sol:
-        omega_tR_3 = 0.5 - np.sin(theta_high / 2) ** 2
+        omega_tR = 1 - np.sin(theta_high / 2) ** 2 + np.sin(theta_low / 2) ** 2
     else:
-        omega_tR_3 = 0.5 - np.sin(theta_last_sol / 2) ** 2
-
-    # combine contributions
-    omega_tR = omega_tR_1 + omega_tR_2 + omega_tR_3
+        omega_tR = 1
 
     # omega_c will be defined as the remainder of the total solid angle
     omega_c = 1 - omega_tR - omega_tL
 
     return omega_tR, omega_tL, omega_c
-
-
-# TODO: testing. if good, refactor the above.
-def get_transverse_velocity_loss_cone_solutions(U, vth, alpha):
-    # solve analytical values of critical v_perp
-    a = 1.0
-    b = 2 * alpha * ((U / vth) ** 2 * (2 * alpha - 1) - 1)
-    c = alpha ** 2 * (1 - (U / vth) ** 2) ** 2
-    det = b ** 2 - 4 * a * c
-
-    v_perp_squared_norm_sol_high = np.nan
-    v_perp_squared_norm_sol_low = np.nan
-    if det >= 0:
-        v_perp_squared_norm_sol_high = (-b + np.sqrt(det)) / (2 * a)
-        v_perp_squared_norm_sol_low = (-b - np.sqrt(det)) / (2 * a)
-
-    if v_perp_squared_norm_sol_high > 1: v_perp_squared_norm_sol_high = 1.0
-    if v_perp_squared_norm_sol_low < 0: v_perp_squared_norm_sol_low = 0
-    v_perp_high = np.sqrt(v_perp_squared_norm_sol_high) * vth
-    v_perp_low = np.sqrt(v_perp_squared_norm_sol_low) * vth
-
-    # translate to angles
-    theta_low = np.arcsin(v_perp_low / vth)
-    theta_high = np.arcsin(v_perp_high / vth)
-
-    # critical U values for loss-cones
-    U_transition = np.sqrt((1 - alpha) / alpha * vth ** 2)
-    U_last_sol = np.sqrt(vth ** 2 / alpha)
-
-    # v, theta at the critical value
-    v_perp_last_sol = np.sqrt((1 - alpha) * vth ** 2)
-    theta_last_sol = np.arcsin(v_perp_last_sol / vth)
-
-    return v_perp_high, v_perp_low, U_transition, U_last_sol

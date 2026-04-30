@@ -13,16 +13,15 @@ from mm_rate_eqs.plot_functions import update_format_coord
 
 plt.close('all')
 
+plt.rcParams['font.size'] = 16
+plt.rcParams['lines.linewidth'] = 3
+
 main_dir = '/Users/talmiller/Downloads/mm_rate_eqs//runs/slurm_runs/'
-main_dir += 'set57_MMM_ni_1e21_Ti_10keV_constmfp'
-# main_dir += 'set58_MMM_ni_1e21_Ti_10keV_constmfp_trfix'
+# main_dir += 'set57_MMM_ni_1e21_Ti_10keV_constmfp'
+main_dir += 'set58_MMM_ni_1e21_Ti_10keV_constmfp_trfix'
 
 # linewidth = 1
 linewidth = 2
-
-axes_label_size = 12
-# axes_label_size = 18
-title_fontsize = 12
 
 # cmap = 'viridis'
 # cmap = 'plasma'
@@ -113,11 +112,11 @@ for num_cells in num_cells_list:
             # vmin, vmax = 0.5, 2.2
             # vmin, vmax = -3.3, -1.5 # for N=80
             c = ax.pcolormesh(X, Y, Z, vmin=vmin, vmax=vmax, cmap=cmap)
-            ax.set_xlabel(x_label, fontsize=axes_label_size)
-            ax.set_ylabel(y_label, fontsize=axes_label_size)
+            ax.set_xlabel(x_label)
+            ax.set_ylabel(y_label)
             # ax.set_title(title, fontsize=title_fontsize)
             # ax.set_title(gas_name_short, fontsize=title_fontsize)
-            fig.suptitle(title, fontsize=title_fontsize)
+            # fig.suptitle(title)
             fig.colorbar(c, ax=ax)
             fig.set_layout_engine(layout='tight')
             update_format_coord(X, Y, Z, ax=ax)
@@ -142,5 +141,5 @@ for num_cells in num_cells_list:
             # file_name += '_scat_fac_' + str(scat_factor)
             # file_name += '_scat_asym_' + str(scat_asym_factor)
             # file_name += '_N_' + str(num_cells)
-            # file_name += '_novcol'
+            # # file_name += '_novcol'
             # fig.savefig(fig_save_dir + file_name + '.pdf', format='pdf', dpi=600)

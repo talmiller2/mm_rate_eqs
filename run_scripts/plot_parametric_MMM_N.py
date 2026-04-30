@@ -13,16 +13,12 @@ from mm_rate_eqs.plot_functions import update_format_coord
 
 plt.close('all')
 
+plt.rcParams['font.size'] = 16
+plt.rcParams['lines.linewidth'] = 3
+
 main_dir = '/Users/talmiller/Downloads/mm_rate_eqs//runs/slurm_runs/'
 # main_dir += 'set57_MMM_ni_1e21_Ti_10keV_constmfp'
 main_dir += 'set58_MMM_ni_1e21_Ti_10keV_constmfp_trfix'
-
-# linewidth = 1
-linewidth = 2
-
-axes_label_size = 12
-# axes_label_size = 18
-title_fontsize = 12
 
 # cmap = 'viridis'
 # cmap = 'plasma'
@@ -115,22 +111,23 @@ for scat_factor in scat_factor_list:
                 Rm = Rm_list[ind_Rm]
 
                 key = f'Rm_{Rm}_U_{U}'
-                label = f'$U/v_{{th}}$={U}, $R_m$={Rm}'
+                # label = f'$U/v_{{th}}$={U}, $R_m$={Rm}'
+                label = f'$U/v_{{th}}$={U}, $R_m$={Rm:.1f}'
                 x_label = 'number of cells'
                 y_label = '$\\phi_{ss} / \\phi_{0}$'
                 plt.plot(num_cells_list, phi[key], label=label, marker='o', color=color, linestyle=linestyle)
 
-                plt.xlabel(x_label, fontsize=axes_label_size)
-                plt.ylabel(y_label, fontsize=axes_label_size)
+                plt.xlabel(x_label)
+                plt.ylabel(y_label)
                 plt.yscale('log')
                 plt.legend()
                 plt.grid(True)
                 plt.tight_layout()
 
-                # ### saving figures
-                # fig_save_dir = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/paper_2026/pics/'
-                # file_name = 'MMM_flux_of_N_' + gas_name
-                # file_name += '_scat_fac_' + str(scat_factor)
-                # file_name += '_scat_asym_' + str(scat_asym_factor)
-                # # file_name += '_novcol'
-                # fig.savefig(fig_save_dir + file_name + '.pdf', format='pdf', dpi=600)
+                ### saving figures
+                fig_save_dir = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/paper_2026/pics/'
+                file_name = 'MMM_flux_of_N_' + gas_name
+                file_name += '_scat_fac_' + str(scat_factor)
+                file_name += '_scat_asym_' + str(scat_asym_factor)
+                # file_name += '_novcol'
+                fig.savefig(fig_save_dir + file_name + '.pdf', format='pdf', dpi=600)

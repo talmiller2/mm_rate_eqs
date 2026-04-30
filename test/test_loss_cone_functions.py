@@ -9,9 +9,9 @@ plt.close('all')
 
 # Solve analytic zeros of loss-cone relation
 vth = 1.0
-# vth = 2.0
-# vth = 734263.3729228973
-# vth = 728838.6716588414
+# v = 2.0
+# v = 734263.3729228973
+# v = 728838.6716588414
 
 # Rm_list = np.array([1.4])
 # Rm_list = np.array([2.0])
@@ -27,9 +27,9 @@ Rm_list = np.array([1.05, 1.4, 1.7, 2.0, 3.0])
 colors = ['k', 'b', 'r', 'g', 'm']
 for ind_Rm, Rm in enumerate(Rm_list):
     alpha = 1 / Rm
-    # U_list = np.linspace(0, 5.0 * vth, 5000)
+    # U_list = np.linspace(0, 5.0 * v, 5000)
     U_list = np.linspace(0, 2.0 * vth, 1000)
-    #    U_list = np.linspace(0, 0.3*vth, 1000)
+    #    U_list = np.linspace(0, 0.3*v, 1000)
     v_perp_high = np.nan * U_list
     v_perp_low = np.nan * U_list
 
@@ -130,42 +130,42 @@ for ind_Rm, Rm in enumerate(Rm_list):
     plt.plot(U_list / vth, omega_c, ':', label='$\\Omega_{c}$ Rm=' + str(Rm), color=colors[ind_Rm])
 
     # ratio that should hold at steady state
-    #    vth_reduced = 0.3*vth
-    #    flux = (vth_reduced - U_list*omega_c/omega_tR)/vth
-    #    flux = (vth - U_list*omega_c/omega_tR)/vth
+    #    vth_reduced = 0.3*v
+    #    flux = (vth_reduced - U_list*omega_c/omega_tR)/v
+    #    flux = (v - U_list*omega_c/omega_tR)/v
     flux = (vth * (1 - omega_tL / omega_tR) - U_list * omega_c / omega_tR) / vth
     plt.figure(7)
     plt.plot(U_list / vth, flux, label='Rm=' + str(Rm), color=colors[ind_Rm])
-#    plt.plot(U_list/vth, omega_c/omega_tR, label='Rm='+str(Rm), color=colors[ind_Rm])
+    #    plt.plot(U_list/v, omega_c/omega_tR, label='Rm='+str(Rm), color=colors[ind_Rm])
 
     plt.figure(8)
     plt.plot(U_list / vth, omega_c / omega_tR, '-', label='$\\Omega_{c}/\\Omega_{tR}$ Rm=' + str(Rm), color=colors[ind_Rm])
     plt.plot(U_list / vth, omega_tL / omega_tR, '--', label='$\\Omega_{tL}/\\Omega_{tR}$ Rm=' + str(Rm), color=colors[ind_Rm])
 
 plt.figure(2)
-plt.xlabel('U/vth')
-plt.ylabel('v_perp/vth')
+plt.xlabel('U/v')
+plt.ylabel('v_perp/v')
 plt.title('Critical v_perp values')
 plt.legend()
 plt.grid()
 plt.tight_layout()
 
 plt.figure(3)
-plt.xlabel('U/vth')
-plt.ylabel('v_perp/vth')
+plt.xlabel('U/v')
+plt.ylabel('v_perp/v')
 plt.title('Right loss-cone v_perp range')
 plt.legend()
 plt.tight_layout()
 
 plt.figure(4)
-plt.xlabel('U/vth')
-plt.ylabel('v_perp/vth')
+plt.xlabel('U/v')
+plt.ylabel('v_perp/v')
 plt.title('Left loss-cone v_perp range')
 plt.legend()
 plt.tight_layout()
 
 plt.figure(5)
-plt.xlabel('U/vth')
+plt.xlabel('U/v')
 plt.ylabel('$\\theta$/$\\pi$')
 plt.title('Critical angles')
 plt.legend()
@@ -173,7 +173,7 @@ plt.grid()
 plt.tight_layout()
 
 plt.figure(6)
-plt.xlabel('U/vth')
+plt.xlabel('U/v')
 plt.ylabel('$\\Omega$ /4$\\pi$')
 plt.title('Solid angles')
 plt.legend()
@@ -181,14 +181,14 @@ plt.grid()
 plt.tight_layout()
 
 plt.figure(7)
-plt.xlabel('U/vth')
+plt.xlabel('U/v')
 plt.title('Flux prediction (toy model)')
 plt.legend()
 plt.grid()
 plt.tight_layout()
 
 plt.figure(8)
-plt.xlabel('U/vth')
+plt.xlabel('U/v')
 plt.title('Solid angle ratios')
 plt.legend()
 plt.grid()
