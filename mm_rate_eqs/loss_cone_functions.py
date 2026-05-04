@@ -3,8 +3,8 @@ import numpy as np
 
 def calc_axial_velocity_loss_cone_solutions(U, v, Rm):
     # solve analytical values of critical v_z
-    vz_sol1 = -1 / Rm * U / v + 1 / Rm * np.sqrt((Rm - 1) * (Rm * v ** 2 - (U / v) ** 2))
-    vz_sol2 = -1 / Rm * U / v - 1 / Rm * np.sqrt((Rm - 1) * (Rm * v ** 2 - (U / v) ** 2))
+    vz_sol1 = -1 / Rm * U + 1 / Rm * np.sqrt((Rm - 1) * (Rm * v ** 2 - U ** 2))
+    vz_sol2 = -1 / Rm * U - 1 / Rm * np.sqrt((Rm - 1) * (Rm * v ** 2 - U ** 2))
     return vz_sol1, vz_sol2
 
 
