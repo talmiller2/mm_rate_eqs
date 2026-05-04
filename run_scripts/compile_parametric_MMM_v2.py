@@ -13,16 +13,11 @@ main_folder += 'set62_MMM_ni_1e21_Ti_10keV_constmfp'
 # gas_name = 'deuterium'
 gas_name = 'tritium'
 
-num_cells_list = [20]
-# num_cells_list = [10, 30, 50, 80]
-# num_cells_list = [20, 40, 60, 70]
+num_cells_list = [30]
+# num_cells_list = [10, 20, 30, 40, 50, 60, 70, 80]
 
-# Rm_list = np.arange(2, 10.25, 0.25)
-# U_list = np.arange(0, 1.05, 0.05)
-
-# testing initial batch
-Rm_list = np.arange(2, 10, 0.5)
-U_list = np.arange(0, 1, 0.1)
+Rm_list = np.arange(2, 10.25, 0.25)
+U_list = np.arange(0, 1.05, 0.05)
 
 modes = []
 modes += ['mahmir']

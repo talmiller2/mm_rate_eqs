@@ -29,20 +29,15 @@ slurm_kwargs['cpus-per-task'] = 1
 # gas_name = 'deuterium'
 gas_name = 'tritium'
 
-num_cells_list = [20]
-# num_cells_list = [10, 30, 50, 80]
-# num_cells_list = [20, 40, 60, 70]
+num_cells_list = [30]
+# num_cells_list = [10, 20, 30, 40, 50, 60, 70, 80]
 
 modes = []
 modes += ['mahmir']
 modes += ['mekel']
 
-# Rm_list = np.arange(2, 10.25, 0.25)
-# U_list = np.arange(0, 1.05, 0.05)
-
-# testing initial batch
-Rm_list = np.arange(2, 10, 0.5)
-U_list = np.arange(0, 1, 0.1)
+Rm_list = np.arange(2, 10.25, 0.25)
+U_list = np.arange(0, 1.05, 0.05)
 
 total_number_of_sets = len(num_cells_list) * len(modes) * len(Rm_list) * len(U_list)
 print('total_number_of_sets = ' + str(total_number_of_sets))
