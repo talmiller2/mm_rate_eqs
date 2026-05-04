@@ -17,7 +17,9 @@ Ti = 10 * 1e3  # eV
 
 main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/'
 # main_folder += 'set57_MMM_ni_1e21_Ti_10keV_constmfp'
-main_folder += 'set58_MMM_ni_1e21_Ti_10keV_constmfp_trfix'
+# main_folder += 'set58_MMM_ni_1e21_Ti_10keV_constmfp_trfix'
+main_folder += 'set62_MMM_ni_1e21_Ti_10keV_constmfp_mahmir'
+# main_folder += 'set63_MMM_ni_1e21_Ti_10keV_constmfp_mekel'
 
 slurm_kwargs = {}
 slurm_kwargs['partition'] = 'core'
@@ -30,14 +32,22 @@ slurm_kwargs['cpus-per-task'] = 1
 # gas_name = 'deuterium'
 gas_name = 'tritium'
 
+num_cells_list = [20]
 # num_cells_list = [10, 30, 50, 80]
-num_cells_list = [20, 40, 60, 70]
+# num_cells_list = [20, 40, 60, 70]
 # scat_factor_list = [0.1, 1]
 # scat_asym_list = [0.5, 1, 2]
 scat_factor_list = [1]
 scat_asym_list = [1]
-Rm_list = np.round(np.linspace(1.1, 10, 21), 2)
-U_list = np.round(np.linspace(0, 1, 21), 2)
+# Rm_list = np.round(np.linspace(1.1, 10, 21), 2) # up to set58
+# U_list = np.round(np.linspace(0, 1, 21), 2) # up to set58
+# Rm_list = np.arange(2, 10.25, 0.25)
+# U_list = np.arange(0, 1.05, 0.05)
+
+# testing initial batch
+Rm_list = np.arange(2, 10, 0.5)
+U_list = np.arange(0, 1, 0.1)
+
 
 total_number_of_sets = len(num_cells_list) * len(scat_factor_list) * len(scat_asym_list) * len(Rm_list) * len(U_list)
 print('total_number_of_sets = ' + str(total_number_of_sets))
@@ -75,7 +85,13 @@ for num_cells in num_cells_list:
 
                     # MMM
                     settings['U0'] = U
-                    settings['alpha_definition'] = 'geometric_constant_U0'
+                    # settings['alpha_definition'] = 'geometric_constant' # mekel
+                    settings['alpha_definition'] = 'geometric_constant_U0'  # mahmir-savir
+
+                    # settings['mmm_tL_transmission_factor'], settings['mmm_tR_transmission_factor'] = 0, 0  # old
+                    settings['mmm_tL_transmission_factor'], settings[
+                        'mmm_tR_transmission_factor'] = 1, 0  # mahmir-savir
+                    # settings['mmm_tL_transmission_factor'], settings['mmm_tR_transmission_factor'] = 1, 1 # mekel
 
                     # mfp
                     settings['assume_constant_density'] = True
