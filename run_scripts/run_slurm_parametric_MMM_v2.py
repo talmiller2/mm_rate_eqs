@@ -28,7 +28,7 @@ slurm_kwargs['cpus-per-task'] = 1
 
 # gas_name = 'deuterium'
 # gas_name = 'tritium'
-gas_name = 'DT-mix'
+gas_name = 'DT_mix'
 
 num_cells_list = [30]
 # num_cells_list = [10, 20, 30, 40, 50, 60, 70, 80]
