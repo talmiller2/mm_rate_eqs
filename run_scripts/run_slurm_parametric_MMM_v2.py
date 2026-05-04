@@ -61,7 +61,6 @@ for num_cells in num_cells_list:
                     set_name += f'_ft_{ft:g}'
                     set_name += f'_Rm_{Rm:g}'
                     set_name += f'_U_{U:g}'
-                    set_name += '_' + gas_name
                     # print(set_name)
 
                     print('@@@@@@@ set num', cnt_sets, '/', total_number_of_sets, ':', set_name)
