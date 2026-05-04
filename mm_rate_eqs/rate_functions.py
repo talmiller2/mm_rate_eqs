@@ -425,15 +425,21 @@ def get_density_time_derivatives(state, settings):
     f_trans_R /= cell_sizes
 
     if U[0] >= 0:
-        f_drag = coeff_mat_L.dot(U * n_c)
+        f_mmm_c = coeff_mat_L.dot(U * n_c)
+        f_mmm_tL = coeff_mat_L.dot(U * n_tL)
+        f_mmm_tR = coeff_mat_L.dot(U * n_tR)
     else:
-        f_drag = coeff_mat_R.dot(-U * n_c)
-    f_drag /= cell_sizes
+        f_mmm_c = coeff_mat_R.dot(-U * n_c)
+        f_mmm_tL = coeff_mat_R.dot(-U * n_tL)
+        f_mmm_tR = coeff_mat_R.dot(-U * n_tR)
+    f_mmm_c *= 1 / cell_sizes
+    f_mmm_tL *= settings['mmm_tL_transmission_factor'] / cell_sizes
+    f_mmm_tR *= settings['mmm_tR_transmission_factor'] / cell_sizes
 
     # combine rates
-    dn_c_dt = f_scat_c + f_drag
-    dn_tL_dt = f_scat_tL + f_trans_L
-    dn_tR_dt = f_scat_tR + f_trans_R
+    dn_c_dt = f_scat_c + f_mmm_c
+    dn_tL_dt = f_scat_tL + f_trans_L + f_mmm_tL
+    dn_tR_dt = f_scat_tR + f_trans_R + f_mmm_tR
 
     if settings['use_RF_terms'] == True:
         tau_th = settings['cell_size'] / state['v_th']
@@ -467,23 +473,31 @@ def get_fluxes(state, settings):
     # initializations
     flux_trans_R = np.nan * np.zeros(settings['number_of_cells'])
     flux_trans_L = np.nan * np.zeros(settings['number_of_cells'])
-    flux_mmm_drag = np.nan * np.zeros(settings['number_of_cells'])
+    flux_mmm_c = np.nan * np.zeros(settings['number_of_cells'])
+    flux_mmm_tL = np.nan * np.zeros(settings['number_of_cells'])
+    flux_mmm_tR = np.nan * np.zeros(settings['number_of_cells'])
 
     # calculate fluxes (normalized to the single mirror flux)
     for k in range(0, settings['number_of_cells'] - 1):
         flux_trans_R[k] = v_R[k] * n_tR[k] * settings['transmission_factor']
         flux_trans_L[k] = - v_L[k + 1] * n_tL[k + 1] * settings['transmission_factor']
         if U[0] >= 0:
-            flux_mmm_drag[k] = - U[k + 1] * n_c[k + 1]
+            flux_mmm_c[k] = - U[k + 1] * n_c[k + 1]
+            flux_mmm_tL[k] = - U[k + 1] * n_tL[k + 1] * settings['mmm_tL_transmission_factor']
+            flux_mmm_tR[k] = - U[k + 1] * n_tR[k + 1] * settings['mmm_tR_transmission_factor']
         else:
-            flux_mmm_drag[k] = - U[k] * n_c[k]
+            flux_mmm_c[k] = - U[k] * n_c[k]
+            flux_mmm_tL[k] = - U[k] * n_tL[k] * settings['mmm_tL_transmission_factor']
+            flux_mmm_tR[k] = - U[k] * n_tR[k] * settings['mmm_tR_transmission_factor']
 
-    flux = flux_trans_R + flux_trans_L + flux_mmm_drag
+    flux = flux_trans_R + flux_trans_L + flux_mmm_c + flux_mmm_tL + flux_mmm_tR
 
     # save fluxes to state
     state['flux_trans_R'] = flux_trans_R
     state['flux_trans_L'] = flux_trans_L
-    state['flux_mmm_drag'] = flux_mmm_drag
+    state['flux_mmm_c'] = flux_mmm_c
+    state['flux_mmm_tL'] = flux_mmm_tL
+    state['flux_mmm_tR'] = flux_mmm_tR
     state['flux'] = flux
 
     # calculate flux statistics

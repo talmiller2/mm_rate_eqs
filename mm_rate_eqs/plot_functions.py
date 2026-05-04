@@ -48,8 +48,12 @@ def plot_relaxation_status(state, settings):
              linewidth=linewidth, color='b')
     plt.plot(z_array, state['flux_trans_L'], linestyle=linestyle, label='flux_trans_L' + label_suffix,
              linewidth=linewidth, color='g')
-    plt.plot(z_array, state['flux_mmm_drag'], linestyle=linestyle, label='flux_mmm_drag' + label_suffix,
+    plt.plot(z_array, state['flux_mmm_c'], linestyle=linestyle, label='flux_mmm_c' + label_suffix,
              linewidth=linewidth, color='r')
+    plt.plot(z_array, state['flux_mmm_tL'], linestyle=linestyle, label='flux_mmm_tL' + label_suffix,
+             linewidth=linewidth, color='orange')
+    plt.plot(z_array, state['flux_mmm_tR'], linestyle=linestyle, label='flux_mmm_tR' + label_suffix,
+             linewidth=linewidth, color='m')
     plt.plot(z_array, state['flux'], linestyle=linestyle, label='flux total' + label_suffix, linewidth=linewidth,
              color='k')
     if state['termination_criterion_reached'] is True:
@@ -82,13 +86,13 @@ def plot_relaxation_status(state, settings):
     #     plt.ylabel('T [keV]')
     #     plt.xlabel(xlabel)
 
-    fig_cnt += 1
-    plt.figure(fig_cnt)
-    plt.plot(z_array, state['mean_free_path'], linestyle=linestyle, label='mfp' + label_suffix, linewidth=linewidth,
-             color='r')
-    if state['termination_criterion_reached'] is True:
-        plt.ylabel('mfp [m]')
-        plt.xlabel(xlabel)
+    # fig_cnt += 1
+    # plt.figure(fig_cnt)
+    # plt.plot(z_array, state['mean_free_path'], linestyle=linestyle, label='mfp' + label_suffix, linewidth=linewidth,
+    #          color='r')
+    # if state['termination_criterion_reached'] is True:
+    #     plt.ylabel('mfp [m]')
+    #     plt.xlabel(xlabel)
 
     fig_cnt += 1
     plt.figure(fig_cnt)
@@ -128,13 +132,13 @@ def plot_relaxation_status(state, settings):
     #     plt.ylabel('velocity [m/s]')
     #     plt.xlabel(xlabel)
 
-    fig_cnt += 1
-    plt.figure(fig_cnt)
-    plt.plot(state['t_evolution'], state['flux_normalized_std_evolution'], linestyle=linestyle, linewidth=linewidth,
-             label='normalized flux std' + label_suffix, color='k')
-    if state['termination_criterion_reached'] is True:
-        plt.ylabel('flux normalized std evolution')
-        plt.xlabel('simulation time')
+    # fig_cnt += 1
+    # plt.figure(fig_cnt)
+    # plt.plot(state['t_evolution'], state['flux_normalized_std_evolution'], linestyle=linestyle, linewidth=linewidth,
+    #          label='normalized flux std' + label_suffix, color='k')
+    # if state['termination_criterion_reached'] is True:
+    #     plt.ylabel('flux normalized std evolution')
+    #     plt.xlabel('simulation time')
 
     # fig_cnt += 1
     # plt.figure(fig_cnt)

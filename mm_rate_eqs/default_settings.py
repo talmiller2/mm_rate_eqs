@@ -49,6 +49,11 @@ def define_default_settings(settings=None):
     if 'mmm_velocity_type' not in settings:
         # settings['mmm_velocity_type'] = 'absolute'
         settings['mmm_velocity_type'] = 'relative_to_thermal_velocity'
+    if 'mmm_tL_transmission_factor' not in settings:
+        settings['mmm_tL_transmission_factor'] = 1
+    if 'mmm_tR_transmission_factor' not in settings:
+        settings['mmm_tR_transmission_factor'] = 0
+
     if 'cell_size' not in settings:
         # settings['cell_size'] = 3.0  # m (MMM wavelength)
         # settings['cell_size'] = 4.0  # m (MMM wavelength)
