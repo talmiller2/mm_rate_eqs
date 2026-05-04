@@ -57,8 +57,8 @@ for num_cells in num_cells_list:
 
                 set_name = 'N_' + str(num_cells)
                 set_name += '_mode_' + str(mode)
-                set_name += '_Rm_' + str(Rm)
-                set_name += '_U_' + str(U)
+                set_name += f'_Rm_{Rm:g}'
+                set_name += f'_U_{U:g}'
                 set_name += '_' + gas_name
                 # print(set_name)
 
