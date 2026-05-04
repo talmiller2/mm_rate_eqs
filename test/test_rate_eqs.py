@@ -41,10 +41,10 @@ settings['plasma_dimension'] = 3
 # settings['plasma_dimension'] = 10
 # settings['plasma_dimension'] = 100
 # settings['number_of_cells'] = 10
-settings['number_of_cells'] = 20  # nominal value
+# settings['number_of_cells'] = 20  # nominal value
 # settings['number_of_cells'] = 30
 # settings['number_of_cells'] = 40
-# settings['number_of_cells'] = 50
+settings['number_of_cells'] = 50
 # settings['number_of_cells'] = 100
 # settings['number_of_cells'] = 150
 # settings['number_of_cells'] = 200
@@ -56,10 +56,11 @@ settings['n0'] = 1e21  # m^-3
 # settings['n0'] = 1e20  # m^-3
 
 # settings['Rm'] = 2.0
-settings['Rm'] = 3.0
+# settings['Rm'] = 3.0
 # settings['Rm'] = 4.0
 # settings['Rm'] = 5.0
 # settings['Rm'] = 6.0
+settings['Rm'] = 6.25
 # settings['Rm'] = 10.0
 
 # settings['Ti_0'] = 3 * 1e3 # eV
@@ -78,12 +79,13 @@ settings['transmission_factor'] = 2
 # settings['U0'] = 0.01
 # settings['U0'] = 0.02
 # settings['U0'] = 0.05
-settings['U0'] = 0.1
+# settings['U0'] = 0.1
 # settings['U0'] = 0.2
 # settings['U0'] = 0.3
 # settings['U0'] = 0.5
 # settings['U0'] = 0.6
 # settings['U0'] = 0.8
+settings['U0'] = 0.85
 # settings['U0'] = 1.0
 # settings['U0'] = 2.0
 # settings['U0'] = -0.01
@@ -94,16 +96,16 @@ settings['U0'] = 0.1
 # settings['flux_normalized_termination_cutoff'] = 0.1
 # settings['flux_normalized_termination_cutoff'] = 0.05
 # settings['flux_normalized_termination_cutoff'] = 0.03
-settings['flux_normalized_termination_cutoff'] = 0.01
-# settings['flux_normalized_termination_cutoff'] = 1e-4
+# settings['flux_normalized_termination_cutoff'] = 0.01
+settings['flux_normalized_termination_cutoff'] = 1e-3
 
-# settings['alpha_definition'] = 'geometric_constant' # mekel
-settings['alpha_definition'] = 'geometric_constant_U0'  # mahmir-savir
+settings['alpha_definition'] = 'geometric_constant'  # mekel
+# settings['alpha_definition'] = 'geometric_constant_U0'  # mahmir-savir
 # settings['alpha_definition'] = 'geometric_local'
 
-settings['mmm_tL_transmission_factor'], settings['mmm_tR_transmission_factor'] = 0, 0  # old
+# settings['mmm_tL_transmission_factor'], settings['mmm_tR_transmission_factor'] = 0, 0  # old
 # settings['mmm_tL_transmission_factor'], settings['mmm_tR_transmission_factor'] = 1, 0 # mahmir-savir
-# settings['mmm_tL_transmission_factor'], settings['mmm_tR_transmission_factor'] = 1, 1 # mekel
+settings['mmm_tL_transmission_factor'], settings['mmm_tR_transmission_factor'] = 1, 1  # mekel
 
 
 # settings['U_for_loss_cone_factor'] = 1.0

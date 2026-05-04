@@ -310,10 +310,6 @@ def print_time_step_info(dt, t_curr, num_time_steps):
 
 
 def print_minimal_densities(state):
-    # logging.info('min values: n_tot=' + '{:.2e}'.format(min(state['n']))
-    #              + ', n_c=' + '{:.2e}'.format(min(state['n_c']))
-    #              + ', n_tL=' + '{:.2e}'.format(min(state['n_tL']))
-    #              + ', n_tR=' + '{:.2e}'.format(min(state['n_tR'])))
     logging.info('(ind,min) values: '
                  + 'n_tot=(' + str(np.argmin(state['n'])) + ',' + '{:.2e}'.format(min(state['n'])) + ')'
                  + ', n_c=(' + str(np.argmin(state['n_c'])) + ',' + '{:.2e}'.format(min(state['n_c'])) + ')'
@@ -424,7 +420,6 @@ def check_termination_criterion_reached(state, settings, t_curr, num_time_steps,
     else:
         pass
     return state
-
 
 def get_simulation_time(start_time):
     end_time = time.time()

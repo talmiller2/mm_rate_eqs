@@ -24,7 +24,7 @@ ft_list = []
 ft_list += [1]
 ft_list += [2]
 
-total_number_of_sets = len(num_cells_list) * len(modes)
+total_number_of_sets = len(num_cells_list) * len(modes) * len(ft_list)
 print('total_number_of_sets = ' + str(total_number_of_sets))
 
 cnt_sets = 0

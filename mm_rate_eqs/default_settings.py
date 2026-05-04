@@ -181,22 +181,12 @@ def define_default_settings(settings=None):
 
     ### relaxation solver parameters
     if 'max_num_time_steps' not in settings:
-        settings['max_num_time_steps'] = int(1e7) - 1
-        # settings['max_num_time_steps'] = int(3e6) - 1
-        # settings['max_num_time_steps'] = int(3e5) - 1
-        # settings['max_num_time_steps'] = int(status_counter_type1e5) - 1
-        # settings['max_num_time_steps'] = int(1e10) - 1
+        # settings['max_num_time_steps'] = int(1e7) - 1
+        settings['max_num_time_steps'] = int(1e5) - 1
     if 't_stop' not in settings:
-        # settings['t_stop'] = 1e-6
-        # settings['t_stop'] = 1e-3
-        # settings['t_stop'] = 1e-2
-        # settings['t_stop'] = 3e-2
-        # settings['t_stop'] = 1e-1
-        # settings['t_stop'] = 1.0
         settings['t_stop'] = 100.0
     if 't_solve_min' not in settings:
         settings['t_solve_min'] = 1e-20
-        # settings['t_solve_min'] = 0.005
     if 'status_counter_type' not in settings:
         # settings['status_counter_type'] = 'time_elapsed'
         settings['status_counter_type'] = 'time_steps'

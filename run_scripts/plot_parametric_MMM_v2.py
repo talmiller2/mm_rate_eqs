@@ -35,7 +35,7 @@ modes += ['mahmir']
 modes += ['mekel']
 
 ft_list = []
-ft_list += [1]
+# ft_list += [1]
 ft_list += [2]
 
 for num_cells in num_cells_list:
@@ -46,6 +46,7 @@ for num_cells in num_cells_list:
             compiled_set_name = 'compiled_'
             compiled_set_name += 'N_' + str(num_cells)
             compiled_set_name += '_mode_' + str(mode)
+            compiled_set_name += f'_ft_{ft:g}'
             print(compiled_set_name)
 
             # load data of flux for all alpha,beta
