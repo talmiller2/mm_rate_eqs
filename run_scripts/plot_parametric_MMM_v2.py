@@ -27,15 +27,14 @@ linewidth = 2
 # cmap = 'inferno'
 cmap = 'coolwarm'
 
-num_cells_list = [30]
-# num_cells_list = [10, 20, 30, 40, 50, 60, 70, 80]
+num_cells_list = [20, 40]
 
 modes = []
 modes += ['mahmir']
 modes += ['mekel']
 
 ft_list = []
-# ft_list += [1]
+ft_list += [1]
 ft_list += [2]
 
 for num_cells in num_cells_list:
@@ -91,8 +90,8 @@ for num_cells in num_cells_list:
             title += ', ft=' + str(ft)
             title += ', N=' + str(num_cells)
 
-            # change failed nan to zero
-            flux_mat = np.nan_to_num(flux_mat, nan=np.nanmin(flux_mat))
+            # # change failed nan to zero
+            # flux_mat = np.nan_to_num(flux_mat, nan=np.nanmin(flux_mat))
 
             # Z = np.log(flux_mat * cross_section_main_cell / flux_lawson_ignition_origial)
             # Z = np.log(flux_mat * cross_section_main_cell / flux_lawson_piel)
@@ -108,30 +107,19 @@ for num_cells in num_cells_list:
             ax.set_ylabel(y_label)
             # ax.set_title(title, fontsize=title_fontsize)
             # ax.set_title(gas_name_short, fontsize=title_fontsize)
-            fig.suptitle(title)
+            # fig.suptitle(title)
             fig.colorbar(c, ax=ax)
             fig.set_layout_engine(layout='tight')
             update_format_coord(X, Y, Z, ax=ax)
 
-            # ## plot density profiles
-            # fig2, ax2 = plt.subplots(1, 1, figsize=(7, 5))
-            # for ind_Rm, Rm in enumerate(Rm_list):
-            # # for ind_Rm, Rm in enumerate([Rm_list[5]]):
-            # #     for ind_U, U in enumerate(U_list):
-            #     for ind_U, U in enumerate([U_list[2]]):
-            #         # print('Rm=', Rm, 'U=', U)
-            #         n = mat_dict['n_tR'][ind_Rm, ind_U, :] + mat_dict['n_tL'][ind_Rm, ind_U, :] + mat_dict['n_c'][ind_Rm, ind_U, :]
-            #         ax2.plot(n, label='Rm='+ str(Rm) + ',U=' + str(U))
-            # ax2.set_xlabel('# cell', fontsize=axes_label_size)
-            # ax2.set_ylabel('n [$m^{-3}$]', fontsize=axes_label_size)
-            # fig2.suptitle(compiled_set_name)
-            # ax2.legend()
-
             # ### saving figures
             # fig_save_dir = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/paper_2026/pics/'
-            # file_name = 'MMM_flux_' + gas_name
-            # file_name += '_scat_fac_' + str(scat_factor)
-            # file_name += '_scat_asym_' + str(scat_asym_factor)
-            # file_name += '_N_' + str(num_cells)
-            # # file_name += '_novcol'
+            # file_name = f'MMM_flux_of_Rm_U_at_fixed_N_{num_cells}'
+            # # file_name += f'_mode_{mode}'
+            # if mode == 'mahmir':
+            #     A = 0
+            # elif mode == 'mekel':
+            #     A = 1
+            # file_name += f'_A_{A}'
+            # file_name += f'_ft_{ft:g}'
             # fig.savefig(fig_save_dir + file_name + '.pdf', format='pdf', dpi=600)

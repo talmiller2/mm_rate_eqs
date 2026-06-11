@@ -10,8 +10,8 @@ rate_eqs_script = get_script_rate_eqs_slave()
 main_folder = '/home/talm/code/mm_rate_eqs/runs/slurm_runs/'
 main_folder += 'set62_MMM_ni_1e21_Ti_10keV_constmfp'
 
-num_cells_list = [30]
-# num_cells_list = [10, 20, 30, 40, 50, 60, 70, 80]
+# num_cells_list = [30]
+num_cells_list = [10, 20, 30, 40, 50, 60, 70, 80]
 
 Rm_list = np.arange(2, 10.25, 0.25)
 U_list = np.arange(0, 0.95, 0.05)

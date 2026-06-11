@@ -28,11 +28,8 @@ cmap = 'coolwarm'
 # num_cells_list = [30]
 num_cells_list = [10, 20, 30, 40, 50, 60, 70, 80]
 
-inds_Rm = [2, 6]
+inds_Rm = [4, 16]
 inds_U = [2, 4, 6]
-# inds_Rm = [5, 10]
-# inds_U = [5, 10]
-
 
 modes = []
 modes += ['mahmir']
@@ -43,7 +40,7 @@ ft_list = []
 ft_list += [2]
 
 color_list = ['b', 'g', 'r']
-linestyle_list = ['-', '--', ':']
+linestyle_list = ['--', '-', ':']
 
 for mode in modes:
     for ft in ft_list:
@@ -64,6 +61,9 @@ for mode in modes:
             flux_mat = mat_dict['flux_mat']
             Rm_list = mat_dict['Rm_list'][0]
             U_list = mat_dict['U_list'][0]
+
+            # change negative flux to nan
+            flux_mat[flux_mat < 0] = np.nan
 
             # load on of the settings files
             # main_dir_dir_settings = '/Users/talmiller/Downloads/mm_rate_eqs//runs/slurm_runs/'
@@ -104,13 +104,15 @@ for mode in modes:
 
                 key = f'Rm_{Rm}_U_{U}'
                 # label = f'$U/v_{{th}}$={U}, $R_m$={Rm}'
-                label = f'$U/v_{{th}}$={U}, $R_m$={Rm:.1f}'
+                # label = f'$U/v_{{th}}$={U}, $R_m$={Rm:.1f}'
+                label = f'$U/v_{{th}}$={U:g}, $R_m$={Rm:g}'
                 x_label = 'number of cells'
                 y_label = '$\\phi_{ss} / \\phi_{0}$'
-                plt.plot(num_cells_list, phi[key], label=label, marker='o', color=color, linestyle=linestyle)
+                plt.plot(num_cells_list, phi[key], label=label, color=color, linestyle=linestyle)
 
                 plt.xlabel(x_label)
                 plt.ylabel(y_label)
+                plt.title(f'mode {mode}, ft={ft}')
                 plt.yscale('log')
                 plt.legend()
                 plt.grid(True)
@@ -118,8 +120,12 @@ for mode in modes:
 
                 # ### saving figures
                 # fig_save_dir = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/paper_2026/pics/'
-                # file_name = 'MMM_flux_of_N_' + gas_name
-                # file_name += '_scat_fac_' + str(scat_factor)
-                # file_name += '_scat_asym_' + str(scat_asym_factor)
-                # # file_name += '_novcol'
+                # file_name = 'MMM_flux_of_N'
+                # # file_name += f'_mode_{mode}'
+                # if mode == 'mahmir':
+                #     A = 0
+                # elif mode == 'mekel':
+                #     A = 1
+                # file_name += f'_A_{A}'
+                # file_name += f'_ft_{ft:g}'
                 # fig.savefig(fig_save_dir + file_name + '.pdf', format='pdf', dpi=600)

@@ -16,7 +16,9 @@ MeV_to_J = e * 1e6
 
 Ti_keV = 50
 # Ti_keV = 15
+# ni_0 = 1e20  # [m^-3]
 ni_0 = 1e21  # [m^-3]
+# ni_0 = 1e22  # [m^-3]
 
 sigma_v_dict = load_sigma_v_fusion_files(Ti_keV)
 
@@ -27,12 +29,12 @@ P_fus_ideal, P_fus_ch_ideal, _ = get_fusion_power_multiple_ions(ni_array_ideal, 
 ###
 
 ions = ['D', 'T', 'He3']
-n = {'D': [ni_0], 'T': [0], 'He3': [0]}
+# n = {'D': [ni_0], 'T': [0], 'He3': [0]}
 # n = {'D': [ni_array_ideal[0]], 'T': [0], 'He3': [0]}
 # n = {'D': [0], 'T': [0], 'He3': [ni_0]}
 # n = {'D': [0], 'T': [ni_0], 'He3': [0]}
 # n = {'D': [ni_0 / 2], 'T': [ni_0 / 2], 'He3': [0]}
-# n = {'D': [ni_array_ideal[0]], 'T': [ni_array_ideal[1]], 'He3': [ni_array_ideal[2]]}
+n = {'D': [ni_array_ideal[0]], 'T': [ni_array_ideal[1]], 'He3': [ni_array_ideal[2]]}
 
 P_fus = [np.nan]
 P_fus_ch = [np.nan]
@@ -48,8 +50,11 @@ E_fus_ch_pure = [0]
 # dt = 1e-3
 # tmax = 1
 dt = 0.01
-tmax = 10
-# tmax = 100
+# tmax = 10
+tmax = 100
+# dt = 0.1
+# tmax = 1000
+
 t = np.arange(0, tmax, dt)  # [s]
 
 for ind_t in range(1, len(t)):
@@ -165,7 +170,7 @@ plt.tight_layout()
 # plt.grid(True)
 # plt.tight_layout()
 
-# ## save figs at higher res
-figs_folder = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/lawson_plots/'
-plt.figure(1)
+# # ## save figs at higher res
+# figs_folder = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/lawson_plots/'
+# plt.figure(1)
 # plt.savefig(figs_folder + '/DD_pulse_dynamics.pdf', format='pdf')
