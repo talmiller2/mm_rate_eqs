@@ -21,18 +21,20 @@ plt.rcParams['lines.linewidth'] = 3
 # # legend_fontsize = 14
 # legend_fontsize = 16
 
-Rm_list = np.array([3])
-colors = ['k']
-Rm_list = np.array([2, 4, 10])
-colors = ['b', 'g', 'r', 'orange']
-
-do_plot_vlines = False
+# Rm_list = np.array([3])
+# colors = ['k']
 # do_plot_vlines = True
+
+Rm_list = np.array([3, 6, 10])
+colors = ['b', 'g', 'r', 'orange']
+do_plot_vlines = False
 
 v = 1
 U_list = np.linspace(0, 2.0 * v, 1000)
 
-fig, axs = plt.subplots(1, 2, figsize=(16, 6), num=1)
+# fig, axs = plt.subplots(1, 2, figsize=(16, 6), num=1)
+fig1, ax1 = plt.subplots(1, 1, figsize=(8, 6), num=1)
+fig2, ax2 = plt.subplots(1, 1, figsize=(8, 6), num=2)
 
 for ind_Rm, Rm in enumerate(Rm_list):
     # U_list = np.linspace(0, 1.0 * v, 1000)
@@ -65,7 +67,7 @@ for ind_Rm, Rm in enumerate(Rm_list):
                    # alpha=0.5,
                    color='g',
                    # color=colors[ind_Rm],
-                   label='$U_{trans}$')
+                   label='$U_{m}$')
         ax.axvline(U_last_sol / v,
                    # linestyle=':',
                    linewidth=2,
@@ -75,43 +77,45 @@ for ind_Rm, Rm in enumerate(Rm_list):
                    label='$U_{last}$')
 
 
-    axs[0].plot(U_list / v, (vz_sol1 + U_list) / v,
+    ax1.plot(U_list / v, (vz_sol1 + U_list) / v,
                 label='$v_{z,1}$ ($R_m$=' + str(Rm) + ')',
                 color=colors[ind_Rm])
-    axs[0].plot(U_list / v, (vz_sol2 + U_list) / v, linestyle='--',
+    ax1.plot(U_list / v, (vz_sol2 + U_list) / v, linestyle='--',
                 label='$v_{z,2}$',
                 color=colors[ind_Rm])
     if do_plot_vlines:
-        plot_vlines(axs[0])
+        plot_vlines(ax1)
 
-    axs[1].plot(U_list / v, omega_tR,
+    ax2.plot(U_list / v, omega_tR,
                 label='$\\alpha_r$ ($R_m$=' + str(Rm) + ')',
                 color=colors[ind_Rm])
-    axs[1].plot(U_list / v, omega_tL, '--',
+    ax2.plot(U_list / v, omega_tL, '--',
                 label='$\\alpha_l$',
                 color=colors[ind_Rm])
-    axs[1].plot(U_list / v, omega_c, ':',
+    ax2.plot(U_list / v, omega_c, ':',
                 label='$\\alpha_c$',
                 color=colors[ind_Rm])
     if do_plot_vlines:
-        plot_vlines(axs[1])
+        plot_vlines(ax2)
 
-axs[0].set_xlim([0, max(U_list) / v])
-axs[0].set_xlabel('$U/v$')
-axs[0].set_ylabel('$(v_{z} + U)/v$ solutions')
-axs[0].legend(loc='upper left')
-axs[0].grid()
+ax1.set_xlim([0, max(U_list) / v])
+ax1.set_xlabel('$U/v$')
+ax1.set_ylabel('$(v_{z} + U)/v$ solutions')
+ax1.legend(loc='upper left')
+ax1.grid()
 
-axs[1].set_xlim([0, max(U_list) / v])
-axs[1].set_xlabel('$U/v$')
-axs[1].set_ylabel('$\\alpha=\\Omega$ /4$\\pi$ normalized solid angles')
-axs[1].legend(loc='upper left')
-axs[1].grid()
+ax2.set_xlim([0, max(U_list) / v])
+ax2.set_xlabel('$U/v$')
+ax2.set_ylabel('$\\alpha=\\Omega$ /4$\\pi$ normalized solid angles')
+ax2.legend(loc='upper left')
+ax2.grid()
 
-fig.tight_layout()
+fig1.tight_layout()
+fig2.tight_layout()
 
 # ### saving figures
 # fig_save_dir = '/Users/talmiller/Data/UNI/Courses Graduate/Plasma/Papers/texts/paper_2026/pics/'
 # # file_name = 'MMM_loss_cones_single_Rm'
 # file_name = 'MMM_loss_cones_multiple_Rm'
-# fig.savefig(fig_save_dir + file_name + '.pdf', format='pdf', dpi=600)
+# fig1.savefig(fig_save_dir + file_name + '_vz_solutions.pdf', format='pdf', dpi=600)
+# fig2.savefig(fig_save_dir + file_name + '_solid_angles.pdf', format='pdf', dpi=600)
